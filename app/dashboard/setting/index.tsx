@@ -14,12 +14,12 @@ import { AppDispatch } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLocale } from "@/store/languageSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 
 const Settings = () => {
   const { locale } = useSelector((state: any) => state.language);
   const [selectedLanguage, setSelectedLanguage] = useState(locale);
-
+  const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
 
   const [isEnabled, setIsEnabled] = useState(false);

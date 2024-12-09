@@ -4,7 +4,7 @@ import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import CustomDrawer from "@/components/CustomDrawer";
 import Logo from "@/components/SVG/Logo";
-import { Stack, usePathname } from "expo-router";
+import { Link, Stack, usePathname } from "expo-router";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 const DashboardLayout = () => {
@@ -32,8 +32,8 @@ const DashboardLayout = () => {
             >
               <View
                 style={{
-                  paddingHorizontal: 5,
-                  height: 60,
+                  paddingHorizontal: 1,
+                  height: 100,
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "center",
@@ -49,12 +49,14 @@ const DashboardLayout = () => {
                   style={{
                     position: "absolute",
                     left: 10,
-                    top: 2,
+                    top: 0,
                   }}
                 >
                   <Entypo name="menu" size={30} color="gray" />
                 </TouchableOpacity>
-                <Logo />
+                <Link href={"/dashboard"}>
+                  <Logo />
+                </Link>
               </View>
             </SafeAreaView>
           ),

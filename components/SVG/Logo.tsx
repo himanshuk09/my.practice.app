@@ -1,10 +1,15 @@
 import * as React from "react";
 import Svg, { SvgProps, Defs, ClipPath, Path, G, Use } from "react-native-svg";
+const aspectRatio = 75.528 / 230.303;
+const newHeight = 58.528;
+const newWidth = newHeight / aspectRatio;
 const Logo = (props: SvgProps) => (
   <Svg
     viewBox="8723 188 230.303 75.528"
-    width={205.303}
-    height={68.528}
+    // width={205.303}
+    // height={68.528}
+    width={newWidth - 2.1}
+    height={newHeight + 0.06}
     {...props}
   >
     <Defs>

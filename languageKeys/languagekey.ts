@@ -50,7 +50,15 @@ export const TranslationKeys: Translations | any = {
     notifications: "Notifications",
     save: "save",
     cancel: "cancel",
+    send: "send",
     show_notifications: "Show Notifications",
+    how_is_your_experience_with_our_app_so_far:
+      "How is your experience with our app so far?",
+    what_could_we_improve: "What could we improve?",
+    name: "Name",
+    phone: "Phone",
+    email: "Email",
+    message: "Message",
   },
   de: {
     unit: "kWh",
@@ -101,6 +109,14 @@ export const TranslationKeys: Translations | any = {
     notifications: "mitteilungen",
     save: "SPEICHERN",
     cancel: "abbrechen",
+    send: "Schicken",
     show_notifications: "mitteilungen anzeigen",
+    how_is_your_experience_with_our_app_so_far:
+      "Wie Wurden Sie lhre bisheringe Erfahrung mit unserer App bewerten?",
+    what_could_we_improve: "Was konnten wir verbessern?",
+    name: "Name",
+    phone: "Telefon",
+    email: "E-Mail",
+    message: "Ihre Nachricht",
   },
 };

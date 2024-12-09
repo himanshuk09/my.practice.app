@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
@@ -139,51 +138,3 @@ const SignIn: React.FC = () => {
 };
 
 export default SignIn;
-
-// import React, { useEffect } from "react";
-// import { View, Image, StyleSheet, Platform, Text } from "react-native";
-// import { LinearGradient } from "expo-linear-gradient";
-// import Logo from "@/components/SVG/Logo";
-// import { useRouter } from "expo-router";
-// const SplashScreen = () => {
-//   const router = useRouter();
-//   useEffect(() => {
-//     const timeout = setTimeout(() => {
-//       router.push("/login");
-//     }, 3000);
-//     return () => clearTimeout(timeout);
-//   }, []);
-//   return (
-//     <LinearGradient colors={["#e31837", "#7f7f7f"]} style={styles.container}>
-//       <View style={styles.logoContainer}>
-//         <Text>hello</Text>
-//         <Image
-//           source={require("@/assets/images/splashLogo.png")}
-//           style={styles.logo}
-//           resizeMode="contain"
-//         />
-//       </View>
-//     </LinearGradient>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   logoContainer: {
-//     width: 200,
-//     height: 200,
-//     borderRadius: 25,
-//     overflow: "hidden",
-//     opacity: 0.7,
-//   },
-//   logo: {
-//     width: "100%",
-//     height: "100%",
-//   },
-// });
-
-// export default SplashScreen;

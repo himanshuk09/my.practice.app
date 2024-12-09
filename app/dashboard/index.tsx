@@ -19,10 +19,6 @@ import { useDispatch } from "react-redux";
 
 const Dashboard: React.FC = () => {
   const [jsonData, setJsonData] = useState<any>(DashboardCardsEng);
-  const [shouldExitApp, setShouldExitApp] = useState(false);
-  const [isLoading, SetLoading] = useState(true);
-  const router = useRouter();
-  const pathname = usePathname();
 
   const dispatch = useDispatch();
   const startLoader = () => {

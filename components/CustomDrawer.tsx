@@ -127,7 +127,7 @@ const CustomDrawer = (props: any) => {
       items: [
         { label: "rateus", route: "/dashboard/feedback/rate" },
         { label: "contactus", route: "/dashboard/feedback/contact" },
-        { label: "visitwebsite", route: "/dashboard/feedback/website" },
+        { label: "visitwebsite", route: "https://www.google.com/" },
       ],
       height: 130,
     },
