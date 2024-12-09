@@ -308,3 +308,151 @@ export const AccordionData = [
     details: [],
   },
 ];
+export const PFCGas = [
+  {
+    id: 1,
+    title: "Gas PFC Cyclic",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 2,
+    title: "Gas PFC aCyclic",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+];
+export const PFCStrom = [
+  {
+    id: 1,
+    title: "Power PFC Externe Strom (Stabdard)",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 2,
+    title: "Power PFC Externe Strom (Grun)",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 3,
+    title: "Power PFC Continuous",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 4,
+    title: "Power PFC Elektrik Turkey",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 5,
+    title: "Power PFC HUPX",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+];
+export const SignalsGas = [
+  {
+    id: 1,
+    title: "Gas Cal+1",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 2,
+    title: "Gas Cal+2",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 3,
+    title: "Gas Cal+3",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 4,
+    title: "Gas Q+1",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 5,
+    title: "Gas Q+2",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 6,
+    title: "Gas Q+3",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 7,
+    title: "Gas Q+4",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+];
+export const SignalsStrom = [
+  {
+    id: 1,
+    title: "Power Cal+1 Base",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 2,
+    title: "Power Cal+1 Peak",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 3,
+    title: "Power Cal+2 Base",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 4,
+    title: "Power Cal+2 Peak",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 5,
+    title: "Power Cal+3 Base",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 6,
+    title: "Power Cal+3 Peak",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 7,
+    title: "Power Q+1 Base",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 8,
+    title: "Power Q+1 Peak",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 9,
+    title: "Power Q+2 Base",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 10,
+    title: "Power Q+2 Peak",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 12,
+    title: "Power Q+3 Base",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 13,
+    title: "Power Q+3 Peak",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 14,
+    title: "Power Q+4 Base",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+  {
+    id: 15,
+    title: "Power Q+4 Peak",
+    route: "dashboard/portfolios/portfolio-overview",
+  },
+];

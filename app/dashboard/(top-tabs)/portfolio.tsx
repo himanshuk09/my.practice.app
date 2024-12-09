@@ -10,8 +10,22 @@ const Portfolio: React.FC = () => {
 
   return (
     <>
-      {gasData && <FlatListBlock title="Gas" items={gasItems} />}
-      {powerData && <FlatListBlock title="Power" items={powerItems} />}
+      {gasData && (
+        <FlatListBlock
+          title="Gas"
+          items={gasItems}
+          enableAutoScroll={true}
+          height={300}
+        />
+      )}
+      {powerData && (
+        <FlatListBlock
+          title="Power"
+          items={powerItems}
+          enableAutoScroll={true}
+          height={300}
+        />
+      )}
     </>
   );
 };

@@ -3,7 +3,7 @@ import { Drawer } from "expo-router/drawer";
 import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import CustomDrawer from "@/components/CustomDrawer";
-// import Logo from "@/assets/svg/logo.svg";
+import Logo from "@/components/SVG/Logo";
 import { Stack, usePathname } from "expo-router";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
@@ -54,7 +54,7 @@ const DashboardLayout = () => {
                 >
                   <Entypo name="menu" size={30} color="gray" />
                 </TouchableOpacity>
-                {/*  <Logo /> */}
+                <Logo />
               </View>
             </SafeAreaView>
           ),

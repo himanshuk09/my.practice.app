@@ -4,9 +4,6 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
-  Image,
-  BackHandler,
-  Alert,
 } from "react-native";
 
 import "nativewind";
@@ -16,7 +13,7 @@ import React, { useState, useEffect } from "react";
 
 import { DashboardCardsEng } from "@/constants/constantData";
 import { usePathname, useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { activeLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 
@@ -34,6 +31,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     setJsonData(DashboardCardsEng);
   }, DashboardCardsEng);
+
   return (
     <SafeAreaView
       className="flex-1 bg-white"

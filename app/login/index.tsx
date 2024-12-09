@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-// import Logo from "@/assets/svg/logo.svg";
+import Logo from "@/components/SVG/Logo";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
 import { i18n } from "@/languageKeys/i18nConfig";

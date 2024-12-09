@@ -1,21 +1,77 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Image } from "react-native";
-// import ComingSoon from "@/assets/images/comingsoon.svg";
-import { i18n } from "@/languageKeys/i18nConfig";
-import Loader from "@/components/Loader";
-const ComingSoonPage = () => {
-  return (
-    <View className="flex-1 justify-center items-center bg-gray-100">
-      {/* <ComingSoon /> */}
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StatusBar,
+  ScrollView,
+  FlatList,
+} from "react-native";
+import React from "react";
+import FlatListBlock from "@/components/FlatListBlock";
+import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 
-      <Text className="text-4xl font-bold text-gray-700 mb-4">
-        {i18n.t("comingsoon")}
-      </Text>
-      <Text className="text-lg text-center  text-gray-500">
-        {i18n.t("We_re_working_hard_to_bring_you_something_amazing")}
-      </Text>
-    </View>
+const Signals = () => {
+  const combinedData = [
+    { type: "header", title: "Gas", data: SignalsGas },
+    { type: "header", title: "Strom", data: SignalsStrom },
+  ];
+  const renderItem = ({ item }: any) => {
+    if (item.type === "header") {
+      return (
+        <View style={{ marginBottom: 20 }}>
+          <FlatListBlock
+            title={item.title}
+            items={item.data}
+            enableAutoScroll={false}
+          />
+        </View>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      <StatusBar />
+      <FlatList
+        data={combinedData}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `${item.title}-${index}`}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
+  );
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      <StatusBar />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
+        {/* Gas Signals */}
+        {SignalsGas && (
+          <View className="mb-4">
+            <FlatListBlock
+              title="Gas"
+              items={SignalsGas}
+              enableAutoScroll={false}
+            />
+          </View>
+        )}
+
+        {/* Strom Signals */}
+        {SignalsStrom && (
+          <View className="mb-4">
+            <FlatListBlock
+              title="Strom"
+              items={SignalsStrom}
+              enableAutoScroll={false}
+            />
+          </View>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-export default ComingSoonPage;
+export default Signals;

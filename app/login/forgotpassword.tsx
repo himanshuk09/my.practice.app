@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Link } from "expo-router";
 
-// import Logo from "@/assets/svg/logo.svg";
+import Logo from "@/components/SVG/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
 const Forgotpassword = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -36,7 +36,9 @@ const Forgotpassword = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
       <View className="flex-1 justify-center items-center bg-white">
         <View className="w-11/12 max-w-md p-5">
-          <View className="items-center mb-10 w-full">{/* <Logo /> */}</View>
+          <View className="items-center mb-10 w-full">
+            <Logo />
+          </View>
 
           <View className="mb-5">
             <Text className="text-[15px] mb-5 text-gray-400 font-bold">

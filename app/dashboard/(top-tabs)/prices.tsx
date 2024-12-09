@@ -26,7 +26,7 @@ const Prices = () => {
   const ListItem = memo(({ item, router }: any) => (
     <TouchableOpacity
       key={item.id}
-      className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1 shadow-slate-400  shadow-lg bg-white h-16"
+      className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1 shadow-slate-400  shadow-lg bg-white h-20"
       onPress={() => item.route && router.push(item.route as Href)}
     >
       <View className="flex flex-row items-center justify-start">

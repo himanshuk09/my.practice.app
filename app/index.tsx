@@ -9,10 +9,12 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-// import Logo from "@/assets/svg/logo.svg";
+
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
+import Logo from "@/components/SVG/Logo";
+
 const SignIn: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -55,7 +57,9 @@ const SignIn: React.FC = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
       <View className="flex-1 justify-center items-center">
         <View className="w-11/12 max-w-md p-5">
-          <View className="items-center mb-5 w-full"></View>
+          <View className="items-center mb-5 w-full">
+            <Logo />
+          </View>
 
           <View className="mb-5">
             {errorMessage ? (
@@ -139,7 +143,7 @@ export default SignIn;
 // import React, { useEffect } from "react";
 // import { View, Image, StyleSheet, Platform, Text } from "react-native";
 // import { LinearGradient } from "expo-linear-gradient";
-// import Logo from "@/assets/svg/logo.svg";
+// import Logo from "@/components/SVG/Logo";
 // import { useRouter } from "expo-router";
 // const SplashScreen = () => {
 //   const router = useRouter();

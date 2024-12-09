@@ -21,26 +21,7 @@ const AccordionFlatlist = ({ data, title }: any) => {
       animations[item.id] = new Animated.Value(0);
     }
   });
-  const toggleExpand0 = (id: any, detailsLength: any) => {
-    const animation = animations[id];
 
-    if (expanded === id) {
-      // Collapse
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start(() => setExpanded(null));
-    } else {
-      // Expand
-      setExpanded(id);
-      Animated.timing(animation, {
-        toValue: detailsLength > 0 ? detailsLength * 0 : 40,
-        duration: 500,
-        useNativeDriver: false,
-      }).start();
-    }
-  };
   const toggleExpand = (id: any, detailsLength: any) => {
     const animation = animations[id];
 

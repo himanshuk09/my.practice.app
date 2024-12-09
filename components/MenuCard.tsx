@@ -1,14 +1,14 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, InteractionManager } from "react-native";
 import { router } from "expo-router";
 import React from "react";
-import Prices from "@/assets/svg/prices.svg";
-import Pfc from "@/assets/svg/pfc.svg";
-import Load from "@/assets/svg/load.svg";
-import Signals from "@/assets/svg/time.svg";
-import Portfolio from "@/assets/svg/portfolio.svg";
-import Setting from "@/assets/svg/settings.svg";
+import Portfolio from "@/components/SVG/Portfolio";
+import Prices from "@/components/SVG/Prices";
+import PFC from "@/components/SVG/PFC";
+import Logo from "@/components/SVG/Logo";
+import Load from "@/components/SVG/Load";
+import Settings from "@/components/SVG/Settings";
 import { i18n } from "@/languageKeys/i18nConfig";
 
 const routeToComponent = (icon: string) => {
@@ -16,7 +16,7 @@ const routeToComponent = (icon: string) => {
     case "PRICES":
       return <Prices />;
     case "PFC":
-      return <Pfc />;
+      return <PFC />;
     case "LOAD":
       return <Load />;
     case "SIGNALS":
@@ -24,7 +24,7 @@ const routeToComponent = (icon: string) => {
     case "PORTFOLIO":
       return <Portfolio />;
     case "SETTINGS":
-      return <Setting />;
+      return <Settings />;
     default:
       return <Text />;
   }
@@ -56,18 +56,17 @@ const MenuCard = ({ item, index, startLoader }: any) => (
   <Pressable
     onPress={() => {
       startLoader();
-      setTimeout(() => router.replace(item.route), 100);
+      setTimeout(() => router.replace(item.route), 50);
     }}
   >
     <View className="relative mb-10  bg-gray-100 w-40 h-40 m-2 rounded-sm justify-center items-center">
-      {/* {routeToComponent(item?.icon)} */}
+      {routeToComponent(item?.icon)}
       <Text className="text-lg text-gray-500 font-bold uppercase">
-        {/* {item?.title} */}
         {i18n.t(item?.title)}
       </Text>
-      {/* {item?.notificationCount > 0 && (
+      {item?.notificationCount > 0 && (
         <NotificationIcon count={item?.notificationCount} />
-      )} */}
+      )}
     </View>
   </Pressable>
 );

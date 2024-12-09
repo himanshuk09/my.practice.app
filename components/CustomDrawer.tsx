@@ -151,7 +151,7 @@ const CustomDrawer = (props: any) => {
     try {
       await AsyncStorage.clear();
 
-      router.replace("/");
+      router.push("/");
 
       dispatch(logout());
       dispatch(setInitialState(false));
@@ -161,14 +161,11 @@ const CustomDrawer = (props: any) => {
   };
   const handleLogout = () => {
     if (typeof window !== "undefined" && Platform.OS === "web") {
-      // For web, use the native browser alert
-
       const isConfirmed = window.confirm("Are you sure you want to logout?");
       if (isConfirmed) {
         clearStorageAndNavigate(router);
       }
     } else {
-      // For React Native, use Alert
       Alert.alert(
         "Logout",
         "Are you sure you want to logout?",
@@ -229,7 +226,7 @@ const CustomDrawer = (props: any) => {
             onPress={() => toggleSubmenu(submenu.key)}
           >
             {submenu.icon}
-            <Text className="text-lg font-semibold ml-4 text-gray-500 capitalize">
+            <Text className="text-lg font-semibold ml-4 text-gray-500 capitalize flex-1 break-words">
               {i18n.t(submenu.label)}
             </Text>
             <Feather

@@ -2,8 +2,12 @@ import React, { memo, useEffect, useRef, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
-
-const FlatListBlock = ({ title, items }: any) => {
+const FlatListBlock = ({
+  title,
+  items,
+  enableAutoScroll = true,
+  height = "auto",
+}: any) => {
   const router = useRouter();
   const flatListRef = useRef<any>(null);
   const currentYear = new Date().getFullYear();
@@ -12,43 +16,35 @@ const FlatListBlock = ({ title, items }: any) => {
   const ITEM_HEIGHT = Platform.OS === "web" ? 73 : 63;
 
   useEffect(() => {
-    // If the FlatList isn't ready or the ref is null, do nothing
-    if (!isReady || !flatListRef.current) return;
+    if (!isReady || !flatListRef.current || !enableAutoScroll) return;
 
-    // Find the index of the current year item in the list
     const currentItemIndex = items.findIndex(
       (item: any) => item.year === currentYear
     );
 
-    // If the current year item is found, perform smooth scrolling
     if (currentItemIndex !== -1) {
       let currentOffset = 0;
-      const targetOffset = currentItemIndex * ITEM_HEIGHT; // Calculate the target scroll position
-      const overshootOffset = targetOffset + 50; // Overshoot slightly for smoother effect
+      const targetOffset = currentItemIndex * ITEM_HEIGHT;
+      const overshootOffset = targetOffset + 50;
 
-      // Function to perform smooth scrolling by incrementally scrolling to target offset
       const slowScroll = () => {
         if (flatListRef.current) {
-          // Ensure FlatList ref is valid
           if (currentOffset < targetOffset - 5) {
-            // If current offset is less than target, increment scroll position
             currentOffset += 10;
             flatListRef?.current?.scrollToOffset({
-              offset: currentOffset, // Scroll by current offset
-              animated: true, // Enable smooth animation
+              offset: currentOffset,
+              animated: true,
             });
-            setTimeout(slowScroll, 40); // Call slowScroll again after 40ms to continue scrolling
+            setTimeout(slowScroll, 40);
           } else {
-            // Once close to target offset, overshoot and then correct position
             flatListRef?.current?.scrollToOffset({
-              offset: overshootOffset, // Overshoot slightly
+              offset: overshootOffset,
               animated: true,
             });
 
             setTimeout(() => {
-              // Correct position after overshooting
               flatListRef?.current?.scrollToOffset({
-                offset: targetOffset, // Final target scroll position
+                offset: targetOffset,
                 animated: true,
               });
             }, 500);
@@ -57,22 +53,21 @@ const FlatListBlock = ({ title, items }: any) => {
       };
       slowScroll();
     }
-  }, [isReady, items, currentYear]);
+  }, [isReady, items, currentYear, enableAutoScroll]);
 
   useEffect(() => {
-    // Set 'isReady' flag to true once FlatList ref is available (mounted)
     if (flatListRef.current) {
-      setIsReady(true); // Set the FlatList as ready to be scrolled
+      setIsReady(true);
     }
-  }, [flatListRef]); // Only run once when ref is available
+  }, [flatListRef]);
 
   const ListItem = memo(({ item, router }: any) => (
     <TouchableOpacity
       key={item.id}
-      className="flex justify-start p-5 text-lg font-serif font-medium rounded-sm my-1 shadow-slate-400 shadow-lg bg-white h-16"
+      className="flex justify-start p-5 text-lg font-serif font-medium rounded-sm my-1 shadow-slate-400 shadow-lg bg-white h-20 space-x-1"
       onPress={() => item.route && router.push(item.route)}
     >
-      <Text className="text-gray-700">{item.title}</Text>
+      <Text className="text-gray-500 text-base  font-normal">{item.title}</Text>
     </TouchableOpacity>
   ));
 
@@ -81,7 +76,13 @@ const FlatListBlock = ({ title, items }: any) => {
   );
 
   return (
-    <View className="h-[49%] my-1">
+    <View
+      // className="h-[49%] my-1"
+      className="my-1"
+      style={{
+        height: height,
+      }}
+    >
       <View className="top-0 w-[100%] z-50 p-3 bg-[#e31837]">
         <Text className="flex justify-start font-semibold py-2 p-3 items-center h-12 text-xl rounded-sm text-white">
           {title}
@@ -104,96 +105,7 @@ const FlatListBlock = ({ title, items }: any) => {
     </View>
   );
 };
-
 export default FlatListBlock;
-//''''''''''''''''''
-// import { View, Text, FlatList, TouchableOpacity, Platform } from "react-native";
-// import React, { memo, useEffect, useRef } from "react";
-// import { Href, useRouter } from "expo-router";
-// import { useIsFocused } from "@react-navigation/native";
-
-// const FlatListBlock = ({ title, items }: any) => {
-//   const router = useRouter();
-//   const flatListRef = useRef<any>(null);
-//   const currentYear = new Date().getFullYear();
-//   const isFocused = useIsFocused();
-//   const ITEM_HEIGHT = Platform.OS === "web" ? 73 : 63;
-//   useEffect(() => {
-//     const currentItemIndex = items.findIndex(
-//       (item: any) => item.year === currentYear
-//     );
-
-//     if (currentItemIndex !== -1 && flatListRef.current) {
-//       let currentOffset = 0;
-//       const targetOffset = currentItemIndex * ITEM_HEIGHT;
-//       const overshootOffset = targetOffset + 50;
-
-//       const slowScroll = () => {
-//         if (currentOffset < targetOffset - 5) {
-//           currentOffset += 10;
-//           flatListRef?.current.scrollToOffset({
-//             offset: currentOffset,
-//             animated: true,
-//           });
-//           setTimeout(slowScroll, 40);
-//         } else {
-//           flatListRef?.current.scrollToOffset({
-//             offset: overshootOffset,
-//             animated: true,
-//           });
-
-//           setTimeout(() => {
-//             flatListRef?.current.scrollToOffset({
-//               offset: targetOffset,
-//               animated: true,
-//             });
-//           }, 500);
-//         }
-//       };
-
-//       slowScroll();
-//     }
-//   }, [isFocused]);
-
-//   const ListItem = memo(({ item, router }: any) => (
-//     <TouchableOpacity
-//       key={item.id}
-//       className="flex justify-start p-5 text-lg font-serif font-medium rounded-sm my-1 shadow-slate-400 shadow-lg bg-white h-16"
-//       onPress={() => item.route && router.push(item.route)}
-//     >
-//       <Text className="text-gray-700">{item.title}</Text>
-//     </TouchableOpacity>
-//   ));
-//   const renderItem = ({ item }: any) => (
-//     <ListItem item={item} router={router} />
-//   );
-
-//   return (
-//     <View className="h-[49%]  my-1">
-//       <View className="top-0 w-[100%] z-50 p-3 bg-[#e31837]">
-//         <Text className="flex justify-start font-semibold  py-2 p-3  items-center  h-12 text-xl rounded-sm text-white">
-//           {title}
-//         </Text>
-//       </View>
-//       <FlatList
-//         ref={flatListRef}
-//         data={items}
-//         renderItem={renderItem}
-//         keyExtractor={(item) => item.id}
-//         getItemLayout={(data, index) => ({
-//           length: 60,
-//           offset: 60 * index,
-//           index,
-//         })}
-//         className=" bg-gray  overflow-scroll mx-2"
-//         showsHorizontalScrollIndicator={false}
-//         showsVerticalScrollIndicator={false}
-//       />
-//     </View>
-//   );
-// };
-
-// export default FlatListBlock;
 
 //without bouncing list
 // import { Href, useRouter } from "expo-router";
