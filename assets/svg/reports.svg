@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="9343.001 406.032 58.69 47.302">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fa2b2e;
+      }
+    </style>
+  </defs>
+  <g id="Group_300" data-name="Group 300" transform="translate(9333 401)">
+    <g id="Group_296" data-name="Group 296" transform="translate(10)">
+      <path id="Path_124" data-name="Path 124" class="cls-1" d="M0,0H10.064L0-10.063Z" transform="translate(22.142 18.115)"/>
+    </g>
+    <g id="Group_297" data-name="Group 297" transform="translate(10)">
+      <path id="Path_125" data-name="Path 125" class="cls-1" d="M0,0H-14.089V44.282H18.117V12.077H6.039V0Z" transform="translate(14.09 8.052)"/>
+    </g>
+    <path id="Path_128" data-name="Path 128" class="cls-1" d="M47.3-43.486H75.725V-47.3H47.3Z" transform="translate(-7.034 52.334)"/>
+    <path id="Path_129" data-name="Path 129" class="cls-1" d="M47.3-33.486H72.708V-37.3H47.3Z" transform="translate(-4.017 49.334)"/>
+    <path id="Path_130" data-name="Path 130" class="cls-1" d="M47.3-23.486H68.691V-27.3H47.3Z" transform="translate(0 46.334)"/>
+    <path id="Path_131" data-name="Path 131" class="cls-1" d="M47.3-23.486H68.691V-27.3H47.3Z" transform="translate(0 53.334)"/>
+  </g>
+</svg>

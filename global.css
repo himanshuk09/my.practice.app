@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (pointer: coarse) {
+  .horizontal-list {
+    flex-grow: 0 !important;
+  }
+}
+#chart {
+  background: transparent;
+}
+/* @media (pointer: coarse) {
+  .r-flexGrow-16y2uox {
+    flex-grow: 0 !important; 
+  }
+}  */
