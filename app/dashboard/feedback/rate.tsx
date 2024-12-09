@@ -13,7 +13,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-// import ComingSoon from "@/assets/images/comingsoon.svg";
 
 import StarRating from "react-native-star-rating-widget";
 import { FontAwesome } from "@expo/vector-icons";
@@ -61,9 +60,25 @@ const Rate = () => {
               color="#ff0000de"
               starStyle={{ marginVertical: 20 }}
             />
-
             {/* Feedback Input */}
             <View className="w-full p-2 relative">
+              <TextInput
+                className="pr-10 pl-3 py-3 bg-gray-200 border h-40 w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-md text-lg align-top"
+                placeholder={i18n.t("message")}
+                value={ratingMsg}
+                onChangeText={setRatingMsg}
+                multiline={true}
+                numberOfLines={6}
+              />
+              <FontAwesome
+                style={{ position: "absolute", right: 20, top: 20 }}
+                name="pencil"
+                size={20}
+                color="#6b7280"
+              />
+            </View>
+
+            {/* <View className="w-full p-2 relative">
               <TextInput
                 className="pr-10 pl-3 py-3 bg-gray-200 border h-52 w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:shadow-sm focus:shadow-blue-500 focus:ring-0 rounded-md text-lg align-top"
                 placeholder={i18n.t("what_could_we_improve")}
@@ -81,7 +96,7 @@ const Rate = () => {
                 size={20}
                 color="#6b7280"
               />
-            </View>
+            </View> */}
           </ScrollView>
 
           {/* Footer Buttons */}
