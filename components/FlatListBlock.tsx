@@ -2,6 +2,7 @@ import React, { memo, useEffect, useRef, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
+import Shimmer from "react-native-shimmer-placeholder";
 const FlatListBlock = ({
   title,
   items,
@@ -88,6 +89,7 @@ const FlatListBlock = ({
           {title}
         </Text>
       </View>
+
       <FlatList
         ref={flatListRef}
         data={items}

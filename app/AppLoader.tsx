@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
-import { usePathname } from "expo-router";
+import { useFocusEffect, usePathname, useRouter } from "expo-router";
 import Loader from "@/components/Loader";
 type AppLoaderProps = {
   children: React.ReactNode;

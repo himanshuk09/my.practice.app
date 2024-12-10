@@ -1,6 +1,6 @@
 import { Stack, useRouter, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import "react-native-reanimated";
 import "../global.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -88,8 +88,10 @@ export default function RootLayout() {
             animationDuration: 2000,
           }}
         />
+
         <Stack.Screen name="+not-found" />
       </Stack>
+
       <StatusBar style="auto" />
     </>
   );

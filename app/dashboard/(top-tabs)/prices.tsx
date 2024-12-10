@@ -10,8 +10,10 @@ import {
 import React, { memo, useRef } from "react";
 import { PricesItem } from "@/constants/constantData";
 import { usePathname } from "expo-router";
-import { Href, router } from "expo-router";
+import { Href } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 interface Item {
   id?: string | number;
   title?: string;
@@ -23,7 +25,8 @@ interface FlatListBlockProps {
   items: Item[];
 }
 const Prices = () => {
-  const ListItem = memo(({ item, router }: any) => (
+  const router = useRouter();
+  const ListItem = memo(({ item }: any) => (
     <TouchableOpacity
       key={item.id}
       className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1 shadow-slate-400  shadow-lg bg-white h-20"
@@ -81,7 +84,12 @@ const Prices = () => {
           </View>
 
           <View className="flex justify-center items-center w-[25%]">
-            <Ionicons name="settings-sharp" size={36} color="white" />
+            <Ionicons
+              name="settings-sharp"
+              size={36}
+              color="white"
+              onPress={() => router.push("/dashboard/setting/prices-setting")}
+            />
           </View>
         </View>
 

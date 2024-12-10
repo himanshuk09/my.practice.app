@@ -1,0 +1,174 @@
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+  TouchableOpacity,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { i18n } from "@/languageKeys/i18nConfig";
+import { useRouter } from "expo-router";
+
+const PricesSettings = () => {
+  const [selectedPlace, setSelectedPlace] = useState();
+  const [selectedEnergyType, setSelectedEnergyType] = useState("Power");
+  const [selectedProductType, setSelectedProductType] = useState("Futures");
+  const router = useRouter();
+  const energyTypes = ["Power", "H GAS", "Coal", "Hydrogen"];
+  const allProductTypes: any = {
+    Power: ["Futures", "Spot Auction"],
+    "H GAS": ["Futures", "Spot Continous"],
+    Coal: ["Futures"],
+    Hydrogen: ["Spot Auction"],
+  };
+
+  const renderButtons = (
+    options: string[],
+    selectedValue: string,
+    setSelectedValue: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    return options.map((option) => (
+      <TouchableOpacity
+        key={option}
+        className={`flex border-gray-600  px-2 justify-center items-center flex-row  mx-1 rounded-md ${
+          selectedValue === option
+            ? "bg-[#fff] border-2 border-[#f799a7] min-w-24"
+            : "bg-[#C0C0C0]"
+        }`}
+        onPress={() => setSelectedValue(option)}
+      >
+        <Text
+          className={`w-fit my-3 text-md font-medium ${
+            selectedValue === option && "text-gray-900 font-bold"
+          }`}
+        >
+          {option}
+        </Text>
+        {selectedValue === option && (
+          <Ionicons
+            name="checkbox"
+            size={20}
+            color="#e31837"
+            style={{ position: "absolute", top: 0, right: 0, marginLeft: 1 }}
+          />
+        )}
+      </TouchableOpacity>
+    ));
+  };
+
+  const filteredProductTypes: any = allProductTypes[selectedEnergyType];
+  const filteredEnergyTypes =
+    selectedPlace === "HUPX" ? ["Power"] : energyTypes;
+
+  useEffect(() => {
+    if (filteredEnergyTypes.length === 1) {
+      setSelectedEnergyType(filteredEnergyTypes[0]);
+    }
+  }, [filteredEnergyTypes]);
+
+  useEffect(() => {
+    if (filteredProductTypes.length === 1) {
+      setSelectedProductType(filteredProductTypes[0]);
+    }
+  }, [filteredProductTypes]);
+  return (
+    <SafeAreaView
+      className="flex-1 "
+      style={{
+        paddingTop:
+          Platform.OS === "android" ? StatusBar?.currentHeight || 100 : 10,
+        marginTop: Platform.OS === "android" ? 36 : 0,
+      }}
+    >
+      <StatusBar />
+      {/* Market Place Section */}
+      <View className="p-2 mb-3 py-3 w-full bg-white shadow-2xl shadow-gray-200 ">
+        <Text className="text-lg font-bold ml-3 capitalize text-gray-500 mb-1">
+          Market Place
+        </Text>
+        <Picker
+          selectedValue={selectedPlace}
+          onValueChange={(newValue) => setSelectedPlace(newValue)}
+          className="w-full p-3 border-b-2 bg-transparent rounded-md"
+        >
+          <Picker.Item
+            label="EEX"
+            value="EEX"
+            style={{
+              color: "#0f172a",
+              fontSize: 16,
+              fontWeight: "900",
+              paddingLeft: 20,
+            }}
+          />
+          <Picker.Item
+            label="HUPX"
+            value="HUPX"
+            style={{
+              color: "#0f172a",
+              fontSize: 16,
+              fontWeight: "400",
+              paddingLeft: 20,
+            }}
+          />
+        </Picker>
+      </View>
+
+      {/* Energy Type Section */}
+      <View className="p-2 mx-1 py-3 w-full mb-5 bg-[#E5E4E2]">
+        <Text className="text-lg font-bold ml-3 capitalize text-gray-500 mb-1">
+          Energy Type
+        </Text>
+        <View className="flex-row flex-wrap gap-1 mx-2 mt-5 mb-7">
+          {renderButtons(
+            filteredEnergyTypes,
+            selectedEnergyType,
+            setSelectedEnergyType
+          )}
+        </View>
+      </View>
+
+      {/* Product Type Section */}
+      <View className="p-2 mx-1 py-3 w-full mb-5 bg-[#E5E4E2] ">
+        <Text className="text-lg font-bold ml-3 capitalize text-gray-500 mb-1">
+          Product Type
+        </Text>
+        <View className="flex-row flex-wrap gap-1 mx-2 mt-5 mb-7">
+          {renderButtons(
+            filteredProductTypes,
+            selectedProductType,
+            setSelectedProductType
+          )}
+        </View>
+      </View>
+      <View className="bottom-0 w-full right-0 left-0 absolute flex flex-row justify-evenly border-y-2 border-[#e31837]">
+        <TouchableOpacity
+          className="items-center p-5 w-[50%]"
+          onPress={() => {
+            router.back();
+          }}
+        >
+          <Text className="text-center text-[#e31837] font-normal uppercase">
+            {i18n.t("cancel")}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="items-center p-5  w-[50%] bg-[#e31837]"
+          onPress={() => {
+            router.push("/dashboard");
+          }}
+        >
+          <Text className="text-center text-white uppercase font-normal">
+            {i18n.t("save")}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default PricesSettings;

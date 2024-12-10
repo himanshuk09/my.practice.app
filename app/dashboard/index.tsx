@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
 
   const dispatch = useDispatch();
   const startLoader = () => {
-    dispatch(activeLoading());
+    // dispatch(activeLoading());
   };
   useEffect(() => {
     setJsonData(DashboardCardsEng);

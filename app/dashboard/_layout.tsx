@@ -11,55 +11,56 @@ const DashboardLayout = () => {
   const pathname = usePathname();
   const dispatch = useDispatch();
   const startLoader = () => {
-    dispatch(activeLoading());
+    // dispatch(activeLoading());
   };
+  const isSettingsPage =
+    pathname.includes("dashboard/setting/prices-setting") ||
+    pathname.includes("dashboard/prices-details");
+
   return (
     <>
       <Drawer
         screenOptions={{
           drawerType: "front",
-
-          header: ({ navigation }) => (
-            <SafeAreaView
-              style={{
-                // backgroundColor:
-                //   pathname == "/dashboard/portfolios/portfolio-overview"
-                //     ? "white"
-                //     : "transparent",
-                backgroundColor: "white",
-                paddingTop: 40,
-              }}
-            >
-              <View
+          headerShown: !isSettingsPage,
+          header: ({ navigation }) =>
+            !isSettingsPage && (
+              <SafeAreaView
                 style={{
-                  paddingHorizontal: 1,
-                  height: 100,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  elevation: 0,
-                  shadowColor: "transparent",
-                  shadowOpacity: 0,
-                  shadowOffset: { width: 0, height: 0 },
-                  borderBottomWidth: 0,
+                  backgroundColor: "white",
+                  paddingTop: 40,
                 }}
               >
-                <TouchableOpacity
-                  onPress={() => navigation.toggleDrawer()}
+                <View
                   style={{
-                    position: "absolute",
-                    left: 10,
-                    top: 0,
+                    paddingHorizontal: 1,
+                    height: 100,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    elevation: 0,
+                    shadowColor: "transparent",
+                    shadowOpacity: 0,
+                    shadowOffset: { width: 0, height: 0 },
+                    borderBottomWidth: 0,
                   }}
                 >
-                  <Entypo name="menu" size={30} color="gray" />
-                </TouchableOpacity>
-                <Link href={"/dashboard"}>
-                  <Logo />
-                </Link>
-              </View>
-            </SafeAreaView>
-          ),
+                  <TouchableOpacity
+                    onPress={() => navigation.toggleDrawer()}
+                    style={{
+                      position: "absolute",
+                      left: 10,
+                      top: 0,
+                    }}
+                  >
+                    <Entypo name="menu" size={30} color="gray" />
+                  </TouchableOpacity>
+                  <Link href={"/dashboard"}>
+                    <Logo />
+                  </Link>
+                </View>
+              </SafeAreaView>
+            ),
           drawerLabelStyle: {
             fontSize: 20,
           },

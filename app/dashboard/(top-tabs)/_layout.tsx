@@ -17,8 +17,8 @@ import {
 } from "react-native";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { useEffect, useRef } from "react";
-import { activeLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
+
 const { Navigator } = createMaterialTopTabNavigator();
 export const MaterialTopTabs = withLayoutContext<
   MaterialTopTabNavigationOptions,
@@ -89,8 +89,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
             });
 
             if (!isFocused && !event.defaultPrevented) {
-              setTimeout(() => navigation.navigate(route.name), 100);
-              dispatch(activeLoading());
+              setTimeout(() => navigation.navigate(route.name), 50);
             }
           };
 
@@ -113,8 +112,8 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
                 onPress={onPress}
               >
                 <Text
-                  className={`font-bold uppercase text-[#BDBDBD] text-md ${
-                    isFocused && "text-[#615f5f]"
+                  className={`font-bold uppercase  text-md ${
+                    isFocused ? "text-[#616161]" : "text-[#BDBDBD]"
                   }`}
                 >
                   {i18n.t(options.tabBarLabel || route.name)}
@@ -135,6 +134,8 @@ export default function TabLayout() {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarScrollEnabled: true,
+        lazy: true,
+        // lazyPreloadDistance: 1000,
       }}
       // screenOptions={{
       //   tabBarScrollEnabled: true,
@@ -165,20 +166,23 @@ export default function TabLayout() {
     >
       <MaterialTopTabs.Screen
         name="prices"
-        options={{ title: i18n.t("prices") }}
+        options={{ title: i18n.t("prices"), lazy: true }}
       />
-      <MaterialTopTabs.Screen name="pfc" options={{ title: i18n.t("pfc") }} />
+      <MaterialTopTabs.Screen
+        name="pfc"
+        options={{ title: i18n.t("pfc"), lazy: true }}
+      />
       <MaterialTopTabs.Screen
         name="load"
-        options={{ title: i18n.t("loaddata") }}
+        options={{ title: i18n.t("loaddata"), lazy: true }}
       />
       <MaterialTopTabs.Screen
         name="signals"
-        options={{ title: i18n.t("signals") }}
+        options={{ title: i18n.t("signals"), lazy: true }}
       />
       <MaterialTopTabs.Screen
         name="portfolio"
-        options={{ title: i18n.t("portfolio") }}
+        options={{ title: i18n.t("portfolio"), lazy: true }}
       />
     </MaterialTopTabs>
   );

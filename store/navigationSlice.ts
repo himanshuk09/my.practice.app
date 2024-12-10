@@ -7,7 +7,7 @@ interface NavigationState {
 // Initial state for the navigation history
 const initialState: NavigationState = {
   history: [], // To store visited routes
-  loading: true,
+  loading: false,
 };
 
 const navigationSlice = createSlice({

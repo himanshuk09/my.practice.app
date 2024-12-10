@@ -17,28 +17,9 @@ export default function LoginLayout() {
       }}
     >
       <Stack.Screen
-        name="index"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="prices-setting"
+        name="[id]"
         options={{
           headerShown: true,
-          title: "Settings Prices", // Title of the screen
-
-          // Back button options
-          headerBackButtonDisplayMode: "minimal",
-          headerBackVisible: true,
-
-          // Header styling
-          headerStyle: {
-            backgroundColor: "gray", // Header background color
-          },
-          headerTintColor: "#fff", // Text and back button color (white text)
-
-          headerBackButtonMenuEnabled: true, // Enable back button menu if needed
           header: ({ navigation }) => (
             <SafeAreaView
               className="flex-1 "
@@ -56,7 +37,7 @@ export default function LoginLayout() {
                   <MaterialIcons name="arrow-back" size={30} color="#1f2937" />
                 </TouchableOpacity>
                 <Text className="ml-4 font-bold text-xl text-gray-800">
-                  Prices Setting
+                  Prices Details
                 </Text>
               </View>
             </SafeAreaView>
