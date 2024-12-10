@@ -114,7 +114,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               >
                 <Text
                   className={`font-bold uppercase text-[#BDBDBD] text-md ${
-                    isFocused && "text-[#5a5858]"
+                    isFocused && "text-[#615f5f]"
                   }`}
                 >
                   {i18n.t(options.tabBarLabel || route.name)}

@@ -29,7 +29,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
   useEffect(() => {
     const backAction = () => {
       const currentPath = "/" + segments.join("/");
-
       if (currentPath === "/dashboard") {
         if (shouldExitApp) {
           Alert.alert(
@@ -71,7 +70,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
       "hardwareBackPress",
       backAction
     );
-
     return () => backHandler.remove();
   }, [history, router, dispatch, segments, shouldExitApp]);
 

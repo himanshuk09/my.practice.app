@@ -56,7 +56,7 @@ const MenuCard = ({ item, index, startLoader }: any) => (
   <Pressable
     onPress={() => {
       startLoader();
-      setTimeout(() => router.replace(item.route), 50);
+      setTimeout(() => router.push(item.route), 50);
     }}
   >
     <View className="relative mb-10  bg-gray-100 w-40 h-40 m-2 rounded-sm justify-center items-center">

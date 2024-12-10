@@ -18,10 +18,41 @@ import StarRating from "react-native-star-rating-widget";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { i18n } from "@/languageKeys/i18nConfig";
+
 const Rate = () => {
   const [rating, setRating] = useState(2.5);
+  const [isRated, setIsRated] = useState(false);
   const [ratingMsg, setRatingMsg] = useState("");
   const router = useRouter();
+  const getRatingText = (rating: number) => {
+    switch (rating) {
+      case 1:
+        return { emoji: "😔", text: "poor", color: "text-red-500" };
+      case 1.5:
+        return { emoji: "😟", text: "below_average", color: "text-red-400" };
+      case 2:
+        return { emoji: "😕", text: "fair", color: "text-orange-500" };
+      case 2.5:
+        return {
+          emoji: "😐",
+          text: "almost_average",
+          color: "text-orange-400",
+        };
+      case 3:
+        return { emoji: "😐", text: "average", color: "text-yellow-500" };
+      case 3.5:
+        return { emoji: "🙂", text: "above_average", color: "text-yellow-400" };
+      case 4:
+        return { emoji: "🙃", text: "good", color: "text-green-500" };
+      case 4.5:
+        return { emoji: "😃", text: "very_good", color: "text-green-400" };
+      case 5:
+        return { emoji: "😍", text: "excellent", color: "text-blue-500" };
+      default:
+        return { emoji: "", text: "", color: "text-gray-500" };
+    }
+  };
+  const { emoji, text, color } = getRatingText(rating);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -51,11 +82,20 @@ const Rate = () => {
             <Text className="font-extrabold text-md text-slate-400 text-center mb-5">
               {i18n.t("how_is_your_experience_with_our_app_so_far")}
             </Text>
-
+            {isRated && color && emoji && text && (
+              <Text
+                className={`font-extrabold text-md ${color} text-center mb-1`}
+              >
+                {emoji} {i18n.t(text)}
+              </Text>
+            )}
             {/* Star Rating */}
             <StarRating
               rating={rating}
-              onChange={setRating}
+              onChange={(newRating) => {
+                setRating(newRating);
+                setIsRated(true);
+              }}
               starSize={36}
               color="#ff0000de"
               starStyle={{ marginVertical: 20 }}

@@ -24,9 +24,7 @@ const Settings = () => {
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-  // useEffect(() => {
-  //   dispatch(updateLocale(selectedLanguage));
-  // }, [selectedLanguage]);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar />
@@ -48,7 +46,7 @@ const Settings = () => {
           <Picker.Item
             label="ENGLISH"
             value="en"
-            style={{ color: "#0f172a", fontSize: 16, fontWeight: 400 }}
+            style={{ color: "#0f172a", fontSize: 16, fontWeight: "900" }}
           />
           <Picker.Item
             label="DEUTSCH"
@@ -61,7 +59,7 @@ const Settings = () => {
         <Text className="text-base capitalize font-semibold text-gray-500">
           {i18n.t("notifications")}
         </Text>
-        <View className="flex flex-row items-center justify-between ">
+        <View className="flex flex-row items-center justify-between my-4">
           <Text className="pl-5 text-base text-slate-900 font-normal capitalize">
             {i18n.t("show_notifications")}
           </Text>
@@ -78,7 +76,7 @@ const Settings = () => {
             />
           </View>
         </View>
-        <View className="flex flex-row items-center justify-between ">
+        <View className="flex flex-row items-center justify-between mb-4">
           <Text className="pl-5 text-base text-slate-900 font-normal capitalize">
             {i18n.t("signals")}
           </Text>

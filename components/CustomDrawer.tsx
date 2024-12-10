@@ -19,13 +19,14 @@ import {
   FontAwesome6,
   Entypo,
 } from "@expo/vector-icons";
-import { Href, usePathname, useRouter } from "expo-router";
+import { Href, usePathname, useRouter, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { i18n } from "@/languageKeys/i18nConfig";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout, setInitialState } from "@/store/authSlice";
-
+import * as Linking from "expo-linking";
 // Helper Components
+
 const Submenu = ({
   isVisible,
   children,
@@ -72,6 +73,9 @@ const CustomDrawer = (props: any) => {
   const pathnames = usePathname();
   const router = useRouter();
   const { startLoader } = props;
+  const segments = useSegments();
+  const pathname = usePathname();
+  const history = useSelector((state: any) => state.navigation.history);
   const toggleSubmenu = (key: string) => {
     setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
   };
@@ -185,7 +189,14 @@ const CustomDrawer = (props: any) => {
       );
     }
   };
-
+  const navigationToRoute = (item: any) => {
+    if (item?.route && !item?.route.startsWith("http")) {
+      router.push(item?.route as Href);
+      if (pathname !== item?.route) startLoader();
+    } else if (item?.route?.startsWith("http")) {
+      Linking.openURL(item.route);
+    }
+  };
   return (
     <ScrollView
       className="flex-1 bg-[#fff]"
@@ -202,10 +213,7 @@ const CustomDrawer = (props: any) => {
                 ? "bg-[#e31837]"
                 : "bg-transparent"
             }`}
-            onPress={() => {
-              startLoader();
-              router.push(item?.route as Href);
-            }}
+            onPress={() => navigationToRoute(item)}
           >
             {React.cloneElement(item.icon, getTextAndIconStyle(item.route))}
             <Text
@@ -226,7 +234,7 @@ const CustomDrawer = (props: any) => {
             onPress={() => toggleSubmenu(submenu.key)}
           >
             {submenu.icon}
-            <Text className="text-lg font-semibold ml-4 text-gray-500 capitalize flex-1 break-words">
+            <Text className="text-lg font-semibold  ml-4 text-gray-500 capitalize flex-1 break-words">
               {i18n.t(submenu.label)}
             </Text>
             <Feather
@@ -251,10 +259,7 @@ const CustomDrawer = (props: any) => {
                     ? "bg-[#e31837]"
                     : "bg-transparent"
                 }`}
-                onPress={() => {
-                  startLoader();
-                  router.push(item?.route as Href);
-                }}
+                onPress={() => navigationToRoute(item)}
               >
                 <Text
                   className="text-md capitalize font-semibold text-gray-500"
