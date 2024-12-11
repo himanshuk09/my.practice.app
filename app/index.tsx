@@ -7,12 +7,13 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { Href, Link, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
 import Logo from "@/components/SVG/Logo";
+import { activeLoading } from "@/store/navigationSlice";
 
 const SignIn: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
@@ -40,8 +41,9 @@ const SignIn: React.FC = () => {
         setErrorMessage("Username should not contain special characters.");
         return;
       case userName.toLowerCase() === "admin" && password === "enexion1":
-        router.push("/dashboard" as any);
+        dispatch(activeLoading());
         dispatch(setUser());
+        setTimeout(() => router.push("/dashboard" as Href), 1000);
         setUserName("");
         setPassword("");
         return;

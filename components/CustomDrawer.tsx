@@ -193,11 +193,11 @@ const CustomDrawer = (props: any) => {
   const navigationToRoute = (item: any) => {
     if (item?.route && !item?.route.startsWith("http")) {
       router.push(item?.route as Href);
-      startLoader();
-      // if (pathname !== item?.route) {
-      //   startLoader();
-      //   console.log("inside");
-      // }
+
+      if (pathname !== item?.route) {
+        startLoader();
+        console.log("inside");
+      }
     } else if (item?.route?.startsWith("http")) {
       if (Platform.OS === "web") {
         window.open(item.route, "_blank");

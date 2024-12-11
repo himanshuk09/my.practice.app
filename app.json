@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "enexion",
+    "name": "eeC",
     "slug": "enexion",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/appicon.png",
     "scheme": "enexion",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/appicon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.himanshuk13.enexion"
@@ -29,8 +29,8 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splashLogo.png",
-          "imageWidth": 200,
+          "image": "./assets/images/splash.png",
+          // "imageWidth": 200,
           "resizeMode": "cover",
           "backgroundColor": "#ffffff"
         }

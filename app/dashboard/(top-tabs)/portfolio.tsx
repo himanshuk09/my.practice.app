@@ -14,10 +14,10 @@ const Portfolio: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://api.jsonbin.io/v3/qs/6757ea6bacd3cb34a8b7110d"
-        );
-        console.log(response);
+        // const response = await axios.get(
+        //   "https://api.jsonbin.io/v3/qs/6757ea6bacd3cb34a8b7110d"
+        // );
+        // console.log(response);
         setGasData(gasItems);
         setPowerData(powerItems);
         dispatch(inActiveLoading());
@@ -28,10 +28,10 @@ const Portfolio: React.FC = () => {
       }
     };
     fetchData();
-  }, []);
-  useEffect(() => {
-    dispatch(inActiveLoading());
   }, [isFocused]);
+  // useEffect(() => {
+  //   dispatch(inActiveLoading());
+  // }, [isFocused]);
   return (
     <>
       <FlatListBlock
