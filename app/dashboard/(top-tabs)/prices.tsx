@@ -6,14 +6,14 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { memo, useEffect } from "react";
+import React, { act, memo, useEffect } from "react";
 import { PricesItem } from "@/constants/constantData";
 import { Href } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
-import { inActiveLoading } from "@/store/navigationSlice";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 const Prices = () => {
   const router = useRouter();
@@ -23,7 +23,10 @@ const Prices = () => {
     <TouchableOpacity
       key={item.id}
       className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1 shadow-slate-400  shadow-lg bg-white h-20"
-      onPress={() => item.route && router.push(item.route as Href)}
+      onPress={() => {
+        dispatch(activeLoading());
+        setTimeout(() => router.push(item.route as Href));
+      }}
     >
       <View className="flex flex-row items-center justify-start">
         <Text className="text-gray-700 mr-2">{item.title}</Text>
@@ -83,7 +86,12 @@ const Prices = () => {
               name="settings-sharp"
               size={36}
               color="white"
-              onPress={() => router.push("/dashboard/setting/prices-setting")}
+              onPress={() => {
+                dispatch(activeLoading());
+                setTimeout(() =>
+                  router.push("/dashboard/setting/prices-setting")
+                );
+              }}
             />
           </View>
         </View>

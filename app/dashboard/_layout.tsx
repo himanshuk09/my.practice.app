@@ -15,7 +15,8 @@ const DashboardLayout = () => {
   };
   const isSettingsPage =
     pathname.includes("dashboard/setting/prices-setting") ||
-    pathname.includes("dashboard/prices-details");
+    pathname.includes("dashboard/prices-details") ||
+    pathname.includes("dashboard/load-data-details");
 
   return (
     <>

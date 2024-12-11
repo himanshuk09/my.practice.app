@@ -1,11 +1,12 @@
 import { View, Text, FlatList, TouchableOpacity, Animated } from "react-native";
 import React, { useRef, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { Href, useRouter } from "expo-router";
 
-const AccordionFlatlist = ({ data, title }: any) => {
+const AccordionFlatlist = ({ data, title, startLoader }: any) => {
   const [expanded, setExpanded] = useState(null);
   const animations = useRef<any>({}).current;
-
+  const router = useRouter();
   data?.forEach((item: any) => {
     if (!animations[item.id]) {
       animations[item.id] = new Animated.Value(0);
@@ -69,14 +70,18 @@ const AccordionFlatlist = ({ data, title }: any) => {
             overflow: "hidden",
           }}
         >
-          {item.details.length > 0 ? (
-            item.details.map((detail: any, index: any) => (
+          {item?.details.length > 0 ? (
+            item?.details.map((detail: any, index: any) => (
               <TouchableOpacity
                 key={index}
                 className="my-1 bg-gray-100 shadow-slate-200 shadow-lg p-3  rounded-sm text-center border-y-4 border-y-white "
+                onPress={() => {
+                  startLoader();
+                  setTimeout(() => router.push(detail.route as Href));
+                }}
               >
                 <Text className="text-md font-normal text-gray-500">
-                  {detail}
+                  {detail?.channel}
                 </Text>
               </TouchableOpacity>
             ))

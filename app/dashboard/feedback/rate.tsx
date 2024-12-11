@@ -13,7 +13,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import StarRating from "react-native-star-rating-widget";
+// import StarRating from "react-native-star-rating-widget";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { i18n } from "@/languageKeys/i18nConfig";
@@ -97,7 +97,7 @@ const Rate = () => {
               </Text>
             )}
             {/* Star Rating */}
-            <StarRating
+            {/* <StarRating
               rating={rating}
               onChange={(newRating) => {
                 setRating(newRating);
@@ -106,7 +106,7 @@ const Rate = () => {
               starSize={36}
               color="#ff0000de"
               starStyle={{ marginVertical: 20 }}
-            />
+            /> */}
             {/* Feedback Input */}
             <View className="w-full p-2 relative">
               <TextInput

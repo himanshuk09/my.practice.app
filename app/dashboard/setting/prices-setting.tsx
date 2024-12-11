@@ -37,9 +37,9 @@ const PricesSettings = () => {
     return options.map((option) => (
       <TouchableOpacity
         key={option}
-        className={`flex border-gray-600  px-2 justify-center items-center flex-row  mx-1 rounded-md ${
+        className={`flex  px-2 justify-center items-center flex-row  mx-1 rounded-md ${
           selectedValue === option
-            ? "bg-[#fff] border-2 border-[#f799a7] min-w-24"
+            ? "bg-[#fff] border-[1px] border-[#e31837] min-w-24"
             : "bg-[#C0C0C0]"
         }`}
         onPress={() => setSelectedValue(option)}

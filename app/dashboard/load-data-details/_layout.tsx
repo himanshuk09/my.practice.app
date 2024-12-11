@@ -1,4 +1,3 @@
-import { Entypo } from "@expo/vector-icons";
 import { Stack } from "expo-router";
 import {
   Platform,
@@ -11,12 +10,13 @@ import {
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { activeLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
-export default function LoginLayout() {
+import { NavigationContainer } from "@react-navigation/native";
+export default function LoadDataDetailsLayout() {
   const dispatch = useDispatch();
   return (
     <Stack
       screenOptions={{
-        headerShown: false, // Hide headers for login-related pages
+        headerShown: false,
       }}
     >
       <Stack.Screen
@@ -37,13 +37,13 @@ export default function LoginLayout() {
                   onPress={() => {
                     dispatch(activeLoading());
                     setTimeout(() => navigation.goBack());
-                  }} // Handle back navigation
+                  }}
                   className="w-9"
                 >
                   <MaterialIcons name="arrow-back" size={30} color="#1f2937" />
                 </TouchableOpacity>
                 <Text className="ml-4 font-bold text-xl text-gray-800">
-                  Prices Details
+                  Load Data Details
                 </Text>
               </View>
             </SafeAreaView>

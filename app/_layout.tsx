@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RootLayout from "./RootLayout";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
@@ -7,13 +7,21 @@ import NavigationWatcher from "./NavigationWatcher";
 import * as SplashScreen from "expo-splash-screen";
 
 SplashScreen.preventAutoHideAsync();
-// SplashScreen.hideAsync();
+
 SplashScreen.setOptions({
-  duration: 5000,
+  duration: 2000,
   fade: true,
 });
 
 const Layout = () => {
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      SplashScreen.hideAsync();
+    }, 3000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
   return (
     <Provider store={store}>
       <NavigationWatcher>

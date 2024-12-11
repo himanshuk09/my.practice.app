@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { FlatList } from "react-native";
 import AccordionFlatlist from "@/components/AccordionFlatlist";
 import { AccordionData } from "@/constants/constantData";
-import { inActiveLoading } from "@/store/navigationSlice";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -13,8 +13,15 @@ const LoadData = () => {
     { id: "1", data: AccordionData, title: "Gas" },
     { id: "2", data: AccordionData, title: "Power" },
   ];
+  const startLoader = () => {
+    dispatch(activeLoading());
+  };
   const renderItem = ({ item }: any) => (
-    <AccordionFlatlist data={AccordionData} title={item?.title} />
+    <AccordionFlatlist
+      data={AccordionData}
+      title={item?.title}
+      startLoader={startLoader}
+    />
   );
   useEffect(() => {
     setTimeout(() => dispatch(inActiveLoading()), 100);

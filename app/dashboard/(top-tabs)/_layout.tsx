@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { useDispatch } from "react-redux";
-import { activeLoading } from "@/store/navigationSlice";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 const { Navigator } = createMaterialTopTabNavigator();
 export const MaterialTopTabs = withLayoutContext<
@@ -125,6 +125,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
   );
 };
 export default function TabLayout() {
+  const dispatch = useDispatch();
   return (
     <MaterialTopTabs
       tabBar={(props) => <CustomTabBar {...props} />}
@@ -132,7 +133,19 @@ export default function TabLayout() {
         tabBarShowLabel: false,
         tabBarScrollEnabled: true,
         lazy: true,
-        // lazyPreloadDistance: 1000,
+      }}
+      screenListeners={{
+        tabPress: (e) => {
+          console.log("Tab Pressed: ", e);
+        },
+        swipeStart: (e) => {
+          console.log("Tab transition started to: ", e);
+          dispatch(activeLoading());
+        },
+        swipeEnd: (e) => {
+          console.log("Tab transition ended to: ", e);
+          dispatch(inActiveLoading());
+        },
       }}
       // screenOptions={{
       //   tabBarScrollEnabled: true,

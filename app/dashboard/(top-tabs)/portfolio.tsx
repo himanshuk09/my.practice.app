@@ -29,9 +29,7 @@ const Portfolio: React.FC = () => {
     };
     fetchData();
   }, [isFocused]);
-  // useEffect(() => {
-  //   dispatch(inActiveLoading());
-  // }, [isFocused]);
+
   return (
     <>
       <FlatListBlock

@@ -326,22 +326,52 @@ export const AccordionData = [
   {
     id: "0",
     title: "Summenlastgänge | BILSTEIN GmbH & Co. KG",
-    details: ["Gas| BILSTEIN GmbH & Co. KG | Summenlastgänge"],
+    details: [
+      {
+        id: 0,
+        channel: "Gas| BILSTEIN GmbH & Co. KG | Summenlastgänge",
+        route: "/dashboard/load-data-details/0",
+      },
+    ],
   },
   {
     id: "1",
     title: "Gas | BILSTEIN GmbH & Co. KG | 58119 Hagen",
     details: [
-      "Werk I - Virtuell (Summe aus Bilstein Im Weinhof + Färberstr.) | MaLo: 50603374899 | Quelle: Kunde",
-      "Werk II - Oeger Str. 11-35 | MaLo: 50601507997 | Quelle: Kunde",
-      "Werk II - Oeger Str. 24 | MaLo: 50603613437 | Quelle: Kunde",
-      "Werk II - Oeger Str. 24 | MaLo: 50603613437 | Quelle: Kunde",
+      {
+        id: 1,
+        channel:
+          "Werk I - Virtuell (Summe aus Bilstein Im Weinhof + Färberstr.) | MaLo: 50603374899 | Quelle: Kunde",
+        route: "/dashboard/load-data-details/1",
+      },
+      {
+        id: 2,
+        channel:
+          "Werk II - Oeger Str. 11-35 | MaLo: 50601507997 | Quelle: Kunde",
+        route: "/dashboard/load-data-details/2",
+      },
+      {
+        id: 3,
+        channel: "Werk II - Oeger Str. 24 | MaLo: 50603613437 | Quelle: Kunde",
+        route: "/dashboard/load-data-details/3",
+      },
+      {
+        id: 4,
+        channel: "Werk II - Oeger Str. 24 | MaLo: 50603613437 | Quelle: Kunde",
+        route: "/dashboard/load-data-details/4",
+      },
     ],
   },
   {
     id: "2",
     title: "Gas | HUGO VOGELSANG GmbH & Co. KG | 58119 Hagen",
-    details: ["Alemannenweg 29 | MaLo: 50603613578 | Quelle: kunde"],
+    details: [
+      {
+        id: 5,
+        channel: "Alemannenweg 29 | MaLo: 50603613578 | Quelle: kunde",
+        route: "/dashboard/load-data-details/5",
+      },
+    ],
   },
   {
     id: "3",
