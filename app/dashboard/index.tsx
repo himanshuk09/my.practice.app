@@ -14,20 +14,24 @@ import React, { useState, useEffect } from "react";
 import { DashboardCardsEng } from "@/constants/constantData";
 import { usePathname, useRouter } from "expo-router";
 
-import { activeLoading } from "@/store/navigationSlice";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 const Dashboard: React.FC = () => {
   const [jsonData, setJsonData] = useState<any>(DashboardCardsEng);
-
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const startLoader = () => {
-    // dispatch(activeLoading());
+    dispatch(activeLoading());
   };
   useEffect(() => {
     setJsonData(DashboardCardsEng);
   }, DashboardCardsEng);
 
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <SafeAreaView
       className="flex-1 bg-white"

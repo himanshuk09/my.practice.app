@@ -3,29 +3,22 @@ import {
   Text,
   SafeAreaView,
   StatusBar,
-  Platform,
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { memo, useRef } from "react";
+import React, { memo, useEffect } from "react";
 import { PricesItem } from "@/constants/constantData";
-import { usePathname } from "expo-router";
 import { Href } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-import { useRoute } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-interface Item {
-  id?: string | number;
-  title?: string;
-  unit?: number;
-  indicator?: string;
-}
-interface FlatListBlockProps {
-  title: string;
-  items: Item[];
-}
+import { useDispatch } from "react-redux";
+import { inActiveLoading } from "@/store/navigationSlice";
+
 const Prices = () => {
   const router = useRouter();
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
   const ListItem = memo(({ item }: any) => (
     <TouchableOpacity
       key={item.id}
@@ -68,7 +61,9 @@ const Prices = () => {
     </TouchableOpacity>
   ));
   const renderItem = ({ item }: any) => <ListItem item={item} />;
-
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <SafeAreaView>
       <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />

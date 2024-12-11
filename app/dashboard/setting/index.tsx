@@ -15,16 +15,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateLocale } from "@/store/languageSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { useRouter } from "expo-router";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useIsFocused } from "@react-navigation/native";
 
 const Settings = () => {
   const { locale } = useSelector((state: any) => state.language);
   const [selectedLanguage, setSelectedLanguage] = useState(locale);
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
-
+  const isFocused = useIsFocused();
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
+  useEffect(() => {
+    let timer = setTimeout(() => dispatch(inActiveLoading()), 0);
+    return () => clearTimeout(timer);
+  }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar />

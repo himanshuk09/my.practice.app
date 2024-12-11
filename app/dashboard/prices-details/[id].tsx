@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Href, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { PricesItem } from "@/constants/constantData";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useDispatch } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 const PricesDetails = () => {
   const { id } = useLocalSearchParams();
@@ -25,9 +27,25 @@ const PricesDetails = () => {
   }, [id]);
 
   const [activeTab, setActiveTab] = useState("Week");
-
   const tabs = ["Day", "Week", "Month", "Quarter", "Year"];
+  const getCurrentUTCDateTime = () => {
+    const now = new Date();
 
+    // Extract UTC components
+    const day = String(now.getUTCDate()).padStart(2, "0");
+    const month = String(now.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const year = now.getUTCFullYear();
+    const hours = String(now.getUTCHours()).padStart(2, "0");
+    const minutes = String(now.getUTCMinutes()).padStart(2, "0");
+
+    // Format as DD/MM/YYYY HH:mm
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  };
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <SafeAreaView
       className="flex-1 "
@@ -41,14 +59,16 @@ const PricesDetails = () => {
 
       <View className="flex-1  bg-white">
         {/* Header Section */}
-        <View className="flex justify-between  flex-row px-4 py-4 my-1  border-b border-gray-300 shadow-slate-400 shadow-sm ">
+        <View className="flex justify-between  flex-row px-4 py-4 my-1 h-28 shadow-slate-400 shadow-sm ">
           <View className="flex-col ">
-            <Text className="text-lg font-bold">2025 Cal Base</Text>
-            <Text className="text-gray-500">09/12/2024 00:00</Text>
+            <Text className="text-xl font-bold">{pricesDetail?.title}</Text>
+            <Text className="text-gray-500 text-lg">
+              {getCurrentUTCDateTime()}
+            </Text>
           </View>
           <View>
             <Text className="text-red-500 text-lg font-semibold">
-              92.660 €/MWh
+              {pricesDetail?.unit} €/MWh
             </Text>
           </View>
         </View>
@@ -59,12 +79,12 @@ const PricesDetails = () => {
             <TouchableOpacity
               key={tab}
               onPress={() => setActiveTab(tab)}
-              className={`py-2 px-4 rounded-lg ${
+              className={`py-2 px-4 text-center rounded-lg h-12 ${
                 activeTab === tab ? "bg-red-500" : "bg-gray-200"
               }`}
             >
               <Text
-                className={`text-lg font-semibold ${
+                className={`text-lg text-center font-semibold ${
                   activeTab === tab ? "text-white" : "text-gray-700"
                 }`}
               >

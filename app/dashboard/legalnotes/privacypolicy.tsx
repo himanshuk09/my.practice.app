@@ -1,8 +1,16 @@
-import React from "react";
-import { View, Text, Image } from "react-native";
-// import ComingSoon from "@/assets/images/comingsoon.svg";
+import React, { useEffect } from "react";
+import { View, Text } from "react-native";
+
 import { i18n } from "@/languageKeys/i18nConfig";
+import { useDispatch } from "react-redux";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useIsFocused } from "@react-navigation/native";
 const Privacy = () => {
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <View className="flex-1 justify-center items-center bg-gray-100">
       {/* <ComingSoon /> */}

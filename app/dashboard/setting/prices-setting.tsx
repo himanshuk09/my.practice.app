@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,17 +7,20 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { useRouter } from "expo-router";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useDispatch } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 const PricesSettings = () => {
   const [selectedPlace, setSelectedPlace] = useState();
   const [selectedEnergyType, setSelectedEnergyType] = useState("Power");
   const [selectedProductType, setSelectedProductType] = useState("Futures");
   const router = useRouter();
+  const isFocused = useIsFocused();
   const energyTypes = ["Power", "H GAS", "Coal", "Hydrogen"];
   const allProductTypes: any = {
     Power: ["Futures", "Spot Auction"],
@@ -74,6 +78,10 @@ const PricesSettings = () => {
       setSelectedProductType(filteredProductTypes[0]);
     }
   }, [filteredProductTypes]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <SafeAreaView
       className="flex-1 "

@@ -1,16 +1,14 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  FlatList,
-} from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
+import { View, SafeAreaView, StatusBar, FlatList } from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { SignalsGas, SignalsStrom } from "@/constants/constantData";
+import { useDispatch } from "react-redux";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useIsFocused } from "@react-navigation/native";
 
 const Signals = () => {
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const combinedData = [
     { type: "header", title: "Gas", data: SignalsGas },
     { type: "header", title: "Strom", data: SignalsStrom },
@@ -30,6 +28,9 @@ const Signals = () => {
     return null;
   };
 
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar />
@@ -39,37 +40,6 @@ const Signals = () => {
         keyExtractor={(item, index) => `${item.title}-${index}`}
         showsVerticalScrollIndicator={false}
       />
-    </SafeAreaView>
-  );
-  return (
-    <SafeAreaView className="flex-1 bg-white">
-      <StatusBar />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
-        {/* Gas Signals */}
-        {SignalsGas && (
-          <View className="mb-4">
-            <FlatListBlock
-              title="Gas"
-              items={SignalsGas}
-              enableAutoScroll={false}
-            />
-          </View>
-        )}
-
-        {/* Strom Signals */}
-        {SignalsStrom && (
-          <View className="mb-4">
-            <FlatListBlock
-              title="Strom"
-              items={SignalsStrom}
-              enableAutoScroll={false}
-            />
-          </View>
-        )}
-      </ScrollView>
     </SafeAreaView>
   );
 };

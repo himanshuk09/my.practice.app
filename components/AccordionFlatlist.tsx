@@ -1,14 +1,4 @@
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  LayoutAnimation,
-  UIManager,
-  Platform,
-  Animated,
-} from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Animated } from "react-native";
 import React, { useRef, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 

@@ -53,7 +53,12 @@ const NotificationIcon = ({ count }: { count: number }) => (
 );
 
 const MenuCard = ({ item, index, startLoader }: any) => (
-  <Pressable onPress={() => router.push(item.route)}>
+  <Pressable
+    onPress={() => {
+      startLoader();
+      setTimeout(() => router.push(item.route), 100);
+    }}
+  >
     <View className="relative mb-10  bg-gray-100 w-40 h-40 m-2 rounded-sm justify-center items-center">
       {routeToComponent(item?.icon)}
       <Text className="text-lg text-gray-500 font-bold uppercase">

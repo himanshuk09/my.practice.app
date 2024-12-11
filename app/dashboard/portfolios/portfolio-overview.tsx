@@ -1,18 +1,17 @@
 import WebViewComponent from "@/components/WebViewComponent";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
-  StyleSheet,
   StatusBar,
   Platform,
   SafeAreaView,
   Text,
-  Pressable,
-  Touchable,
   TouchableOpacity,
 } from "react-native";
 
-import { WebView } from "react-native-webview";
+import { useDispatch } from "react-redux";
 
 const Portfolio_OverView = () => {
   const [iframeReady, setIframeReady] = useState(false);
@@ -355,7 +354,11 @@ const Portfolio_OverView = () => {
       `updateChartOptions(${JSON.stringify(newOptions)});`
     );
   };
-
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <SafeAreaView
       className="flex-1 "

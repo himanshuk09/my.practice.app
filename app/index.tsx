@@ -55,10 +55,12 @@ const SignIn: React.FC = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
       <View className="flex-1 justify-center items-center">
+        {/** Logo */}
         <View className="w-11/12 max-w-md p-5">
           <View className="items-center mb-5 w-full">
             <Logo />
           </View>
+          {/**Error Handler */}
 
           <View className="mb-5">
             {errorMessage ? (
@@ -66,6 +68,7 @@ const SignIn: React.FC = () => {
                 {errorMessage}
               </Text>
             ) : null}
+            {/** Username Feild*/}
 
             <View className="relative">
               <TextInput
@@ -88,6 +91,7 @@ const SignIn: React.FC = () => {
                 color="#6b7280"
               />
             </View>
+            {/**Password Feild */}
 
             <View className="relative">
               <TextInput
@@ -116,7 +120,7 @@ const SignIn: React.FC = () => {
                 />
               </TouchableOpacity>
             </View>
-
+            {/**Login Button */}
             <TouchableOpacity
               className="bg-red-600 p-4 rounded-full items-center"
               onPress={handleSubmit}
@@ -125,6 +129,7 @@ const SignIn: React.FC = () => {
                 {i18n.t("login")}
               </Text>
             </TouchableOpacity>
+            {/** Forget password screen redirector */}
             <Link href={`/login/forgotpassword`} className="mx-auto mt-5">
               <Text className="text-red-600 capitalize underline text-center text-sm">
                 {i18n.t("forgotyourpassword")}

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { usePathname, useRouter, useSegments } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
-import { addRouteToHistory, removeLastRoute } from "@/store/navigationSlice";
+import {
+  activeLoading,
+  addRouteToHistory,
+  removeLastRoute,
+} from "@/store/navigationSlice";
 import { BackHandler, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -52,14 +56,19 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 
       // Handle `/dashboard/(top-tabs)/...` back press
       if (currentPath.startsWith("/dashboard/(top-tabs)/")) {
-        router.replace("/dashboard"); // Navigate to `/dashboard`
+        dispatch(activeLoading());
+        setTimeout(() => router.replace("/dashboard"));
+        // Navigate to `/dashboard`
         return true;
       }
 
       // Standard back navigation
       if (history.length > 1) {
         dispatch(removeLastRoute());
-        router.replace(history[history.length - 2]); // Navigate to the previous route
+        dispatch(activeLoading());
+        setTimeout(() => {
+          router.replace(history[history.length - 2]);
+        }); // Navigate to the previous route
         return true;
       }
 

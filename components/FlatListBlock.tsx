@@ -1,8 +1,8 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, Platform } from "react-native";
 import { useRouter } from "expo-router";
-import { useIsFocused } from "@react-navigation/native";
-import Shimmer from "react-native-shimmer-placeholder";
+import Loader from "./Loader";
+
 const FlatListBlock = ({
   title,
   items,
@@ -12,7 +12,7 @@ const FlatListBlock = ({
   const router = useRouter();
   const flatListRef = useRef<any>(null);
   const currentYear = new Date().getFullYear();
-  const isFocused = useIsFocused();
+
   const [isReady, setIsReady] = useState(false);
   const ITEM_HEIGHT = Platform.OS === "web" ? 73 : 63;
 
@@ -60,7 +60,7 @@ const FlatListBlock = ({
     if (flatListRef.current) {
       setIsReady(true);
     }
-  }, [flatListRef]);
+  }, [flatListRef, items]);
 
   const ListItem = memo(({ item, router }: any) => (
     <TouchableOpacity
@@ -75,7 +75,9 @@ const FlatListBlock = ({
   const renderItem = ({ item }: any) => (
     <ListItem item={item} router={router} />
   );
-
+  if (items.length === 0) {
+    return <Loader />;
+  }
   return (
     <View
       // className="h-[49%] my-1"

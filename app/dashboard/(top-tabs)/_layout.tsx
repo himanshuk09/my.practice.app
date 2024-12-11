@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import {
   MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
@@ -6,18 +7,15 @@ import {
 import { withLayoutContext } from "expo-router";
 import { ParamListBase, TabNavigationState } from "@react-navigation/native";
 import {
-  Platform,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
   ScrollView,
-  LayoutChangeEvent,
   Animated,
 } from "react-native";
 import { i18n } from "@/languageKeys/i18nConfig";
-import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { activeLoading } from "@/store/navigationSlice";
 
 const { Navigator } = createMaterialTopTabNavigator();
 export const MaterialTopTabs = withLayoutContext<
@@ -30,10 +28,22 @@ export const MaterialTopTabs = withLayoutContext<
 const CustomTabBar = ({ state, descriptors, navigation }: any) => {
   const scrollViewRef = useRef<ScrollView | null>(null);
   const tabRefs = useRef<(View | null)[]>([]);
+  const dispatch = useDispatch();
   const animatedValues = useRef(
     state.routes.map(() => new Animated.Value(1))
   ).current;
-
+  const handleFocusAnimation = (index: number, isFocused: boolean) => {
+    Animated.timing(animatedValues[index], {
+      toValue: isFocused ? 1.1 : 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+  useEffect(() => {
+    state.routes.forEach((_: any, index: any) => {
+      handleFocusAnimation(index, state.index === index);
+    });
+  }, [state.index]);
   useEffect(() => {
     const scrollToFocusedTab = () => {
       const focusedTabRef = tabRefs.current[state.index];
@@ -52,20 +62,6 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
     scrollToFocusedTab();
   }, [state.index]);
 
-  const handleFocusAnimation = (index: number, isFocused: boolean) => {
-    Animated.timing(animatedValues[index], {
-      toValue: isFocused ? 1.1 : 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  useEffect(() => {
-    state.routes.forEach((_: any, index: any) => {
-      handleFocusAnimation(index, state.index === index);
-    });
-  }, [state.index]);
-  const dispatch = useDispatch();
   return (
     <View className="overflow-hidden h-9 bg-white">
       <ScrollView
@@ -89,7 +85,8 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
             });
 
             if (!isFocused && !event.defaultPrevented) {
-              setTimeout(() => navigation.navigate(route.name), 50);
+              dispatch(activeLoading());
+              setTimeout(() => navigation.navigate(route.name), 100);
             }
           };
 

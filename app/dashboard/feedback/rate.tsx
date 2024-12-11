@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,17 +13,20 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-
 import StarRating from "react-native-star-rating-widget";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { i18n } from "@/languageKeys/i18nConfig";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useDispatch } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 const Rate = () => {
   const [rating, setRating] = useState(2.5);
   const [isRated, setIsRated] = useState(false);
   const [ratingMsg, setRatingMsg] = useState("");
   const router = useRouter();
+  const isFocused = useIsFocused();
   const getRatingText = (rating: number) => {
     switch (rating) {
       case 1:
@@ -53,6 +56,10 @@ const Rate = () => {
     }
   };
   const { emoji, text, color } = getRatingText(rating);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -117,26 +124,6 @@ const Rate = () => {
                 color="#6b7280"
               />
             </View>
-
-            {/* <View className="w-full p-2 relative">
-              <TextInput
-                className="pr-10 pl-3 py-3 bg-gray-200 border h-52 w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:shadow-sm focus:shadow-blue-500 focus:ring-0 rounded-md text-lg align-top"
-                placeholder={i18n.t("what_could_we_improve")}
-                textContentType="none"
-                value={ratingMsg}
-                onChangeText={setRatingMsg}
-                multiline={true}
-                numberOfLines={10}
-                autoCapitalize="none"
-                style={{ padding: 5, fontWeight: "semibold" }}
-              />
-              <FontAwesome
-                style={{ position: "absolute", right: 20, top: 15 }}
-                name="pencil"
-                size={20}
-                color="#6b7280"
-              />
-            </View> */}
           </ScrollView>
 
           {/* Footer Buttons */}

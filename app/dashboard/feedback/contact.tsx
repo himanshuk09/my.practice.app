@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -15,12 +15,20 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { i18n } from "@/languageKeys/i18nConfig";
+import { useDispatch } from "react-redux";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useIsFocused } from "@react-navigation/native";
 const ContactUs = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    setTimeout(() => dispatch(inActiveLoading()), 100);
+  }, [isFocused]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
