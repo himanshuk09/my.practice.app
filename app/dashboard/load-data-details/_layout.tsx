@@ -11,6 +11,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { activeLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
+import { i18n } from "@/languageKeys/i18nConfig";
 export default function LoadDataDetailsLayout() {
   const dispatch = useDispatch();
   return (
@@ -43,7 +44,7 @@ export default function LoadDataDetailsLayout() {
                   <MaterialIcons name="arrow-back" size={30} color="#1f2937" />
                 </TouchableOpacity>
                 <Text className="ml-4 font-bold text-xl text-gray-800">
-                  Load Data Details
+                  {i18n.t("Load_Data_Details")}
                 </Text>
               </View>
             </SafeAreaView>

@@ -5,8 +5,10 @@ import {
   SafeAreaView,
   Platform,
   TouchableOpacity,
+  PermissionsAndroid,
+  Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { AccordionData, PricesItem } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
@@ -14,16 +16,378 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { toggleFilter } from "@/store/chartDataFilterToggle";
+import ChartComponent from "@/components/Chart/ChartComponent";
+import { englishIN, germany, i18n } from "@/languageKeys/i18nConfig";
+import { cockpitChartData } from "@/constants/cockpitchart";
+import Loader, { ChartLoader } from "@/components/Loader";
+
+type ChartUpdateType = "series" | "options" | "chart";
+type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "";
 const PricesDetails = () => {
-  const { id } = useLocalSearchParams();
+  const [isLoading, setLoading] = useState(false);
   const [loadDetail, setloadDetails] = useState<any>();
-  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<tabsType>("Year");
+  const [previousTab, setPreviousTab] = useState<tabsType>("Year");
+  const [initialRender, setInitialRender] = useState<boolean>(true);
+  const [isFirstSelection, setIsFirstSelection] = useState(true);
+  const [startDate, setStartDate] = useState<any>();
+  const [endDate, setEndDate] = useState<any>();
+  const locale = useSelector((state: any) => state.language.locale);
+  const { id } = useLocalSearchParams();
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  const [activeTab, setActiveTab] = useState<string>("Year");
-  const tabs = ["Day", "Week", "Month", "Quarter", "Year"];
+  const webViewRef = useRef<any>(null);
+  const iFrameRef = useRef<any>(null);
+  const berlineTimeZone = "Europe/Berlin";
+  const localeFormatter = locale === "en" ? englishIN : germany;
+
+  function filterCurrentDayDataUTC() {
+    // Convert the targetDate to a Date object (UTC)
+    const targetDateObj = new Date(1672542000000);
+
+    // Set the start and end of the day (midnight to 11:59:59 PM) in UTC
+    const startOfDay = new Date(
+      Date.UTC(
+        targetDateObj.getUTCFullYear(),
+        targetDateObj.getUTCMonth(),
+        targetDateObj.getUTCDate(),
+        -1,
+        0,
+        0,
+        0
+      )
+    ); // Start of day (UTC)
+    const endOfDay = new Date(
+      Date.UTC(
+        targetDateObj.getUTCFullYear(),
+        targetDateObj.getUTCMonth(),
+        targetDateObj.getUTCDate(),
+        22,
+        59,
+        59,
+        999
+      )
+    );
+
+    return cockpitChartData.filter((item: any) => {
+      const datetime = new Date(item.x);
+      return datetime >= startOfDay && datetime <= endOfDay;
+    });
+  }
+  function filterCurrentWeekDataUTC() {
+    const currentDateBerlin = new Date(1672660800000);
+    const currentWeekStart = new Date(
+      Date.UTC(
+        currentDateBerlin.getUTCFullYear(),
+        currentDateBerlin.getUTCMonth(),
+        currentDateBerlin.getUTCDate() - currentDateBerlin.getUTCDay(), // Adjust for the start of the ISO week
+        -1,
+        0,
+        0,
+        0 // Set to the start of the day (00:00:00 UTC)
+      )
+    );
+    const currentWeekEnd = new Date(
+      Date.UTC(
+        currentWeekStart.getUTCFullYear(),
+        currentWeekStart.getUTCMonth(),
+        currentWeekStart.getUTCDate() + 6,
+        22,
+        59,
+        59,
+        999
+      )
+    );
+    return cockpitChartData.filter((item: any) => {
+      const itemDate = new Date(item.x);
+      return itemDate >= currentWeekStart && itemDate <= currentWeekEnd;
+    });
+  }
+  function filterByMonthYearUTC() {
+    let input = 1672542000000;
+    const targetDate = new Date(input);
+
+    const targetMonth = targetDate.getUTCMonth();
+    const targetYear = targetDate.getUTCFullYear();
+
+    const startOfMonth = new Date(
+      Date.UTC(targetYear, targetMonth, 0, 0, 0, 0, 0)
+    );
+    const endOfMonth = new Date(
+      Date.UTC(targetYear, targetMonth + 1, 0, 22, 59, 59, 999)
+    );
+
+    return cockpitChartData.filter((item: any) => {
+      const datetime = new Date(item.x);
+      return datetime >= startOfMonth && datetime <= endOfMonth;
+    });
+  }
+  function filterByCurrentQuarterUTC() {
+    let input = 1680566400000;
+    const now = new Date(input);
+    const currentYear = now.getUTCFullYear();
+    const currentMonth = now.getUTCMonth();
+    const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
+    const startOfQuarter = new Date(
+      Date.UTC(currentYear, quarterStartMonth, 1, 0, 0, 0, 0)
+    );
+    const endOfQuarter = new Date(
+      Date.UTC(currentYear, quarterStartMonth + 3, 0, 23, 59, 59, 999)
+    );
+
+    return cockpitChartData.filter((item: any) => {
+      const datetime = new Date(item.x);
+      return datetime >= startOfQuarter && datetime <= endOfQuarter;
+    });
+  }
+  const updateChartData = (filteredData: any) => {
+    setLoading(true);
+    const xAxisRange =
+      filteredData?.length > 0
+        ? [filteredData[0]?.x, filteredData[filteredData?.length - 1].x]
+        : [0, 0];
+    let previousDate: Date | null = null;
+    const formatter: any = (value: any) => {
+      const date = new Date(value);
+      const isEdgeCase =
+        (value === xAxisRange[0] || value === xAxisRange[1]) &&
+        activeTab === "Day";
+      const isNewDate =
+        !previousDate ||
+        date.getFullYear() !== previousDate.getFullYear() ||
+        date.getMonth() !== previousDate.getMonth() ||
+        date.getDate() !== previousDate.getDate();
+
+      if (isEdgeCase || isNewDate) {
+        previousDate = date;
+        return new Intl.DateTimeFormat(localeFormatter, {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+          timeZone: berlineTimeZone,
+        }).format(date);
+      }
+      // Define date formatting options based on the active tab
+      const options: Intl.DateTimeFormatOptions =
+        activeTab === "Day"
+          ? {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+              timeZone: berlineTimeZone,
+            }
+          : activeTab === "Week" ||
+            activeTab === "Month" ||
+            activeTab === "Quarter" ||
+            (startDate && endDate)
+          ? {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+              timeZone: berlineTimeZone,
+            }
+          : {
+              year: "numeric",
+              month: "short",
+              timeZone: berlineTimeZone,
+            };
+      return new Intl.DateTimeFormat(localeFormatter, options).format(date);
+    };
+    const xAxisFormater = {
+      labels: {
+        show: true,
+        formatter: formatter,
+      },
+    };
+    // Define chart options in a more concise way
+    const updatedOptions = {
+      chart: {
+        animations: { dynamicAnimation: { speed: 1000 } },
+      },
+      noData: { text: "" },
+      xaxis: {
+        ...xAxisFormater,
+      },
+    };
+    const updatedInitialOptions = {
+      chart: {
+        animations: { dynamicAnimation: { speed: 100 } },
+      },
+      noData: { text: "" },
+      xaxis: {
+        ...xAxisFormater,
+      },
+    };
+    const updateEmptynoDataOptions = {
+      noData: { text: "" },
+      xaxis: {
+        ...xAxisFormater,
+      },
+    };
+    const updateNoDataOptions = {
+      noData: { text: "no data" },
+      xaxis: {
+        ...xAxisFormater,
+      },
+    };
+    const handleChartUpdate = (data: any, options: any) => {
+      updateChart("chart", data, options);
+    };
+    if (filteredData.length <= 0) {
+      // Handle empty data
+      if (initialRender) {
+        handleChartUpdate([], updateEmptynoDataOptions);
+        setInitialRender(false);
+        console.log("empty0.0");
+      } else {
+        console.log("empty");
+
+        handleChartUpdate([], updateNoDataOptions);
+      }
+    } else {
+      // Handle non-empty data based on the selected filter
+      if (activeTab === "Year" && previousTab === "Year") {
+        // Initial state
+        console.log("empty selected", filteredData.length);
+        setTimeout(() => {
+          updateChart("series", filteredData);
+        });
+        updateChart("options", updatedInitialOptions);
+        // handleChartUpdate(filteredData, updatedInitialOptions);
+      } else if (
+        ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
+        previousTab === "Year"
+      ) {
+        // Transition from initial state
+        handleChartUpdate([], {
+          chart: { animations: { dynamicAnimation: { speed: 1000 } } },
+          xaxis: {
+            ...xAxisFormater,
+          },
+        });
+        updateChart("series", filteredData);
+      } else if (
+        ["Month", "Week", "Day", "Quarter"].includes(previousTab) &&
+        activeTab === "Year"
+      ) {
+        // Switching back to initial state
+        handleChartUpdate([], updatedInitialOptions);
+        updateChart("series", filteredData);
+      } else if (
+        ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
+        ["Month", "Week", "Day", "Quarter"].includes(previousTab)
+      ) {
+        // Switching between filters
+        updateChart("options", updatedOptions);
+        updateChart("series", filteredData);
+      }
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  };
+
   useEffect(() => {
+    const getUpdatedData = () => {
+      setLoading(true);
+      if (activeTab === "Month") return filterByMonthYearUTC();
+      if (activeTab === "Week") return filterCurrentWeekDataUTC();
+      if (activeTab === "Day") return filterCurrentDayDataUTC();
+      if (activeTab === "Quarter") return filterByCurrentQuarterUTC();
+      if (activeTab === "Year") return cockpitChartData;
+      return;
+    };
+    let updatedData: any = getUpdatedData();
+    console.log("activeTab calling");
+    updateChartData(updatedData);
+    setPreviousTab(activeTab);
+  }, [activeTab]);
+  const updateChart = (type: ChartUpdateType, data?: any, options?: any) => {
+    if (Platform.OS === "web") {
+      const iframe = iFrameRef.current;
+      if (iframe && iframe.contentWindow) {
+        switch (type) {
+          case "series":
+            iframe.contentWindow.updateChartSeries?.([{ data: data }]);
+            console.log("series", data.length);
+            break;
+          case "options":
+            iframe.contentWindow.updateChartOptions?.(data);
+
+            break;
+          case "chart":
+            iframe.contentWindow.updateChart?.([{ data: data }], options);
+            break;
+          default:
+            console.error("Invalid chart update type");
+            return;
+        }
+      } else {
+        console.error("Iframe contentWindow is not accessible.");
+      }
+    } else {
+      let jsCommand = "";
+      switch (type) {
+        case "series":
+          console.log("series");
+          jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
+          break;
+        case "options":
+          console.log("options");
+          jsCommand = `updateChartOptions(${JSON.stringify(data)});`;
+          break;
+        case "chart":
+          jsCommand = `updateChart(${JSON.stringify(data)}, ${JSON.stringify(
+            options || {}
+          )});`;
+          break;
+        default:
+          console.error("Invalid chart update type");
+          return;
+      }
+
+      (webViewRef.current as any)?.injectJavaScript(jsCommand);
+    }
+  };
+  const updateLocale = () => {
+    let localOption = {
+      xaxis: {
+        title: { text: i18n.t("datetime") },
+      },
+    };
+    if (Platform.OS === "web") {
+      const iframe = iFrameRef.current;
+      console.log(locale);
+      if (iframe && iframe.contentWindow) {
+        const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
+        iframe.contentWindow.updateLocale?.(locale);
+      }
+      updateChart("options", localOption);
+    } else {
+      console.log(locale);
+
+      if (webViewRef.current) {
+        const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
+        webViewRef.current.injectJavaScript(updateLocaleScript);
+        updateChart("options", localOption);
+      }
+    }
+  };
+
+  const onMessage = async (event: any) => {
+    const message = JSON.parse(event.nativeEvent.data);
+
+    if (message.action === "startLoader") {
+      setLoading(true);
+    } else if (message.action === "stopLoader") {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+    console.log("loaderVisible", isLoading);
+  };
+  useEffect(() => {
+    updateLocale();
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);
   useEffect(() => {
@@ -35,16 +399,12 @@ const PricesDetails = () => {
         (detail: any) => detail.id === Number(id)
       );
       setloadDetails(selectedDetail);
-      console.log(filteredItem);
     } else {
       setloadDetails(null);
-      console.log("No matching detail found");
+      console.warn("No matching detail found");
     }
   }, [id]);
-  // const activeTab = useSelector((state: any) => state.activeTabFilter.value);
-  // const setActiveTab = (tab: any) => {
-  //   dispatch(toggleFilter(tab));
-  // };
+
   return (
     <SafeAreaView
       className="flex-1 "
@@ -69,54 +429,48 @@ const PricesDetails = () => {
               {loadDetail?.channel}
             </Text>
             <View className="flex-row justify-items-start">
-              <Text className="text-gray-500 text-md">Energy: </Text>
-              <Text className="text-gray-500 text-md ml-5">30,319 kWh</Text>
+              <Text className="text-gray-500 text-md">
+                {i18n.t("Energy")}:{" "}
+              </Text>
+              <Text className="text-gray-500 text-sm ml-5">30,319 kWh</Text>
             </View>
             <View className="flex-row justify-items-start  ">
-              <Text className="text-gray-500 text-md">Energy: </Text>
-              <Text className="text-gray-500 text-md ml-5">30,319 kWh</Text>
+              <Text className="text-gray-500 text-md">
+                {i18n.t("Average")}:{" "}
+              </Text>
+              <Text className="text-gray-500 text-sm ml-5">30,319 kWh</Text>
             </View>
           </View>
-          <View className="py-3 ">
-            <FontAwesome5 name="file-download" size={35} color="#ef4444" />
+          <View className="py-5 ">
+            <FontAwesome5
+              name="file-download"
+              size={35}
+              color="#ef4444"
+              // onPress={() => updateChart("series", [])}
+            />
           </View>
         </View>
 
         {/* Toggle Buttons */}
-        <View className="flex-row justify-evenly border-[1px] border-slate-200 w-full my-2">
-          {tabs.map((tab) => (
-            <TouchableOpacity
-              key={tab}
-              onPress={() => setActiveTab(tab)}
-              className={`py-2 px-4 text-center rounded-sm h-12 ${
-                activeTab === tab
-                  ? " border-b-4 border-red-500 "
-                  : "bg-gray-200 shadow-lg"
-              }      `}
-            >
-              <Text
-                className={`text-lg text-center font-semibold ${
-                  activeTab === tab ? "text-red-500" : "text-gray-700"
-                }`}
-              >
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        {/* <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} /> */}
+        <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
+
         {/* Chart Placeholder */}
-        <View className="flex-1 mx-4 bg-gray-100 rounded-lg border border-gray-300">
-          {/* This will be replaced with your chart component */}
-          <Text className="text-center text-gray-500 mt-20">
-            Chart Placeholder
-          </Text>
+        <View className="flex-1  border-b border-gray-300">
+          {isLoading && <ChartLoader />}
+          <ChartComponent
+            webViewRef={webViewRef}
+            iFrameRef={iFrameRef}
+            onMessage={onMessage}
+          />
         </View>
 
         {/* Bottom Button */}
-        <TouchableOpacity className="bg-red-500 py-4 mx-5 rounded-lg my-4">
-          <Text className="text-white text-center text-lg font-semibold">
-            Customize View
+        <TouchableOpacity
+          className="bg-red-500 py-4 mx-5 rounded-lg my-1"
+          onPress={() => updateChartData([])}
+        >
+          <Text className="text-white text-center text-lg font-semibold uppercase">
+            {i18n.t("Customize_View")}
           </Text>
         </TouchableOpacity>
       </View>

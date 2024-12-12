@@ -12,6 +12,7 @@ import { PricesItem } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
+import TabToggleButtons from "@/components/TabToggleButtons";
 
 const PricesDetails = () => {
   const { id } = useLocalSearchParams();
@@ -27,10 +28,8 @@ const PricesDetails = () => {
   }, [id]);
 
   const [activeTab, setActiveTab] = useState("Year");
-  const tabs = ["Day", "Week", "Month", "Quarter", "Year"];
   const getCurrentUTCDateTime = () => {
     const now = new Date();
-
     // Extract UTC components
     const day = String(now.getUTCDate()).padStart(2, "0");
     const month = String(now.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
@@ -72,30 +71,9 @@ const PricesDetails = () => {
             </Text>
           </View>
         </View>
-
         {/* Toggle Buttons */}
-        <View className="flex-row justify-evenly border-[1px] border-slate-200 w-full my-2">
-          {tabs.map((tab) => (
-            <TouchableOpacity
-              key={tab}
-              onPress={() => setActiveTab(tab)}
-              className={`py-2 px-4 text-center rounded-sm h-12 ${
-                activeTab === tab
-                  ? " border-b-4 border-red-500 "
-                  : "bg-gray-200 shadow-lg"
-              }      `}
-            >
-              <Text
-                className={`text-lg text-center font-semibold ${
-                  activeTab === tab ? "text-red-500" : "text-gray-700"
-                }`}
-              >
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
 
+        <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
         {/* Chart Placeholder */}
         <View className="flex-1 mx-4 bg-gray-100 rounded-lg border border-gray-300">
           {/* This will be replaced with your chart component */}
@@ -103,7 +81,6 @@ const PricesDetails = () => {
             Chart Placeholder
           </Text>
         </View>
-
         {/* Bottom Button */}
         <TouchableOpacity className="bg-red-500 py-4 mx-5 rounded-lg my-4">
           <Text className="text-white text-center text-lg font-semibold">

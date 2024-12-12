@@ -6,6 +6,7 @@ import "../global.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setInitialState } from "@/store/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { updateLocale } from "@/store/languageSlice";
 
 export default function RootLayout() {
   const dispatch = useDispatch();
@@ -19,8 +20,10 @@ export default function RootLayout() {
       try {
         // Check login status from AsyncStorage
         const loggedIn = await AsyncStorage.getItem("isLoggedIn");
+        const storedLanguage = await AsyncStorage.getItem("languagePreference");
         if (loggedIn === "true") {
           dispatch(setInitialState(true));
+          dispatch(updateLocale(storedLanguage || "en"));
         } else {
           dispatch(setInitialState(false));
         }
@@ -33,7 +36,10 @@ export default function RootLayout() {
       isMounted.current = false; // Cleanup for component unmount
     };
   }, [dispatch]);
-
+  const getLanguagePreference = async () => {
+    const storedLanguage = await AsyncStorage.getItem("languagePreference");
+    dispatch(updateLocale(storedLanguage || "en"));
+  };
   useEffect(() => {
     if (
       !isLoggedIn &&
@@ -48,6 +54,7 @@ export default function RootLayout() {
         pathname === "/login" ||
         pathname === "/login/forgotpassword")
     ) {
+      getLanguagePreference();
       router.replace("/dashboard");
     }
   }, [isLoggedIn, pathname, router]);
