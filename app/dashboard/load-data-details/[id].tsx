@@ -375,17 +375,21 @@ const PricesDetails = () => {
   };
 
   const onMessage = async (event: any) => {
-    const message = JSON.parse(event.nativeEvent.data);
-
-    if (message.action === "startLoader") {
+    const message = event.nativeEvent.data;
+    if (message) {
+      console.log("Full HTML Content:", message);
+    }
+    // Handle loader actions on tooltip toggle
+    const parsedMessage = JSON.parse(event.nativeEvent.data);
+    if (parsedMessage.action === "startLoader") {
       setLoading(true);
-    } else if (message.action === "stopLoader") {
+    } else if (parsedMessage.action === "stopLoader") {
       setTimeout(() => {
         setLoading(false);
       }, 1000);
     }
-    console.log("loaderVisible", isLoading);
   };
+
   useEffect(() => {
     updateLocale();
     setTimeout(() => dispatch(inActiveLoading()), 100);
@@ -442,12 +446,7 @@ const PricesDetails = () => {
             </View>
           </View>
           <View className="py-5 ">
-            <FontAwesome5
-              name="file-download"
-              size={35}
-              color="#ef4444"
-              // onPress={() => updateChart("series", [])}
-            />
+            <FontAwesome5 name="file-download" size={35} color="#ef4444" />
           </View>
         </View>
 

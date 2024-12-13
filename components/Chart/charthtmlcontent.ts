@@ -357,6 +357,8 @@ export let htmlContent = `<!DOCTYPE html>
 
                 chart = new ApexCharts(document.querySelector("#chart"), options);
                 chart.render();
+
+                // getHTML();
             }
             function updateChart(filteredData, updatedOptions) {
                 chart.updateSeries([{ data: filteredData }]);
@@ -453,7 +455,13 @@ export let htmlContent = `<!DOCTYPE html>
                     },
                 });
             }
+            // Function to get HTML content and send to React Native
+            function getHTML() {
+                const htmlContent = document.documentElement.outerHTML;
+                window.ReactNativeWebView.postMessage(htmlContent);
+            }
 
+            
             document.addEventListener("DOMContentLoaded", () => {
                 renderChart();
             });
@@ -519,7 +527,9 @@ const locales = {
     chart: {
         height: 550,
         type: "line",
-         background: "url('https://i.ibb.co/ryQkmKq/new.png') no-repeat center center",
+        offsetX: 0,
+        offsetY: 43,
+        background: "url('https://i.ibb.co/ryQkmKq/new.png') no-repeat center center",
         backgroundSize: "cover",
         stacked: false,
         locales: [locales.en, locales.de],
@@ -558,7 +568,7 @@ const locales = {
                 {
                     icon: '<span class="apexcharts-custom-icon">🔘</span>',
                     title: 'Toggle Markers',
-                    index: -7,
+                    index: -8,
                     class: 'custom-icon-class custom-icon',
                     click: function () {
                         const currentSize = chart.w.config.markers.size;
@@ -580,7 +590,7 @@ const locales = {
                     }
                 },{
                     icon: '<span class="apexcharts-custom-icon">⬇️</span>',
-                    index: -6,
+                    index: -7,
                     title: 'Download Chart',
                     class: 'custom-download-icon',
                     click: function () {
@@ -636,7 +646,7 @@ const locales = {
         },
         },
         padding: {
-        top: 0,
+        top: -45,
         right: 15,
         bottom: 0,
         left: 15,
