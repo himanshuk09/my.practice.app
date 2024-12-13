@@ -93,7 +93,12 @@ export let htmlContent = `<!DOCTYPE html>
                     }
                 }
             };
-            
+            function downloadChartAsImage() {
+                chart.dataURI().then(({ imgURI }) => {
+                    // Send Base64 URI to React Native
+                    window.ReactNativeWebView.postMessage(JSON.stringify({ action: "downloadChart", data: imgURI }));
+                });
+            }
             function toggleMarkers() {
                 // Start loader
                 window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'startLoader' }));
@@ -118,7 +123,13 @@ export let htmlContent = `<!DOCTYPE html>
                                         index: -5,
                                         class: 'custom-icon-class custom-icon',
                                         click: toggleMarkers // Reassign to the same function
-                                    }
+                                    }, {
+                                        icon: '<span class="apexcharts-custom-icon">💾</span>',
+                                        index: -6,
+                                        title: 'Download Chart',
+                                        class: 'custom-download-icon',
+                                        click: downloadChartAsImage,
+                                    },
                                 ]
                             }
                         }
@@ -170,7 +181,13 @@ export let htmlContent = `<!DOCTYPE html>
                                         index: -5,
                                         class: 'custom-icon-class custom-icon',
                                         click: toggleMarkers
-                                    }
+                                    }, {
+                                        icon: '<span class="apexcharts-custom-icon">💾</span>',
+                                        index: -6,
+                                        title: 'Download Chart',
+                                        class: 'custom-download-icon',
+                                        click: downloadChartAsImage,
+                                    },
                                 ],
                             }
                         }

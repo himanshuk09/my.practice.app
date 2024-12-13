@@ -20,7 +20,7 @@ import ChartComponent from "@/components/Chart/ChartComponent";
 import { englishIN, germany, i18n } from "@/languageKeys/i18nConfig";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import Loader, { ChartLoader } from "@/components/Loader";
-
+import RNFetchBlob from "rn-fetch-blob";
 type ChartUpdateType = "series" | "options" | "chart";
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "";
 const PricesDetails = () => {
@@ -388,6 +388,28 @@ const PricesDetails = () => {
         setLoading(false);
       }, 1000);
     }
+    //download
+    // if (message.action === "downloadChart" || Platform.OS === "android") {
+    //   const base64Data = message.data.split(",")[1];
+    //   const filePath = `${RNFetchBlob?.fs?.dirs?.DownloadDir}/chart.png`;
+    //   if (Platform.OS === "android") {
+    //     const granted = await PermissionsAndroid.request(
+    //       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+    //     );
+    //     if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+    //       alert("Storage permission is required to download the file.");
+    //       return;
+    //     }
+    //   }
+    //   if (Platform.OS === "android") {
+    //     RNFetchBlob.fs
+    //       .writeFile(filePath, base64Data, "base64")
+    //       .then(() => {
+    //         alert(`Chart saved to ${filePath}`);
+    //       })
+    //       .catch((err) => console.error("Error saving file:", err));
+    //   }
+    // }
   };
 
   useEffect(() => {
