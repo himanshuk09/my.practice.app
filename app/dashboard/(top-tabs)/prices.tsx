@@ -73,18 +73,18 @@ const Prices = () => {
       <View className="h-auto">
         <View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-[#e31837] ">
           <View className="flex flex-col justify-evenly w-[60%]">
-            <Text className="flex justify-start font-semibold  items-center   text-xl  text-white">
+            <Text className="flex justify-start font-normal mb-2  items-center   text-xl  text-white">
               EEX Power Auction
             </Text>
-            <Text className="flex justify-start font-semibold items-center  text-sm  text-white">
+            <Text className="flex justify-start font-normal items-center  text-sm  text-white">
               24/07/5468
             </Text>
           </View>
 
-          <View className="flex justify-center items-center w-[25%]">
+          <View className="flex justify-center items-center w-[10%] mb-4">
             <Ionicons
               name="settings-sharp"
-              size={36}
+              size={30}
               color="white"
               onPress={() => {
                 dispatch(activeLoading());
@@ -104,7 +104,7 @@ const Prices = () => {
           keyExtractor={(item: any, index) => index.toString()}
           scrollEnabled={true}
           className="bg-gray overflow-scroll mx-2"
-          contentContainerStyle={{ paddingTop: 10 }}
+          contentContainerStyle={{ paddingTop: 4 }}
         />
       </View>
     </SafeAreaView>

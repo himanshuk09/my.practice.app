@@ -87,7 +87,7 @@ const FlatListBlock = ({
       }}
     >
       <View className="top-0 w-[100%] z-50 p-3 bg-[#e31837]">
-        <Text className="flex justify-start font-semibold py-2 p-3 items-center h-12 text-xl rounded-sm text-white">
+        <Text className="flex justify-start font-normal py-2 p-3 mb-4 items-center h-12 text-xl rounded-sm text-white">
           {title}
         </Text>
       </View>

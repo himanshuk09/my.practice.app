@@ -100,7 +100,7 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
   return (
     <>
       <View className=" w-full  p-3 bg-[#e31837] ">
-        <Text className="flex justify-start font-semibold  py-2 p-3  items-center  h-14 text-xl rounded-sm text-white">
+        <Text className="flex justify-start font-normal  py-2 p-3  items-center mb-4  h-14 text-xl rounded-sm text-white">
           {title}
         </Text>
       </View>

@@ -10,48 +10,7 @@ export let htmlContent = `<!DOCTYPE html>
         <div id="chart" style="height: 350px"></div>
         <script>
             let chart;
-            const initialData = [
-                    {
-                      x: 1672527600000,
-                      y: 0,
-                    },
-                    {
-                      x: 1672531200000,
-                      y: 4090.08,
-                    },
-                    {
-                      x: 1672534800000,
-                      y: 4027.157,
-                    },
-                    {
-                      x: 1672538400000,
-                      y: 4311.228,
-                    },
-                    {
-                      x: 1672542000000,
-                      y: 4362.576,
-                    },
-                    {
-                      x: 1672545600000,
-                      y: 3593.179,
-                    },
-                    {
-                      x: 1672549200000,
-                      y: 4214.896,
-                    },
-                    {
-                      x: 1672552800000,
-                      y: 3991.298,
-                    },
-                    {
-                      x: 1672556400000,
-                      y: 4020.254,
-                    },
-                    {
-                      x: 1672560000000,
-                      y: 3999.042,
-                    }
-            ];
+
             const locales = {
                 en: {
                     name: 'en',
@@ -93,19 +52,19 @@ export let htmlContent = `<!DOCTYPE html>
                     }
                 }
             };
-            function downloadChartAsImage() {
-                chart.dataURI().then(({ imgURI }) => {
-                    // Send Base64 URI to React Native
-                    window.ReactNativeWebView.postMessage(JSON.stringify({ action: "downloadChart", data: imgURI }));
-                });
-            }
+            // function downloadChartAsImage() {
+            //     chart.dataURI().then(({ imgURI }) => {
+            //         // Send Base64 URI to React Native
+            //         window.ReactNativeWebView.postMessage(JSON.stringify({ action: "downloadChart", data: imgURI }));
+            //     });
+            // }
             function toggleMarkers() {
                 // Start loader
                 window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'startLoader' }));
-            
+
                 const currentSize = chart.w.config.markers.size;
                 const newSize = currentSize === 0 ? 2 : 0;
-            
+
                 // Update chart options
                 chart.updateOptions({
                     markers: {
@@ -116,26 +75,27 @@ export let htmlContent = `<!DOCTYPE html>
                             tools: {
                                 customIcons: [
                                     {
-                                        icon: newSize === 0 
-                                            ? '<span class="apexcharts-custom-icon" >🔘</span>' 
+                                        icon: newSize === 0
+                                            ? '<span class="apexcharts-custom-icon" >🔘</span>'
                                             : '<span class="apexcharts-custom-icon">🔴</span>',
                                         title: 'Toggle Markers',
                                         index: -5,
                                         class: 'custom-icon-class custom-icon',
                                         click: toggleMarkers // Reassign to the same function
-                                    }, {
-                                        icon: '<span class="apexcharts-custom-icon">💾</span>',
-                                        index: -6,
-                                        title: 'Download Chart',
-                                        class: 'custom-download-icon',
-                                        click: downloadChartAsImage,
                                     },
+                                    //  {
+                                    //     icon: '<span class="apexcharts-custom-icon">💾</span>',
+                                    //     index: -6,
+                                    //     title: 'Download Chart',
+                                    //     class: 'custom-download-icon',
+                                    //     click: downloadChartAsImage,
+                                    // },
                                 ]
                             }
                         }
                     }
                 });
-            
+
                 // Stop loader after chart update
                 window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'stopLoader' }));
             }
@@ -181,13 +141,14 @@ export let htmlContent = `<!DOCTYPE html>
                                         index: -5,
                                         class: 'custom-icon-class custom-icon',
                                         click: toggleMarkers
-                                    }, {
-                                        icon: '<span class="apexcharts-custom-icon">💾</span>',
-                                        index: -6,
-                                        title: 'Download Chart',
-                                        class: 'custom-download-icon',
-                                        click: downloadChartAsImage,
                                     },
+                                    // {
+                                    //     icon: '<span class="apexcharts-custom-icon">💾</span>',
+                                    //     index: -6,
+                                    //     title: 'Download Chart',
+                                    //     class: 'custom-download-icon',
+                                    //     click: downloadChartAsImage,
+                                    // },
                                 ],
                             }
                         }
@@ -306,7 +267,7 @@ export let htmlContent = `<!DOCTYPE html>
                           height: 6,
                           offsetX: 0,
                           offsetY: 0,
-                      }, 
+                      },
                     },
                     yaxis: {
                         labels: {
@@ -371,18 +332,17 @@ export let htmlContent = `<!DOCTYPE html>
                       },
                   },
                 };
-
+                
                 chart = new ApexCharts(document.querySelector("#chart"), options);
                 chart.render();
-
-                // getHTML();
             }
             function updateChart(filteredData, updatedOptions) {
                 chart.updateSeries([{ data: filteredData }]);
                 chart.updateOptions(updatedOptions);
             }
             function updateChartSeries(filteredData) {
-                chart.updateSeries([{ data: filteredData }])
+                chart.updateSeries([{ data: filteredData }], true)
+                window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartSeriesss' }));
             }
             function updateChartOptions( updatedOptions) {
                 chart.updateOptions(updatedOptions);
@@ -393,7 +353,6 @@ export let htmlContent = `<!DOCTYPE html>
             function appendChartData(data){
                 chart.appendData(data)
             }
-
             function updateLocale(newLocale) {
                 const localeOptions = newLocale === 'de' ? locales.de : locales.en;
                 chart.updateOptions({
@@ -473,12 +432,10 @@ export let htmlContent = `<!DOCTYPE html>
                 });
             }
             // Function to get HTML content and send to React Native
-            function getHTML() {
-                const htmlContent = document.documentElement.outerHTML;
-                window.ReactNativeWebView.postMessage(htmlContent);
-            }
-
-            
+            // function getHTML() {
+            //     const htmlContent = document.documentElement.outerHTML;
+            //     window.ReactNativeWebView.postMessage(htmlContent);
+            // }
             document.addEventListener("DOMContentLoaded", () => {
                 renderChart();
             });
