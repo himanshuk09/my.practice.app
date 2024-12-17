@@ -29,6 +29,10 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
       console.error("Error fetching user login status:", error);
     }
   };
+  useEffect(() => {
+    const currentPath = "/" + segments.join("/");
+    dispatch(addRouteToHistory(currentPath));
+  }, [segments, dispatch]);
 
   useEffect(() => {
     const backAction = () => {
@@ -81,11 +85,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
     );
     return () => backHandler.remove();
   }, [history, router, dispatch, segments, shouldExitApp]);
-
-  useEffect(() => {
-    const currentPath = "/" + segments.join("/");
-    dispatch(addRouteToHistory(currentPath));
-  }, [segments, dispatch]);
 
   return children;
 };

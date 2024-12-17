@@ -26,6 +26,7 @@ const Rate = () => {
   const [isRated, setIsRated] = useState(false);
   const [ratingMsg, setRatingMsg] = useState("");
   const router = useRouter();
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const getRatingText = (rating: number) => {
     switch (rating) {
@@ -56,7 +57,7 @@ const Rate = () => {
     }
   };
   const { emoji, text, color } = getRatingText(rating);
-  const dispatch = useDispatch();
+
   useEffect(() => {
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);

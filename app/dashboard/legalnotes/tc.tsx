@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Button } from "react-native";
 
 import { i18n } from "@/languageKeys/i18nConfig";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
+import { getProfileData } from "@/services/auth.services";
 const TC = () => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -14,7 +15,7 @@ const TC = () => {
   return (
     <View className="flex-1 justify-center items-center bg-gray-100">
       {/* <ComingSoon /> */}
-
+      <Button title="get profile " onPress={getProfileData} />
       <Text className="text-4xl font-bold text-gray-700 mb-4">
         {i18n.t("comingsoon")}
       </Text>

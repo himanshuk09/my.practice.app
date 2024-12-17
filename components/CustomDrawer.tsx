@@ -155,9 +155,7 @@ const CustomDrawer = (props: any) => {
   const clearStorageAndNavigate = async (router: any) => {
     try {
       await AsyncStorage.clear();
-
       router.push("/");
-
       dispatch(logout());
       dispatch(setInitialState(false));
     } catch (error) {

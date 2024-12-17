@@ -75,7 +75,7 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             animation: "slide_from_left",
-            animationDuration: 4000,
+            animationDuration: 1000,
           }}
         />
         <Stack.Screen
@@ -83,7 +83,7 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             animation: "slide_from_right",
-            animationDuration: 4000,
+            animationDuration: 1000,
           }}
         />
 
@@ -91,11 +91,10 @@ export default function RootLayout() {
           name="dashboard"
           options={{
             headerShown: false,
-            animation: "fade",
+            animation: "slide_from_bottom",
             animationDuration: 2000,
           }}
         />
-
         <Stack.Screen name="+not-found" />
       </Stack>
 

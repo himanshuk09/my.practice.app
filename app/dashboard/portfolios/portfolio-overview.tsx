@@ -16,6 +16,8 @@ import { useDispatch } from "react-redux";
 const Portfolio_OverView = () => {
   const [iframeReady, setIframeReady] = useState(false);
   const donutChartRef = useRef<any>(null);
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const donutChartHtmlIframe = `
   <!DOCTYPE html>
   <html lang="en">
@@ -354,8 +356,7 @@ const Portfolio_OverView = () => {
       `updateChartOptions(${JSON.stringify(newOptions)});`
     );
   };
-  const dispatch = useDispatch();
-  const isFocused = useIsFocused();
+
   useEffect(() => {
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);

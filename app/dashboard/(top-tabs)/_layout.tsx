@@ -86,7 +86,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 
             if (!isFocused && !event.defaultPrevented) {
               dispatch(activeLoading());
-              setTimeout(() => navigation.navigate(route.name), 100);
+              setTimeout(() => navigation.navigate(route.name), 50);
             }
           };
 
@@ -145,6 +145,9 @@ export default function TabLayout() {
         swipeEnd: (e) => {
           console.log("Tab transition ended to: ", e);
           dispatch(inActiveLoading());
+        },
+        tabLongPress: (e) => {
+          console.log("Tab long Pressed: ", e);
         },
       }}
       // screenOptions={{

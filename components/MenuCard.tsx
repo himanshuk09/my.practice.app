@@ -1,15 +1,13 @@
-import { FontAwesome5 } from "@expo/vector-icons";
-import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
-import { View, Text, Pressable, InteractionManager } from "react-native";
-import { router } from "expo-router";
 import React from "react";
+import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
+import { View, Text, Pressable } from "react-native";
 import Portfolio from "@/components/SVG/Portfolio";
 import Prices from "@/components/SVG/Prices";
 import PFC from "@/components/SVG/PFC";
-import Logo from "@/components/SVG/Logo";
 import Load from "@/components/SVG/Load";
 import Settings from "@/components/SVG/Settings";
 import { i18n } from "@/languageKeys/i18nConfig";
+import { router } from "expo-router";
 
 const routeToComponent = (icon: string) => {
   switch (icon) {
@@ -52,23 +50,26 @@ const NotificationIcon = ({ count }: { count: number }) => (
   </Svg>
 );
 
-const MenuCard = ({ item, index, startLoader }: any) => (
-  <Pressable
-    onPress={() => {
-      startLoader();
-      setTimeout(() => router.push(item.route), 100);
-    }}
-  >
-    <View className="relative mb-10  bg-gray-100 w-40 h-40 m-2 rounded-sm justify-center items-center">
-      {routeToComponent(item?.icon)}
-      <Text className="text-lg text-gray-500 font-bold uppercase">
-        {i18n.t(item?.title)}
-      </Text>
-      {item?.notificationCount > 0 && (
-        <NotificationIcon count={item?.notificationCount} />
-      )}
-    </View>
-  </Pressable>
-);
+const MenuCard = ({ item, index, startLoader }: any) => {
+  return (
+    <Pressable
+      className=" m-1 items-center"
+      onPressIn={() => {
+        startLoader();
+        setTimeout(() => router.replace(item.route));
+      }}
+    >
+      <View className="relative   bg-gray-100 w-40 h-40 m-2 rounded-sm justify-center items-center">
+        {routeToComponent(item?.icon)}
+        <Text className="text-lg text-gray-500 font-bold uppercase">
+          {i18n.t(item?.title)}
+        </Text>
+        {item?.notificationCount > 0 && (
+          <NotificationIcon count={item?.notificationCount} />
+        )}
+      </View>
+    </Pressable>
+  );
+};
 
 export default MenuCard;

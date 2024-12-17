@@ -52,12 +52,7 @@ export let htmlContent = `<!DOCTYPE html>
                     }
                 }
             };
-            // function downloadChartAsImage() {
-            //     chart.dataURI().then(({ imgURI }) => {
-            //         // Send Base64 URI to React Native
-            //         window.ReactNativeWebView.postMessage(JSON.stringify({ action: "downloadChart", data: imgURI }));
-            //     });
-            // }
+            
             function toggleMarkers() {
                 // Start loader
                 window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'startLoader' }));
@@ -83,13 +78,13 @@ export let htmlContent = `<!DOCTYPE html>
                                         class: 'custom-icon-class custom-icon',
                                         click: toggleMarkers // Reassign to the same function
                                     },
-                                    //  {
-                                    //     icon: '<span class="apexcharts-custom-icon">💾</span>',
-                                    //     index: -6,
-                                    //     title: 'Download Chart',
-                                    //     class: 'custom-download-icon',
-                                    //     click: downloadChartAsImage,
-                                    // },
+                                     {
+                                        icon: '<span class="apexcharts-custom-icon">💾</span>',
+                                        index: -6,
+                                        title: 'Download Chart',
+                                        class: 'custom-download-icon',
+                                        click: exportChart,
+                                    },
                                 ]
                             }
                         }
@@ -106,7 +101,7 @@ export let htmlContent = `<!DOCTYPE html>
                     chart: {
                         type: "line",
                         height: 401,
-                        background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+                         //background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
                         stacked: false,
                         locales: [locales.en, locales.de],
                         defaultLocale: "en",
@@ -142,13 +137,13 @@ export let htmlContent = `<!DOCTYPE html>
                                         class: 'custom-icon-class custom-icon',
                                         click: toggleMarkers
                                     },
-                                    // {
-                                    //     icon: '<span class="apexcharts-custom-icon">💾</span>',
-                                    //     index: -6,
-                                    //     title: 'Download Chart',
-                                    //     class: 'custom-download-icon',
-                                    //     click: downloadChartAsImage,
-                                    // },
+                                    {
+                                        icon: '<span class="apexcharts-custom-icon">💾</span>',
+                                        index: -6,
+                                        title: 'Download Chart',
+                                        class: 'custom-download-icon',
+                                        click: exportChart,
+                                    },
                                 ],
                             }
                         }
@@ -336,6 +331,36 @@ export let htmlContent = `<!DOCTYPE html>
                 chart = new ApexCharts(document.querySelector("#chart"), options);
                 chart.render();
             }
+            //..........
+            // Export the chart as a PNG image
+            window.ReactNativeWebView.postMessage('Chart loaded');
+      
+            // Export the chart as a PNG image
+            async function exportChart() {
+              try {
+                const dataURI = await chart.dataURI(); // Get Base64 of chart
+                window.ReactNativeWebView.postMessage(dataURI.imgURI); // Send to React Native
+              } catch (error) {
+                console.error('Error exporting chart:', error);
+              }
+            }
+      
+            // Bind the button to trigger export
+            window.exportChart = exportChart;
+            //CSV
+            window.captureCSVDownload = function() {
+                const chart = window.Apex._chartInstances[0]; // Access the ApexCharts chart instance
+                if (chart) {
+                  chart.dataURI().then((uri) => {
+                    // Extract CSV content and send it to React Native
+                    const csvContent = uri.csv;
+                    window.ReactNativeWebView.postMessage(csvContent);
+                  });
+                }
+              };
+             
+              
+            //....
             function updateChart(filteredData, updatedOptions) {
                 chart.updateSeries([{ data: filteredData }]);
                 chart.updateOptions(updatedOptions);
@@ -440,6 +465,8 @@ export let htmlContent = `<!DOCTYPE html>
                 renderChart();
             });
         </script>
+        
+        
     </body>
 </html>
 `;
@@ -871,3 +898,448 @@ const locales = {
 </body>
 </html>
 `;
+// export let htmlContent = `<!DOCTYPE html>
+// <html lang="en">
+//     <head>
+//         <meta charset="UTF-8"/>
+//         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+//         <title>Simple Apex Chart</title>
+//         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+//     </head>
+//     <body>
+//         <div id="chart" style="height: 350px"></div>
+//         <script>
+//             let chart;
+
+//             const locales = {
+//                 en: {
+//                     name: 'en',
+//                     options: {
+//                         months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+//                         shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+//                         days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+//                         shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+//                         toolbar: {
+//                             download: 'Download SVG',
+//                             selection: 'Selection',
+//                             selectionZoom: 'Selection Zoom',
+//                             zoomIn: 'Zoom In',
+//                             zoomOut: 'Zoom Out',
+//                             pan: 'Panning',
+//                             reset: 'Reset Zoom',
+//                         }
+//                     }
+//                 },
+//                 de: {
+//                     name: 'de',
+//                     options: {
+//                         months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+//                         shortMonths: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+//                         days: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+//                         shortDays: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+//                         toolbar: {
+//                             exportToSVG: 'SVG speichern',
+//                             exportToPNG: 'PNG speichern',
+//                             exportToCSV: 'CSV speichern',
+//                             menu: 'Menü',
+//                             selection: 'Auswahl',
+//                             selectionZoom: 'Auswahl vergrößern',
+//                             zoomIn: 'Vergrößern',
+//                             zoomOut: 'Verkleinern',
+//                             pan: 'Verschieben',
+//                             reset: 'Zoom zurücksetzen'
+//                         }
+//                     }
+//                 }
+//             };
+//             // function downloadChartAsImage() {
+//             //     chart.dataURI().then(({ imgURI }) => {
+//             //         // Send Base64 URI to React Native
+//             //         window.ReactNativeWebView.postMessage(JSON.stringify({ action: "downloadChart", data: imgURI }));
+//             //     });
+//             // }
+//             function toggleMarkers() {
+//                 // Start loader
+//                 window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'startLoader' }));
+
+//                 const currentSize = chart.w.config.markers.size;
+//                 const newSize = currentSize === 0 ? 2 : 0;
+
+//                 // Update chart options
+//                 chart.updateOptions({
+//                     markers: {
+//                         size: newSize
+//                     },
+//                     chart: {
+//                         toolbar: {
+//                             tools: {
+//                                 customIcons: [
+//                                     {
+//                                         icon: newSize === 0
+//                                             ? '<span class="apexcharts-custom-icon" >🔘</span>'
+//                                             : '<span class="apexcharts-custom-icon">🔴</span>',
+//                                         title: 'Toggle Markers',
+//                                         index: -5,
+//                                         class: 'custom-icon-class custom-icon',
+//                                         click: toggleMarkers // Reassign to the same function
+//                                     },
+//                                     //  {
+//                                     //     icon: '<span class="apexcharts-custom-icon">💾</span>',
+//                                     //     index: -6,
+//                                     //     title: 'Download Chart',
+//                                     //     class: 'custom-download-icon',
+//                                     //     click: downloadChartAsImage,
+//                                     // },
+//                                 ]
+//                             }
+//                         }
+//                     }
+//                 });
+
+//                 // Stop loader after chart update
+//                 window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'stopLoader' }));
+//             }
+
+//             function renderChart() {
+//                 const options = {
+//                     series: [{ name: "Energy Consumption (kWh)", data: []}],
+//                     chart: {
+//                         type: "line",
+//                         height: 401,
+//                         background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+//                         stacked: false,
+//                         locales: [locales.en, locales.de],
+//                         defaultLocale: "en",
+//                         selection: { enabled: true },
+//                         zoom: { type: "xy", enabled: true, autoScaleYaxis: true },
+//                         offsetX: 0,
+//                         offsetY: 15,
+//                         animations: {
+//                             enabled: true,
+//                             easing: "ease-in",
+//                             speed: 1000,
+//                             dynamicAnimation: { enabled: true, speed: 100 },
+//                             animategradually: { enabled: false, delay: 0 }
+//                         },
+//                         toolbar: {
+//                             show: true,
+//                             offsetX: 5,
+//                             offsetY: 0,
+//                             autoSelected: "zoom",
+//                             tools: {
+//                                 download: true,
+//                                 reset: true,
+//                                 zoomin: true,
+//                                 zoomout: true,
+//                                 zoom: false,
+//                                 pan: false,
+//                                 selection: false,
+//                                 customIcons:[
+//                                     {
+//                                         icon: '<span class="apexcharts-custom-icon">🔘</span>',
+//                                         title: 'Toggle Markers',
+//                                         index: -5,
+//                                         class: 'custom-icon-class custom-icon',
+//                                         click: toggleMarkers
+//                                     },
+//                                     // {
+//                                     //     icon: '<span class="apexcharts-custom-icon">💾</span>',
+//                                     //     index: -6,
+//                                     //     title: 'Download Chart',
+//                                     //     class: 'custom-download-icon',
+//                                     //     click: downloadChartAsImage,
+//                                     // },
+//                                 ],
+//                             }
+//                         }
+//                     },
+//                     stroke: { curve: "straight", width: 0.7 },
+//                     noData: {
+//                       text: "",
+//                       align: "center",
+//                       verticalAlign: "middle",
+//                       offsetX: 0,
+//                       offsetY: 0,
+//                       style: {
+//                           color: "#e31837",
+//                           fontSize: "25px",
+//                           fontFamily: "Helvetica, Arial, sans-serif",
+//                       },
+//                     },
+//                     dataLabels: {
+//                       enabled: false,
+//                       },
+//                       grid: {
+//                         show: true,
+//                         borderColor: "#ccc",
+//                         strokeDashArray: 0,
+//                         position: "back",
+//                         row: {
+//                             colors: ["#e5e5e5", "transparent"],
+//                             opacity: 0.2,
+//                         },
+//                         column: {
+//                             colors: ["#f8f8f8", "transparent"],
+//                             opacity: 0.2,
+//                         },
+//                         xaxis: {
+//                             lines: {
+//                             show: true,
+//                             },
+//                         },
+//                         yaxis: {
+//                             lines: {
+//                             show: true,
+//                             },
+//                         },
+//                         padding: {
+//                             top: -15,
+//                             right: 0,
+//                             bottom: -5,
+//                             left:0,
+//                         },
+//                       },
+//                       markers: {
+//                         size: 0,
+//                         colors: "#b81c03",
+//                         strokeColors: "black",
+//                         strokeWidth: 1,
+//                         strokeOpacity: 0.2,
+//                         strokeDashArray: 0,
+//                         fillOpacity: 2,
+//                         discrete: [],
+//                         shape: "circle",
+//                         offsetX: 0,
+//                         offsetY: 0,
+//                         onClick: undefined,
+//                         onDblClick: undefined,
+//                         showNullDataPoints: false,
+//                         hover: {
+//                             size: undefined,
+//                             sizeOffset: 5,
+//                         },
+//                       },
+//                     xaxis: {
+//                         type: "datetime",
+//                         tickAmount: 5,
+//                         title: { text: "Date / Time",
+//                         style: {
+//                           fontSize: "12px",
+//                           fontFamily: "Helvetica, Arial, sans-serif",
+//                           }, },
+//                         labels: {
+//                             show: true,
+//                             rotate: -45,
+//                             rotateAlways: true,
+//                             position: "top",
+//                             textAnchor: "end",
+//                             hideOverlappingLabels: true,
+//                             showDuplicates: false,
+//                             trim: false,
+//                             maxHeight: 120,
+//                             style: {
+//                               fontSize: "8px",
+//                               fontFamily: "Helvetica, Arial, sans-serif",
+//                               fontWeight: 300,
+//                           },
+//                             formatter: (value) => {
+//                                 const date = new Date(value);
+//                                 return date.toLocaleString("en-IN", {
+//                                     year: "numeric",
+//                                     month: "short",
+//                                     day: "2-digit",
+//                                     timeZone: "Europe/Berlin",
+//                                 });
+//                             },
+//                         },
+//                         axisBorder: {
+//                           show: true,
+//                           color: "#78909C",
+//                           height: 1,
+//                           width: "100%",
+//                           offsetX: 0,
+//                           offsetY: 0,
+//                       },
+//                       axisTicks: {
+//                           show: true,
+//                           borderType: "solid",
+//                           color: "#78909C",
+//                           height: 6,
+//                           offsetX: 0,
+//                           offsetY: 0,
+//                       },
+//                     },
+//                     yaxis: {
+//                         labels: {
+//                             show: true,
+//                             minWidth: 0,
+//                             maxWidth: 160,
+//                             style: {
+//                               fontSize: "8px",
+//                               fontFamily: "Helvetica, Arial, sans-serif",
+//                               fontWeight: 300,
+//                               },
+//                               offsetX: -4,
+//                               offsetY: 0,
+//                             formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 0 }).format(value),
+//                         },
+//                         axisBorder: {
+//                           show: false,
+//                           color: "#78909C",
+//                           offsetX: 0,
+//                           offsetY: 0,
+//                       },
+//                       axisTicks: {
+//                           show: true,
+//                           borderType: "solid",
+//                           color: "#78909C",
+//                           width: 1,
+//                           offsetX: -9,
+//                           offsetY: 0,
+//                       },
+//                         title: { text: "kWh" },
+//                     },
+//                     tooltip: {
+//                         enabled: true,
+//                         shared: true,
+//                         intersect: false,
+//                         onDatasetHover: {
+//                             highlightDataSeries: true,
+//                         },
+//                         y: { formatter: (value) => new Intl.NumberFormat("en-IN", { maximumFractionDigits: 3 }).format(value) + " kWh" },
+//                         x: { show: true ,
+//                           formatter: (value) => {
+//                             const date = new Date(value);
+//                             return date.toLocaleString("en-IN", {
+//                             year: "numeric",
+//                             month: "short",
+//                             day: "2-digit",
+//                             hour: "2-digit",
+//                             minute: "2-digit",
+//                             hour12: false,
+//                             timeZone: "Europe/Berlin",
+//                             });
+//                         },
+//                         },
+//                     },
+//                     fill: {
+//                       colors: ["#b81c03"],
+//                       gradient: {
+//                           shadeIntensity: 1,
+//                           inverseColors: false,
+//                           opacityFrom: 0.2,
+//                           opacityTo: 0,
+//                       },
+//                   },
+//                 };
+
+//                 chart = new ApexCharts(document.querySelector("#chart"), options);
+//                 chart.render();
+//             }
+//             function updateChart(filteredData, updatedOptions) {
+//                 chart.updateSeries([{ data: filteredData }]);
+//                 chart.updateOptions(updatedOptions);
+//             }
+//             function updateChartSeries(filteredData) {
+//                 chart.updateSeries([{ data: filteredData }], true)
+//                 window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartSeriesss' }));
+//             }
+//             function updateChartOptions( updatedOptions) {
+//                 chart.updateOptions(updatedOptions);
+//             }
+//             function resetChartSeries(){
+//                 chart.resetSeries();
+//             }
+//             function appendChartData(data){
+//                 chart.appendData(data)
+//             }
+//             function updateLocale(newLocale) {
+//                 const localeOptions = newLocale === 'de' ? locales.de : locales.en;
+//                 chart.updateOptions({
+//                     chart: {
+//                         defaultLocale: newLocale,
+//                         locales: [localeOptions],
+//                     },
+//                     tooltip: {
+//                         y: {
+//                             formatter: (value) => {
+//                                 const formatter = new Intl.NumberFormat(newLocale === 'de' ? 'de-DE' : 'en-IN', { maximumFractionDigits: 3 });
+//                                 return formatter.format(value) + " kWh";
+//                             },
+//                         },
+//                         x: {
+//                             show: true,
+//                             formatter: (value) => {
+//                                 const date = new Date(value);
+//                                 return date.toLocaleString(newLocale === 'de' ? 'de-DE' : 'en-IN', {
+//                                 year: "numeric",
+//                                 month: "short",
+//                                 day: "2-digit",
+//                                 hour: "2-digit",
+//                                 minute: "2-digit",
+//                                 hour12: false,
+//                                 timeZone: "Europe/Berlin",
+//                                 });
+//                             },
+//                             },
+//                     },
+//                     xaxis: {
+//                         labels: {
+//                             formatter: (value) => {
+//                                 const date = new Date(value);
+//                                 return date.toLocaleString(newLocale === 'de' ? 'de-DE' : 'en-IN', {
+//                                     year: "numeric",
+//                                     month: "short",
+//                                     day: "2-digit",
+//                                     timeZone: "Europe/Berlin",
+//                                 });
+//                             },
+//                         },
+//                     },
+//                     yaxis: {
+//                         labels: {
+//                             show: true,
+//                             minWidth: 0,
+//                             maxWidth: 160,
+//                             style: {
+//                               fontSize: "8px",
+//                               fontFamily: "Helvetica, Arial, sans-serif",
+//                               fontWeight: 300,
+//                             },
+//                             offsetX: -4,
+//                             offsetY: 0,
+//                             formatter: (value) => {
+//                               const formatter = new Intl.NumberFormat(newLocale === 'de' ? 'de-DE' : 'en-IN', { maximumFractionDigits: 0 });
+//                               return formatter.format(value);
+//                             }
+//                         },
+//                         axisBorder: {
+//                           show: false,
+//                           color: "#78909C",
+//                           offsetX: 0,
+//                           offsetY: 0,
+//                       },
+//                       axisTicks: {
+//                           show: true,
+//                           borderType: "solid",
+//                           color: "#78909C",
+//                           width: 1,
+//                           offsetX: -9,
+//                           offsetY: 0,
+//                       },
+//                         title: { text: "kWh" },
+//                     },
+//                 });
+//             }
+//             // Function to get HTML content and send to React Native
+//             // function getHTML() {
+//             //     const htmlContent = document.documentElement.outerHTML;
+//             //     window.ReactNativeWebView.postMessage(htmlContent);
+//             // }
+//             document.addEventListener("DOMContentLoaded", () => {
+//                 renderChart();
+//             });
+//         </script>
+//     </body>
+// </html>
+// `;

@@ -5,19 +5,13 @@ import {
   Platform,
   StatusBar,
 } from "react-native";
-
 import "nativewind";
 import MenuCard from "@/components/MenuCard";
-
 import React, { useState, useEffect } from "react";
-
 import { DashboardCardsEng } from "@/constants/constantData";
-import { usePathname, useRouter } from "expo-router";
-
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
-
 const Dashboard: React.FC = () => {
   const [jsonData, setJsonData] = useState<any>(DashboardCardsEng);
   const isFocused = useIsFocused();

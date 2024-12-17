@@ -11,9 +11,10 @@ const AppLoader: React.FC<AppLoaderProps> = ({ children }) => {
   const isLoading = useSelector((state: any) => state?.navigation?.loading);
   const pathname = usePathname();
   const skipLoadingPaths = ["/", "/login", "/login/forgotpassword"];
+  //&& !skipLoadingPaths.includes(pathname)
   return (
     <View style={{ flex: 1 }}>
-      {isLoading && !skipLoadingPaths.includes(pathname) && <Loader />}
+      {isLoading && <Loader />}
       {children}
     </View>
   );

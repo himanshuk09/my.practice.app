@@ -40,7 +40,7 @@ const SignIn: React.FC = () => {
         return;
       case userName.toLowerCase() === "admin" && password === "enexion1":
         router.push("/dashboard" as any);
-        dispatch(setUser());
+        // dispatch(setUser());
         setUserName("");
         setPassword("");
         return;

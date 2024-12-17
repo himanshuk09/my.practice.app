@@ -531,14 +531,23 @@ const PricesDetails = () => {
             </View>
           </View>
           <View className="py-5 ">
-            <FontAwesome5 name="file-download" size={35} color="#ef4444" />
+            <FontAwesome5
+              name="file-download"
+              size={35}
+              color="#ef4444"
+              onPress={() => {
+                if (Platform.OS !== "web") {
+                  webViewRef?.current.injectJavaScript("exportChart();");
+                }
+              }}
+            />
           </View>
         </View>
 
         {/* Toggle Buttons */}
         <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        {/* Chart Placeholder */}
+        {/* Chart  */}
         <View className="flex-1  border-b border-gray-300">
           {isLoading && <ChartLoader />}
           <ChartComponent
