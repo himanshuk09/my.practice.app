@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   StatusBar,
   Keyboard,
+  Pressable,
 } from "react-native";
 import { Href, Link, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -69,7 +70,7 @@ const SignIn: React.FC = () => {
       const response = await loginUser(payload);
 
       if (response) {
-        dispatch(setUser(response)); // Assuming 'response' contains user data
+        dispatch(setUser()); // Assuming 'response' contains user data
         router.push("/dashboard"); // Redirect to dashboard
       }
     } catch (err: any) {
@@ -157,11 +158,14 @@ const SignIn: React.FC = () => {
               </Text>
             </TouchableOpacity>
             {/** Forget password screen redirector */}
-            <Link href={`/login/forgotpassword`} className="mx-auto mt-5">
+            <Pressable
+              onPress={() => router.replace(`/login/forgotpassword`)}
+              className="mx-auto my-5  p-4"
+            >
               <Text className="text-red-600 capitalize underline text-center text-sm">
                 {i18n.t("forgotyourpassword")}
               </Text>
-            </Link>
+            </Pressable>
           </View>
         </View>
       </View>

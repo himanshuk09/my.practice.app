@@ -11,10 +11,10 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action) => {
+    setUser: (state) => {
       state.value = true;
-      state.user = action.payload;
-      AsyncStorage.setItem("user", action.payload);
+      // state.user = action.payload;
+      // AsyncStorage.setItem("user", action.payload);
       AsyncStorage.setItem("isLoggedIn", "true");
     },
     logout: (state) => {

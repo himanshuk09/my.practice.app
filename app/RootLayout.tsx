@@ -47,7 +47,7 @@ export default function RootLayout() {
       pathname !== "/login" &&
       pathname !== "/login/forgotpassword"
     ) {
-      router.replace("/");
+      // router.replace("/");
     } else if (
       isLoggedIn &&
       (pathname === "/" ||
@@ -55,7 +55,7 @@ export default function RootLayout() {
         pathname === "/login/forgotpassword")
     ) {
       getLanguagePreference();
-      router.replace("/dashboard");
+      // router.replace("/dashboard");
     }
   }, [isLoggedIn, pathname, router]);
 
@@ -75,7 +75,7 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             animation: "slide_from_left",
-            animationDuration: 1000,
+            animationDuration: 500,
           }}
         />
         <Stack.Screen
@@ -83,7 +83,7 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             animation: "slide_from_right",
-            animationDuration: 1000,
+            animationDuration: 500,
           }}
         />
 
@@ -92,7 +92,7 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             animation: "slide_from_bottom",
-            animationDuration: 2000,
+            animationDuration: 500,
           }}
         />
         <Stack.Screen name="+not-found" />
