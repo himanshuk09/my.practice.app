@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
 import { View, Text, Pressable } from "react-native";
 import Portfolio from "@/components/SVG/Portfolio";
@@ -50,13 +50,14 @@ const NotificationIcon = ({ count }: { count: number }) => (
   </Svg>
 );
 
-const MenuCard = ({ item, index, startLoader }: any) => {
+const MenuCard = memo(({ item, index, startLoader }: any) => {
   return (
     <Pressable
       className=" m-1 items-center"
       onPressIn={() => {
         startLoader();
-        setTimeout(() => router.replace(item.route));
+        // setTimeout(() => );
+        router.replace(item.route);
       }}
     >
       <View className="relative   bg-gray-100 w-40 h-40 m-2 rounded-sm justify-center items-center">
@@ -70,6 +71,6 @@ const MenuCard = ({ item, index, startLoader }: any) => {
       </View>
     </Pressable>
   );
-};
+});
 
 export default MenuCard;

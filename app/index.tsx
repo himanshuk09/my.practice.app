@@ -4,7 +4,6 @@ import {
   TextInput,
   Text,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   Keyboard,
   Pressable,
@@ -17,6 +16,7 @@ import { i18n } from "@/languageKeys/i18nConfig";
 import Logo from "@/components/SVG/Logo";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { loginUser } from "@/services/auth.services";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SignIn: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
@@ -50,6 +50,7 @@ const SignIn: React.FC = () => {
   };
   const handleSubmit = async (): Promise<void> => {
     Keyboard.dismiss();
+
     // Validate input
     const validationError = validateInput(userName, password);
     if (validationError) {

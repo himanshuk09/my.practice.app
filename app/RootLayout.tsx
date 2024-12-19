@@ -1,4 +1,4 @@
-import { Stack, useRouter, usePathname } from "expo-router";
+import { Stack, useRouter, usePathname, Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef } from "react";
 import "react-native-reanimated";
@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setInitialState } from "@/store/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { updateLocale } from "@/store/languageSlice";
+import Logo from "@/components/SVG/Logo";
+import { Entypo } from "@expo/vector-icons";
+import { SafeAreaView, View, TouchableOpacity } from "react-native";
 
 export default function RootLayout() {
   const dispatch = useDispatch();
@@ -86,7 +89,6 @@ export default function RootLayout() {
             animationDuration: 500,
           }}
         />
-
         <Stack.Screen
           name="dashboard"
           options={{
@@ -95,6 +97,14 @@ export default function RootLayout() {
             animationDuration: 500,
           }}
         />
+        {/* <Stack.Screen
+          name="/dashboard/(top-tabs)"
+          options={{
+            headerShown: false,
+            animation: "slide_from_right",
+            animationDuration: 500,
+          }}
+        /> */}
         <Stack.Screen name="+not-found" />
       </Stack>
 

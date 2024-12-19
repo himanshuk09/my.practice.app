@@ -3,7 +3,7 @@ import Svg, { SvgProps, Defs, ClipPath, Path, G, Use } from "react-native-svg";
 const aspectRatio = 75.528 / 230.303;
 const newHeight = 58.528;
 const newWidth = newHeight / aspectRatio;
-const Logo = (props: SvgProps) => (
+const Logo = React.memo((props: SvgProps) => (
   <Svg
     viewBox="8723 188 230.303 75.528"
     // width={205.303}
@@ -60,5 +60,5 @@ const Logo = (props: SvgProps) => (
       </G>
     </G>
   </Svg>
-);
+));
 export default Logo;

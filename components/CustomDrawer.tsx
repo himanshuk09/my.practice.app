@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -25,46 +25,48 @@ import { logout, setInitialState } from "@/store/authSlice";
 import * as Linking from "expo-linking";
 // Helper Components
 
-const Submenu = ({
-  isVisible,
-  children,
-  height,
-}: {
-  isVisible: boolean;
-  children: React.ReactNode;
-  height: number | any;
-}) => {
-  const heightAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+const Submenu = memo(
+  ({
+    isVisible,
+    children,
+    height,
+  }: {
+    isVisible: boolean;
+    children: React.ReactNode;
+    height: number | any;
+  }) => {
+    const heightAnim = useRef(new Animated.Value(0)).current;
+    const opacityAnim = useRef(new Animated.Value(0)).current;
 
-  React.useEffect(() => {
-    Animated.timing(heightAnim, {
-      toValue: isVisible ? height : 0,
-      duration: 300,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
-    }).start();
+    React.useEffect(() => {
+      Animated.timing(heightAnim, {
+        toValue: isVisible ? height : 0,
+        duration: 300,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: false,
+      }).start();
 
-    Animated.timing(opacityAnim, {
-      toValue: isVisible ? 1 : 0,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  }, [isVisible]);
+      Animated.timing(opacityAnim, {
+        toValue: isVisible ? 1 : 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    }, [isVisible]);
 
-  return (
-    <Animated.View
-      style={{
-        height: heightAnim,
-        opacity: opacityAnim,
-        overflow: "hidden",
-      }}
-    >
-      {children}
-    </Animated.View>
-  );
-};
-const CustomDrawer = (props: any) => {
+    return (
+      <Animated.View
+        style={{
+          height: heightAnim,
+          opacity: opacityAnim,
+          overflow: "hidden",
+        }}
+      >
+        {children}
+      </Animated.View>
+    );
+  }
+);
+const CustomDrawer = memo((props: any) => {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
   const [isPressed, setIsPressed] = useState(false);
   const dispatch = useDispatch();
@@ -308,5 +310,5 @@ const CustomDrawer = (props: any) => {
       </TouchableOpacity>
     </ScrollView>
   );
-};
+});
 export default CustomDrawer;
