@@ -94,7 +94,9 @@ const SignIn: React.FC = () => {
           <View className="mb-5">
             {errorMessage ? (
               <Text className="text-red-500 mb-2 font-semibold text-center">
-                {i18n.t(errorMessage)}
+                {errorMessage == "Login failed. Please try again."
+                  ? "Login failed. Please try again."
+                  : i18n.t(errorMessage)}
               </Text>
             ) : null}
             {/** Username Feild*/}

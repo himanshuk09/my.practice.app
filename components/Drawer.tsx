@@ -17,6 +17,7 @@ const Drawer = ({ drawerWidth = 280, content }: any) => {
   const dispatch = useDispatch();
   const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
   const translateX = React.useRef(new Animated.Value(-drawerWidth)).current;
+  console.log("isDrawerOpenDD", isDrawerOpen);
   // Gesture handler to detect swipe
   const panResponder = useRef(
     PanResponder.create({

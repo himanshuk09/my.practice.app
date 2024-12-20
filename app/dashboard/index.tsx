@@ -54,5 +54,4 @@ const Dashboard: React.FC = () => {
     </SafeAreaView>
   );
 };
-
 export default Dashboard;

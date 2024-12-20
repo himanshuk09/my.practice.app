@@ -104,7 +104,7 @@ const CustomDrawer = memo((props: any) => {
     },
     {
       label: "settings",
-      route: "/dashboard/setting",
+      route: "/dashboard/settings",
       icon: <MaterialIcons name="settings-suggest" size={25} color="gray" />,
     },
   ];

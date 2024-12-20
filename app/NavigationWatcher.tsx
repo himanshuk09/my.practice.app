@@ -10,6 +10,7 @@ import { BackHandler, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setInitialState } from "@/store/authSlice";
 import { updateLocale } from "@/store/languageSlice";
+import { closeDrawer } from "@/store/drawerSlice";
 
 type NavigationWatcherProps = {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMounted, setIsMounted] = useState(true);
   const currentPath = "/" + segments.join("/");
-
+  const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
   // Fetch user login status and initialize app
   const fetchUserLoginStatus = async () => {
     try {
@@ -45,11 +46,13 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 
   useEffect(() => {
     const backAction = () => {
-      console.log("shouldExitApp", shouldExitApp, currentPath);
+      console.log("isDrawerOpen", isDrawerOpen);
+
+      // if (isDrawerOpen) {
+      //   dispatch(closeDrawer());
+      // }
 
       if (currentPath === "/dashboard") {
-        console.log("match", currentPath);
-
         if (shouldExitApp) {
           Alert.alert(
             "Exit App",

@@ -9,6 +9,7 @@ import Drawer from "@/components/Drawer";
 import { Button, View, StyleSheet } from "react-native";
 import { closeDrawer } from "@/store/drawerSlice";
 import CustomDrawer from "@/components/CustomDrawer";
+import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,11 +40,13 @@ const Layout = () => {
           </View>
         }
       />
-      <NavigationWatcher>
-        <AppLoader>
-          <RootLayout />
-        </AppLoader>
-      </NavigationWatcher>
+      <SwipeDetectionWrapper>
+        <NavigationWatcher>
+          <AppLoader>
+            <RootLayout />
+          </AppLoader>
+        </NavigationWatcher>
+      </SwipeDetectionWrapper>
     </Provider>
   );
 };
