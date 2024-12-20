@@ -16,7 +16,7 @@ export default function LoginLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false, // Hide headers for login-related pages
+        headerShown: false,
       }}
     >
       <Stack.Screen

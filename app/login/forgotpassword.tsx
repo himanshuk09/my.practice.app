@@ -6,15 +6,18 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 import Logo from "@/components/SVG/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
+import { i18n } from "@/languageKeys/i18nConfig";
 const Forgotpassword = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const router = useRouter();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const validateEmail = (text: string) => {
     if (emailRegex.test(text)) {
@@ -42,7 +45,9 @@ const Forgotpassword = () => {
 
           <View className="mb-5">
             <Text className="text-[15px] mb-5 text-gray-400 font-bold">
-              Enter your registered email address to reset your password
+              {i18n.t(
+                "Enter_your_registered_email_address_to_reset_your_password"
+              )}
             </Text>
             {errorMessage ? (
               <Text className="text-red-500 mb-2 font-semibold text-center">
@@ -54,7 +59,7 @@ const Forgotpassword = () => {
                 className={`bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none focus:border-blue-500 focus:shadow-sm focus:shadow-blue-500 mb-10 focus:ring-0 rounded-md  text-lg ${
                   errorMessage && "border-red-500 shadow-red-500 shadow-sm"
                 }`}
-                placeholder="Email"
+                placeholder={i18n.t("email")}
                 textContentType="emailAddress"
                 value={email}
                 onChangeText={(text) => {
@@ -71,16 +76,20 @@ const Forgotpassword = () => {
               />
             </View>
 
-            <TouchableOpacity className="bg-red-600 p-4 rounded-full items-center">
-              <Text className="text-white text-lg font-semibold text-md">
-                Send
+            <TouchableOpacity className="bg-red-600 p-3 rounded-full items-center">
+              <Text className="text-white text-lg font-semibold  uppercase">
+                {i18n.t("send")}
               </Text>
             </TouchableOpacity>
-            <Link href="/" className="mx-auto mt-5">
-              <Text className="text-red-600 underline text-center text-sm">
-                Login
+
+            <Pressable
+              onPress={() => router.replace(`/login`)}
+              className="mx-auto my-5  p-4"
+            >
+              <Text className="text-red-600 capitalize underline text-center text-sm">
+                {i18n.t("login")}
               </Text>
-            </Link>
+            </Pressable>
           </View>
         </View>
       </View>

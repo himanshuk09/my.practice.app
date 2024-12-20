@@ -130,7 +130,7 @@ const CircularLoaderSVGAndroid = () => {
   });
 
   return (
-    <View className="absolute top-0 right-0 bottom-0 left-0 justify-center items-center bg-[#f5f5f5ed] z-50 ">
+    <View className="absolute top-0 right-0 bottom-0 left-0 justify-center items-center bg-[#f5f5f5fa] z-50 ">
       <Animated.View
         className="justify-center items-center"
         style={[{ transform: [{ rotate: rotateInterpolate }] }]}

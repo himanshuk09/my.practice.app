@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useMemo, useRef, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -81,12 +81,15 @@ const CustomDrawer = memo((props: any) => {
     setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
   };
 
-  const getTextAndIconStyle = (routeName: any) => ({
-    color:
-      routeName.replace(/\(.*\)/g, "").replace(/\/\//g, "/") === pathnames
-        ? "white"
-        : "gray",
-  });
+  const getTextAndIconStyle = useMemo(
+    () => (routeName: string) => ({
+      color:
+        routeName.replace(/\(.*\)/g, "").replace(/\/\//g, "/") === pathnames
+          ? "white"
+          : "gray",
+    }),
+    [pathnames]
+  );
 
   const menuItems = [
     {
@@ -166,6 +169,7 @@ const CustomDrawer = memo((props: any) => {
     }
   };
   const handleLogout = () => {
+    dispatch(closeDrawer());
     if (typeof window !== "undefined" && Platform.OS === "web") {
       const isConfirmed = window.confirm("Are you sure you want to logout?");
       if (isConfirmed) {
@@ -214,7 +218,7 @@ const CustomDrawer = memo((props: any) => {
       showsVerticalScrollIndicator={false}
     >
       {menuItems.map((item, index) => (
-        <View key={index}>
+        <View key={index} className="mt-3">
           <TouchableOpacity
             key={index}
             activeOpacity={0.7}
@@ -264,7 +268,7 @@ const CustomDrawer = memo((props: any) => {
             {submenu.items.map((item, subIndex) => (
               <TouchableOpacity
                 key={subIndex}
-                className={`pl-3 ml-12 rounded-md py-3 mr-3  ${
+                className={`pl-3 ml-16 rounded-md py-3 mr-3  ${
                   item.route.replace(/\/\([^)]*\)\//g, "/") === pathnames
                     ? "bg-[#e31837]"
                     : "bg-transparent"
@@ -302,7 +306,7 @@ const CustomDrawer = memo((props: any) => {
           style={{ transform: [{ scaleX: -1 }] }}
         />
         <Text
-          className={`text-xl font-bold  ml-4 ${
+          className={`text-xl font-bold capitalize ml-4 ${
             isPressed ? "text-white" : "text-[#e31837]"
           } `}
         >
@@ -312,4 +316,7 @@ const CustomDrawer = memo((props: any) => {
     </ScrollView>
   );
 });
-export default CustomDrawer;
+const areEqual = (prevProps: any, nextProps: any) =>
+  prevProps.pathnames === nextProps.pathnames;
+
+export default React.memo(CustomDrawer, areEqual);

@@ -40,12 +40,6 @@ const Dashboard: React.FC = () => {
     >
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <View className="justify-center items-center">
-        {/* <Button title="Open Drawer" onPress={() => dispatch(openDrawer())} />
-        <Button title="Close Drawer" onPress={() => dispatch(closeDrawer())} />
-        <Button
-          title="Toggle Drawer"
-          onPress={() => dispatch(toggleDrawer())}
-        /> */}
         <FlatList
           data={jsonData}
           keyExtractor={(item) => item?.id?.toString()}

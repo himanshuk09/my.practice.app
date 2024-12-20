@@ -27,17 +27,17 @@ export default function RootLayout() {
         options={{
           headerShown: false,
           animation: "slide_from_right",
-          animationDuration: 500,
+          animationDuration: 4000,
         }}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name="(drawer)/dashboard"
         options={{
           headerShown: false,
           animation: "slide_from_bottom",
-          animationDuration: 500,
+          animationDuration: 4000,
         }}
-      /> */}
+      />
 
       <Stack.Screen name="+not-found" />
     </Stack>

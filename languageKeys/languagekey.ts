@@ -25,8 +25,8 @@ export const TranslationKeys: Translations | any = {
     December: "December",
     All: "All",
     comingsoon: "Coming Soon!",
-    login: "LOGIN",
-    logout: "Logout",
+    login: "login",
+    logout: "logout",
     forgotyourpassword: "Forgot your password?",
     prices: "prices",
     pfc: "PFC",
@@ -75,6 +75,17 @@ export const TranslationKeys: Translations | any = {
     Average: "Average",
     Customize_View: "Customize View",
     Load_Data_Details: "Load Data Details",
+    Please_enter_your_username_and_password:
+      "Please enter your username and password.",
+    Please_enter_your_username: "Please enter your username.",
+    Please_enter_your_password: "Please enter your password.",
+    Username_should_not_contain_special_characters:
+      "Username should not contain special characters.",
+    An_error_occurred_Please_try_again: "An error occurred. Please try again.",
+    username: "Username",
+    password: "Password",
+    Enter_your_registered_email_address_to_reset_your_password:
+      "Enter your registered email address to reset your password.",
   },
   de: {
     unit: "kWh",
@@ -150,5 +161,17 @@ export const TranslationKeys: Translations | any = {
     Average: "Durchschnitt",
     Customize_View: "Ansicht anpassen",
     Load_Data_Details: "Details Lastdaten",
+    Please_enter_your_username_and_password:
+      "Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein.",
+    Please_enter_your_username: "Bitte geben Sie Ihren Benutzernamen ein.",
+    Please_enter_your_password: "Bitte geben Sie Ihr Passwort ein.",
+    Username_should_not_contain_special_characters:
+      "Der Benutzername sollte keine Sonderzeichen enthalten.",
+    An_error_occurred_Please_try_again:
+      "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    username: "Benutzername",
+    password: "Passwort",
+    Enter_your_registered_email_address_to_reset_your_password:
+      "Geben Sie Ihre registrierte E-Mail-Adresse ein, um Ihr Passwort zurückzusetzen.",
   },
 };

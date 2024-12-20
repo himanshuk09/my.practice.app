@@ -22,7 +22,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
   const segments = useSegments();
   const [shouldExitApp, setShouldExitApp] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isMounted, setIsMounted] = useState(true); // For cleanup in useEffect
+  const [isMounted, setIsMounted] = useState(true);
   const currentPath = "/" + segments.join("/");
 
   // Fetch user login status and initialize app
@@ -103,22 +103,17 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
   }, [currentPath, history, shouldExitApp, dispatch, router, segments]);
 
   useEffect(() => {
-    if (isMounted) {
-      if (
-        !isLoggedIn &&
-        currentPath !== "/" &&
-        currentPath !== "/login" &&
-        currentPath !== "/login/forgotpassword"
-      ) {
-        router.replace("/"); // Redirect to login if not logged in
-      } else if (
-        isLoggedIn &&
-        (currentPath === "/" ||
-          currentPath === "/login" ||
-          currentPath === "/login/forgotpassword")
-      ) {
-        router.replace("/dashboard"); // Redirect to dashboard if logged in
-      }
+    if (!isMounted) return;
+    if (
+      !isLoggedIn &&
+      !["/", "/login", "/login/forgotpassword"].includes(currentPath)
+    ) {
+      router.replace("/"); // Redirect to login if not logged in
+    } else if (
+      isLoggedIn &&
+      ["/", "/login", "/login/forgotpassword"].includes(currentPath)
+    ) {
+      router.replace("/dashboard"); // Redirect to dashboard if logged in
     }
   }, [isLoggedIn, currentPath, router, isMounted]);
   return children;

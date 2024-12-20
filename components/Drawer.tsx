@@ -70,8 +70,7 @@ const Drawer = ({ drawerWidth = 280, content }: any) => {
         ]}
         // {...panResponder.panHandlers}
       >
-        {content}
-        {/* <CustomDrawer startLoader={startLoader} /> */}
+        <CustomDrawer startLoader={startLoader} />
       </Animated.View>
 
       {/* Overlay */}

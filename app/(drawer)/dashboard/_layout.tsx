@@ -1,16 +1,12 @@
-import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import React from "react";
-import { Drawer } from "expo-router/drawer";
 import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import CustomDrawer from "@/components/CustomDrawer";
 import Logo from "@/components/SVG/Logo";
-import { Link, Stack, usePathname } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { useDispatch } from "react-redux";
-import { activeLoading } from "@/store/navigationSlice";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { toggleDrawer } from "@/store/drawerSlice";
+
 const DrawerHeader = React.memo(({ navigation }: any) => {
   const dispatch = useDispatch();
   return (
@@ -18,7 +14,7 @@ const DrawerHeader = React.memo(({ navigation }: any) => {
       <View
         style={{
           paddingHorizontal: 1,
-          height: 100,
+          height: 80,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
@@ -34,7 +30,7 @@ const DrawerHeader = React.memo(({ navigation }: any) => {
           style={{
             position: "absolute",
             left: 10,
-            top: 0,
+            top: 10,
           }}
         >
           <Entypo name="menu" size={30} color="gray" />
@@ -46,44 +42,47 @@ const DrawerHeader = React.memo(({ navigation }: any) => {
     </SafeAreaView>
   );
 });
-const DashboardLayout = () => (
-  <Stack
-    screenOptions={{
-      headerShown: false,
-      gestureEnabled: true,
-      gestureDirection: "vertical",
-      contentStyle: { backgroundColor: "white" },
-      statusBarAnimation: "slide",
-    }}
-  >
-    <Stack.Screen
-      name="index"
-      options={{
-        headerShown: true,
-        animation: "slide_from_left",
-        animationDuration: 500,
-        header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
-      }}
-    />
-    <Stack.Screen
-      name="(top-tabs)"
-      options={{
-        headerShown: true,
-        animation: "slide_from_right",
-        animationDuration: 500,
-        header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
-      }}
-    />
-    <Stack.Screen
-      name="settings"
-      options={{
+const DashboardLayout = () => {
+  const dispatch = useDispatch();
+  return (
+    <Stack
+      screenOptions={{
         headerShown: false,
-        animation: "slide_from_left",
-        animationDuration: 500,
-        header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
+        gestureEnabled: true,
+        gestureDirection: "vertical",
+        contentStyle: { backgroundColor: "white" },
+        statusBarAnimation: "slide",
       }}
-    />
-  </Stack>
-);
+    >
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: true,
+          animation: "slide_from_right",
+          animationDuration: 4000,
+          header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
+        }}
+      />
+      <Stack.Screen
+        name="(top-tabs)"
+        options={{
+          headerShown: true,
+          animation: "slide_from_right",
+          animationDuration: 500,
+          header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
+        }}
+      />
+      <Stack.Screen
+        name="settings"
+        options={{
+          headerShown: true,
+          animation: "slide_from_left",
+          animationDuration: 500,
+          header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
+        }}
+      />
+    </Stack>
+  );
+};
 
 export default DashboardLayout;

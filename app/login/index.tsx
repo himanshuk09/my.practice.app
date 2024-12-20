@@ -27,16 +27,16 @@ const SignIn: React.FC = () => {
   const dispatch = useDispatch();
   const validateInput = (userName: string, password: string): string => {
     if (userName.trim() === "" && password.trim() === "") {
-      return "Please enter your username and password.";
+      return "Please_enter_your_username_and_password";
     }
     if (userName.trim() === "") {
-      return "Please enter your username.";
+      return "Please_enter_your_username";
     }
     if (password.trim() === "") {
-      return "Please enter your password.";
+      return "Please_enter_your_password";
     }
     if (!validateUserName(userName)) {
-      return "Username should not contain special characters.";
+      return "Username_should_not_contain_special_characters";
     }
     return ""; // No error
   };
@@ -75,7 +75,7 @@ const SignIn: React.FC = () => {
         router.push("/dashboard"); // Redirect to dashboard
       }
     } catch (err: any) {
-      setErrorMessage(err?.message || "An error occurred. Please try again.");
+      setErrorMessage(err?.message || "An_error_occurred_Please_try_again");
     } finally {
       dispatch(inActiveLoading());
     }
@@ -94,7 +94,7 @@ const SignIn: React.FC = () => {
           <View className="mb-5">
             {errorMessage ? (
               <Text className="text-red-500 mb-2 font-semibold text-center">
-                {errorMessage}
+                {i18n.t(errorMessage)}
               </Text>
             ) : null}
             {/** Username Feild*/}
@@ -104,7 +104,7 @@ const SignIn: React.FC = () => {
                 className={`bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none focus:border-blue-500 focus:shadow-sm focus:shadow-blue-500 mb-4 focus:ring-0 rounded-md  text-lg ${
                   errorMessage && "border-red-500 shadow-red-300 shadow-sm"
                 }`}
-                placeholder="Username"
+                placeholder={i18n.t("username")}
                 textContentType="username"
                 value={userName}
                 onChangeText={(text) => {
@@ -127,7 +127,7 @@ const SignIn: React.FC = () => {
                 className={`bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none focus:border-blue-500 focus:shadow-blue-500 focus:shadow-sm  mb-4 focus:ring-0 rounded-md  text-lg ${
                   errorMessage && "border-red-500 shadow-red-300 shadow-sm"
                 }`}
-                placeholder="Password"
+                placeholder={i18n.t("password")}
                 placeholderTextColor="#808080"
                 secureTextEntry={hidePassword}
                 value={password}

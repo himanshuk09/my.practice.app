@@ -17,7 +17,8 @@ export default function LoginLayout() {
         options={{
           headerShown: false,
           animation: "slide_from_left",
-          animationDuration: 4000,
+          animationDuration: 5000,
+          animationTypeForReplace: "push",
         }}
       />
       <Stack.Screen
@@ -25,7 +26,7 @@ export default function LoginLayout() {
         options={{
           headerShown: false,
           animation: "slide_from_right",
-          animationDuration: 4000,
+          animationDuration: 5000,
         }}
       />
     </Stack>

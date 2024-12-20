@@ -4,10 +4,7 @@ import {
   SafeAreaView,
   StatusBar,
   Switch,
-  TextInput,
   TouchableOpacity,
-  Animated,
-  BackHandler,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -28,17 +25,6 @@ const Settings = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
-  // useEffect(() => {
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     () => {
-  //       router.push("/dashboard");
-  //       return true;
-  //     }
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, [router]);
   useEffect(() => {
     let timer = setTimeout(() => dispatch(inActiveLoading()), 0);
     return () => clearTimeout(timer);
