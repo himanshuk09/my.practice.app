@@ -29,7 +29,7 @@ const Layout = () => {
   return (
     <Provider store={store}>
       <Drawer
-        drawerWidth={300}
+        drawerWidth={250}
         content={
           <View style={styles.drawerContent}>
             <Button

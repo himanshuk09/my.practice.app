@@ -47,7 +47,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
     const backAction = () => {
       console.log("shouldExitApp", shouldExitApp, currentPath);
 
-      if (currentPath === "/(drawer)/dashboard") {
+      if (currentPath === "/dashboard") {
         console.log("match", currentPath);
 
         if (shouldExitApp) {
