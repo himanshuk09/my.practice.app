@@ -72,7 +72,7 @@ const SignIn: React.FC = () => {
 
       if (response) {
         dispatch(setUser()); // Assuming 'response' contains user data
-        router.push("/dashboard"); // Redirect to dashboard
+        router.push("/(drawer)/dashboard"); // Redirect to dashboard
       }
     } catch (err: any) {
       setErrorMessage(err?.message || "An_error_occurred_Please_try_again");

@@ -13,7 +13,7 @@ export default function LoginLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false, // Hide headers for login-related pages
+        headerShown: false,
       }}
     >
       <Stack.Screen
@@ -26,12 +26,9 @@ export default function LoginLayout() {
         name="prices-setting"
         options={{
           headerShown: true,
-          title: "Settings Prices", // Title of the screen
-
-          // Back button options
+          title: "Settings Prices",
           headerBackButtonDisplayMode: "minimal",
           headerBackVisible: true,
-
           // Header styling
           headerStyle: {
             backgroundColor: "gray", // Header background color

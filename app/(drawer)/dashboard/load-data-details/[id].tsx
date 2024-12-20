@@ -20,7 +20,7 @@ import ChartComponent from "@/components/Chart/ChartComponent";
 import { englishIN, germany, i18n } from "@/languageKeys/i18nConfig";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import Loader, { ChartLoader } from "@/components/Loader";
-import RNFetchBlob from "rn-fetch-blob";
+
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";

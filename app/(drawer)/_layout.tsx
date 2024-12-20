@@ -6,7 +6,7 @@ import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import CustomDrawer from "@/components/CustomDrawer";
 import Logo from "@/components/SVG/Logo";
-import { Link, Stack, usePathname } from "expo-router";
+import { Link, Slot, Stack, usePathname } from "expo-router";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
