@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Animated,
+  BackHandler,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -27,6 +28,17 @@ const Settings = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        router.push("/dashboard");
+        return true;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [router]);
   useEffect(() => {
     let timer = setTimeout(() => dispatch(inActiveLoading()), 0);
     return () => clearTimeout(timer);
@@ -104,7 +116,7 @@ const Settings = () => {
         <TouchableOpacity
           className="items-center p-5 w-[50%]"
           onPress={() => {
-            router.back();
+            router.push("/dashboard");
             setSelectedLanguage(locale);
           }}
         >

@@ -319,7 +319,7 @@ export const DashboardCardsEng = [
     title: "settings",
     icon: "SETTINGS",
     notificationCount: 0,
-    route: "dashboard/setting",
+    route: "dashboard/settings",
   },
 ];
 export const AccordionData = [

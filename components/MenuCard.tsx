@@ -57,7 +57,7 @@ const MenuCard = memo(({ item, index, startLoader }: any) => {
       onPressIn={() => {
         startLoader();
         // setTimeout(() => );
-        router.replace(item.route);
+        router.push(item.route);
       }}
     >
       <View className="relative   bg-gray-100 w-40 h-40 m-2 rounded-sm justify-center items-center">

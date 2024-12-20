@@ -3,12 +3,14 @@ import userReducer from "./authSlice";
 import languageReducer from "./languageSlice";
 import navigationReducer from "./navigationSlice";
 import chartDataFilterReducer from "./chartDataFilterToggle";
+import drawerReducer from "./drawerSlice";
 export const store = configureStore({
   reducer: {
     auth: userReducer,
     language: languageReducer,
     navigation: navigationReducer,
     activeTabFilter: chartDataFilterReducer,
+    drawer: drawerReducer,
   },
   devTools: true,
 });

@@ -23,6 +23,7 @@ import { i18n } from "@/languageKeys/i18nConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setInitialState } from "@/store/authSlice";
 import * as Linking from "expo-linking";
+import { closeDrawer } from "@/store/drawerSlice";
 // Helper Components
 
 const Submenu = memo(
@@ -75,7 +76,7 @@ const CustomDrawer = memo((props: any) => {
   const { startLoader } = props;
   const segments = useSegments();
   const pathname = usePathname();
-  const history = useSelector((state: any) => state.navigation.history);
+
   const toggleSubmenu = (key: string) => {
     setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
   };
@@ -193,7 +194,7 @@ const CustomDrawer = memo((props: any) => {
   const navigationToRoute = (item: any) => {
     if (item?.route && !item?.route.startsWith("http")) {
       router.push(item?.route as Href);
-
+      dispatch(closeDrawer());
       if (pathname !== item?.route) {
         startLoader();
         console.log("inside");
@@ -209,7 +210,7 @@ const CustomDrawer = memo((props: any) => {
   return (
     <ScrollView
       className="flex-1 bg-[#fff]"
-      style={{ paddingTop: (StatusBar.currentHeight || 0) + 25 }}
+      // style={{ paddingTop: (StatusBar.currentHeight || 0) + 25 }}
       showsVerticalScrollIndicator={false}
     >
       {menuItems.map((item, index) => (

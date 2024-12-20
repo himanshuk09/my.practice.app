@@ -4,14 +4,18 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
+  Button,
+  PanResponder,
 } from "react-native";
 import "nativewind";
 import MenuCard from "@/components/MenuCard";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DashboardCardsEng } from "@/constants/constantData";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
+import { closeDrawer, openDrawer, toggleDrawer } from "@/store/drawerSlice";
+
 const Dashboard: React.FC = () => {
   const [jsonData, setJsonData] = useState<any>(DashboardCardsEng);
   const isFocused = useIsFocused();
@@ -19,6 +23,7 @@ const Dashboard: React.FC = () => {
   const startLoader = () => {
     dispatch(activeLoading());
   };
+
   useEffect(() => {
     setJsonData(DashboardCardsEng);
   }, DashboardCardsEng);
@@ -35,6 +40,12 @@ const Dashboard: React.FC = () => {
     >
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <View className="justify-center items-center">
+        {/* <Button title="Open Drawer" onPress={() => dispatch(openDrawer())} />
+        <Button title="Close Drawer" onPress={() => dispatch(closeDrawer())} />
+        <Button
+          title="Toggle Drawer"
+          onPress={() => dispatch(toggleDrawer())}
+        /> */}
         <FlatList
           data={jsonData}
           keyExtractor={(item) => item?.id?.toString()}

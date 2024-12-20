@@ -4,15 +4,20 @@ import {
   TextInput,
   Text,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
+  Keyboard,
+  Pressable,
 } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { Href, Link, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Logo from "@/components/SVG/Logo";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
+import Logo from "@/components/SVG/Logo";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { loginUser } from "@/services/auth.services";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 const SignIn: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -20,33 +25,59 @@ const SignIn: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
   const dispatch = useDispatch();
+  const validateInput = (userName: string, password: string): string => {
+    if (userName.trim() === "" && password.trim() === "") {
+      return "Please enter your username and password.";
+    }
+    if (userName.trim() === "") {
+      return "Please enter your username.";
+    }
+    if (password.trim() === "") {
+      return "Please enter your password.";
+    }
+    if (!validateUserName(userName)) {
+      return "Username should not contain special characters.";
+    }
+    return ""; // No error
+  };
   const validateUserName = (username: string): boolean => {
     const regex = /^[a-zA-Z0-9]+$/;
     return regex.test(username);
   };
-  const handleSubmit = (): void => {
-    switch (true) {
-      case userName.trim() === "" && password.trim() === "":
-        setErrorMessage("Please enter your username and password.");
-        return;
-      case userName.trim() === "":
-        setErrorMessage("Please enter your username.");
-        return;
-      case password.trim() === "":
-        setErrorMessage("Please enter your password.");
-        return;
-      case !validateUserName(userName):
-        setErrorMessage("Username should not contain special characters.");
-        return;
-      case userName.toLowerCase() === "admin" && password === "enexion1":
-        router.push("/dashboard" as any);
-        // dispatch(setUser());
-        setUserName("");
-        setPassword("");
-        return;
-      default:
-        setErrorMessage("The username or password you entered is incorrect.");
-        return;
+  let payload = {
+    email: "john@mail.com",
+    password: "changeme",
+  };
+  const handleSubmit = async (): Promise<void> => {
+    Keyboard.dismiss();
+
+    // Validate input
+    const validationError = validateInput(userName, password);
+    if (validationError) {
+      setErrorMessage(validationError);
+      return;
+    }
+
+    setErrorMessage("");
+
+    try {
+      dispatch(activeLoading());
+      const payload = {
+        email: "john@mail.com",
+        password: "changeme",
+      };
+
+      // Call the loginUser API function
+      const response = await loginUser(payload);
+
+      if (response) {
+        dispatch(setUser()); // Assuming 'response' contains user data
+        router.push("/dashboard"); // Redirect to dashboard
+      }
+    } catch (err: any) {
+      setErrorMessage(err?.message || "An error occurred. Please try again.");
+    } finally {
+      dispatch(inActiveLoading());
     }
   };
 
@@ -55,7 +86,10 @@ const SignIn: React.FC = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
       <View className="flex-1 justify-center items-center">
         <View className="w-11/12 max-w-md p-5">
-          <View className="items-center mb-5 w-full">{/* <Logo /> */}</View>
+          <View className="items-center mb-5 w-full">
+            <Logo />
+          </View>
+          {/**Error Handler */}
 
           <View className="mb-5">
             {errorMessage ? (
@@ -63,6 +97,7 @@ const SignIn: React.FC = () => {
                 {errorMessage}
               </Text>
             ) : null}
+            {/** Username Feild*/}
 
             <View className="relative">
               <TextInput
@@ -72,7 +107,10 @@ const SignIn: React.FC = () => {
                 placeholder="Username"
                 textContentType="username"
                 value={userName}
-                onChangeText={(text) => setUserName(text)}
+                onChangeText={(text) => {
+                  setUserName(text);
+                  if (errorMessage !== "") setErrorMessage("");
+                }}
                 autoCapitalize="none"
               />
               <FontAwesome
@@ -82,6 +120,7 @@ const SignIn: React.FC = () => {
                 color="#6b7280"
               />
             </View>
+            {/**Password Feild */}
 
             <View className="relative">
               <TextInput
@@ -93,7 +132,10 @@ const SignIn: React.FC = () => {
                 secureTextEntry={hidePassword}
                 value={password}
                 textContentType="password"
-                onChangeText={(text) => setPassword(text)}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  if (errorMessage !== "") setErrorMessage("");
+                }}
                 autoCapitalize="none"
               />
               <TouchableOpacity
@@ -107,7 +149,7 @@ const SignIn: React.FC = () => {
                 />
               </TouchableOpacity>
             </View>
-
+            {/**Login Button */}
             <TouchableOpacity
               className="bg-red-600 p-4 rounded-full items-center"
               onPress={handleSubmit}
@@ -116,11 +158,15 @@ const SignIn: React.FC = () => {
                 {i18n.t("login")}
               </Text>
             </TouchableOpacity>
-            <Link href={`/login/forgotpassword`} className="mx-auto mt-5">
+            {/** Forget password screen redirector */}
+            <Pressable
+              onPress={() => router.replace(`/login/forgotpassword`)}
+              className="mx-auto my-5  p-4"
+            >
               <Text className="text-red-600 capitalize underline text-center text-sm">
                 {i18n.t("forgotyourpassword")}
               </Text>
-            </Link>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -129,3 +175,29 @@ const SignIn: React.FC = () => {
 };
 
 export default SignIn;
+// const handleSubmit1 = (): void => {
+//   switch (true) {
+//     case userName.trim() === "" && password.trim() === "":
+//       setErrorMessage("Please enter your username and password.");
+//       return;
+//     case userName.trim() === "":
+//       setErrorMessage("Please enter your username.");
+//       return;
+//     case password.trim() === "":
+//       setErrorMessage("Please enter your password.");
+//       return;
+//     case !validateUserName(userName):
+//       setErrorMessage("Username should not contain special characters.");
+//       return;
+//     case userName.toLowerCase() === "admin" && password === "enexion1":
+//       dispatch(activeLoading());
+//       // dispatch(setUser());
+//       setTimeout(() => router.push("/dashboard" as Href), 1000);
+//       setUserName("");
+//       setPassword("");
+//       return;
+//     default:
+//       setErrorMessage("The username or password you entered is incorrect.");
+//       return;
+//   }
+// };

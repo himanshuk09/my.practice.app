@@ -9,39 +9,9 @@ import Logo from "@/components/SVG/Logo";
 import { Link, Stack, usePathname } from "expo-router";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
-
-const DashboardLayout = () => (
-  <Stack
-    screenOptions={{
-      headerShown: false,
-      gestureEnabled: true,
-      gestureDirection: "vertical",
-      contentStyle: { backgroundColor: "white" },
-      statusBarAnimation: "slide",
-    }}
-  >
-    <Stack.Screen
-      name="index"
-      options={{
-        headerShown: true,
-        animation: "slide_from_left",
-        animationDuration: 500,
-        header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
-      }}
-    />
-    <Stack.Screen
-      name="(top-tabs)"
-      options={{
-        headerShown: true,
-        animation: "slide_from_right",
-        animationDuration: 500,
-        header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
-      }}
-    />
-  </Stack>
-);
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 const DrawerHeader = React.memo(({ navigation }: any) => (
-  <SafeAreaView style={{ backgroundColor: "white", paddingTop: 40 }}>
+  <SafeAreaView style={{ backgroundColor: "white" }}>
     <View
       style={{
         paddingHorizontal: 1,
@@ -87,25 +57,29 @@ const DrawerLayout = () => {
   console.log("drawer");
 
   return (
-    <Drawer
-      screenOptions={{
-        drawerType: "front",
-        lazy: true,
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Drawer
+        screenOptions={{
+          drawerType: "front",
+          lazy: true,
 
-        headerShown: !isSettingsPage,
-        header: ({ navigation }) =>
-          !isSettingsPage && <DrawerHeader navigation={navigation} />,
-        drawerLabelStyle: {
-          fontSize: 20,
-        },
-        drawerStyle: {
-          backgroundColor: "#f9f9f9",
-          width: 280,
-        },
-      }}
-      drawerContent={(props) => <CustomDrawer {...props} />}
-    />
+          headerShown: !isSettingsPage,
+          header: ({ navigation }) =>
+            !isSettingsPage && <DrawerHeader navigation={navigation} />,
+          drawerLabelStyle: {
+            fontSize: 20,
+          },
+          drawerStyle: {
+            backgroundColor: "#f9f9f9",
+            width: 280,
+          },
+        }}
+        drawerContent={(props) => (
+          <CustomDrawer {...props} startLoader={startLoader} />
+        )}
+      ></Drawer>
+    </GestureHandlerRootView>
   );
 };
-//export default DashboardLayout;
-export default DrawerLayout;
+
+// export default DrawerLayout;
