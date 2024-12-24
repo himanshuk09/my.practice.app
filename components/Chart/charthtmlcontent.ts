@@ -143,8 +143,23 @@ export let htmlContent = `<!DOCTYPE html>
                                         title: 'Download Chart',
                                         class: 'custom-download-icon',
                                         click: exportChart,
-                                    },
+                                    }
+                                      
                                 ],
+                            },
+                            export: {
+                                csv: true,  
+                                png: true, 
+                                svg: true   
+                            }
+                        },
+                        events: {
+                            dataURI: function (event, chartContext, config) {
+                                // Post message with download data to React Native
+                                window.ReactNativeWebView.postMessage(JSON.stringify({
+                                    type: 'dataURI',
+                                    dataURI: config.dataURI
+                                }));
                             }
                         }
                     },
@@ -329,12 +344,11 @@ export let htmlContent = `<!DOCTYPE html>
                 };
                 
                 chart = new ApexCharts(document.querySelector("#chart"), options);
-                chart.render();
+                chart.render()
             }
             //..........
             // Export the chart as a PNG image
             window.ReactNativeWebView.postMessage('Chart loaded');
-      
             // Export the chart as a PNG image
             async function exportChart() {
               try {
@@ -347,19 +361,7 @@ export let htmlContent = `<!DOCTYPE html>
       
             // Bind the button to trigger export
             window.exportChart = exportChart;
-            //CSV
-            window.captureCSVDownload = function() {
-                const chart = window.Apex._chartInstances[0]; // Access the ApexCharts chart instance
-                if (chart) {
-                  chart.dataURI().then((uri) => {
-                    // Extract CSV content and send it to React Native
-                    const csvContent = uri.csv;
-                    window.ReactNativeWebView.postMessage(csvContent);
-                  });
-                }
-              };
-             
-              
+           
             //....
             function updateChart(filteredData, updatedOptions) {
                 chart.updateSeries([{ data: filteredData }]);
@@ -456,11 +458,6 @@ export let htmlContent = `<!DOCTYPE html>
                     },
                 });
             }
-            // Function to get HTML content and send to React Native
-            // function getHTML() {
-            //     const htmlContent = document.documentElement.outerHTML;
-            //     window.ReactNativeWebView.postMessage(htmlContent);
-            // }
             document.addEventListener("DOMContentLoaded", () => {
                 renderChart();
             });

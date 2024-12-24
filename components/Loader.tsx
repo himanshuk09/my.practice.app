@@ -186,84 +186,6 @@ const CircularLoaderSVGAndroid = () => {
     </View>
   );
 };
-const ChartCircularLoaderSVGAndroid = () => {
-  const rotation = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const animation = Animated.loop(
-      Animated.timing(rotation, {
-        toValue: 1,
-        duration: 2000, // Rotate fully in 2 seconds
-        useNativeDriver: true, // Use native driver for smooth animations
-      })
-    );
-
-    animation.start();
-
-    return () => animation.stop();
-  }, [rotation]);
-
-  const rotateInterpolate = rotation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
-
-  return (
-    <View className="absolute top-0 right-0 bottom-0 left-0 justify-center items-center bg-[#f5f5f5c2] z-50 ">
-      <Animated.View
-        className="justify-center items-center"
-        style={[{ transform: [{ rotate: rotateInterpolate }] }]}
-      >
-        <Svg
-          width="100"
-          height="75"
-          viewBox="0 0 200 200"
-          style={{ transform: [{ scaleX: -1 }] }}
-        >
-          <Defs>
-            <RadialGradient
-              id="a7"
-              cx=".66"
-              fx=".66"
-              cy=".3125"
-              fy=".3125"
-              gradientTransform="scale(1.5)"
-            >
-              <Stop offset="0" stopColor="#E31837" />
-              <Stop offset="0.3" stopColor="#E31837" stopOpacity="0.9" />
-              <Stop offset="0.6" stopColor="#E31837" stopOpacity="0.6" />
-              <Stop offset="0.8" stopColor="#E31837" stopOpacity="0.3" />
-              <Stop offset="1" stopColor="#E31837" stopOpacity="0" />
-            </RadialGradient>
-          </Defs>
-
-          <Circle
-            fill="none"
-            stroke="url(#a7)"
-            strokeWidth="28"
-            strokeLinecap="round"
-            strokeDasharray="200 1000"
-            strokeDashoffset="0"
-            cx="100"
-            cy="100"
-            r="70"
-          />
-
-          <Circle
-            fill="none"
-            opacity=".2"
-            stroke="#E31837"
-            strokeWidth="28"
-            strokeLinecap="round"
-            cx="100"
-            cy="100"
-            r="70"
-          />
-        </Svg>
-      </Animated.View>
-    </View>
-  );
-};
 const CircularLoaderDefault = () => (
   <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#f5f5f5ed] z-50">
     <ActivityIndicator size={70} color="#E31837" />
@@ -346,19 +268,41 @@ const LoaderPNG = () => {
   );
 };
 
+export const ChartLoaderPNG = () => {
+  const rotation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const startRotation = () => {
+      Animated.loop(
+        Animated.timing(rotation, {
+          toValue: 1,
+          duration: 2000, // 1.5 seconds for a full rotation
+          useNativeDriver: Platform.OS !== "web",
+          easing: Easing.linear,
+        })
+      ).start();
+    };
+
+    startRotation();
+  }, [rotation]);
+
+  const rotate = rotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
+  return (
+    <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#ffffffda] z-50">
+      <Animated.Image
+        source={require("@/assets/images/ic_loader2.png")} // Update the path if needed
+        style={[{ width: 64, height: 64 }, { transform: [{ rotate }] }]}
+      />
+    </View>
+  );
+};
+
 const Loader: React.FC = () => {
   return <LoaderPNG />;
 };
 
-export const ChartLoader: React.FC = () => {
-  return (
-    <>
-      {Platform.OS !== "web" ? (
-        <ChartCircularLoaderSVGAndroid />
-      ) : (
-        <CircularLoaderSVGWeb />
-      )}
-    </>
-  );
-};
 export default Loader;

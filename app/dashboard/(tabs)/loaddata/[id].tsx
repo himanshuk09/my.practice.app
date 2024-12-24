@@ -5,8 +5,6 @@ import {
   SafeAreaView,
   Platform,
   TouchableOpacity,
-  PermissionsAndroid,
-  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -19,12 +17,12 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import ChartComponent from "@/components/Chart/ChartComponent";
 import { englishIN, germany, i18n } from "@/languageKeys/i18nConfig";
 import { cockpitChartData } from "@/constants/cockpitchart";
-import Loader, { ChartLoader } from "@/components/Loader";
-
+import Loader, { ChartLoaderPNG } from "@/components/Loader";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import DateTimePickerComponents from "@/components/DateTimePickerComponents";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import PickerModel from "@/components/PickerModel";
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -97,7 +95,7 @@ const LoadDataDetails = () => {
       (webViewRef.current as any)?.injectJavaScript(jsCommand);
     }
   };
-  const updateChartData = (filteredData: any) => {
+  const updateChartData1 = (filteredData: any) => {
     console.log("filteredData", filteredData?.length);
     updateChart("series", filteredData);
     // setLoading(true);
@@ -239,6 +237,81 @@ const LoadDataDetails = () => {
     //     updateChart("series", filteredData);
     //   }
     // }
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+  const updateChartData = (filteredData: any) => {
+    console.log("filteredData", filteredData?.length);
+    // updateChart("series", filteredData);
+    setLoading(true);
+
+    // Define chart options in a more concise way
+    const updatedOptions = {
+      chart: {
+        animations: { dynamicAnimation: { speed: 1000 } },
+      },
+      noData: { text: "" },
+    };
+    const updatedInitialOptions = {
+      chart: {
+        animations: { dynamicAnimation: { speed: 100 } },
+      },
+      noData: { text: "" },
+    };
+    const updateEmptynoDataOptions = {
+      noData: { text: "" },
+    };
+    const updateNoDataOptions = {
+      noData: { text: "no data" },
+    };
+    const handleChartUpdate = (data: any, options: any) => {
+      updateChart("chart", data, options);
+    };
+    if (filteredData?.length <= 0) {
+      // Handle empty data
+      if (initialRender) {
+        handleChartUpdate([], updateEmptynoDataOptions);
+        setInitialRender(false);
+      } else {
+        handleChartUpdate([], updateNoDataOptions);
+      }
+    } else {
+      // Handle non-empty data based on the selected filter
+      if (activeTab === "Year" && previousTab === "Year") {
+        // Initial state
+        console.log("empty selected", filteredData.length);
+        setTimeout(() => {
+          updateChart("series", filteredData);
+        });
+        updateChart("options", updatedInitialOptions);
+        // handleChartUpdate(filteredData, updatedInitialOptions);
+      } else if (
+        ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
+        previousTab === "Year"
+      ) {
+        // Transition from initial state
+        handleChartUpdate([], {
+          chart: { animations: { dynamicAnimation: { speed: 1000 } } },
+        });
+        updateChart("series", filteredData);
+      } else if (
+        ["Month", "Week", "Day", "Quarter"].includes(previousTab) &&
+        activeTab === "Year"
+      ) {
+        // Switching back to initial state
+        handleChartUpdate([], updatedInitialOptions);
+        updateChart("series", filteredData);
+      } else if (
+        ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
+        ["Month", "Week", "Day", "Quarter"].includes(previousTab)
+      ) {
+        // Switching between filters
+        console.log("here");
+        updateChart("options", updatedOptions);
+        updateChart("series", filteredData);
+      }
+    }
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -426,24 +499,39 @@ const LoadDataDetails = () => {
     }
   };
   const onMessage = async (event: any) => {
-    const message = event.nativeEvent.data;
-    if (message) {
-      console.log("Full HTML Content:", message);
+    //for file share or save
+    const base64Data = event.nativeEvent.data;
+    if (base64Data && base64Data.startsWith("data:image/png;base64,")) {
+      const fileName = `${FileSystem.documentDirectory}chart.png`;
+      try {
+        // Save Base64 as a file
+        await FileSystem.writeAsStringAsync(
+          fileName,
+          base64Data.split(",")[1],
+          {
+            encoding: FileSystem.EncodingType.Base64,
+          }
+        );
+        // Share or Save the file
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(fileName);
+        }
+      } catch (error) {
+        console.error("Error saving chart image:", error);
+      }
     }
-
-    const updateMessage = JSON.parse(event.nativeEvent.data);
-    if (updateMessage.action === "updateChartSeriesss") {
+    //for loader on marker
+    const webViewMessage = JSON.parse(event.nativeEvent.data);
+    if (webViewMessage.action === "updateChartSeriesss") {
       console.log("update");
     }
-
     // Handle loader actions on tooltip toggle
-    const parsedMessage = JSON.parse(event.nativeEvent.data);
-    if (parsedMessage.action === "startLoader") {
+    if (webViewMessage.action === "startLoader") {
       setLoading(true);
-    } else if (parsedMessage.action === "stopLoader") {
+    } else if (webViewMessage.action === "stopLoader") {
       setTimeout(() => {
         setLoading(false);
-      }, 1000);
+      }, 1500);
     }
   };
 
@@ -549,7 +637,7 @@ const LoadDataDetails = () => {
 
         {/* Chart  */}
         <View className="flex-1  border-b border-gray-300">
-          {isLoading && <ChartLoader />}
+          {isLoading && <ChartLoaderPNG />}
           <ChartComponent
             refereshkey={key}
             webViewRef={webViewRef}
