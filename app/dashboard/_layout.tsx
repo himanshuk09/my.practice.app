@@ -1,49 +1,9 @@
 import "react-native-reanimated";
 import React from "react";
-import { View, TouchableOpacity, SafeAreaView } from "react-native";
-import { Entypo } from "@expo/vector-icons";
-import Logo from "@/components/SVG/Logo";
-import { Link, Stack } from "expo-router";
-import { useDispatch } from "react-redux";
-import { toggleDrawer } from "@/store/drawerSlice";
+import { Stack } from "expo-router";
+import Header from "@/components/MainHeader";
 
-const DrawerHeader = React.memo(({ navigation }: any) => {
-  const dispatch = useDispatch();
-  return (
-    <SafeAreaView style={{ backgroundColor: "white" }}>
-      <View
-        style={{
-          paddingHorizontal: 1,
-          height: 80,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          elevation: 0,
-          shadowColor: "transparent",
-          shadowOpacity: 0,
-          shadowOffset: { width: 0, height: 0 },
-          borderBottomWidth: 0,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => dispatch(toggleDrawer())}
-          style={{
-            position: "absolute",
-            left: 10,
-            top: 10,
-          }}
-        >
-          <Entypo name="menu" size={30} color="gray" />
-        </TouchableOpacity>
-        <Link href={"/dashboard"}>
-          <Logo />
-        </Link>
-      </View>
-    </SafeAreaView>
-  );
-});
 const DashboardLayout = () => {
-  const dispatch = useDispatch();
   return (
     <Stack
       screenOptions={{
@@ -60,7 +20,15 @@ const DashboardLayout = () => {
           headerShown: true,
           animation: "slide_from_right",
           animationDuration: 4000,
-          header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
+          header: ({ navigation }) => <Header navigation={navigation} />,
+        }}
+      />
+      <Stack.Screen
+        name="(tabs)"
+        options={{
+          headerShown: false,
+          animation: "slide_from_right",
+          animationDuration: 5000,
         }}
       />
       <Stack.Screen
@@ -69,7 +37,7 @@ const DashboardLayout = () => {
           headerShown: true,
           animation: "slide_from_right",
           animationDuration: 500,
-          header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
+          header: ({ navigation }) => <Header navigation={navigation} />,
         }}
       />
       <Stack.Screen
@@ -78,7 +46,7 @@ const DashboardLayout = () => {
           headerShown: true,
           animation: "slide_from_left",
           animationDuration: 500,
-          header: ({ navigation }) => <DrawerHeader navigation={navigation} />,
+          header: ({ navigation }) => <Header navigation={navigation} />,
         }}
       />
     </Stack>

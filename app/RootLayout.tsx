@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import "react-native-reanimated";
 import "../global.css";
 
-export default function RootLayout() {
+const RootLayout = () => {
   return (
     <Stack
       screenOptions={{
@@ -42,4 +42,5 @@ export default function RootLayout() {
       <Stack.Screen name="+not-found" />
     </Stack>
   );
-}
+};
+export default RootLayout;

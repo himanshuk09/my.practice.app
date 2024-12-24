@@ -1,37 +1,46 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, PanResponder, StyleSheet } from "react-native";
-import { useDispatch } from "react-redux";
-import { toggleDrawer } from "@/store/drawerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 
 const SwipeDetectionWrapper = ({ children }: any) => {
   const dispatch = useDispatch();
-  let debounceTimeout: any = null; // To hold the timeout ID
-
-  const debounceToggleDrawer = () => {
+  let debounceTimeout: any = null;
+  const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
+  const debounceAction = (action: () => void) => {
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
     }
-
-    // Set a new timeout to debounce the action
-    debounceTimeout = setTimeout(() => {
+    debounceTimeout = setTimeout(action, 300);
+  };
+  const debounceToggleDrawer = () => {
+    debounceAction(() => {
       console.log("Left swipe detected!");
       dispatch(toggleDrawer());
-    }, 300); // 300ms debounce
+    });
+  };
+  const debounceCloseDrawer = () => {
+    debounceAction(() => {
+      console.log("Right to left swipe detected, closing drawer!");
+      dispatch(closeDrawer());
+    });
   };
 
-  // Create a pan responder to handle gestures
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true, // Let the responder handle the touch event
     onMoveShouldSetPanResponder: () => true, // Allow movement during gesture
     onPanResponderMove: (e, gestureState) => {
-      // Detect swipe gesture from the left side && gestureState.dx < 100
-      if (gestureState.moveX < 50) {
+      // Detect swipe gesture from the left side to open the drawer
+      if (gestureState.moveX < 50 && gestureState.dx > 20 && !isDrawerOpen) {
         debounceToggleDrawer();
+      }
+      // Detect swipe gesture from the right side to close the drawer
+      if (gestureState.dx < -20 && isDrawerOpen) {
+        debounceCloseDrawer();
       }
     },
     onPanResponderRelease: () => true,
   });
-
   return (
     <View style={styles.container} {...panResponder.panHandlers}>
       {children}

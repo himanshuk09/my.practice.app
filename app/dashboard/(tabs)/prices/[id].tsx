@@ -46,14 +46,7 @@ const PricesDetails = () => {
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);
   return (
-    <SafeAreaView
-      className="flex-1 "
-      style={{
-        paddingTop:
-          Platform.OS === "android" ? StatusBar?.currentHeight || 100 : 10,
-        marginTop: Platform.OS === "android" ? 36 : 0,
-      }}
-    >
+    <SafeAreaView className="flex-1 ">
       <StatusBar />
 
       <View className="flex-1  bg-white">

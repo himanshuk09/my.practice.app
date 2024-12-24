@@ -4,6 +4,7 @@ import {
   Animated,
   Platform,
   StyleSheet,
+  Easing,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import Svg, {
@@ -312,18 +313,43 @@ const LoadingAnimation = () => {
     </View>
   );
 };
-const Loader: React.FC = () => {
+const LoaderPNG = () => {
+  const rotation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const startRotation = () => {
+      Animated.loop(
+        Animated.timing(rotation, {
+          toValue: 1,
+          duration: 1500, // 1.5 seconds for a full rotation
+          useNativeDriver: Platform.OS !== "web",
+          easing: Easing.linear,
+        })
+      ).start();
+    };
+
+    startRotation();
+  }, [rotation]);
+
+  const rotate = rotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
   return (
-    <>
-      {Platform.OS !== "web" ? (
-        <CircularLoaderSVGAndroid />
-      ) : (
-        <CircularLoaderSVGWeb />
-      )}
-    </>
+    <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#fffffff1] z-50">
+      <Animated.Image
+        source={require("@/assets/images/ic_loader2.png")} // Update the path if needed
+        style={[{ width: 64, height: 64 }, { transform: [{ rotate }] }]}
+      />
+    </View>
   );
 };
-export default Loader;
+
+const Loader: React.FC = () => {
+  return <LoaderPNG />;
+};
+
 export const ChartLoader: React.FC = () => {
   return (
     <>
@@ -335,3 +361,4 @@ export const ChartLoader: React.FC = () => {
     </>
   );
 };
+export default Loader;

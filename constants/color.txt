@@ -1,0 +1,11 @@
+header bg - #e31836
+status bar #c3c3c3
+inactive tab #c1c1c1
+active tab #7c7c7c
+text #474747
+drawer text #9a9b9e
+menu card #ebebeb
+Dashboard bg #ffffff
+list bg #dfdfdf
+title header #dfdfdf
+cards #ebebeb

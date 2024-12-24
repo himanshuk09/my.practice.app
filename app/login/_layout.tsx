@@ -1,7 +1,6 @@
 // app/login/_layout.tsx
 import { Stack } from "expo-router";
-
-export default function LoginLayout() {
+const LoginLayout = () => {
   return (
     <Stack
       screenOptions={{
@@ -31,4 +30,6 @@ export default function LoginLayout() {
       />
     </Stack>
   );
-}
+};
+
+export default LoginLayout;

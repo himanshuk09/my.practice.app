@@ -8,6 +8,7 @@ import Load from "@/components/SVG/Load";
 import Settings from "@/components/SVG/Settings";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { router } from "expo-router";
+import Signals from "./SVG/Signals";
 
 const routeToComponent = (icon: string) => {
   switch (icon) {
@@ -18,7 +19,7 @@ const routeToComponent = (icon: string) => {
     case "LOAD":
       return <Load />;
     case "SIGNALS":
-      return <Load />;
+      return <Signals />;
     case "PORTFOLIO":
       return <Portfolio />;
     case "SETTINGS":
@@ -31,7 +32,7 @@ const NotificationIcon = ({ count }: { count: number }) => (
   <Svg
     height="40"
     width="40"
-    style={{ position: "absolute", top: 5, right: 5, zIndex: 0 }}
+    style={{ position: "absolute", top: 14, right: 12, zIndex: 0 }}
   >
     <G>
       <Circle cx="20" cy="20" r="10" fill="#e31837" />
@@ -56,13 +57,12 @@ const MenuCard = memo(({ item, index, startLoader }: any) => {
       className=" m-1 items-center"
       onPressIn={() => {
         startLoader();
-        // setTimeout(() => );
-        router.push(item.route);
+        setTimeout(() => router.push(item.route));
       }}
     >
-      <View className="relative   bg-gray-100 w-40 h-40 m-2 rounded-sm justify-center items-center">
+      <View className="relative   bg-[#ebebeb] w-44 h-40 my-5 mx-2 rounded-sm justify-center items-center">
         {routeToComponent(item?.icon)}
-        <Text className="text-lg text-gray-500 font-bold uppercase">
+        <Text className="text-xl text-gray-700 font-medium uppercase mt-1">
           {i18n.t(item?.title)}
         </Text>
         {item?.notificationCount > 0 && (

@@ -6,6 +6,7 @@ import {
   Platform,
   StatusBar,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -37,10 +38,10 @@ const PricesSettings = () => {
     return options.map((option) => (
       <TouchableOpacity
         key={option}
-        className={`flex  px-2 justify-center items-center flex-row  mx-1 rounded-md ${
+        className={`flex  px-2 justify-center items-center flex-row  mx-1 rounded-sm ${
           selectedValue === option
             ? "bg-[#fff] border-[1px] border-[#e31837] min-w-24"
-            : "bg-[#C0C0C0]"
+            : "bg-[#d6d6d6] border-none"
         }`}
         onPress={() => setSelectedValue(option)}
       >
@@ -52,11 +53,22 @@ const PricesSettings = () => {
           {option}
         </Text>
         {selectedValue === option && (
-          <Ionicons
-            name="checkbox"
-            size={20}
-            color="#e31837"
-            style={{ position: "absolute", top: 0, right: 0, marginLeft: 1 }}
+          // <Ionicons
+          //   name="checkbox"
+          //   size={20}
+          //   color="#e31837"
+          //   style={{ position: "absolute", top: 0, right: 0, marginLeft: 1 }}
+          // />
+          <Image
+            source={require("@/assets/images/tickMark.png")}
+            style={{
+              position: "absolute",
+              top: 1,
+              right: 1,
+              marginLeft: 1,
+              height: 15,
+              width: 15,
+            }}
           />
         )}
       </TouchableOpacity>
@@ -80,21 +92,14 @@ const PricesSettings = () => {
   }, [filteredProductTypes]);
   const dispatch = useDispatch();
   useEffect(() => {
-    setTimeout(() => dispatch(inActiveLoading()), 100);
+    dispatch(inActiveLoading());
   }, [isFocused]);
   return (
-    <SafeAreaView
-      className="flex-1 "
-      style={{
-        paddingTop:
-          Platform.OS === "android" ? StatusBar?.currentHeight || 100 : 10,
-        marginTop: Platform.OS === "android" ? 36 : 0,
-      }}
-    >
+    <SafeAreaView className="flex-1 bg-white">
       <StatusBar />
       {/* Market Place Section */}
       <View className="p-2 mb-3 py-3 w-full bg-white shadow-2xl shadow-gray-200 ">
-        <Text className="text-lg font-bold ml-3 capitalize text-gray-500 mb-1">
+        <Text className="text-lg font-bold ml-3 capitalize text-[#9a9b9d] mb-1">
           Market Place
         </Text>
         <Picker
@@ -126,8 +131,8 @@ const PricesSettings = () => {
       </View>
 
       {/* Energy Type Section */}
-      <View className="p-2 mx-1 py-3 w-full mb-5 bg-[#E5E4E2]">
-        <Text className="text-lg font-bold ml-3 capitalize text-gray-500 mb-1">
+      <View className="p-2 mx-1 py-3 w-full mb-5 bg-[#f2f2f2]">
+        <Text className="text-lg font-bold ml-3 capitalize text-[#9a9b9d] mb-1">
           Energy Type
         </Text>
         <View className="flex-row flex-wrap gap-1 mx-2 mt-5 mb-7">
@@ -140,8 +145,8 @@ const PricesSettings = () => {
       </View>
 
       {/* Product Type Section */}
-      <View className="p-2 mx-1 py-3 w-full mb-5 bg-[#E5E4E2] ">
-        <Text className="text-lg font-bold ml-3 capitalize text-gray-500 mb-1">
+      <View className="p-2 mx-1 py-3 w-full mb-5 bg-[#f2f2f2] ">
+        <Text className="text-lg font-bold ml-3 capitalize text-[#9a9b9d] mb-1">
           Product Type
         </Text>
         <View className="flex-row flex-wrap gap-1 mx-2 mt-5 mb-7">

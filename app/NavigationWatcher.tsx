@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSegments } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  activeLoading,
-  addRouteToHistory,
-  removeLastRoute,
-} from "@/store/navigationSlice";
+
 import { BackHandler, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setInitialState } from "@/store/authSlice";
 import { updateLocale } from "@/store/languageSlice";
 import { closeDrawer } from "@/store/drawerSlice";
+import { activeLoading } from "@/store/navigationSlice";
 
 type NavigationWatcherProps = {
   children: React.ReactNode;
@@ -26,6 +23,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
   const [isMounted, setIsMounted] = useState(true);
   const currentPath = "/" + segments.join("/");
   const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
+  const [drawerOpen, SetDrawerOpen] = useState(false);
   // Fetch user login status and initialize app
   const fetchUserLoginStatus = async () => {
     try {
@@ -46,11 +44,12 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 
   useEffect(() => {
     const backAction = () => {
-      console.log("isDrawerOpen", isDrawerOpen);
+      console.log("isDrawerOpen", isDrawerOpen, drawerOpen);
 
-      // if (isDrawerOpen) {
-      //   dispatch(closeDrawer());
-      // }
+      if (isDrawerOpen) {
+        dispatch(closeDrawer());
+        return true;
+      }
 
       if (currentPath === "/dashboard") {
         if (shouldExitApp) {
@@ -73,24 +72,19 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
         return true; // Prevent default back behavior
       }
 
-      // Handle `/dashboard/(top-tabs)/...` back press
-      // if (currentPath.startsWith("/dashboard/(top-tabs)/")) {
-      //   dispatch(activeLoading());
-      //   setTimeout(() => router.replace("/dashboard"));
-      //   // Navigate to `/dashboard`
-      //   return true;
-      // }
-
-      // // Standard back navigation
-      // if (history.length > 1) {
-      //   dispatch(removeLastRoute());
-      //   dispatch(activeLoading());
-      //   setTimeout(() => {
-      //     router.replace(history[history.length - 2]);
-      //   }); // Navigate to the previous route
-      //   return true;
-      // }
-
+      if (
+        [
+          "/dashboard/(tabs)/prices",
+          "/dashboard/(tabs)/pfc",
+          "/dashboard/(tabs)/loaddata",
+          "/dashboard/(tabs)/signals",
+          "/dashboard/(tabs)/porfolio",
+        ].includes(currentPath)
+      ) {
+        dispatch(activeLoading());
+        setTimeout(() => router.replace("/dashboard"));
+        return true;
+      }
       return false;
     };
     fetchUserLoginStatus();
@@ -111,14 +105,15 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
       !isLoggedIn &&
       !["/", "/login", "/login/forgotpassword"].includes(currentPath)
     ) {
-      router.replace("/"); // Redirect to login if not logged in
+      router.replace("/");
     } else if (
       isLoggedIn &&
       ["/", "/login", "/login/forgotpassword"].includes(currentPath)
     ) {
-      router.replace("/dashboard"); // Redirect to dashboard if logged in
+      router.replace("/dashboard");
     }
   }, [isLoggedIn, currentPath, router, isMounted]);
+
   return children;
 };
 

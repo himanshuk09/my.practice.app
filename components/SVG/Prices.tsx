@@ -5,20 +5,16 @@ const Prices = (props: SvgProps) => (
   <Svg viewBox="9172 243.793 51.05 47.207" width={49} height={46} {...props}>
     <Defs></Defs>
     <G id="Group_317" data-name="Group 317" transform="translate(9172 243.793)">
-      <G
-        id="Group_313"
-        data-name="Group 313"
-        transform="translate(11.143 4.819)"
-      >
+      <G id="Group_313" data-name="Group 313" transform="translate(11.143 6)">
         <Path
           id="Path_142"
           data-name="Path 142"
           fill="#e31837"
           d="M-.787,0H-4V3.831L-.169,0Z"
-          transform="translate(4)"
+          transform="translate(4,3)"
         />
       </G>
-      <G id="Group_314" data-name="Group 314" transform="translate(2.315 0)">
+      <G id="Group_314" data-name="Group 314" transform="translate(2.315 4)">
         <Path
           id="Path_143"
           data-name="Path 143"
@@ -26,11 +22,7 @@ const Prices = (props: SvgProps) => (
           d="M0,0V.191L.524.715l4.3,4.3V0Z"
         />
       </G>
-      <G
-        id="Group_315"
-        data-name="Group 315"
-        transform="translate(2.308 8.142)"
-      >
+      <G id="Group_315" data-name="Group 315" transform="translate(2.308 12)">
         <Path
           id="Path_144"
           data-name="Path 144"
@@ -39,7 +31,7 @@ const Prices = (props: SvgProps) => (
           transform="translate(0.009 42.863)"
         />
       </G>
-      <G id="Group_316" data-name="Group 316" transform="translate(0 0.263)">
+      <G id="Group_316" data-name="Group 316" transform="translate(0 4)">
         <Path
           id="Path_145"
           data-name="Path 145"

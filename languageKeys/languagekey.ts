@@ -87,6 +87,7 @@ export const TranslationKeys: Translations | any = {
     Enter_your_registered_email_address_to_reset_your_password:
       "Enter your registered email address to reset your password.",
     "Login failed. Please try again.": "Login failed. Please try again.",
+    portfolio_overview: "Portfolio Overview",
   },
   de: {
     unit: "kWh",
@@ -176,5 +177,6 @@ export const TranslationKeys: Translations | any = {
       "Geben Sie Ihre registrierte E-Mail-Adresse ein, um Ihr Passwort zurückzusetzen.",
     "Login failed. Please try again.":
       "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
+    portfolio_overview: "Portfolio Übersicht",
   },
 };

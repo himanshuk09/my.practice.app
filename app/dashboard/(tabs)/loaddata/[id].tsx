@@ -30,7 +30,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "";
-const PricesDetails = () => {
+const LoadDataDetails = () => {
   const [isLoading, setLoading] = useState(false);
   const [loadDetail, setloadDetails] = useState<any>();
   const [activeTab, setActiveTab] = useState<tabsType>("Year");
@@ -582,4 +582,4 @@ const PricesDetails = () => {
   );
 };
 
-export default PricesDetails;
+export default LoadDataDetails;

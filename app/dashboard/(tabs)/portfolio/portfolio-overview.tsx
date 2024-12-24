@@ -361,12 +361,7 @@ const Portfolio_OverView = () => {
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);
   return (
-    <SafeAreaView
-      className="flex-1 "
-      // style={{
-      //   paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      // }}
-    >
+    <SafeAreaView className="flex-1 ">
       <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
       <View className="flex-1 bg-white p-4">
         <View className="flex flex-row justify-between h-[30%] mb-2">

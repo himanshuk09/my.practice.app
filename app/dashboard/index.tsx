@@ -14,7 +14,6 @@ import { DashboardCardsEng } from "@/constants/constantData";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
-import { closeDrawer, openDrawer, toggleDrawer } from "@/store/drawerSlice";
 
 const Dashboard: React.FC = () => {
   const [jsonData, setJsonData] = useState<any>(DashboardCardsEng);

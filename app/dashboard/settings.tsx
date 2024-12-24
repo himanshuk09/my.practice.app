@@ -102,7 +102,7 @@ const Settings = () => {
         <TouchableOpacity
           className="items-center p-5 w-[50%]"
           onPress={() => {
-            router.push("/dashboard");
+            router.back();
             setSelectedLanguage(locale);
           }}
         >
@@ -115,7 +115,7 @@ const Settings = () => {
           className="items-center p-5  w-[50%] bg-[#e31837]"
           onPress={() => {
             dispatch(updateLocale(selectedLanguage));
-            router.push("/dashboard");
+            router.back();
           }}
         >
           <Text className="text-center text-white uppercase font-normal">

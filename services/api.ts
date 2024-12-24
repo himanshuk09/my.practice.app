@@ -1,8 +1,9 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
+const url = "https://api.escuelajs.co/api/v1";
 const api = axios.create({
-  baseURL: "https://api.escuelajs.co/api/v1",
+  baseURL: url,
 });
 
 const getToken = async () => {

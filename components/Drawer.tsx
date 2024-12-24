@@ -1,5 +1,5 @@
 // Drawer.js
-import { closeDrawer, openDrawer } from "@/store/drawerSlice";
+import { closeDrawer, openDrawer, toggleDrawer } from "@/store/drawerSlice";
 import React, { useRef } from "react";
 import {
   View,
@@ -13,43 +13,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import CustomDrawer from "./CustomDrawer";
 
-const Drawer = ({ drawerWidth = 280, content }: any) => {
+const Drawer = ({ drawerWidth = 280 }: any) => {
   const dispatch = useDispatch();
   const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
   const translateX = React.useRef(new Animated.Value(-drawerWidth)).current;
-  console.log("isDrawerOpenDD", isDrawerOpen);
-  // Gesture handler to detect swipe
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        // Only handle gestures starting from the left edge
-        return gestureState.moveX < 30 && !isDrawerOpen;
-      },
-      onPanResponderMove: (evt, gestureState) => {
-        // Update drawer position during swipe
-        if (gestureState.dx > 0) {
-          translateX.setValue(Math.min(gestureState.dx - drawerWidth, 0));
-        }
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        // Open the drawer if the swipe is sufficient
-        if (gestureState.dx > 50) {
-          dispatch(openDrawer());
-        } else {
-          Animated.timing(translateX, {
-            toValue: -drawerWidth,
-            duration: 300,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-    })
-  ).current;
+
   React.useEffect(() => {
     Animated.timing(translateX, {
       toValue: isDrawerOpen ? 0 : -drawerWidth,
-      duration: 300,
+      duration: 200,
       useNativeDriver: true,
     }).start();
   }, [isDrawerOpen]);
@@ -60,6 +32,40 @@ const Drawer = ({ drawerWidth = 280, content }: any) => {
   const startLoader = () => {
     dispatch(activeLoading());
   };
+  let debounceTimeout: any = null;
+
+  const debounceAction = (action: () => void) => {
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+    debounceTimeout = setTimeout(action, 300);
+  };
+  const debounceToggleDrawer = () => {
+    debounceAction(() => {
+      console.log("Left swipe detected!");
+      dispatch(toggleDrawer());
+    });
+  };
+  const debounceCloseDrawer = () => {
+    debounceAction(() => {
+      console.log("Right to left swipe detected, closing drawer!");
+      dispatch(closeDrawer());
+    });
+  };
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderMove: (e, gestureState) => {
+      if (gestureState.moveX < 50 && gestureState.dx > 20 && !isDrawerOpen) {
+        debounceToggleDrawer();
+      }
+      if (gestureState.dx < -20 && isDrawerOpen) {
+        debounceCloseDrawer();
+      }
+    },
+    onPanResponderRelease: () => true,
+  });
   return (
     <>
       <View {...panResponder.panHandlers} style={StyleSheet.absoluteFill} />
@@ -69,7 +75,7 @@ const Drawer = ({ drawerWidth = 280, content }: any) => {
           styles.drawer,
           { width: drawerWidth, transform: [{ translateX }] },
         ]}
-        // {...panResponder.panHandlers}
+        {...panResponder.panHandlers}
       >
         <CustomDrawer startLoader={startLoader} />
       </Animated.View>

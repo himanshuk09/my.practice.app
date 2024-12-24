@@ -201,7 +201,6 @@ const CustomDrawer = memo((props: any) => {
       dispatch(closeDrawer());
       if (pathname !== item?.route) {
         startLoader();
-        console.log("inside");
       }
     } else if (item?.route?.startsWith("http")) {
       if (Platform.OS === "web") {

@@ -14,10 +14,6 @@ const Portfolio: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const response = await axios.get(
-        //   "https://api.jsonbin.io/v3/qs/6757ea6bacd3cb34a8b7110d"
-        // );
-        // console.log(response);
         setGasData(gasItems);
         setPowerData(powerItems);
         dispatch(inActiveLoading());

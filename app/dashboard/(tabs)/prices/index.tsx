@@ -88,9 +88,7 @@ const Prices = () => {
               color="white"
               onPress={() => {
                 dispatch(activeLoading());
-                setTimeout(() =>
-                  router.push("/dashboard/setting/prices-setting")
-                );
+                setTimeout(() => router.push("/dashboard/prices/settings"));
               }}
             />
           </View>
