@@ -100,6 +100,18 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             containerStyle={{
               overflow: "hidden",
             }}
+            onFileDownload={({ nativeEvent }: any) => {
+              const { downloadUrl } = nativeEvent;
+              console.log("DownloadUrl", downloadUrl);
+            }}
+            scalesPageToFit={false}
+            allowsInlineMediaPlayback
+            // startInLoadingState
+            onHttpError={(syntheticEvent) => {
+              const { statusCode } = syntheticEvent.nativeEvent;
+              console.log("HTTP error status code", statusCode);
+            }}
+            injectedJavaScript={`document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=3.0, user-scalable=yes');`}
           />
         </>
       ) : (

@@ -1,13 +1,8 @@
-import { i18n } from "@/languageKeys/i18nConfig";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { Text, View, Animated, TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { Animated, View, TouchableOpacity } from "react-native";
 
-const CustomSwitch = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [translateX] = useState(new Animated.Value(0));
+const CustomSwitch = ({ isEnabled = true, setIsEnabled }: any) => {
+  const [translateX] = useState(new Animated.Value(isEnabled ? 30 : 0));
 
   const toggleSwitch = () => {
     setIsEnabled(!isEnabled);
@@ -55,27 +50,4 @@ const CustomSwitch = () => {
     </View>
   );
 };
-
-const Imprint = () => {
-  const dispatch = useDispatch();
-  const isFocused = useIsFocused();
-  useEffect(() => {
-    setTimeout(() => dispatch(inActiveLoading()), 100);
-  }, [isFocused]);
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
-  return (
-    <View className="flex-1 justify-center items-center bg-gray-100">
-      {/* <ComingSoon /> */}
-
-      <Text className="text-4xl font-bold text-gray-700 mb-4">
-        {i18n.t("comingsoon")}
-      </Text>
-      <Text className="text-lg text-center  text-gray-500">
-        {i18n.t("We_re_working_hard_to_bring_you_something_amazing")}
-      </Text>
-      <CustomSwitch />
-    </View>
-  );
-};
-
-export default Imprint;
+export default CustomSwitch;

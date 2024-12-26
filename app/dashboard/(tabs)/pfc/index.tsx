@@ -19,7 +19,11 @@ const PFC = () => {
         <FlatListBlock title="Gas" items={PFCGas} enableAutoScroll={false} />
       )}
       {PFCStrom && (
-        <FlatListBlock title="Gas" items={PFCStrom} enableAutoScroll={false} />
+        <FlatListBlock
+          title="Strom"
+          items={PFCStrom}
+          enableAutoScroll={false}
+        />
       )}
     </SafeAreaView>
   );

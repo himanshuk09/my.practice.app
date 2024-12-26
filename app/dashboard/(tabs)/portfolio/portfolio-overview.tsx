@@ -35,7 +35,7 @@ const Portfolio_OverView = () => {
           labels: ["Open", "Closed"],
           chart: {
             type: 'donut',
-            height: '95%',
+            height: '100%',
             background: "none",
             animations: { enabled: true },
             toolbar: {
@@ -44,8 +44,8 @@ const Portfolio_OverView = () => {
               offsetY: 0,
               autoSelected: "zoom",
               tools: {
-                download: true,
-                reset: true,
+                download: false,
+                reset: false,
                 zoomin: true,
                 zoomout: true,
                 zoom: false,
@@ -81,19 +81,20 @@ const Portfolio_OverView = () => {
                   show: true,
                   name: {
                     show: false,
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    color: "#263238",
-                    offsetY: 0,
+                    // fontSize: "18px",
+                    // fontWeight: "bold",
+                    // color: "#dbe2e5a8",
+                    // offsetY: 0,
                   },
                   value: {
                     show: true,
                     fontSize: "16px",
                     fontWeight: "bold",
                     color:[ "#e31837"],
-                    offsetY: 0,
+                    offsetY: 2,
+                    offsetX:10,
                     formatter: function (val) {
-                      return val +"%";
+                      return val +"\t%";
                     },
                   },
                   total: {
@@ -114,7 +115,7 @@ const Portfolio_OverView = () => {
           },
           
           dataLabels: { enabled: false },
-          fill: { type: 'gradient' },
+          // fill: { type: 'gradient' },
           legend: {
             show: true,
             position: 'bottom'
@@ -134,7 +135,8 @@ const Portfolio_OverView = () => {
               chart: { width: '100%' , background: "transparent",},
               legend: { position: 'bottom' }
             }
-          }]
+          }],
+          
         };
 
         var donutchart = new ApexCharts(document.querySelector("#donut-chart"), options);
@@ -166,6 +168,9 @@ const Portfolio_OverView = () => {
         function updateChartOptions( updatedOptions) {
           chart.updateOptions(updatedOptions);
         }
+
+
+       
       });
     </script>
   </body>
@@ -183,35 +188,45 @@ const Portfolio_OverView = () => {
       <div id="chart" style="width:100%; height:100%;"></div>
       <script>
         var options = {
-          series: [{
-            name: 'Open',
-            data: [31, 40, 28, 51, 42, 109, 100]
-          }, {
-            name: 'Closed',
-            data: [11, 32, 45, 32, 34, 52, 41]
-          }],
-          colors: ["#ff0000", "#808080"],
-          
+          series: [
+            {
+              name: 'Forward',
+              data: [10, 25, 15, 30, 20, 35, 25, 40, 20, 15, 10, 30],
+            },
+            {
+              name: 'IbISwing',
+              data: [15, 20, 10, 35, 25, 30, 20, 25, 15, 20, 25, 15],
+            },
+            {
+              name: 'IbIspot',
+              data: [20, 10, 30, 25, 35, 20, 10, 15, 30, 25, 35, 20],
+            },
+            {
+              name: 'Closed',
+              data: [5, 10, 7, 12, 8, 15, 10, 8, 12, 5, 7, 10],
+            },
+          ],
+          colors: ["#cecece", "#e4e4e4","#b5b5b5","#c32442"],
           chart: {
-            height: 305,
-            type: "area",
-            zoom: {
-              enabled: true,
-            },
-            background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
-            toolbar: {
-              show: true,
-              offsetX: 0,
-              offsetY: 0,
-              tools: {
-                download: true,
-                selection: true,
-                zoom: false,
-                zoomin: true,
-                zoomout: true,
-                pan: false,
+              height: 360,
+              type: "area",
+              zoom: {
+                enabled: true,
               },
-            },
+              background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+              toolbar: {
+                show: true,
+                offsetX: 0,
+                offsetY: 0,
+                tools: {
+                  download: true,
+                  selection: true,
+                  zoom: false,
+                  zoomin: true,
+                  zoomout: true,
+                  pan: false,
+                },
+              },
           },
           title: {
             text: "Target 2024",
@@ -229,25 +244,25 @@ const Portfolio_OverView = () => {
             curve: 'smooth'
           },
           xaxis: {
-            type: 'datetime',
-            categories: [
-              "2018-09-19T00:00:00.000Z",
-              "2018-09-19T01:30:00.000Z",
-              "2018-09-19T02:30:00.000Z",
-              "2018-09-19T03:30:00.000Z",
-              "2018-09-19T04:30:00.000Z",
-              "2018-09-19T05:30:00.000Z",
-              "2018-09-19T06:30:00.000Z"
-            ]
+            type: "category",
+          categories: [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct","Nov","Dec"
+          ]
           },
           yaxis: {
             title: {
-              text: "MWh",
+              text: "MW",
             },
           },
           legend: {
             show: true,
             position: "bottom",
+            markers: {
+              width: 40, // Makes the marker wide like a line
+              height: 1, // Reduces the height to appear as a thin line
+              radius: 0, // No rounded corners, to maintain a line shape
+              offsetX: -5, // Adjust the position slightly
+            },
           },
           tooltip: {
             x: {
@@ -356,7 +371,30 @@ const Portfolio_OverView = () => {
       `updateChartOptions(${JSON.stringify(newOptions)});`
     );
   };
-
+  const closedData = [
+    { value: "770,005", unit: "$" },
+    { value: "17,588", unit: "MWh" },
+    { value: "43.83", unit: "$/MWh" },
+  ];
+  const openData = [
+    { value: "2,829,207", unit: "$" },
+    { value: "57,288", unit: "MWh" },
+    { value: "49.39", unit: "$/MWh" },
+  ];
+  const InfoItem = ({
+    value,
+    unit,
+    width,
+  }: {
+    value: string;
+    unit: string;
+    width: string;
+  }) => (
+    <View className={`flex-row justify-between ${width}`}>
+      <Text className="text-md font-medium text-slate-400 ml-2">{value}</Text>
+      <Text className="text-md font-medium text-slate-400">{unit}</Text>
+    </View>
+  );
   useEffect(() => {
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);
@@ -373,38 +411,45 @@ const Portfolio_OverView = () => {
             />
           </View>
           <View className="w-[40%] flex flex-col justify-start m-1">
-            <View className="mb-2">
+            <View className="mb-2 ">
               <Text className="text-rose-600 font-bold">Closed</Text>
-              {["770,005 $", "17,588 MWh", "43.83 $/MWh"].map((item, index) => (
+              {/* {["770,005 $", "17,588 MWh", "43.83 $/MWh"].map((item, index) => (
                 <Text
                   key={index}
                   className="text-md font-medium text-slate-400 ml-2"
                 >
                   {item}
                 </Text>
+              ))} */}
+              {closedData.map((item, index) => (
+                <InfoItem
+                  key={index}
+                  value={item.value}
+                  unit={item.unit}
+                  width={["w-24", "w-32", "w-36"][index]}
+                />
               ))}
             </View>
             <View>
               <Text className="text-slate-400 font-bold">Open</Text>
-              {["2,829,207 $", "57,288 MWh", "49.39 $/MWh"].map(
-                (item, index) => (
-                  <Text
-                    key={index}
-                    className="text-md font-medium text-slate-400 ml-2"
-                  >
-                    {item}
-                  </Text>
-                )
-              )}
+
+              {openData.map((item, index) => (
+                <InfoItem
+                  key={index}
+                  value={item.value}
+                  unit={item.unit}
+                  width={["w-24", "w-32", "w-36"][index]}
+                />
+              ))}
             </View>
           </View>
         </View>
         <View className="h-1 bg-slate-300 my-2" />
-        <View className="h-[55%]">
+        <View className="h-[60%]">
           <WebViewComponent htmlcontentIframe={areaChartHtmlIframe} />
         </View>
         <TouchableOpacity
-          className="h-10 items-center bg-[#e31837] m-3 justify-center"
+          className="h-12 items-center bg-[#e31837] m-1 justify-center"
           onPress={viewDetails}
         >
           <Text className="text-white font-bold">VIEW DETAILS</Text>

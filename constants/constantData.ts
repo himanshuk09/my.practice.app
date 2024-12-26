@@ -394,147 +394,147 @@ export const PFCGas = [
   {
     id: 1,
     title: "Gas PFC Cyclic",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/pfc/1",
   },
   {
     id: 2,
     title: "Gas PFC aCyclic",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/pfc/2",
   },
 ];
 export const PFCStrom = [
   {
-    id: 1,
+    id: 10,
     title: "Power PFC Externe Strom (Stabdard)",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/pfc/10",
   },
   {
-    id: 2,
+    id: 20,
     title: "Power PFC Externe Strom (Grun)",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/pfc/20",
   },
   {
-    id: 3,
+    id: 30,
     title: "Power PFC Continuous",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/pfc/30",
   },
   {
-    id: 4,
+    id: 40,
     title: "Power PFC Elektrik Turkey",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/pfc/40",
   },
   {
-    id: 5,
+    id: 50,
     title: "Power PFC HUPX",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/pfc/50",
   },
 ];
 export const SignalsGas = [
   {
     id: 1,
     title: "Gas Cal+1",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/1",
   },
   {
     id: 2,
     title: "Gas Cal+2",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/2",
   },
   {
     id: 3,
     title: "Gas Cal+3",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/3",
   },
   {
     id: 4,
     title: "Gas Q+1",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/4",
   },
   {
     id: 5,
     title: "Gas Q+2",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/5",
   },
   {
     id: 6,
     title: "Gas Q+3",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/6",
   },
   {
     id: 7,
     title: "Gas Q+4",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/7",
   },
 ];
 export const SignalsStrom = [
   {
-    id: 1,
-    title: "Power Cal+1 Base",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
-    id: 2,
-    title: "Power Cal+1 Peak",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
-    id: 3,
-    title: "Power Cal+2 Base",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
-    id: 4,
-    title: "Power Cal+2 Peak",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
-    id: 5,
-    title: "Power Cal+3 Base",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
-    id: 6,
-    title: "Power Cal+3 Peak",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
-    id: 7,
-    title: "Power Q+1 Base",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
-    id: 8,
-    title: "Power Q+1 Peak",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
-    id: 9,
-    title: "Power Q+2 Base",
-    route: "dashboard/portfolio/portfolio-overview",
-  },
-  {
     id: 10,
-    title: "Power Q+2 Peak",
-    route: "dashboard/portfolio/portfolio-overview",
+    title: "Power Cal+1 Base",
+    route: "dashboard/signals/10",
   },
   {
-    id: 12,
+    id: 20,
+    title: "Power Cal+1 Peak",
+    route: "dashboard/signals/20",
+  },
+  {
+    id: 30,
+    title: "Power Cal+2 Base",
+    route: "dashboard/signals/30",
+  },
+  {
+    id: 40,
+    title: "Power Cal+2 Peak",
+    route: "dashboard/signals/40",
+  },
+  {
+    id: 50,
+    title: "Power Cal+3 Base",
+    route: "dashboard/signals/50",
+  },
+  {
+    id: 60,
+    title: "Power Cal+3 Peak",
+    route: "dashboard/signals/60",
+  },
+  {
+    id: 70,
+    title: "Power Q+1 Base",
+    route: "dashboard/signals/70",
+  },
+  {
+    id: 80,
+    title: "Power Q+1 Peak",
+    route: "dashboard/signals/80",
+  },
+  {
+    id: 90,
+    title: "Power Q+2 Base",
+    route: "dashboard/signals/90",
+  },
+  {
+    id: 100,
+    title: "Power Q+2 Peak",
+    route: "dashboard/signals/100",
+  },
+  {
+    id: 120,
     title: "Power Q+3 Base",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/120",
   },
   {
     id: 13,
     title: "Power Q+3 Peak",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/130",
   },
   {
-    id: 14,
+    id: 140,
     title: "Power Q+4 Base",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signals/140",
   },
   {
-    id: 15,
+    id: 150,
     title: "Power Q+4 Peak",
-    route: "dashboard/portfolio/portfolio-overview",
+    route: "dashboard/signal/150",
   },
 ];

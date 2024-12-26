@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/appicon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.himanshuk13.enexion"
+      "package": "com.himanshuk13.enexion",
+      "permissions": ["WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"]
     },
     "web": {
       "bundler": "metro",

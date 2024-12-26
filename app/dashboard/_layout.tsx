@@ -35,7 +35,7 @@ const DashboardLayout = () => {
         name="(top-tabs)"
         options={{
           headerShown: true,
-          animation: "slide_from_right",
+          animation: "fade",
           animationDuration: 500,
           header: ({ navigation }) => <Header navigation={navigation} />,
         }}

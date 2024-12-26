@@ -6,6 +6,7 @@ import {
   Pressable,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import DateTimePickerComponents from "./DateTimePickerComponents";
 import dayjs from "dayjs";
@@ -28,6 +29,9 @@ const PickerModel = ({
   // console.log("end", end);
   useEffect(() => setStartDate(start), [start]);
   useEffect(() => setEndDate(end), [end]);
+  const handleBackgroundPress = () => {
+    setModalVisible(false);
+  };
   return (
     <Modal
       animationType="slide"
@@ -35,155 +39,160 @@ const PickerModel = ({
       visible={modalVisible}
       onRequestClose={() => setModalVisible(!modalVisible)}
     >
-      <View className="flex-1 justify-start pt-24 bg-[#0a0a0aa8] bg-opacity-50">
-        <View className="bg-white mx-2 rounded-lg  ">
-          {/* Title */}
-          <View className="flex-row justify-between p-3 bg-[#ebebeb]">
-            <Text className="text-gray-600 font-bold text-lg ">
-              Period of Time
-            </Text>
-            <TouchableOpacity
-              className="m-1"
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <AntDesign
-                name="close"
-                className="font-bold"
-                size={23}
-                color="#E63757"
-              />
-            </TouchableOpacity>
-          </View>
+      <TouchableWithoutFeedback onPress={handleBackgroundPress}>
+        <View className="flex-1 justify-start pt-24 bg-[#0a0a0aa8] bg-opacity-50">
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <View className="bg-white mx-2 rounded-lg  block-box">
+              {/* Title */}
+              <View className="flex-row justify-between p-3 bg-[#ebebeb]">
+                <Text className="text-gray-600 font-bold text-lg ">
+                  Period of Time
+                </Text>
+                <TouchableOpacity
+                  className="m-1"
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <AntDesign
+                    name="close"
+                    className="font-bold"
+                    size={23}
+                    color="#E63757"
+                  />
+                </TouchableOpacity>
+              </View>
 
-          <View className="flex-row justify-between items-center m-4">
-            <View className="flex-1 mr-2">
-              <Text className=" text-gray-400  mb-1 font-semibold">From</Text>
-              <Pressable
-                className="border border-gray-300 rounded px-2 py-2 flex-row justify-between"
-                onPress={() => setOpenStartDate(!openStartDate)}
-              >
-                <Text className="text-slate-600">
-                  {start
-                    ? dayjs(start).locale("en").format("MMM DD YYYY")
-                    : dayjs().locale("en").format("MMM DD YYYY")}
-                </Text>
-                <FontAwesome name="calendar" size={18} color="#475569" />
-              </Pressable>
-            </View>
-            <View className="flex-1 ml-2">
-              <Text className="text-gray-400 mb-1">00:00</Text>
-              <Pressable
-                className="border border-gray-300 rounded px-2 py-2 flex-row justify-between"
-                onPress={() => setOpenStartDate(!openStartDate)}
-              >
-                <Text className="text-slate-600">
-                  {start
-                    ? dayjs(start).locale("en").format("HH:mm")
-                    : dayjs().locale("en").format("HH:mm")}
-                </Text>
-                <Ionicons name="alarm-outline" size={22} color="#475569" />
-              </Pressable>
-            </View>
-          </View>
+              <View className="flex-row justify-between items-center m-4">
+                <View className="flex-1 mr-2">
+                  <Text className=" text-gray-400  mb-1 font-semibold">
+                    From
+                  </Text>
+                  <Pressable
+                    className="border border-gray-300 rounded px-2 py-2 flex-row justify-between"
+                    onPress={() => setOpenStartDate(!openStartDate)}
+                  >
+                    <Text className="text-slate-600">
+                      {start
+                        ? dayjs(start).locale("en").format("MMM DD YYYY")
+                        : dayjs().locale("en").format("MMM DD YYYY")}
+                    </Text>
+                    <FontAwesome name="calendar" size={18} color="#475569" />
+                  </Pressable>
+                </View>
+                <View className="flex-1 ml-2">
+                  <Text className="text-gray-400 mb-1">00:00</Text>
+                  <Pressable
+                    className="border border-gray-300 rounded px-2 py-2 flex-row justify-between"
+                    onPress={() => setOpenStartDate(!openStartDate)}
+                  >
+                    <Text className="text-slate-600">
+                      {start
+                        ? dayjs(start).locale("en").format("HH:mm")
+                        : dayjs().locale("en").format("HH:mm")}
+                    </Text>
+                    <Ionicons name="alarm-outline" size={22} color="#475569" />
+                  </Pressable>
+                </View>
+              </View>
 
-          <View className="flex-row justify-between items-center m-4">
-            <View className="flex-1 mr-2">
-              <Text className="text-gray-400 mb-1">To</Text>
-              <Pressable
-                className="border border-gray-300 rounded px-2 py-2 flex-row justify-between"
-                onPress={() => setOpenEndDate(!openEndDate)}
-              >
-                <Text className="text-slate-600">
-                  {end
-                    ? dayjs(end).locale("en").format("MMM DD YYYY")
-                    : dayjs().locale("en").format("MMM DD YYYY")}
-                </Text>
-                <FontAwesome name="calendar" size={18} color="#475569" />
-              </Pressable>
-            </View>
-            <View className="flex-1 ml-2">
-              <Text className="text-gray-400 mb-1">00:00</Text>
-              <Pressable
-                className="border border-gray-300 rounded p-2 flex-row justify-between"
-                onPress={() => setOpenStartDate(!openStartDate)}
-              >
-                <Text className="text-slate-600">
-                  {end
-                    ? dayjs(end).locale("en").format("HH:mm")
-                    : dayjs().locale("en").format("HH:mm")}
-                </Text>
-                <Ionicons name="alarm-outline" size={22} color="#475569" />
-              </Pressable>
-            </View>
-          </View>
+              <View className="flex-row justify-between items-center m-4">
+                <View className="flex-1 mr-2">
+                  <Text className="text-gray-400 mb-1">To</Text>
+                  <Pressable
+                    className="border border-gray-300 rounded px-2 py-2 flex-row justify-between"
+                    onPress={() => setOpenEndDate(!openEndDate)}
+                  >
+                    <Text className="text-slate-600">
+                      {end
+                        ? dayjs(end).locale("en").format("MMM DD YYYY")
+                        : dayjs().locale("en").format("MMM DD YYYY")}
+                    </Text>
+                    <FontAwesome name="calendar" size={18} color="#475569" />
+                  </Pressable>
+                </View>
+                <View className="flex-1 ml-2">
+                  <Text className="text-gray-400 mb-1">00:00</Text>
+                  <Pressable
+                    className="border border-gray-300 rounded p-2 flex-row justify-between"
+                    onPress={() => setOpenStartDate(!openStartDate)}
+                  >
+                    <Text className="text-slate-600">
+                      {end
+                        ? dayjs(end).locale("en").format("HH:mm")
+                        : dayjs().locale("en").format("HH:mm")}
+                    </Text>
+                    <Ionicons name="alarm-outline" size={22} color="#475569" />
+                  </Pressable>
+                </View>
+              </View>
 
-          {/* Value Range */}
-          <Text className="text-gray-600 font-bold text-lg p-3 bg-[#ebebeb]">
-            Value Range
-          </Text>
-          <View className="flex-col  m-4">
-            <View className="mr-2 mb-2 w-[50%]">
-              <Text className="text-gray-400 mb-1">From </Text>
-              <TextInput
-                className="border border-gray-300 rounded px-2 py-2"
-                placeholder="877,456 kWh"
-                editable={false}
-              />
+              {/* Value Range */}
+              <Text className="text-gray-600 font-bold text-lg p-3 bg-[#ebebeb]">
+                Value Range
+              </Text>
+              <View className="flex-col  m-4">
+                <View className="mr-2 mb-2 w-[50%]">
+                  <Text className="text-gray-400 mb-1">From </Text>
+                  <TextInput
+                    className="border border-gray-300 rounded px-2 py-2"
+                    placeholder="877,456 kWh"
+                    editable={false}
+                  />
+                </View>
+                <View className="mr-2 mb-2 w-[50%]">
+                  <Text className="text-gray-400 mb-1">To</Text>
+                  <TextInput
+                    className="border border-gray-300 rounded px-2 py-2"
+                    placeholder="1632,418 kWh"
+                    editable={false}
+                  />
+                </View>
+              </View>
+              <View className="flex-row justify-end my-3">
+                <Pressable
+                  className="px-4 py-2"
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text className="text-gray-600 font-bold">Cancle</Text>
+                </Pressable>
+                <Pressable
+                  className="px-4 py-2"
+                  onPress={() => {
+                    // setModalVisible(false);
+                    handleRangeDataFilter();
+                    setTimeout(() => {
+                      setModalVisible(false);
+                    }, 100);
+                  }}
+                >
+                  <Text className="text-red-600 font-extrabold">OK</Text>
+                </Pressable>
+              </View>
+              {openStartDate && (
+                <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8]">
+                  <DateTimePickerComponents
+                    title="Select Start Date"
+                    open={openStartDate}
+                    timePicker={true}
+                    setOpen={setOpenStartDate}
+                    setSingleDate={setStart}
+                  />
+                </View>
+              )}
+              {openEndDate && (
+                <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
+                  <DateTimePickerComponents
+                    title="Select End Date"
+                    open={openEndDate}
+                    timePicker={true}
+                    setOpen={setOpenEndDate}
+                    setSingleDate={setEnd}
+                  />
+                </View>
+              )}
             </View>
-            <View className="mr-2 mb-2 w-[50%]">
-              <Text className="text-gray-400 mb-1">To</Text>
-              <TextInput
-                className="border border-gray-300 rounded px-2 py-2"
-                placeholder="1632,418 kWh"
-                editable={false}
-              />
-            </View>
-          </View>
-          <View className="flex-row justify-end my-3">
-            <Pressable
-              className="px-4 py-2"
-              onPress={() => setModalVisible(false)}
-            >
-              <Text className="text-gray-600 font-bold">Cancle</Text>
-            </Pressable>
-            <Pressable
-              className="px-4 py-2"
-              onPress={() => {
-                // setModalVisible(false);
-                handleRangeDataFilter();
-                setTimeout(() => {
-                  setModalVisible(false);
-                }, 100);
-              }}
-            >
-              <Text className="text-red-600 font-extrabold">OK</Text>
-            </Pressable>
-          </View>
+          </TouchableWithoutFeedback>
         </View>
-
-        {openStartDate && (
-          <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8]">
-            <DateTimePickerComponents
-              title="Select Start Date"
-              open={openStartDate}
-              timePicker={true}
-              setOpen={setOpenStartDate}
-              setSingleDate={setStart}
-            />
-          </View>
-        )}
-        {openEndDate && (
-          <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
-            <DateTimePickerComponents
-              title="Select End Date"
-              open={openEndDate}
-              timePicker={true}
-              setOpen={setOpenEndDate}
-              setSingleDate={setEnd}
-            />
-          </View>
-        )}
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

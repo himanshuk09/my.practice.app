@@ -1,4 +1,6 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
+import { View, TouchableOpacity, Text } from "react-native";
 const PFCLayout = () => {
   return (
     <Stack
@@ -9,6 +11,28 @@ const PFCLayout = () => {
       <Stack.Screen
         name="index"
         options={{ headerShown: false, animation: "slide_from_left" }}
+      />
+      <Stack.Screen
+        name="[id]"
+        options={{
+          headerShown: true,
+          animation: "slide_from_left",
+          header: ({ navigation }) => (
+            <View className="bg-[#ebebeb] px-4 items-center justify-start py-6 flex-row h-20">
+              <TouchableOpacity
+                onPress={() => {
+                  setTimeout(() => navigation.goBack());
+                }}
+                className="w-9"
+              >
+                <MaterialIcons name="arrow-back" size={30} color="#9b9b9b" />
+              </TouchableOpacity>
+              <Text className="ml-4 font-medium text-2xl text-[#9b9b9b]">
+                PFC Details
+              </Text>
+            </View>
+          ),
+        }}
       />
     </Stack>
   );

@@ -7,9 +7,11 @@ import {
   Platform,
   Animated,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import Loader from "./Loader";
 import { useIsFocused } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { activeLoading } from "@/store/navigationSlice";
 
 const FlatListBlock1 = ({
   title,
@@ -17,6 +19,7 @@ const FlatListBlock1 = ({
   enableAutoScroll = true,
   height = "auto",
 }: any) => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const flatListRef = useRef<any>(null);
   const currentYear = new Date().getFullYear();
@@ -26,7 +29,12 @@ const FlatListBlock1 = ({
     <TouchableOpacity
       key={item.id}
       className="flex justify-start p-5 text-lg font-serif font-medium rounded-sm my-1 shadow-slate-400 shadow-lg bg-white h-20 space-x-1"
-      onPress={() => item.route && router.push(item.route)}
+      onPress={() => {
+        dispatch(activeLoading());
+        setTimeout(() => {
+          router.push(item.route as Href);
+        });
+      }}
     >
       <Text className="text-gray-500 text-base font-normal">{item.title}</Text>
     </TouchableOpacity>

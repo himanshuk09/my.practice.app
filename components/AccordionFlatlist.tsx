@@ -1,4 +1,11 @@
-import { View, Text, FlatList, TouchableOpacity, Animated } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Animated,
+  Platform,
+} from "react-native";
 import React, { useRef, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Href, useRouter } from "expo-router";
@@ -29,16 +36,20 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
         if (animations[key]) {
           Animated.timing(animations[key], {
             toValue: 0,
-            duration: 300,
+            duration: 500,
             useNativeDriver: false,
           }).start();
         }
       });
-
+      const baseValue = detailsLength > 0 ? detailsLength * 78 : 40;
       // Expand the clicked accordion
       Animated.timing(animation, {
-        toValue: detailsLength > 0 ? detailsLength * 75 : 40,
-        duration: 500,
+        toValue: Platform.select({
+          ios: baseValue + 20, // iOS-specific value
+          android: baseValue, // Android-specific value
+          default: baseValue + 35, // Default for other platforms or if no platform-specific values
+        }),
+        duration: 700,
         useNativeDriver: false,
       }).start(() => setExpanded(id));
     }
@@ -51,7 +62,7 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
       <View>
         <TouchableOpacity
           onPress={() => toggleExpand(item.id, item.details.length)}
-          className="flex flex-row justify-between items-center p-4 text-lg font-serif font-medium rounded-sm my-1  shadow-slate-300 shadow-lg bg-white space-x-1 h-20 "
+          className="flex flex-row justify-between items-center p-4 text-lg font-serif font-medium rounded-sm my-1  shadow-slate-60000 shadow-xl bg-white space-x-1 h-20 "
           activeOpacity={0.6}
         >
           <Text className="text-slate-500 w-[95%] text-base  font-normal">
@@ -74,7 +85,7 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
             item?.details.map((detail: any, index: any) => (
               <TouchableOpacity
                 key={index}
-                className="my-1 bg-gray-100 shadow-slate-200 shadow-lg p-3  rounded-sm text-center border-y-4 border-y-white "
+                className="my-1 bg-gray-100 shadow-slate-200 shadow-lg p-3  items-center justify-center  rounded-sm text-center border-y-4 border-y-white h-20"
                 onPress={() => {
                   startLoader();
                   setTimeout(() => router.push(detail.route as Href));

@@ -15,6 +15,7 @@ import { i18n } from "@/languageKeys/i18nConfig";
 import { useRouter } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
+import CustomSwitch from "@/components/CustomSwitch";
 
 const Settings = () => {
   const { locale } = useSelector((state: any) => state.language);
@@ -23,6 +24,8 @@ const Settings = () => {
   const dispatch: AppDispatch = useDispatch();
   const isFocused = useIsFocused();
   const [isEnabled, setIsEnabled] = useState(false);
+  const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
+  const [isSignalsEnabled, setIsSignalsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   useEffect(() => {
@@ -68,7 +71,7 @@ const Settings = () => {
             {i18n.t("show_notifications")}
           </Text>
           <View className="w-20 mr-3">
-            <Switch
+            {/* <Switch
               style={{
                 transform: [{ scaleX: 1.4 }, { scaleY: 1.2 }],
               }}
@@ -77,6 +80,10 @@ const Settings = () => {
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
               value={isEnabled}
+            /> */}
+            <CustomSwitch
+              isEnabled={isNotificationEnabled}
+              setIsEnabled={setIsNotificationEnabled}
             />
           </View>
         </View>
@@ -85,7 +92,7 @@ const Settings = () => {
             {i18n.t("signals")}
           </Text>
           <View className="w-20 mr-3">
-            <Switch
+            {/* <Switch
               style={{
                 transform: [{ scaleX: 1.4 }, { scaleY: 1.2 }],
               }}
@@ -94,6 +101,10 @@ const Settings = () => {
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
               value={isEnabled}
+            /> */}
+            <CustomSwitch
+              isEnabled={isSignalsEnabled}
+              setIsEnabled={setIsSignalsEnabled}
             />
           </View>
         </View>
