@@ -160,9 +160,10 @@ const PricesDetails = () => {
                   },
                 ],
               },
+              { height: "100%" },
             ]}
             onLayout={onLayout}
-            className="h-full absolute justify-center items-center bg-white"
+            className="h-full w-full absolute justify-center items-center bg-white"
           >
             {isChartVisible && <ToggleChartComponent isSignaleScreen={true} />}
           </Animated.View>

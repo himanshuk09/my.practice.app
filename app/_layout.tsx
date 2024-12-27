@@ -5,6 +5,7 @@ import { store } from "@/store/store";
 import AppLoader from "./AppLoader";
 import NavigationWatcher from "./NavigationWatcher";
 import * as SplashScreen from "expo-splash-screen";
+import * as ScreenOrientation from "expo-screen-orientation";
 import Drawer from "@/components/Drawer";
 import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
 
@@ -22,6 +23,15 @@ const Layout = () => {
     }, 2000);
     return () => {
       clearTimeout(timer);
+    };
+  }, []);
+  useEffect(() => {
+    // Lock orientation to portrait
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+
+    return () => {
+      // Unlock orientation when leaving the screen (optional)
+      ScreenOrientation.unlockAsync();
     };
   }, []);
   return (

@@ -13,7 +13,6 @@ export let htmlContent = `<!DOCTYPE html>
         <div id="chart" style="height: 350px"></div>
         <script>
             let chart;
-
             const locales = {
                 en: {
                     name: 'en',
@@ -100,8 +99,8 @@ export let htmlContent = `<!DOCTYPE html>
                     series: [{ name: "Energy Consumption (kWh)", data: []}],
                     chart: {
                         type: "line",
-                        height: 401,
-                         //background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+                        height: 270,
+                        background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
                         stacked: false,
                         locales: [locales.en, locales.de],
                         defaultLocale: "en",
@@ -169,7 +168,7 @@ export let htmlContent = `<!DOCTYPE html>
                             }
                         }
                     },
-                    stroke: { curve: "straight", width: 0.7 },
+                    stroke: { curve: "smooth", width: 1 },//['straight', 'smooth', 'monotoneCubic', 'stepline']
                     noData: {
                       text: "",
                       align: "center",
@@ -347,6 +346,16 @@ export let htmlContent = `<!DOCTYPE html>
                           opacityTo: 0,
                       },
                   },
+                  responsive: [{
+                    breakpoint: 480,
+                    options: {
+                      chart: { 
+                        width: '100%' , 
+                        height:400,
+                        background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center ",
+                      }, 
+                    }
+                  }],
                 };
                 
                 chart = new ApexCharts(document.querySelector("#chart"), options);

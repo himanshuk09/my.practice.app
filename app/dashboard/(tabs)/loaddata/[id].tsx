@@ -23,13 +23,18 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+import * as ScreenOrientation from "expo-screen-orientation";
 import PickerModel from "@/components/PickerModel";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
+import { RootState } from "@/store/store";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "";
 const LoadDataDetails = () => {
+  const isLandscape = useSelector(
+    (state: RootState) => state.orientation.isLandscape
+  );
   const [loadDetail, setloadDetails] = useState<any>();
   const { id } = useLocalSearchParams();
   //convert json to CSV
@@ -85,43 +90,45 @@ const LoadDataDetails = () => {
       <StatusBar />
       <View className="flex-1  bg-white">
         {/* Header Section */}
-        <View className="flex justify-between bg-white  flex-row px-4  m-1 h-28 shadow-2xl shadow-black ">
-          <View
-            className="flex-col py-4"
-            style={{
-              width: Platform.OS === "web" ? "90%" : "85%",
-            }}
-          >
-            <Text className="text-sm font-semibold text-[#b5b5b5] break-words">
-              {loadDetail?.channel}
-            </Text>
-            <View className="flex-row justify-items-start">
-              <Text className="text-[#b5b5b5] text-md">
-                {i18n.t("Energy")}:{" "}
+        {!isLandscape && (
+          <View className="flex justify-between bg-white  flex-row px-4  m-1 h-28 shadow-2xl shadow-black ">
+            <View
+              className="flex-col py-4"
+              style={{
+                width: Platform.OS === "web" ? "90%" : "85%",
+              }}
+            >
+              <Text className="text-sm font-semibold text-[#b5b5b5] break-words">
+                {loadDetail?.channel}
               </Text>
-              <Text className="text-[#b5b5b5] text-sm ml-5">30,319 kWh</Text>
+              <View className="flex-row justify-items-start">
+                <Text className="text-[#b5b5b5] text-md">
+                  {i18n.t("Energy")}:{" "}
+                </Text>
+                <Text className="text-[#b5b5b5] text-sm ml-5">30,319 kWh</Text>
+              </View>
+              <View className="flex-row justify-items-start  ">
+                <Text className="text-[#b5b5b5] text-md">
+                  {i18n.t("Average")}:{" "}
+                </Text>
+                <Text className="text-[#b5b5b5] text-sm ml-5">30,319 kWh</Text>
+              </View>
             </View>
-            <View className="flex-row justify-items-start  ">
-              <Text className="text-[#b5b5b5] text-md">
-                {i18n.t("Average")}:{" "}
-              </Text>
-              <Text className="text-[#b5b5b5] text-sm ml-5">30,319 kWh</Text>
+            <View className="py-5 ">
+              <FontAwesome5
+                name="file-download"
+                size={35}
+                color="#ef4444"
+                onPress={() => saveCSVToFile(cockpitChartData)}
+                // onPress={() => {
+                //   if (Platform.OS !== "web") {
+                //     webViewRef?.current.injectJavaScript("exportChart();");
+                //   }
+                // }}
+              />
             </View>
           </View>
-          <View className="py-5 ">
-            <FontAwesome5
-              name="file-download"
-              size={35}
-              color="#ef4444"
-              onPress={() => saveCSVToFile(cockpitChartData)}
-              // onPress={() => {
-              //   if (Platform.OS !== "web") {
-              //     webViewRef?.current.injectJavaScript("exportChart();");
-              //   }
-              // }}
-            />
-          </View>
-        </View>
+        )}
 
         <ToggleChartComponent
           showRangePicker={false}

@@ -4,7 +4,9 @@ import {
   Platform,
   Button,
   Alert,
+  StyleSheet,
   TouchableOpacity,
+  BackHandler,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import WebView from "react-native-webview";
@@ -12,7 +14,13 @@ import { htmlContent, iframehtmlcontent } from "./charthtmlcontent";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 
-import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
+import * as ScreenOrientation from "expo-screen-orientation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setOrientation } from "@/store/chartSlice";
+import { MaterialIcons } from "@expo/vector-icons";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+
 type ChartComponentProps = {
   webViewRef?: React.RefObject<any>;
   iFrameRef?: React.RefObject<any>;
@@ -60,7 +68,77 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       console.log("Received unexpected message:", base64Data);
     }
   };
+  const dispatch = useDispatch();
+  const isLandscape = useSelector(
+    (state: RootState) => state.orientation.isLandscape
+  );
+  // const checkOrientation = async () => {
+  //   const orientationInfo = await ScreenOrientation.getOrientationAsync();
+  //   const isLandscapeMode =
+  //     orientationInfo === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+  //     orientationInfo === ScreenOrientation.Orientation.LANDSCAPE_RIGHT;
 
+  //   // Dispatch the action to update Redux state
+  //   dispatch(setOrientation(isLandscapeMode));
+  // };
+  // useEffect(() => {
+  //   checkOrientation(); // Check the initial orientation
+  //   const subscription = ScreenOrientation.addOrientationChangeListener(() => {
+  //     checkOrientation(); // Check orientation when it changes
+  //   });
+
+  //   // Cleanup on unmount
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, [dispatch]);
+  // Function to toggle the orientation lock
+  const toggleOrientation = async () => {
+    dispatch(activeLoading());
+    if (isLandscape) {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT
+      );
+    } else {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE
+      );
+    }
+
+    setTimeout(() => {
+      // webViewRef?.current?.reload();
+      (webViewRef?.current as any)?.injectJavaScript(
+        `updateChartOptions(${JSON.stringify({
+          chart: {
+            height: 280,
+          },
+        })});`
+      );
+    }, 500);
+    setTimeout(() => {
+      dispatch(inActiveLoading());
+    }, 2000);
+    dispatch(setOrientation(!isLandscape));
+  };
+
+  useEffect(() => {
+    const handleBackPress = () => {
+      if (isLandscape) {
+        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT); // Switch to portrait mode
+        dispatch(setOrientation(false)); // Update the state to reflect the change
+        return true; // Prevent default back button behavior (optional)
+      }
+      return false; // Let the default back button behavior proceed if not in landscape
+    };
+
+    // Add the back button listener
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+
+    // Cleanup on unmount
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
+    };
+  }, [isLandscape, dispatch]);
   return (
     <>
       {Platform.OS !== "web" ? (
@@ -75,9 +153,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
               webViewRef?.current.injectJavaScript("exportChart();")
             }
           /> */}
+
           <WebView
             key={refereshkey}
-            className="z-20"
+            className="z-50"
             ref={webViewRef}
             originWhitelist={["*"]}
             source={{ html: htmlContent }}
@@ -113,6 +192,21 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             }}
             injectedJavaScript={`document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=3.0, user-scalable=yes');`}
           />
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              bottom: 10,
+              right: 20,
+              zIndex: 1000,
+            }}
+            onPress={toggleOrientation}
+          >
+            <MaterialIcons
+              name={isLandscape ? "zoom-in-map" : "zoom-out-map"}
+              size={24}
+              color="gray"
+            />
+          </TouchableOpacity>
         </>
       ) : (
         <iframe

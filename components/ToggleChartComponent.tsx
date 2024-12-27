@@ -22,6 +22,7 @@ import timezone from "dayjs/plugin/timezone";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import PickerModel from "@/components/PickerModel";
+import { RootState } from "@/store/store";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
@@ -50,7 +51,9 @@ const ToggleChartComponent = ({
   const reloadWebView = () => {
     setKey((prevKey: any) => prevKey + 1);
   };
-
+  const isLandscape = useSelector(
+    (state: RootState) => state.orientation.isLandscape
+  );
   const updateChart = (type: ChartUpdateType, data?: any, options?: any) => {
     if (Platform.OS === "web") {
       const iframe = iFrameRef.current;
@@ -607,7 +610,9 @@ const ToggleChartComponent = ({
   return (
     <View className="flex-1  bg-white">
       {/* Toggle Buttons */}
-      <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
+      {!isLandscape && (
+        <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
+      )}
 
       {/* Chart  */}
       <View className="flex-1  border-gray-300">
@@ -621,7 +626,7 @@ const ToggleChartComponent = ({
       </View>
 
       {/* Bottom Button */}
-      {!isSignaleScreen && (
+      {!isLandscape && !isSignaleScreen && (
         <>
           <TouchableOpacity
             className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
