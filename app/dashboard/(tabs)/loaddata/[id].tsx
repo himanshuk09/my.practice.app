@@ -123,39 +123,11 @@ const LoadDataDetails = () => {
           </View>
         </View>
 
-        <ToggleChartComponent />
-        {/* <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
-
-       
-        <View className="flex-1  border-b border-gray-300">
-          {isLoading && <ChartLoaderPNG />}
-          <ChartComponent
-            refereshkey={key}
-            webViewRef={webViewRef}
-            iFrameRef={iFrameRef}
-            onMessage={onMessage}
-          />
-        </View>
-
-     
-        <TouchableOpacity
-          className="bg-red-500 py-4 mx-5 rounded-lg my-1"
-          onPress={() => setModalVisible(!modalVisible)}
-        >
-          <Text className="text-white text-center text-lg font-semibold uppercase">
-            {i18n.t("Customize_View")}
-          </Text>
-        </TouchableOpacity>
-        <PickerModel
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          timePicker={true}
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          handleRangeDataFilter={handleRangeDataFilter}
-        />*/}
+        <ToggleChartComponent
+          showRangePicker={false}
+          showPeriodOfTime={true}
+          showValueRange={true}
+        />
       </View>
     </SafeAreaView>
   );

@@ -26,7 +26,13 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "";
-const ToggleChartComponent = () => {
+const ToggleChartComponent = ({
+  isSignaleScreen = false,
+  bottonTitle = "Customize_View",
+  showRangePicker,
+  showPeriodOfTime,
+  showValueRange,
+}: any) => {
   const [isLoading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<tabsType>("Year");
   const [previousTab, setPreviousTab] = useState<tabsType>("Year");
@@ -44,6 +50,7 @@ const ToggleChartComponent = () => {
   const reloadWebView = () => {
     setKey((prevKey: any) => prevKey + 1);
   };
+
   const updateChart = (type: ChartUpdateType, data?: any, options?: any) => {
     if (Platform.OS === "web") {
       const iframe = iFrameRef.current;
@@ -424,7 +431,14 @@ const ToggleChartComponent = () => {
     console.log("callled");
     let rangeFilterData = filterDataByDateRange(startDate, endDate);
     console.log("rangeFilterData", rangeFilterData.length);
-    updateChart("series", rangeFilterData);
+    if (rangeFilterData.length === 0) {
+      updateChart("options", {
+        noData: { text: "No data" },
+      });
+      updateChart("series", []);
+    } else {
+      updateChart("series", rangeFilterData);
+    }
     setActiveTab("");
     // const formatter = (value: any) => {
     //   const date = new Date(value);
@@ -596,7 +610,7 @@ const ToggleChartComponent = () => {
       <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Chart  */}
-      <View className="flex-1  border-b border-gray-300">
+      <View className="flex-1  border-gray-300">
         {isLoading && <ChartLoaderPNG />}
         <ChartComponent
           refereshkey={key}
@@ -607,24 +621,31 @@ const ToggleChartComponent = () => {
       </View>
 
       {/* Bottom Button */}
-      <TouchableOpacity
-        className="bg-[#e31836] py-4 mx-5 rounded-lg my-1"
-        onPress={() => setModalVisible(!modalVisible)}
-      >
-        <Text className="text-white text-center text-lg font-semibold uppercase">
-          {i18n.t("Customize_View")}
-        </Text>
-      </TouchableOpacity>
-      <PickerModel
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        timePicker={true}
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        handleRangeDataFilter={handleRangeDataFilter}
-      />
+      {!isSignaleScreen && (
+        <>
+          <TouchableOpacity
+            className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <Text className="text-white text-center text-base font-normal uppercase">
+              {i18n.t(bottonTitle)}
+            </Text>
+          </TouchableOpacity>
+          <PickerModel
+            showRangePicker={showRangePicker}
+            showPeriodOfTime={showPeriodOfTime}
+            showValueRange={showValueRange}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            timePicker={true}
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+            handleRangeDataFilter={handleRangeDataFilter}
+          />
+        </>
+      )}
     </View>
   );
 };

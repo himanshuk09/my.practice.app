@@ -38,7 +38,7 @@ const PricesSettings = () => {
     return options.map((option) => (
       <TouchableOpacity
         key={option}
-        className={`flex  px-2 justify-center items-center flex-row  mx-1 rounded-sm ${
+        className={`flex  px-2 justify-start items-center flex-row  mx-1 rounded-sm ${
           selectedValue === option
             ? "bg-[#fff] border-[1px] border-[#e31837] min-w-24"
             : "bg-[#d6d6d6] border-none"
@@ -46,7 +46,7 @@ const PricesSettings = () => {
         onPress={() => setSelectedValue(option)}
       >
         <Text
-          className={`w-fit my-3 text-md font-medium ${
+          className={`w-fit my-3 text-md font-normal mr-2 ${
             selectedValue === option && "text-gray-900 font-bold"
           }`}
         >
@@ -74,7 +74,44 @@ const PricesSettings = () => {
       </TouchableOpacity>
     ));
   };
-
+  const renderProductButtons = (
+    options: string[],
+    selectedValue: string,
+    setSelectedValue: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    return options.map((option) => (
+      <TouchableOpacity
+        key={option}
+        className={`flex  px-2 justify-start items-center flex-row w-[40%] mx-1 rounded-sm ${
+          selectedValue === option
+            ? "bg-[#fff] border-[1px] border-[#e31837] min-w-24"
+            : "bg-[#d6d6d6] border-none"
+        }`}
+        onPress={() => setSelectedValue(option)}
+      >
+        <Text
+          className={`w-fit my-3 text-md font-normal mr-2 ${
+            selectedValue === option && "text-gray-900 font-bold"
+          }`}
+        >
+          {option}
+        </Text>
+        {selectedValue === option && (
+          <Image
+            source={require("@/assets/images/tickMark.png")}
+            style={{
+              position: "absolute",
+              top: 1,
+              right: 1,
+              marginLeft: 1,
+              height: 15,
+              width: 15,
+            }}
+          />
+        )}
+      </TouchableOpacity>
+    ));
+  };
   const filteredProductTypes: any = allProductTypes[selectedEnergyType];
   const filteredEnergyTypes =
     selectedPlace === "HUPX" ? ["Power"] : energyTypes;
@@ -98,7 +135,7 @@ const PricesSettings = () => {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar />
       {/* Market Place Section */}
-      <View className="p-2 mb-3 py-3 w-full bg-white shadow-2xl shadow-gray-200 ">
+      <View className="p-2 mb-3 py-3 w-full bg-white shadow-lg shadow-black ">
         <Text className="text-lg font-bold ml-3 capitalize text-[#9a9b9d] mb-1">
           Market Place
         </Text>
@@ -131,11 +168,11 @@ const PricesSettings = () => {
       </View>
 
       {/* Energy Type Section */}
-      <View className="p-2 mx-1 py-3 w-full mb-5 bg-[#f2f2f2]">
+      <View className="p-2 mx-1 py-3 w-full mb-3 mt-1 bg-[#f2f2f2] ">
         <Text className="text-lg font-bold ml-3 capitalize text-[#9a9b9d] mb-1">
           Energy Type
         </Text>
-        <View className="flex-row flex-wrap gap-1 mx-2 mt-5 mb-7">
+        <View className="flex-row flex-wrap gap-1 mx-2 mt-5 mb-7 ">
           {renderButtons(
             filteredEnergyTypes,
             selectedEnergyType,
@@ -145,12 +182,12 @@ const PricesSettings = () => {
       </View>
 
       {/* Product Type Section */}
-      <View className="p-2 mx-1 py-3 w-full mb-5 bg-[#f2f2f2] ">
+      <View className="p-2 mx-1 py-3 w-full mb-3 bg-[#f2f2f2] ">
         <Text className="text-lg font-bold ml-3 capitalize text-[#9a9b9d] mb-1">
           Product Type
         </Text>
         <View className="flex-row flex-wrap gap-1 mx-2 mt-5 mb-7">
-          {renderButtons(
+          {renderProductButtons(
             filteredProductTypes,
             selectedProductType,
             setSelectedProductType

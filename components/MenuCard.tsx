@@ -62,7 +62,7 @@ const MenuCard = memo(({ item, index, startLoader }: any) => {
     >
       <View className="relative   bg-[#ebebeb] w-44 h-40 my-5 mx-2 rounded-sm justify-center items-center">
         {routeToComponent(item?.icon)}
-        <Text className="text-xl text-gray-700 font-medium uppercase mt-1">
+        <Text className="text-xl text-gray-600 font-medium uppercase mt-1">
           {i18n.t(item?.title)}
         </Text>
         {item?.notificationCount > 0 && (

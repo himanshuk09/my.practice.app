@@ -73,7 +73,11 @@ const PFCDetails = () => {
             />
           </View>
         </View>
-        <ToggleChartComponent />
+        <ToggleChartComponent
+          showRangePicker={false}
+          showPeriodOfTime={true}
+          showValueRange={false}
+        />
       </View>
     </SafeAreaView>
   );

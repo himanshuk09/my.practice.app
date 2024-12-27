@@ -180,8 +180,8 @@ const TabNavigatorLayout = () => {
             title: i18n.t("pfc"),
           }}
         />
-        <Tabs.Screen name="loaddata" options={{ title: i18n.t("loaddata") }} />
         <Tabs.Screen name="signals" options={{ title: i18n.t("signals") }} />
+        <Tabs.Screen name="loaddata" options={{ title: i18n.t("loaddata") }} />
         <Tabs.Screen
           name="portfolio"
           options={{ title: i18n.t("portfolio") }}

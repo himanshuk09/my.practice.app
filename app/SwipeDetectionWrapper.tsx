@@ -42,7 +42,11 @@ const SwipeDetectionWrapper = ({ children }: any) => {
     onPanResponderRelease: () => true,
   });
   return (
-    <View style={styles.container} {...panResponder.panHandlers}>
+    <View
+      style={styles.container}
+      {...panResponder.panHandlers}
+      className="font-sans"
+    >
       {children}
     </View>
   );

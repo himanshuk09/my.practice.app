@@ -78,7 +78,11 @@ const PricesDetails = () => {
             />
           </View>
         </View>
-        <ToggleChartComponent />
+        <ToggleChartComponent
+          showRangePicker={true}
+          showPeriodOfTime={true}
+          showValueRange={false}
+        />
         {/* 
         <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
         

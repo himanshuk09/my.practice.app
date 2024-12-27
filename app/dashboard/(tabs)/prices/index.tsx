@@ -22,7 +22,7 @@ const Prices = () => {
   const ListItem = memo(({ item }: any) => (
     <TouchableOpacity
       key={item.id}
-      className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1 shadow-slate-400  shadow-lg bg-white h-20"
+      className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1  bg-white h-20"
       onPress={() => {
         dispatch(activeLoading());
         setTimeout(() => router.push(item.route as Href));
@@ -88,6 +88,7 @@ const Prices = () => {
               color="white"
               onPress={() => {
                 dispatch(activeLoading());
+
                 setTimeout(() => router.push("/dashboard/prices/settings"));
               }}
             />
@@ -101,7 +102,7 @@ const Prices = () => {
           renderItem={renderItem}
           keyExtractor={(item: any, index) => index.toString()}
           scrollEnabled={true}
-          className="bg-gray overflow-scroll mx-2"
+          className="bg-gray-100 overflow-scroll mx-2"
           contentContainerStyle={{ paddingTop: 4 }}
         />
       </View>

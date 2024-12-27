@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
@@ -24,8 +24,7 @@ const DateTimePickerComponents = ({
   open,
   setOpen,
   setSingleDate,
-  setStartDate,
-  setEndDate,
+  setRangeDate,
 }: any) => {
   const [mode, setMode] = useState<ModeType>(pickerMode);
   // const [timePicker, setTimePicker] = useState(false);
@@ -54,12 +53,14 @@ const DateTimePickerComponents = ({
         setSingleDate(params.date);
       } else if (mode === "range") {
         setRange(params);
+        setRangeDate(params);
       } else if (mode === "multiple") {
         setDates(params.dates);
       }
     },
     [mode]
   );
+
   // useEffect(() => {
   //   setStartDate(range.startDate);
   // }, [range.startDate]);
@@ -158,6 +159,19 @@ const DateTimePickerComponents = ({
                 ? dayjs(range.endDate).locale(locale).format("MMM, DD, YYYY")
                 : "..."}
             </Text>
+            {date && (
+              <Pressable
+                onPress={() => {
+                  setTimeout(() => setOpen(false), 100);
+                }}
+                accessibilityRole="button"
+                accessibilityLabel="Set"
+              >
+                <View className="bg-[#E63757] px-4 py-2 my-1 rounded-md items-center ">
+                  <Text className="text-white font-medium">Set</Text>
+                </View>
+              </Pressable>
+            )}
           </View>
         ) : mode === "multiple" ? (
           <View style={{ gap: 3 }}>

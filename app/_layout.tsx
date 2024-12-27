@@ -11,7 +11,7 @@ import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
 SplashScreen.preventAutoHideAsync();
 
 SplashScreen.setOptions({
-  duration: 2000,
+  duration: 1000,
   fade: true,
 });
 
@@ -19,7 +19,7 @@ const Layout = () => {
   useEffect(() => {
     let timer = setTimeout(() => {
       SplashScreen.hideAsync();
-    }, 3000);
+    }, 2000);
     return () => {
       clearTimeout(timer);
     };

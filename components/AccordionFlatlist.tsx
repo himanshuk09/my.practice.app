@@ -124,7 +124,7 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
         contentContainerStyle={{
           padding: 10,
         }}
-        className=" bg-gray  overflow-scroll mx-0"
+        className=" bg-gray-100  overflow-scroll mx-0"
       />
     </>
   );

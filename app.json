@@ -31,11 +31,16 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/appicon.png",
-          "resizeMode": "cover",
-          "backgroundColor": "#ffffff"
+          "resizeMode": "contain",
+          "backgroundColor": "#fff"
         }
       ]
     ],
+    "splash": {
+      "image": "./assets/images/appicon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "experiments": {
       "typedRoutes": true
     },

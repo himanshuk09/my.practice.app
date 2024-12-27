@@ -74,6 +74,8 @@ export const TranslationKeys: Translations | any = {
     Energy: "Energy",
     Average: "Average",
     Customize_View: "Customize View",
+    View_Signal_Settings: "View Signal Settings",
+    View_Signal_Chart: "View Signal Chart",
     Load_Data_Details: "Load Data Details",
     Please_enter_your_username_and_password:
       "Please enter your username and password.",
@@ -162,6 +164,8 @@ export const TranslationKeys: Translations | any = {
     Energy: "Energie",
     Average: "Durchschnitt",
     Customize_View: "Ansicht anpassen",
+    View_Signal_Settings: "Signal Einstellungen anzeigen",
+    View_Signal_Chart: "Signal Einstellungen anzeigen",
     Load_Data_Details: "Details Lastdaten",
     Please_enter_your_username_and_password:
       "Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein.",
