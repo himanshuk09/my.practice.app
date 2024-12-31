@@ -49,19 +49,19 @@ export default function FloatingActionMenu({ webViewRef }: any) {
     },
     {
       icon: "home",
-      action: "exportChart()",
+      action: "resetZoom()",
       size: 14,
       color: "#848484",
     },
     {
       icon: tooltip ? "dot-circle" : "circle",
-      action: `toggleMarkers(); setTooltip(!tooltip);`,
+      action: `toggleMarkers():`,
       size: 14,
       color: "#848484",
     },
     {
       icon: "download",
-      action: "resetZoom()",
+      action: " exportChart()",
       size: 14,
       color: "#848484",
     },
