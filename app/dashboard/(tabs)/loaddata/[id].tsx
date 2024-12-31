@@ -27,6 +27,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import PickerModel from "@/components/PickerModel";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { RootState } from "@/store/store";
+import FloatingActionMenu from "@/components/FloatingActionMenu";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
@@ -89,11 +90,10 @@ const LoadDataDetails = () => {
     <SafeAreaView className="flex-1 ">
       <StatusBar />
       <View className="flex-1  bg-white">
-        {/* Header Section */}
         {!isLandscape && (
           <View className="flex justify-between bg-white  flex-row px-4  m-1 h-28 shadow-2xl shadow-black ">
             <View
-              className="flex-col py-4"
+              className="flex-col py-1"
               style={{
                 width: Platform.OS === "web" ? "90%" : "85%",
               }}

@@ -33,7 +33,7 @@
           "image": "./assets/images/appicon.png",
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
-          "imageWidth": 200
+          "imageWidth": 300
         }
       ],
       [
@@ -43,12 +43,6 @@
         }
       ]
     ],
-    "splash": {
-      "image": "./assets/images/appicon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff",
-      "imageWidth": 200
-    },
     "experiments": {
       "typedRoutes": true
     },

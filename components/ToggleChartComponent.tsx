@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StatusBar,
-  SafeAreaView,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Platform, TouchableOpacity, Button } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
@@ -13,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import ChartComponent from "@/components/Chart/ChartComponent";
-import { englishIN, germany, i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/languageKeys/i18nConfig";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { ChartLoaderPNG } from "@/components/Loader";
 import dayjs from "dayjs";
@@ -23,6 +16,7 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import PickerModel from "@/components/PickerModel";
 import { RootState } from "@/store/store";
+import FloatingActionMenu from "./FloatingActionMenu";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
@@ -41,6 +35,7 @@ const ToggleChartComponent = ({
   const [startDate, setStartDate] = useState<any>();
   const [endDate, setEndDate] = useState<any>();
   const [modalVisible, setModalVisible] = useState(false);
+  const [isChartZoomed, setIschartZoomed] = useState(false);
   const locale = useSelector((state: any) => state.language.locale);
   const { id } = useLocalSearchParams();
   const dispatch = useDispatch();
@@ -79,11 +74,9 @@ const ToggleChartComponent = ({
       let jsCommand = "";
       switch (type) {
         case "series":
-          console.log("series", data?.length);
           jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
           break;
         case "options":
-          console.log("options");
           jsCommand = `updateChartOptions(${JSON.stringify(data)});`;
           break;
         case "chart":
@@ -99,226 +92,58 @@ const ToggleChartComponent = ({
       (webViewRef.current as any)?.injectJavaScript(jsCommand);
     }
   };
-  const updateChartData1 = (filteredData: any) => {
-    console.log("filteredData", filteredData?.length);
-    updateChart("series", filteredData);
-    // setLoading(true);
-    // const xAxisRange =
-    //   filteredData?.length > 0
-    //     ? [filteredData[0]?.x, filteredData[filteredData?.length - 1].x]
-    //     : [0, 0];
-    // let previousDate: Date | null = null;
-    // const formatter: any = (value: any) => {
-    //   const date = new Date(value);
-    //   const isEdgeCase =
-    //     (value === xAxisRange[0] || value === xAxisRange[1]) &&
-    //     activeTab === "Day";
-    //   const isNewDate =
-    //     !previousDate ||
-    //     date.getFullYear() !== previousDate.getFullYear() ||
-    //     date.getMonth() !== previousDate.getMonth() ||
-    //     date.getDate() !== previousDate.getDate();
 
-    //   if (isEdgeCase || isNewDate) {
-    //     previousDate = date;
-    //     return new Intl.DateTimeFormat(localeFormatter, {
-    //       year: "numeric",
-    //       month: "short",
-    //       day: "2-digit",
-    //       timeZone: berlineTimeZone,
-    //     }).format(date);
-    //   }
-    //   // Define date formatting options based on the active tab
-    //   const options: Intl.DateTimeFormatOptions =
-    //     activeTab === "Day"
-    //       ? {
-    //           hour: "2-digit",
-    //           minute: "2-digit",
-    //           hour12: false,
-    //           timeZone: berlineTimeZone,
-    //         }
-    //       : activeTab === "Week" ||
-    //         activeTab === "Month" ||
-    //         activeTab === "Quarter" ||
-    //         (startDate && endDate)
-    //       ? {
-    //           year: "numeric",
-    //           month: "short",
-    //           day: "2-digit",
-    //           timeZone: berlineTimeZone,
-    //         }
-    //       : {
-    //           year: "numeric",
-    //           month: "short",
-    //           timeZone: berlineTimeZone,
-    //         };
-    //   return new Intl.DateTimeFormat(localeFormatter, options).format(date);
-    // };
-    // const xAxisFormater = {
-    //   labels: {
-    //     show: true,
-    //     formatter: formatter,
-    //   },
-    // };
-    // // Define chart options in a more concise way
-    // const updatedOptions = {
-    //   chart: {
-    //     animations: { dynamicAnimation: { speed: 1000 } },
-    //   },
-    //   noData: { text: "" },
-    //   xaxis: {
-    //     ...xAxisFormater,
-    //   },
-    // };
-    // const updatedInitialOptions = {
-    //   chart: {
-    //     animations: { dynamicAnimation: { speed: 100 } },
-    //   },
-    //   noData: { text: "" },
-    //   xaxis: {
-    //     ...xAxisFormater,
-    //   },
-    // };
-    // const updateEmptynoDataOptions = {
-    //   noData: { text: "" },
-    //   xaxis: {
-    //     ...xAxisFormater,
-    //   },
-    // };
-    // const updateNoDataOptions = {
-    //   noData: { text: "no data" },
-    //   xaxis: {
-    //     ...xAxisFormater,
-    //   },
-    // };
-    // const handleChartUpdate = (data: any, options: any) => {
-    //   updateChart("chart", data, options);
-    // };
-    // if (filteredData?.length <= 0) {
-    //   // Handle empty data
-    //   if (initialRender) {
-    //     handleChartUpdate([], updateEmptynoDataOptions);
-    //     setInitialRender(false);
-    //   } else {
-    //     handleChartUpdate([], updateNoDataOptions);
-    //   }
-    // } else {
-    //   // Handle non-empty data based on the selected filter
-    //   if (activeTab === "Year" && previousTab === "Year") {
-    //     // Initial state
-    //     console.log("empty selected", filteredData.length);
-    //     setTimeout(() => {
-    //       updateChart("series", filteredData);
-    //     });
-    //     updateChart("options", updatedInitialOptions);
-    //     // handleChartUpdate(filteredData, updatedInitialOptions);
-    //   } else if (
-    //     ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
-    //     previousTab === "Year"
-    //   ) {
-    //     // Transition from initial state
-    //     handleChartUpdate([], {
-    //       chart: { animations: { dynamicAnimation: { speed: 1000 } } },
-    //       xaxis: {
-    //         ...xAxisFormater,
-    //       },
-    //     });
-    //     updateChart("series", filteredData);
-    //   } else if (
-    //     ["Month", "Week", "Day", "Quarter"].includes(previousTab) &&
-    //     activeTab === "Year"
-    //   ) {
-    //     // Switching back to initial state
-    //     handleChartUpdate([], updatedInitialOptions);
-    //     updateChart("series", filteredData);
-    //   } else if (
-    //     ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
-    //     ["Month", "Week", "Day", "Quarter"].includes(previousTab)
-    //   ) {
-    //     // Switching between filters
-    //     console.log("here");
-    //     updateChart("options", updatedOptions);
-    //     updateChart("series", filteredData);
-    //   }
-    // }
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
   const updateChartData = (filteredData: any) => {
-    console.log("filteredData", filteredData?.length);
-    // updateChart("series", filteredData);
-    setLoading(true);
-
-    // Define chart options in a more concise way
-    const updatedOptions = {
-      chart: {
-        animations: { dynamicAnimation: { speed: 1000 } },
-      },
-      noData: { text: "" },
-    };
-    const updatedInitialOptions = {
-      chart: {
-        animations: { dynamicAnimation: { speed: 100 } },
-      },
-      noData: { text: "" },
-    };
-    const updateEmptynoDataOptions = {
-      noData: { text: "" },
-    };
-    const updateNoDataOptions = {
-      noData: { text: "no data" },
-    };
-    const handleChartUpdate = (data: any, options: any) => {
-      updateChart("chart", data, options);
-    };
-    if (filteredData?.length <= 0) {
-      // Handle empty data
-      if (initialRender) {
-        handleChartUpdate([], updateEmptynoDataOptions);
-        setInitialRender(false);
-      } else {
-        handleChartUpdate([], updateNoDataOptions);
-      }
-    } else {
-      // Handle non-empty data based on the selected filter
-      if (activeTab === "Year" && previousTab === "Year") {
-        // Initial state
-        console.log("empty selected", filteredData.length);
-        setTimeout(() => {
-          updateChart("series", filteredData);
-        });
-        updateChart("options", updatedInitialOptions);
-        // handleChartUpdate(filteredData, updatedInitialOptions);
-      } else if (
-        ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
-        previousTab === "Year"
-      ) {
-        // Transition from initial state
-        handleChartUpdate([], {
-          chart: { animations: { dynamicAnimation: { speed: 1000 } } },
-        });
-        updateChart("series", filteredData);
-      } else if (
-        ["Month", "Week", "Day", "Quarter"].includes(previousTab) &&
-        activeTab === "Year"
-      ) {
-        // Switching back to initial state
-        handleChartUpdate([], updatedInitialOptions);
-        updateChart("series", filteredData);
-      } else if (
-        ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
-        ["Month", "Week", "Day", "Quarter"].includes(previousTab)
-      ) {
-        // Switching between filters
-        console.log("here");
-        updateChart("options", updatedOptions);
-        updateChart("series", filteredData);
-      }
+    if (filteredData?.length === 0) {
+      updateChart("options", {
+        noData: { text: "no data" },
+      });
+      updateChart("series", []);
+      return;
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
+    if (Platform.OS === "web") {
+      updateChart("series", filteredData);
+      return;
+    }
+    if (
+      activeTab === "Year" ||
+      previousTab === "Year" ||
+      activeTab === "Quarter" ||
+      previousTab === "Quarter"
+    ) {
+      if (isChartZoomed) {
+        webViewRef?.current.injectJavaScript("window.resetZoom(); true;");
+        setIschartZoomed(false);
+      }
+      updateChart("options", {
+        chart: {
+          animations: {
+            enabled: false,
+          },
+        },
+      });
+      updateChart("series", filteredData);
+      updateChart("options", {
+        chart: {
+          animations: {
+            enabled: true,
+          },
+        },
+      });
+    } else {
+      if (isChartZoomed) {
+        webViewRef?.current.injectJavaScript("window.resetZoom(); true;");
+        setIschartZoomed(false);
+      }
+      updateChart("options", {
+        chart: {
+          animations: {
+            enabled: true,
+          },
+        },
+      });
+      updateChart("series", filteredData);
+    }
   };
   function filterCurrentDayDataUTC() {
     // Convert the targetDate to a Date object (UTC)
@@ -431,9 +256,7 @@ const ToggleChartComponent = ({
     });
   }
   const handleRangeDataFilter = () => {
-    console.log("callled");
     let rangeFilterData = filterDataByDateRange(startDate, endDate);
-    console.log("rangeFilterData", rangeFilterData.length);
     if (rangeFilterData.length === 0) {
       updateChart("options", {
         noData: { text: "No data" },
@@ -443,6 +266,7 @@ const ToggleChartComponent = ({
       updateChart("series", rangeFilterData);
     }
     setActiveTab("");
+
     // const formatter = (value: any) => {
     //   const date = new Date(value);
     //   return date.toLocaleString(locale === "de" ? "de-DE" : "en-IN", {
@@ -494,6 +318,8 @@ const ToggleChartComponent = ({
         title: { text: i18n.t("datetime") },
       },
     };
+    console.log(localOption.xaxis.title.text);
+
     if (Platform.OS === "web") {
       const iframe = iFrameRef.current;
       if (iframe && iframe.contentWindow) {
@@ -502,10 +328,11 @@ const ToggleChartComponent = ({
       }
       updateChart("options", localOption);
     } else {
-      if (webViewRef.current) {
+      if (webViewRef?.current) {
         const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
+        console.log("updateLocaleScript");
+        console.log("locale", locale);
         webViewRef.current.injectJavaScript(updateLocaleScript);
-        updateChart("options", localOption);
       }
     }
   };
@@ -531,21 +358,32 @@ const ToggleChartComponent = ({
         console.error("Error saving chart image:", error);
       }
     }
+
     //for loader on marker
-    const webViewMessage = JSON.parse(event.nativeEvent.data);
-    if (webViewMessage.action === "updateChartSeriesss") {
-      console.log("update");
+    const message = JSON.parse(event.nativeEvent.data);
+    if (message.action === "updateChartSeries") {
+      setLoading(true);
+    } else if (message.action === "Chart updated") {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+    if (message.action === "updateLocale") {
+      console.log(message?.action, message?.value);
     }
     // Handle loader actions on tooltip toggle
-    if (webViewMessage.action === "startLoader") {
+    if (message.action === "startLoader") {
       setLoading(true);
-    } else if (webViewMessage.action === "stopLoader") {
+    } else if (message.action === "stopLoader") {
       setTimeout(() => {
         setLoading(false);
       }, 1500);
     }
+    if (message.action === "chartZoomed") {
+      setIschartZoomed(message.isZoomed);
+    }
+    console.log("message.action", message.action);
   };
-  //convert json to CSV
   const splitTimestamp = (timestamp: number) => {
     const date = new Date(timestamp); // Convert timestamp to Date object
     const formattedDate = date.toISOString().split("T")[0]; // Extract UTC date (YYYY-MM-DD)
@@ -585,7 +423,7 @@ const ToggleChartComponent = ({
       if (activeTab === "Quarter") return filterByCurrentQuarterUTC();
       if (activeTab === "Year") return cockpitChartData;
     };
-    console.log("activeTab cALLED");
+
     if (activeTab !== "") {
       let updatedData: any = getUpdatedData();
       console.log(updatedData?.length);
@@ -595,25 +433,19 @@ const ToggleChartComponent = ({
   }, [activeTab]);
 
   useEffect(() => {
-    reloadWebView();
-    updateLocale();
-    console.log("updateLocale reloadWebView cALLED");
     setTimeout(() => {
       dispatch(inActiveLoading());
-    }, 100);
-    setTimeout(() => {
-      console.log("updateChartData(cockpitChartData);");
-      setActiveTab("Year");
+      updateLocale();
       updateChartData(cockpitChartData);
-    }, 500);
-  }, [isFocused]);
+    }, 100);
+  }, [isFocused, locale]);
   return (
     <View className="flex-1  bg-white">
-      {/* Toggle Buttons */}
-      {!isLandscape && (
+      {!isLandscape ? (
         <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
+      ) : (
+        <FloatingActionMenu activeTab={activeTab} setActiveTab={setActiveTab} />
       )}
-
       {/* Chart  */}
       <View className="flex-1  border-gray-300">
         {isLoading && <ChartLoaderPNG />}
@@ -622,6 +454,7 @@ const ToggleChartComponent = ({
           webViewRef={webViewRef}
           iFrameRef={iFrameRef}
           onMessage={onMessage}
+          activeTab={activeTab}
         />
       </View>
 
@@ -656,3 +489,148 @@ const ToggleChartComponent = ({
 };
 
 export default ToggleChartComponent;
+// const updateChartData1 = (filteredData: any) => {
+//   updateChart("series", filteredData);
+// setLoading(true);
+// const xAxisRange =
+//   filteredData?.length > 0
+//     ? [filteredData[0]?.x, filteredData[filteredData?.length - 1].x]
+//     : [0, 0];
+// let previousDate: Date | null = null;
+// const formatter: any = (value: any) => {
+//   const date = new Date(value);
+//   const isEdgeCase =
+//     (value === xAxisRange[0] || value === xAxisRange[1]) &&
+//     activeTab === "Day";
+//   const isNewDate =
+//     !previousDate ||
+//     date.getFullYear() !== previousDate.getFullYear() ||
+//     date.getMonth() !== previousDate.getMonth() ||
+//     date.getDate() !== previousDate.getDate();
+
+//   if (isEdgeCase || isNewDate) {
+//     previousDate = date;
+//     return new Intl.DateTimeFormat(localeFormatter, {
+//       year: "numeric",
+//       month: "short",
+//       day: "2-digit",
+//       timeZone: berlineTimeZone,
+//     }).format(date);
+//   }
+//   // Define date formatting options based on the active tab
+//   const options: Intl.DateTimeFormatOptions =
+//     activeTab === "Day"
+//       ? {
+//           hour: "2-digit",
+//           minute: "2-digit",
+//           hour12: false,
+//           timeZone: berlineTimeZone,
+//         }
+//       : activeTab === "Week" ||
+//         activeTab === "Month" ||
+//         activeTab === "Quarter" ||
+//         (startDate && endDate)
+//       ? {
+//           year: "numeric",
+//           month: "short",
+//           day: "2-digit",
+//           timeZone: berlineTimeZone,
+//         }
+//       : {
+//           year: "numeric",
+//           month: "short",
+//           timeZone: berlineTimeZone,
+//         };
+//   return new Intl.DateTimeFormat(localeFormatter, options).format(date);
+// };
+// const xAxisFormater = {
+//   labels: {
+//     show: true,
+//     formatter: formatter,
+//   },
+// };
+// // Define chart options in a more concise way
+// const updatedOptions = {
+//   chart: {
+//     animations: { dynamicAnimation: { speed: 1000 } },
+//   },
+//   noData: { text: "" },
+//   xaxis: {
+//     ...xAxisFormater,
+//   },
+// };
+// const updatedInitialOptions = {
+//   chart: {
+//     animations: { dynamicAnimation: { speed: 100 } },
+//   },
+//   noData: { text: "" },
+//   xaxis: {
+//     ...xAxisFormater,
+//   },
+// };
+// const updateEmptynoDataOptions = {
+//   noData: { text: "" },
+//   xaxis: {
+//     ...xAxisFormater,
+//   },
+// };
+// const updateNoDataOptions = {
+//   noData: { text: "no data" },
+//   xaxis: {
+//     ...xAxisFormater,
+//   },
+// };
+// const handleChartUpdate = (data: any, options: any) => {
+//   updateChart("chart", data, options);
+// };
+// if (filteredData?.length <= 0) {
+//   // Handle empty data
+//   if (initialRender) {
+//     handleChartUpdate([], updateEmptynoDataOptions);
+//     setInitialRender(false);
+//   } else {
+//     handleChartUpdate([], updateNoDataOptions);
+//   }
+// } else {
+//   // Handle non-empty data based on the selected filter
+//   if (activeTab === "Year" && previousTab === "Year") {
+//     // Initial state
+//     console.log("empty selected", filteredData.length);
+//     setTimeout(() => {
+//       updateChart("series", filteredData);
+//     });
+//     updateChart("options", updatedInitialOptions);
+//     // handleChartUpdate(filteredData, updatedInitialOptions);
+//   } else if (
+//     ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
+//     previousTab === "Year"
+//   ) {
+//     // Transition from initial state
+//     handleChartUpdate([], {
+//       chart: { animations: { dynamicAnimation: { speed: 1000 } } },
+//       xaxis: {
+//         ...xAxisFormater,
+//       },
+//     });
+//     updateChart("series", filteredData);
+//   } else if (
+//     ["Month", "Week", "Day", "Quarter"].includes(previousTab) &&
+//     activeTab === "Year"
+//   ) {
+//     // Switching back to initial state
+//     handleChartUpdate([], updatedInitialOptions);
+//     updateChart("series", filteredData);
+//   } else if (
+//     ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
+//     ["Month", "Week", "Day", "Quarter"].includes(previousTab)
+//   ) {
+//     // Switching between filters
+//     console.log("here");
+//     updateChart("options", updatedOptions);
+//     updateChart("series", filteredData);
+//   }
+// }
+//   setTimeout(() => {
+//     setLoading(false);
+//   }, 700);
+// };

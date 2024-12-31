@@ -27,6 +27,7 @@ type ChartComponentProps = {
   onMessage?: (event: any) => void;
   id?: number;
   refereshkey?: number;
+  activeTab?: string;
 };
 const ChartComponent: React.FC<ChartComponentProps> = ({
   webViewRef,
@@ -34,6 +35,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   onMessage,
   id,
   refereshkey,
+  activeTab,
 }) => {
   const handleMessagePNG = async (event: any) => {
     const base64Data = event.nativeEvent.data; // Base64 string of chart
@@ -112,6 +114,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
           chart: {
             height: 280,
           },
+          xaxis: {
+            labels: {
+              rotate: 0,
+              rotateAlways: false,
+            },
+          },
         })});`
       );
     }, 500);
@@ -143,17 +151,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     <>
       {Platform.OS !== "web" ? (
         <>
-          {/* <Button
-            title="reload Chart"
-            onPress={() => webViewRef?.current?.reload()}
-          />
-          <Button
-            title="Export Chart"
-            onPress={() =>
-              webViewRef?.current.injectJavaScript("exportChart();")
-            }
-          /> */}
-
           <WebView
             key={refereshkey}
             className="z-50"
@@ -164,6 +161,19 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             onLoad={() => console.log("WebView Loaded")}
             onLoadEnd={() => console.log("WebView end Load")}
             onMessage={onMessage}
+            onFileDownload={({ nativeEvent }: any) => {
+              const { downloadUrl } = nativeEvent;
+              console.log("DownloadUrl", downloadUrl);
+            }}
+            onHttpError={(syntheticEvent) => {
+              const { statusCode } = syntheticEvent.nativeEvent;
+              console.log("HTTP error status code", statusCode);
+            }}
+            containerStyle={{
+              overflow: "hidden",
+            }}
+            overScrollMode="content"
+            gestureHandling="auto"
             injectedJavaScriptBeforeContentLoaded={htmlContent}
             scrollEnabled={false}
             javaScriptEnabled={true}
@@ -171,26 +181,16 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             allowFileAccess={true}
             useWebkit={true}
             allowsFullscreenVideo={true}
-            overScrollMode="never"
-            gestureHandling="auto"
-            showsHorizontalScrollIndicator={true}
+            showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             setWebContentsDebuggingEnabled={true}
-            containerStyle={{
-              overflow: "hidden",
-            }}
-            onFileDownload={({ nativeEvent }: any) => {
-              const { downloadUrl } = nativeEvent;
-              console.log("DownloadUrl", downloadUrl);
-            }}
-            scalesPageToFit={false}
-            allowsInlineMediaPlayback
+            scalesPageToFit={true}
+            setBuiltInZoomControls={false}
+            allowsInlineMediaPlayback={true}
+            bounces={false}
+            zoomEnabled={false}
+            nestedScrollEnabled={true}
             // startInLoadingState
-            onHttpError={(syntheticEvent) => {
-              const { statusCode } = syntheticEvent.nativeEvent;
-              console.log("HTTP error status code", statusCode);
-            }}
-            injectedJavaScript={`document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=3.0, user-scalable=yes');`}
           />
           <TouchableOpacity
             style={{

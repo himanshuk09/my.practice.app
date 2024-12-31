@@ -10,16 +10,20 @@ import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { PricesItem } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { RootState } from "@/store/store";
 
 const PricesDetails = () => {
   const { id } = useLocalSearchParams();
   const [pricesDetail, setPricesDetails] = useState<any>();
   const router = useRouter();
+  const isLandscape = useSelector(
+    (state: RootState) => state.orientation.isLandscape
+  );
   useEffect(() => {
     console.log(typeof id);
     const filteredItem = PricesItem.filter(
@@ -54,30 +58,32 @@ const PricesDetails = () => {
       <View className="flex-1  bg-white">
         {/* Header Section */}
 
-        <View className="flex justify-between bg-white flex-row  m-1  h-24 px-4 shadow-2xl shadow-black pt-3">
-          <View className="flex-col w-48  ">
-            <Text className="text-xl break-words font-bold text-[#b5b5b5]">
-              {pricesDetail?.title}
-            </Text>
-            <Text className=" text-md text-[#b5b5b5] ">
-              {getCurrentUTCDateTime()}
-            </Text>
-          </View>
+        {!isLandscape && (
+          <View className="flex justify-between bg-white flex-row  m-1  h-24 px-4 shadow-2xl shadow-black pt-3">
+            <View className="flex-col w-48  ">
+              <Text className="text-xl break-words font-bold text-[#b5b5b5]">
+                {pricesDetail?.title}
+              </Text>
+              <Text className=" text-md text-[#b5b5b5] ">
+                {getCurrentUTCDateTime()}
+              </Text>
+            </View>
 
-          <View className="flex-row w-48 px-2 justify-between items-center">
-            <Text className="text-[#e11935]  text-md font-semibold">
-              {pricesDetail?.unit} €/MWh
-            </Text>
+            <View className="flex-row w-48 px-2 justify-between items-center">
+              <Text className="text-[#e11935]  text-md font-semibold">
+                {pricesDetail?.unit} €/MWh
+              </Text>
 
-            <FontAwesome5
-              classname="mr-2"
-              name="file-download"
-              size={35}
-              color="#e11935"
-              onPress={() => {}}
-            />
+              <FontAwesome5
+                classname="mr-2"
+                name="file-download"
+                size={35}
+                color="#e11935"
+                onPress={() => {}}
+              />
+            </View>
           </View>
-        </View>
+        )}
         <ToggleChartComponent
           showRangePicker={true}
           showPeriodOfTime={true}
