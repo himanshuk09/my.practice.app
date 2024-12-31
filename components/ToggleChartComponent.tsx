@@ -17,6 +17,7 @@ import * as Sharing from "expo-sharing";
 import PickerModel from "@/components/PickerModel";
 import { RootState } from "@/store/store";
 import FloatingActionMenu from "./FloatingActionMenu";
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
@@ -99,10 +100,16 @@ const ToggleChartComponent = ({
         noData: { text: "no data" },
       });
       updateChart("series", []);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
       return;
     }
     if (Platform.OS === "web") {
       updateChart("series", filteredData);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
       return;
     }
     if (
@@ -426,7 +433,7 @@ const ToggleChartComponent = ({
 
     if (activeTab !== "") {
       let updatedData: any = getUpdatedData();
-      console.log(updatedData?.length);
+      console.log(updatedData?.length, "activeTab");
       updateChartData(updatedData);
       setPreviousTab(activeTab);
     }
@@ -437,7 +444,7 @@ const ToggleChartComponent = ({
       dispatch(inActiveLoading());
       updateLocale();
       updateChartData(cockpitChartData);
-    }, 100);
+    }, 1000);
   }, [isFocused, locale]);
   return (
     <View className="flex-1  bg-white">

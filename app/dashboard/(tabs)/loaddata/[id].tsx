@@ -121,9 +121,9 @@ const LoadDataDetails = () => {
                 color="#ef4444"
                 onPress={() => saveCSVToFile(cockpitChartData)}
                 // onPress={() => {
-                //   if (Platform.OS !== "web") {
-                //     webViewRef?.current.injectJavaScript("exportChart();");
-                //   }
+                //   // if (Platform.OS !== "web") {
+                //   //   webViewRef?.current.injectJavaScript("exportChart();");
+                //   // }
                 // }}
               />
             </View>

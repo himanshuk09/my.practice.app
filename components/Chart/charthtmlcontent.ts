@@ -147,7 +147,7 @@ export let htmlContent = `  <!DOCTYPE html>
                             //     animategradually: { enabled: false, delay: 0 }
                             // },
                             toolbar: {
-                                show: true,
+                                show: false,
                                 offsetX:-5,
                                 offsetY: 0,
                                 autoSelected: "zoom",
@@ -249,20 +249,45 @@ export let htmlContent = `  <!DOCTYPE html>
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'beforeZoom' })
                                     );
-                                    const zoomPercentage = 30; // Desired zoom percentage
-                                    const range = xaxis.max - xaxis.min;
+                                    // const zoomPercentage = 30; // Desired zoom percentage
+                                    // const range = xaxis.max - xaxis.min;
 
+                                    // const seriesData = chartContext.w.config.series[0].data;
+                                    // const minX = Math.min(...seriesData.map(point => Array.isArray(point) ? point[0] : point.x));
+                                    // const maxX = Math.max(...seriesData.map(point => Array.isArray(point) ? point[0] : point.x));
+
+                                    // const zoomRange = (maxX - minX) * (zoomPercentage / 100);
+
+                                    // return {
+                                    // xaxis: {
+                                    //     min: xaxis.min,
+                                    //     max: xaxis.min + zoomRange,
+                                    // },
+                                    // };
+                                    const zoomPercentage = 30; // Desired zoom percentage
                                     const seriesData = chartContext.w.config.series[0].data;
+
+                                    // Calculate the original data range
                                     const minX = Math.min(...seriesData.map(point => Array.isArray(point) ? point[0] : point.x));
                                     const maxX = Math.max(...seriesData.map(point => Array.isArray(point) ? point[0] : point.x));
 
-                                    const zoomRange = (maxX - minX) * (zoomPercentage / 100);
+                                    // Current visible range
+                                    const currentMin = xaxis.min;
+                                    const currentMax = xaxis.max;
+                                    const currentRange = currentMax - currentMin;
+
+                                    // Increase the range by zoomPercentage for zoom-out
+                                    const zoomOutRange = currentRange * (1 + zoomPercentage / 100);
+
+                                    // Adjust new range ensuring it doesn't exceed original bounds
+                                    const newMin = Math.max(minX, currentMin - (zoomOutRange - currentRange) / 2);
+                                    const newMax = Math.min(maxX, currentMax + (zoomOutRange - currentRange) / 2);
 
                                     return {
-                                    xaxis: {
-                                        min: xaxis.min,
-                                        max: xaxis.min + zoomRange,
-                                    },
+                                        xaxis: {
+                                            min: newMin,
+                                            max: newMax,
+                                        },
                                     };
                                 },
                                 beforeResetZoom: function(chartContext, { xaxis, yaxis }) {
@@ -303,7 +328,7 @@ export let htmlContent = `  <!DOCTYPE html>
                         stroke: 
                             { 
                                 curve: "monotoneCubic", 
-                                width: 0.8 //['straight', 'smooth', 'monotoneCubic', 'stepline']
+                                width: 1.5 //['straight', 'smooth', 'monotoneCubic', 'stepline']
                             },
                         noData: {
                             text: "",
@@ -352,7 +377,7 @@ export let htmlContent = `  <!DOCTYPE html>
                         },
                         markers: {
                             size: 0,
-                            colors: "#b81c03",
+                            colors: "#e31837",
                             strokeColors: "black",
                             strokeWidth: 1,
                             strokeOpacity: 0.2,
@@ -483,12 +508,13 @@ export let htmlContent = `  <!DOCTYPE html>
                             },
                         },
                         fill: {
-                        colors: ["#b81c03"],
+                            //#e31837
+                            colors: ["#e31837"],
                             gradient: {
                                 shadeIntensity: 1,
                                 inverseColors: false,
-                                opacityFrom: 0.2,
-                                opacityTo: 0,
+                                opacityFrom: 0.5,
+                                opacityTo: 0.9,
                             },
                         },
                         //this working in portrait and by default in landscape 
@@ -842,8 +868,8 @@ export let htmlContent = `  <!DOCTYPE html>
                             x: minPoint.x,
                             y: minPoint.y,
                             marker: {
-                                size: 2,
-                                fillColor: '#ff0000',
+                                size: 3,
+                                fillColor: '#e31837',
                                 strokeColor: '#ffffff',
                                 strokeWidth:1,
                             },
@@ -861,8 +887,8 @@ export let htmlContent = `  <!DOCTYPE html>
                             x: maxPoint.x,
                             y: maxPoint.y,
                             marker: {
-                            size: 2,
-                                fillColor: '#ff0000',
+                                size: 3,
+                                fillColor: '#e31837',
                                 strokeColor: '#ffffff',
                                 strokeWidth: 1,
                             },
@@ -1074,7 +1100,7 @@ export let iframehtmlcontent = `
             },
             markers: {
                 size: 0,
-                colors: "#b81c03",
+                colors: "#e31837",
                 strokeColors: "black",
                 strokeWidth: 1,
                 strokeOpacity: 0.2,
@@ -1093,7 +1119,7 @@ export let iframehtmlcontent = `
                 },
             },
             fill: {
-                colors: ["#b81c03"],
+                colors: ["#e31837"],
                 gradient: {
                     shadeIntensity: 1,
                     inverseColors: false,
@@ -1600,7 +1626,7 @@ export let iframehtmlcontent = `
 //                       },
 //                       markers: {
 //                         size: 0,
-//                         colors: "#b81c03",
+//                         colors: "#e31837",
 //                         strokeColors: "black",
 //                         strokeWidth: 1,
 //                         strokeOpacity: 0.2,
@@ -1722,7 +1748,7 @@ export let iframehtmlcontent = `
 //                         },
 //                     },
 //                     fill: {
-//                       colors: ["#b81c03"],
+//                       colors: ["#e31837"],
 //                       gradient: {
 //                           shadeIntensity: 1,
 //                           inverseColors: false,

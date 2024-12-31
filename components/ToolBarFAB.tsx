@@ -5,14 +5,13 @@ import {
   Animated,
   Text,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons"; // For icons
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons"; // For icons
 import { useState } from "react";
-import { i18n } from "@/languageKeys/i18nConfig";
 
-export default function FloatingActionMenu({ activeTab, setActiveTab }: any) {
+export default function FloatingActionMenu({ webViewRef }: any) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [animation] = useState(new Animated.Value(0));
-  const [showText, setShowText] = useState(false);
+  const [tooltip, setTooltip] = useState(false);
   const toggleMenu = () => {
     const toValue = isMenuOpen ? 0 : 1;
 
@@ -32,14 +31,40 @@ export default function FloatingActionMenu({ activeTab, setActiveTab }: any) {
 
   const menuTranslateX = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [-100, 0], // Slide menu items into view
+    outputRange: [100, 0], // Slide menu items into view from right to left
   });
-  const tabs = [
-    { name: "D", icon: "edit", tab: "Day" },
-    { name: "W", icon: "edit", tab: "Week" },
-    { name: "M", icon: "edit", tab: "Month" },
-    { name: "Q", icon: "edit", tab: "Quarter" },
-    { name: "Y", icon: "edit", tab: "Year" },
+
+  const menuItems = [
+    {
+      icon: "search-plus",
+      action: "zoomIn()",
+      size: 14,
+      color: "#848484",
+    },
+    {
+      icon: "search-minus",
+      action: "zoomOut()",
+      size: 14,
+      color: "#848484",
+    },
+    {
+      icon: "home",
+      action: "exportChart()",
+      size: 14,
+      color: "#848484",
+    },
+    {
+      icon: tooltip ? "dot-circle" : "circle",
+      action: `toggleMarkers(); setTooltip(!tooltip);`,
+      size: 14,
+      color: "#848484",
+    },
+    {
+      icon: "download",
+      action: "resetZoom()",
+      size: 14,
+      color: "#848484",
+    },
   ];
 
   return (
@@ -47,8 +72,8 @@ export default function FloatingActionMenu({ activeTab, setActiveTab }: any) {
       {/* Floating Action Button */}
       <TouchableOpacity style={styles.fab} onPress={toggleMenu}>
         <MaterialIcons
-          name={isMenuOpen ? "filter-alt-off" : "filter-alt"}
-          size={15}
+          name={isMenuOpen ? "close" : "add"}
+          size={20}
           color="white"
         />
       </TouchableOpacity>
@@ -64,27 +89,20 @@ export default function FloatingActionMenu({ activeTab, setActiveTab }: any) {
             },
           ]}
         >
-          {tabs.map((tab) => (
-            <View style={styles.menuItem} key={tab.name}>
+          {menuItems.map((item, index) => (
+            <View style={styles.menuItem} key={index}>
               <TouchableOpacity
-                style={[
-                  styles.menuIcon,
-                  activeTab === tab.tab
-                    ? styles.activeMenuItem
-                    : styles.inactiveMenuItem,
-                ]}
-                onPress={() => setActiveTab(tab.tab)}
+                style={styles.menuIcon}
+                onPress={() => {
+                  // Dynamically inject JavaScript based on the action in the JSON
+                  (webViewRef.current as any)?.injectJavaScript(item.action);
+                }}
               >
-                <Text
-                  style={[
-                    styles.menuText,
-                    activeTab === tab.tab
-                      ? styles.activeMenuText
-                      : styles.inactiveMenuText,
-                  ]}
-                >
-                  {i18n.t(tab.name)}
-                </Text>
+                <FontAwesome5
+                  name={item.icon}
+                  size={item.size}
+                  color={item.color}
+                />
               </TouchableOpacity>
             </View>
           ))}
@@ -95,23 +113,16 @@ export default function FloatingActionMenu({ activeTab, setActiveTab }: any) {
 }
 
 const styles = StyleSheet.create({
-  activeMenuText: {
-    color: "#e11935",
-    fontWeight: "600",
-  },
-  inactiveMenuText: {
-    color: "black",
-  },
   container: {
     position: "absolute",
     top: 0,
-    left: 25,
+    right: 25, // Position on the right side
     paddingTop: 3,
-    paddingLeft: 5,
+    paddingRight: 5,
     zIndex: 1000,
   },
   fab: {
-    backgroundColor: "#e11935",
+    backgroundColor: "#e31837",
     width: 30,
     height: 30,
     borderRadius: 30,
@@ -122,7 +133,7 @@ const styles = StyleSheet.create({
   menuItemsContainer: {
     position: "absolute",
     top: 5,
-    left: 50,
+    right: 50, // Adjust the position for right-to-left
     flexDirection: "row",
     alignItems: "center",
   },
@@ -132,22 +143,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 1,
   },
   menuIcon: {
-    backgroundColor: "#e11935",
+    backgroundColor: "#f3f4f6",
     width: 30,
     height: 30,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 5,
-  },
-  menuText: {
-    color: "white",
-    fontSize: 16,
+    marginLeft: 5, // Add margin to the left
   },
   activeMenuItem: {
-    backgroundColor: "white",
+    backgroundColor: "#848484",
     borderWidth: 2,
-    borderColor: "#e11935",
+    borderColor: "#f3f4f6",
     fontWeight: "bold",
   },
   inactiveMenuItem: {

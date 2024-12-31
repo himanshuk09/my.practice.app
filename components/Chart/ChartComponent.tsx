@@ -13,7 +13,7 @@ import WebView from "react-native-webview";
 import { htmlContent, iframehtmlcontent } from "./charthtmlcontent";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-
+import ToolBarFloatingActionMenu from "../ToolBarFAB";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -151,6 +151,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     <>
       {Platform.OS !== "web" ? (
         <>
+          <ToolBarFloatingActionMenu webViewRef={webViewRef} />
           <WebView
             key={refereshkey}
             className="z-50"
