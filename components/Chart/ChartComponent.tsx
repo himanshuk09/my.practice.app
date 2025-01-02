@@ -1,19 +1,10 @@
-import {
-  View,
-  Text,
-  Platform,
-  Button,
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-  BackHandler,
-} from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { Platform, TouchableOpacity, BackHandler } from "react-native";
+import React, { useEffect } from "react";
 import WebView from "react-native-webview";
 import { htmlContent, iframehtmlcontent } from "./charthtmlcontent";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import ToolBarFloatingActionMenu from "../ToolBarFAB";
+
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -29,6 +20,7 @@ type ChartComponentProps = {
   refereshkey?: number;
   activeTab?: string;
 };
+
 const ChartComponent: React.FC<ChartComponentProps> = ({
   webViewRef,
   iFrameRef,
@@ -74,6 +66,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   const isLandscape = useSelector(
     (state: RootState) => state.orientation.isLandscape
   );
+
   // const checkOrientation = async () => {
   //   const orientationInfo = await ScreenOrientation.getOrientationAsync();
   //   const isLandscapeMode =
@@ -94,6 +87,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   //     subscription.remove();
   //   };
   // }, [dispatch]);
+
   // Function to toggle the orientation lock
   const toggleOrientation = async () => {
     dispatch(activeLoading());
@@ -112,7 +106,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       (webViewRef?.current as any)?.injectJavaScript(
         `updateChartOptions(${JSON.stringify({
           chart: {
-            height: 280,
+            height: 270,
           },
           xaxis: {
             labels: {
@@ -123,9 +117,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         })});`
       );
     }, 500);
-    setTimeout(() => {
-      dispatch(inActiveLoading());
-    }, 2000);
+    setTimeout(
+      () => {
+        dispatch(inActiveLoading());
+      },
+      activeTab === "Year" ? 5000 : 2000
+    );
     dispatch(setOrientation(!isLandscape));
   };
 
@@ -151,10 +148,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     <>
       {Platform.OS !== "web" ? (
         <>
-          <ToolBarFloatingActionMenu webViewRef={webViewRef} />
+          {/* <ToolBarFloatingActionMenu webViewRef={webViewRef} /> */}
           <WebView
             key={refereshkey}
-            className="z-50"
+            className="z-50 "
             ref={webViewRef}
             originWhitelist={["*"]}
             source={{ html: htmlContent }}
@@ -172,6 +169,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             }}
             containerStyle={{
               overflow: "hidden",
+              width: "100%",
+              height: "100%",
+              border: "none",
+              pointerEvents: "auto",
+              margin: 1,
             }}
             overScrollMode="content"
             gestureHandling="auto"
@@ -193,6 +195,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             nestedScrollEnabled={true}
             // startInLoadingState
           />
+
           <TouchableOpacity
             style={{
               position: "absolute",

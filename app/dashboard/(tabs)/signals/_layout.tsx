@@ -1,3 +1,4 @@
+import { i18n } from "@/languageKeys/i18nConfig";
 import { RootState } from "@/store/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
@@ -34,7 +35,7 @@ const SignalsLayout = () => {
                 <MaterialIcons name="arrow-back" size={30} color="#1f2937" />
               </TouchableOpacity>
               <Text className="ml-4 font-bold text-xl text-[#9b9b9b]">
-                Signals Details
+                {i18n.t("Signals_Details")}
               </Text>
             </View>
           ),

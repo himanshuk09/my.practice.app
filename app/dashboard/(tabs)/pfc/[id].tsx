@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StatusBar,
-  SafeAreaView,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StatusBar, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
@@ -19,7 +12,6 @@ import { RootState } from "@/store/store";
 const PFCDetails = () => {
   const { id } = useLocalSearchParams();
   const [pfcDetails, setPfcDetails] = useState<any>();
-  const router = useRouter();
   const isLandscape = useSelector(
     (state: RootState) => state.orientation.isLandscape
   );
@@ -32,7 +24,6 @@ const PFCDetails = () => {
     console.log(filteredItem);
   }, [id]);
 
-  const [activeTab, setActiveTab] = useState("Year");
   const getCurrentUTCDateTime = () => {
     const now = new Date();
     // Extract UTC components

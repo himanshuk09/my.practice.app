@@ -53,12 +53,6 @@ const PricesSettings = () => {
           {option}
         </Text>
         {selectedValue === option && (
-          // <Ionicons
-          //   name="checkbox"
-          //   size={20}
-          //   color="#e31837"
-          //   style={{ position: "absolute", top: 0, right: 0, marginLeft: 1 }}
-          // />
           <Image
             source={require("@/assets/images/tickMark.png")}
             style={{

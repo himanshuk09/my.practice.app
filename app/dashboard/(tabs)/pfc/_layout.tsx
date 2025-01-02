@@ -1,3 +1,4 @@
+import { i18n } from "@/languageKeys/i18nConfig";
 import { RootState } from "@/store/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
@@ -33,7 +34,7 @@ const PFCLayout = () => {
                 <MaterialIcons name="arrow-back" size={30} color="#9b9b9b" />
               </TouchableOpacity>
               <Text className="ml-4 font-medium text-2xl text-[#9b9b9b]">
-                PFC Details
+                {i18n.t("PFC_Details")}
               </Text>
             </View>
           ),

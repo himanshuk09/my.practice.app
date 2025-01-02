@@ -1,5 +1,5 @@
 // <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-export let htmlContent = `  <!DOCTYPE html>
+export let htmlContent = `   <!DOCTYPE html>
     <html lang="en">
     <head>
             <meta charset="UTF-8"/>
@@ -7,21 +7,25 @@ export let htmlContent = `  <!DOCTYPE html>
             <title>Simple Apex Chart</title>
             <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
             <style>
-                .chart-container {
-                    width: 100%;
-                    height: 100%; 
-                    touch-action: none;
-                }
+                // .chart-container {
+                //     width: 100%;
+                //     height: 100%; 
+                //     // touch-action: none;
+                // }
                 #chart {
                     width: 100%;
-                    height: 80vh; 
+                    touch-action: none;
                 }
+                .apexcharts-element-hidden {
+                    opacity: 1 !important; 
+                    visibility: visible !important; 
+                  }
             </style>
     </head>
     <body>
-            <div class="chart-container">
+            
                 <div id="chart"></div>
-            </div>
+           
             <script>
                 let chart;
                 const locales = {
@@ -129,6 +133,11 @@ export let htmlContent = `  <!DOCTYPE html>
                                     strokeColor: '#fff', // Optional: change stroke color of zoom area
                                 },
                             },
+                            pan: {
+                                enabled: true,
+                                type: 'xy', // Allows both vertical and horizontal panning
+                                threshold: 1 // Set threshold to control the panning speed
+                              },
                             offsetX: -2,
                             offsetY: 30,
                             animations: {
@@ -147,7 +156,7 @@ export let htmlContent = `  <!DOCTYPE html>
                             //     animategradually: { enabled: false, delay: 0 }
                             // },
                             toolbar: {
-                                show: false,
+                                show: true,
                                 offsetX:-5,
                                 offsetY: 0,
                                 autoSelected: "zoom",
@@ -157,8 +166,8 @@ export let htmlContent = `  <!DOCTYPE html>
                                     zoomin: true,
                                     zoomout: true,
                                     zoom: true,
-                                    pan: false,
-                                    selection: false,
+                                    pan: true,
+                                    selection: true,
                                     customIcons:[
                                         {
                                             icon: '<span class="apexcharts-custom-icon">🔘</span>',
@@ -246,6 +255,7 @@ export let htmlContent = `  <!DOCTYPE html>
                                     );
                                 },
                                 beforeZoom: function(chartContext, { xaxis, yaxis }) {
+                                    window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoom Start' }));
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'beforeZoom' })
                                     );
@@ -299,6 +309,7 @@ export let htmlContent = `  <!DOCTYPE html>
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'chartZoomed', isZoomed: true })
                                     );
+                                    window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoomed' }));
                                 },
                                 beforeMount: function (chartContext) {
                                     window.ReactNativeWebView.postMessage(
@@ -524,7 +535,7 @@ export let htmlContent = `  <!DOCTYPE html>
                             chart: { 
                                 width: '100%' , 
                                 height:400,
-                                background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center ",
+                                background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center",
                             }, 
                             xaxis: 
                                 {   
@@ -548,10 +559,21 @@ export let htmlContent = `  <!DOCTYPE html>
                     };
                     
                     chart = new ApexCharts(document.querySelector("#chart"), options);
-                    chart.render()
+                    chart.render().then(() => {
+                        // Manually override the isTouchDevice detection
+                        chart.w.globals.isTouchDevice = false;
+                       
+                      }).catch(error => {
+                        console.error('Chart failed to render:', error);
+                      });
                 }
                 //..........
-
+                function getChartHeight() {
+                    // Get the screen height and set a percentage or adjust as needed
+                    const screenHeight = window.innerHeight;
+                    const chartHeight = screenHeight * 0.9; // 50% of the screen height
+                    return chartHeight;
+                  }
                 window.ReactNativeWebView.postMessage('Chart loaded');
                 
                 // Export the chart as a PNG image
@@ -567,7 +589,7 @@ export let htmlContent = `  <!DOCTYPE html>
                 // Bind the button to trigger export
                 window.exportChart = exportChart;
             
-                //....
+                //.... 
                 function updateChart(filteredData, updatedOptions) {
                     chart.updateSeries([{ data: filteredData }]);
                     chart.updateOptions(updatedOptions);
@@ -849,9 +871,6 @@ export let htmlContent = `  <!DOCTYPE html>
                         });
                     } 
                     else if (seriesData[0].x !== undefined && seriesData[0].y !== undefined) {
-
-                        window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'here2' }));
-
                         // { x, y } format
                         const minPoint = seriesData.reduce((min, point) => {
                             return point.y < min.y ? point : min;
@@ -861,7 +880,8 @@ export let htmlContent = `  <!DOCTYPE html>
                         const maxPoint = seriesData.reduce((max, point) => {
                             return point.y > max.y ? point : max;
                         }, { x: -Infinity, y: -Infinity });
-                    
+
+                        window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'min,max' ,values:[minPoint,maxPoint]}));
                         // Add annotations to the chart
                         chartInstance.clearAnnotations();
                         chartInstance.addPointAnnotation({
@@ -873,13 +893,13 @@ export let htmlContent = `  <!DOCTYPE html>
                                 strokeColor: '#ffffff',
                                 strokeWidth:1,
                             },
-                            // label: {
-                                // text: 'Min',
-                                // style: {
-                                //     color: '#ff0000',
-                                //     fontSize: '5px',
-                                // },
-                            // },
+                            label: {
+                                text: 'Min',
+                                style: {
+                                    color: '#ff0000',
+                                    fontSize: '5px',
+                                },
+                            },
                             
                         });
                     
@@ -892,13 +912,13 @@ export let htmlContent = `  <!DOCTYPE html>
                                 strokeColor: '#ffffff',
                                 strokeWidth: 1,
                             },
-                            // label: {
-                                // text: 'Max',
-                                // style: {
-                                //     color: '#ff0000',
-                                //     fontSize: '5px',
-                                // },
-                            // },
+                            label: {
+                                text: 'Max',
+                                style: {
+                                    color: '#ff0000',
+                                    fontSize: '5px',
+                                },
+                            },
                         });
                     } 
                     else {
@@ -906,7 +926,8 @@ export let htmlContent = `  <!DOCTYPE html>
                         window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'here3' }));
                     }
                 }
-
+               
+      
                 document.addEventListener("DOMContentLoaded", () => {
                     renderChart();
                 });

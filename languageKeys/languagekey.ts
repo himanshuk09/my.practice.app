@@ -95,6 +95,9 @@ export const TranslationKeys: Translations | any = {
       "Enter your registered email address to reset your password.",
     "Login failed. Please try again.": "Login failed. Please try again.",
     portfolio_overview: "Portfolio Overview",
+    PFC_Details: "PFC Details",
+    Prices_Setting: "Prices Setting",
+    Signals_Details: "Signals Details",
   },
   de: {
     unit: "kWh",
@@ -128,7 +131,7 @@ export const TranslationKeys: Translations | any = {
     login: "anmelden",
     logout: "Abmelden",
     forgotyourpassword: "Passwort vergessen?",
-    PRICES: "preise",
+    prices: "preise",
     pfc: "PFC",
     loaddata: "lastdaten",
     load: "lastdaten",
@@ -177,6 +180,9 @@ export const TranslationKeys: Translations | any = {
     View_Signal_Settings: "Signal Einstellungen anzeigen",
     View_Signal_Chart: "Signal Einstellungen anzeigen",
     Load_Data_Details: "Details Lastdaten",
+    PFC_Details: " Details PFC",
+    Prices_Setting: " Preise Einstellungen",
+    Signals_Details: "Details Signal",
     Please_enter_your_username_and_password:
       "Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein.",
     Please_enter_your_username: "Bitte geben Sie Ihren Benutzernamen ein.",

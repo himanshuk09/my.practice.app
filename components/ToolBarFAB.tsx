@@ -53,9 +53,10 @@ export default function FloatingActionMenu({ webViewRef }: any) {
       size: 14,
       color: "#848484",
     },
+
     {
-      icon: tooltip ? "dot-circle" : "circle",
-      action: `toggleMarkers():`,
+      icon: tooltip ? "circle" : "dot-circle",
+      action: `toggleMarkers()`,
       size: 14,
       color: "#848484",
     },
@@ -66,6 +67,32 @@ export default function FloatingActionMenu({ webViewRef }: any) {
       color: "#848484",
     },
   ];
+  return (
+    <View style={styles.container}>
+      <View style={styles.menuItemsContainer}>
+        {menuItems.map((item, index) => (
+          <View style={styles.menuItem} key={index}>
+            <TouchableOpacity
+              style={styles.menuIcon}
+              onPress={() => {
+                // Dynamically inject JavaScript based on the action in the JSON
+                (webViewRef.current as any)?.injectJavaScript(item.action);
+                if (item.action === `toggleMarkers()`) {
+                  setTooltip(!tooltip);
+                }
+              }}
+            >
+              <FontAwesome5
+                name={item.icon}
+                size={item.size}
+                color={item.color}
+              />
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -96,6 +123,9 @@ export default function FloatingActionMenu({ webViewRef }: any) {
                 onPress={() => {
                   // Dynamically inject JavaScript based on the action in the JSON
                   (webViewRef.current as any)?.injectJavaScript(item.action);
+                  if (item.action === `toggleMarkers()`) {
+                    setTooltip(!tooltip);
+                  }
                 }}
               >
                 <FontAwesome5
@@ -116,7 +146,7 @@ const styles = StyleSheet.create({
   container: {
     position: "absolute",
     top: 0,
-    right: 25, // Position on the right side
+    right: 10, // Position on the right side
     paddingTop: 3,
     paddingRight: 5,
     zIndex: 1000,
@@ -133,7 +163,7 @@ const styles = StyleSheet.create({
   menuItemsContainer: {
     position: "absolute",
     top: 5,
-    right: 50, // Adjust the position for right-to-left
+    right: 10, // Adjust the position for right-to-left
     flexDirection: "row",
     alignItems: "center",
   },
@@ -143,13 +173,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 1,
   },
   menuIcon: {
-    backgroundColor: "#f3f4f6",
+    // backgroundColor: "#f3f4f6",
     width: 30,
     height: 30,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 5, // Add margin to the left
+    marginLeft: 1, // Add margin to the left
   },
   activeMenuItem: {
     backgroundColor: "#848484",

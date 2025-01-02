@@ -89,21 +89,6 @@ const PricesDetails = () => {
           showPeriodOfTime={true}
           showValueRange={false}
         />
-        {/* 
-        <TabToggleButtons activeTab={activeTab} setActiveTab={setActiveTab} />
-        
-        <View className="flex-1 mx-4 bg-gray-100 rounded-lg border border-gray-300">
-         
-          <Text className="text-center text-gray-500 mt-20">
-            Chart Placeholder
-          </Text>
-        </View>
-      
-        <TouchableOpacity className="bg-red-500 py-4 mx-5 rounded-lg my-4">
-          <Text className="text-white text-center text-lg font-semibold">
-            Customize View
-          </Text>
-        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );

@@ -2,11 +2,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import { View, PanResponder, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
+import { usePathname, useRouter } from "expo-router";
 
 const SwipeDetectionWrapper = ({ children }: any) => {
   const dispatch = useDispatch();
+  const pathname = usePathname();
+  const isLoginRoute =
+    pathname === "/login" || pathname === "/login/forgotpassword";
   let debounceTimeout: any = null;
   const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
+
   const debounceAction = (action: () => void) => {
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
@@ -44,7 +49,8 @@ const SwipeDetectionWrapper = ({ children }: any) => {
   return (
     <View
       style={styles.container}
-      {...panResponder.panHandlers}
+      // {...panResponder.panHandlers}
+      {...(!isLoginRoute ? panResponder.panHandlers : {})}
       className="font-sans"
     >
       {children}

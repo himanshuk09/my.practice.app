@@ -1,37 +1,16 @@
-import {
-  View,
-  Text,
-  StatusBar,
-  SafeAreaView,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { View, Text, StatusBar, SafeAreaView, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { AccordionData } from "@/constants/constantData";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
-import TabToggleButtons from "@/components/TabToggleButtons";
+import { useSelector } from "react-redux";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import ChartComponent from "@/components/Chart/ChartComponent";
-import { englishIN, germany, i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/languageKeys/i18nConfig";
 import { cockpitChartData } from "@/constants/cockpitchart";
-import Loader, { ChartLoaderPNG } from "@/components/Loader";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import * as ScreenOrientation from "expo-screen-orientation";
-import PickerModel from "@/components/PickerModel";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { RootState } from "@/store/store";
-import FloatingActionMenu from "@/components/FloatingActionMenu";
-dayjs.extend(utc);
-dayjs.extend(timezone);
-type ChartUpdateType = "series" | "options" | "chart";
-type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "";
+
 const LoadDataDetails = () => {
   const isLandscape = useSelector(
     (state: RootState) => state.orientation.isLandscape
@@ -88,8 +67,9 @@ const LoadDataDetails = () => {
 
   return (
     <SafeAreaView className="flex-1 ">
-      <StatusBar />
+      <StatusBar showHideTransition={"slide"} />
       <View className="flex-1  bg-white">
+        {/**hidden in landscape orientation  */}
         {!isLandscape && (
           <View className="flex justify-between bg-white  flex-row px-4  m-1 h-28 shadow-2xl shadow-black ">
             <View
@@ -120,16 +100,11 @@ const LoadDataDetails = () => {
                 size={35}
                 color="#ef4444"
                 onPress={() => saveCSVToFile(cockpitChartData)}
-                // onPress={() => {
-                //   // if (Platform.OS !== "web") {
-                //   //   webViewRef?.current.injectJavaScript("exportChart();");
-                //   // }
-                // }}
               />
             </View>
           </View>
         )}
-
+        {/**chart component */}
         <ToggleChartComponent
           showRangePicker={false}
           showPeriodOfTime={true}
