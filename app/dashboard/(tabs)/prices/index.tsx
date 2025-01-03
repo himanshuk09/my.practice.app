@@ -25,7 +25,8 @@ const Prices = () => {
       className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1  bg-white h-20"
       onPress={() => {
         dispatch(activeLoading());
-        setTimeout(() => router.push(item.route as Href));
+
+        setTimeout(() => router.push(`dashboard/prices/${item.id}` as Href));
       }}
     >
       <View className="flex flex-row items-center justify-start">

@@ -20,7 +20,7 @@ const LoaddataLayout = () => {
         options={{ headerShown: false, animation: "slide_from_left" }}
       />
       <Stack.Screen
-        name="[id]"
+        name="[meterid]/[id]"
         options={{
           headerShown: Platform.OS === "web" ? true : !isLandscape,
           animation: "slide_from_left",

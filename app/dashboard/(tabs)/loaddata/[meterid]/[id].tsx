@@ -16,7 +16,9 @@ const LoadDataDetails = () => {
     (state: RootState) => state.orientation.isLandscape
   );
   const [loadDetail, setloadDetails] = useState<any>();
-  const { id } = useLocalSearchParams();
+  const { meterId, id } = useLocalSearchParams();
+  console.log(meterId, id);
+
   //convert json to CSV
   const splitTimestamp = (timestamp: number) => {
     const date = new Date(timestamp); // Convert timestamp to Date object
@@ -69,7 +71,6 @@ const LoadDataDetails = () => {
     <SafeAreaView className="flex-1 ">
       <StatusBar showHideTransition={"slide"} />
       <View className="flex-1  bg-white">
-        {/**hidden in landscape orientation  */}
         {!isLandscape && (
           <View className="flex justify-between bg-white  flex-row px-4  m-1 h-28 shadow-2xl shadow-black ">
             <View

@@ -17,6 +17,10 @@ import * as Sharing from "expo-sharing";
 import PickerModel from "@/components/PickerModel";
 import { RootState } from "@/store/store";
 import FloatingActionMenu from "./FloatingActionMenu";
+import {
+  WebviewLineHtmlContent,
+  iFrameLineHtmlcontent,
+} from "./Chart/charthtmlcontent";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -56,13 +60,13 @@ const ToggleChartComponent = ({
       if (iframe && iframe.contentWindow) {
         switch (type) {
           case "series":
-            iframe.contentWindow.updateChartSeries?.([{ data: data }]);
+            iframe.contentWindow.updateChartSeries?.(data);
             break;
           case "options":
             iframe.contentWindow.updateChartOptions?.(data);
             break;
           case "chart":
-            iframe.contentWindow.updateChart?.([{ data: data }], options);
+            iframe.contentWindow.updateChart?.(data, options);
             break;
           default:
             console.error("Invalid chart update type");
@@ -93,7 +97,6 @@ const ToggleChartComponent = ({
       (webViewRef.current as any)?.injectJavaScript(jsCommand);
     }
   };
-
   const updateChartData = (filteredData: any) => {
     if (filteredData?.length === 0) {
       updateChart("options", {
@@ -347,7 +350,14 @@ const ToggleChartComponent = ({
     //for file share or save
     const base64Data = event.nativeEvent.data;
     if (base64Data && base64Data.startsWith("data:image/png;base64,")) {
-      const fileName = `${FileSystem.documentDirectory}chart.png`;
+      // const fileName = `${FileSystem.documentDirectory}chart.png`;
+      const fileName = `${FileSystem.documentDirectory}cockpi_chart_${new Date()
+        .toISOString()
+        .replace(/:/g, "-")
+        .replace(/T/, "_")
+        .replace(/\..+/, "")}.png`;
+      console.log("fileName", fileName);
+
       try {
         // Save Base64 as a file
         await FileSystem.writeAsStringAsync(
@@ -433,6 +443,8 @@ const ToggleChartComponent = ({
           iFrameRef={iFrameRef}
           onMessage={onMessage}
           activeTab={activeTab}
+          webViewhtmlContent={WebviewLineHtmlContent}
+          iFramehtmlContent={iFrameLineHtmlcontent}
         />
       </View>
 

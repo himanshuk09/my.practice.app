@@ -335,18 +335,18 @@ export const DashboardCardsEng = [
 ];
 export const AccordionData = [
   {
-    id: "0",
+    id: "10",
     title: "Summenlastgänge | BILSTEIN GmbH & Co. KG",
     details: [
       {
         id: 0,
         channel: "Gas| BILSTEIN GmbH & Co. KG | Summenlastgänge",
-        route: "/dashboard/loaddata/0",
+        route: "/dashboard/loaddata/0/0",
       },
     ],
   },
   {
-    id: "1",
+    id: "11",
     title: "Gas | BILSTEIN GmbH & Co. KG | 58119 Hagen",
     details: [
       {
@@ -374,7 +374,7 @@ export const AccordionData = [
     ],
   },
   {
-    id: "2",
+    id: "12",
     title: "Gas | HUGO VOGELSANG GmbH & Co. KG | 58119 Hagen",
     details: [
       {
@@ -385,7 +385,7 @@ export const AccordionData = [
     ],
   },
   {
-    id: "3",
+    id: "13",
     title: "Gas | BILSTEIN GmbH & Co. KG | 58093 Hagen",
     details: [],
   },

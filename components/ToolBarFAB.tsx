@@ -1,10 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-  Text,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons"; // For icons
 import { useState } from "react";
 
@@ -62,7 +56,7 @@ export default function FloatingActionMenu({ webViewRef }: any) {
     },
     {
       icon: "download",
-      action: " exportChart()",
+      action: `exportChart()`,
       size: 14,
       color: "#848484",
     },
@@ -75,8 +69,9 @@ export default function FloatingActionMenu({ webViewRef }: any) {
             <TouchableOpacity
               style={styles.menuIcon}
               onPress={() => {
-                // Dynamically inject JavaScript based on the action in the JSON
-                (webViewRef.current as any)?.injectJavaScript(item.action);
+                (webViewRef?.current as any)?.injectJavaScript(item.action);
+                console.log("menuItems");
+
                 if (item.action === `toggleMarkers()`) {
                   setTooltip(!tooltip);
                 }
@@ -122,7 +117,7 @@ export default function FloatingActionMenu({ webViewRef }: any) {
                 style={styles.menuIcon}
                 onPress={() => {
                   // Dynamically inject JavaScript based on the action in the JSON
-                  (webViewRef.current as any)?.injectJavaScript(item.action);
+                  (webViewRef?.current as any)?.injectJavaScript(item.action);
                   if (item.action === `toggleMarkers()`) {
                     setTooltip(!tooltip);
                   }
@@ -146,7 +141,7 @@ const styles = StyleSheet.create({
   container: {
     position: "absolute",
     top: 0,
-    right: 10, // Position on the right side
+    right: 10,
     paddingTop: 3,
     paddingRight: 5,
     zIndex: 1000,
@@ -163,7 +158,7 @@ const styles = StyleSheet.create({
   menuItemsContainer: {
     position: "absolute",
     top: 5,
-    right: 10, // Adjust the position for right-to-left
+    right: 10,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -179,7 +174,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 1, // Add margin to the left
+    marginLeft: 1,
   },
   activeMenuItem: {
     backgroundColor: "#848484",

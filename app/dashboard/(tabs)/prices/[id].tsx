@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
 import { PricesItem } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,7 @@ const PricesDetails = () => {
   const { id } = useLocalSearchParams();
   const [pricesDetail, setPricesDetails] = useState<any>();
   const router = useRouter();
+
   const isLandscape = useSelector(
     (state: RootState) => state.orientation.isLandscape
   );

@@ -1,94 +1,44 @@
 import { Platform, TouchableOpacity, BackHandler } from "react-native";
 import React, { useEffect } from "react";
 import WebView from "react-native-webview";
-import { htmlContent, iframehtmlcontent } from "./charthtmlcontent";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setOrientation } from "@/store/chartSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-
+import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 type ChartComponentProps = {
-  webViewRef?: React.RefObject<any>;
+  webViewRef: React.RefObject<any>;
   iFrameRef?: React.RefObject<any>;
   onMessage?: (event: any) => void;
   id?: number;
   refereshkey?: number;
   activeTab?: string;
+  webViewhtmlContent?: any;
+  iFramehtmlContent?: any;
+  showToggleOrientation?: boolean;
+  showToolbar?: boolean;
 };
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
   webViewRef,
   iFrameRef,
   onMessage,
-  id,
   refereshkey,
   activeTab,
+  webViewhtmlContent,
+  iFramehtmlContent,
+  showToggleOrientation = true,
+  showToolbar = true,
 }) => {
-  const handleMessagePNG = async (event: any) => {
-    const base64Data = event.nativeEvent.data; // Base64 string of chart
-
-    if (base64Data === "Chart loaded") {
-      console.log("Chart successfully loaded inside WebView");
-      return; // Handle chart loading message
-    }
-    console.log("base64Data", base64Data);
-
-    if (base64Data && base64Data.startsWith("data:image/png;base64,")) {
-      const fileName = `${FileSystem.documentDirectory}chart.png`;
-
-      try {
-        // Save Base64 as a file
-        await FileSystem.writeAsStringAsync(
-          fileName,
-          base64Data.split(",")[1],
-          {
-            encoding: FileSystem.EncodingType.Base64,
-          }
-        );
-
-        // Share or Save the file
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(fileName);
-        }
-      } catch (error) {
-        console.error("Error saving chart image:", error);
-      }
-    } else {
-      console.log("Received unexpected message:", base64Data);
-    }
-  };
   const dispatch = useDispatch();
   const isLandscape = useSelector(
     (state: RootState) => state.orientation.isLandscape
   );
 
-  // const checkOrientation = async () => {
-  //   const orientationInfo = await ScreenOrientation.getOrientationAsync();
-  //   const isLandscapeMode =
-  //     orientationInfo === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-  //     orientationInfo === ScreenOrientation.Orientation.LANDSCAPE_RIGHT;
-
-  //   // Dispatch the action to update Redux state
-  //   dispatch(setOrientation(isLandscapeMode));
-  // };
-  // useEffect(() => {
-  //   checkOrientation(); // Check the initial orientation
-  //   const subscription = ScreenOrientation.addOrientationChangeListener(() => {
-  //     checkOrientation(); // Check orientation when it changes
-  //   });
-
-  //   // Cleanup on unmount
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, [dispatch]);
-
-  // Function to toggle the orientation lock
   const toggleOrientation = async () => {
     dispatch(activeLoading());
     if (isLandscape) {
@@ -148,13 +98,13 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     <>
       {Platform.OS !== "web" ? (
         <>
-          {/* <ToolBarFloatingActionMenu webViewRef={webViewRef} /> */}
+          {showToolbar && <ToolBarFloatingActionMenu webViewRef={webViewRef} />}
           <WebView
             key={refereshkey}
             className="z-50 "
             ref={webViewRef}
             originWhitelist={["*"]}
-            source={{ html: htmlContent }}
+            source={{ html: webViewhtmlContent }}
             onLoadStart={() => console.log("WebView start Load")}
             onLoad={() => console.log("WebView Loaded")}
             onLoadEnd={() => console.log("WebView end Load")}
@@ -177,7 +127,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             }}
             overScrollMode="content"
             gestureHandling="auto"
-            injectedJavaScriptBeforeContentLoaded={htmlContent}
+            injectedJavaScriptBeforeContentLoaded={webViewhtmlContent}
             scrollEnabled={false}
             javaScriptEnabled={true}
             domStorageEnabled={true}
@@ -196,26 +146,28 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             // startInLoadingState
           />
 
-          <TouchableOpacity
-            style={{
-              position: "absolute",
-              bottom: 10,
-              right: 20,
-              zIndex: 1000,
-            }}
-            onPress={toggleOrientation}
-          >
-            <MaterialIcons
-              name={isLandscape ? "zoom-in-map" : "zoom-out-map"}
-              size={24}
-              color="gray"
-            />
-          </TouchableOpacity>
+          {showToggleOrientation && (
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                bottom: 10,
+                right: 20,
+                zIndex: 1000,
+              }}
+              onPress={toggleOrientation}
+            >
+              <MaterialIcons
+                name={isLandscape ? "zoom-in-map" : "zoom-out-map"}
+                size={24}
+                color="gray"
+              />
+            </TouchableOpacity>
+          )}
         </>
       ) : (
         <iframe
           ref={iFrameRef}
-          srcDoc={iframehtmlcontent}
+          srcDoc={iFramehtmlContent}
           style={{
             width: "100%",
             height: "100%",
@@ -231,3 +183,23 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 };
 
 export default ChartComponent;
+// const checkOrientation = async () => {
+//   const orientationInfo = await ScreenOrientation.getOrientationAsync();
+//   const isLandscapeMode =
+//     orientationInfo === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+//     orientationInfo === ScreenOrientation.Orientation.LANDSCAPE_RIGHT;
+
+//   // Dispatch the action to update Redux state
+//   dispatch(setOrientation(isLandscapeMode));
+// };
+// useEffect(() => {
+//   checkOrientation(); // Check the initial orientation
+//   const subscription = ScreenOrientation.addOrientationChangeListener(() => {
+//     checkOrientation(); // Check orientation when it changes
+//   });
+
+//   // Cleanup on unmount
+//   return () => {
+//     subscription.remove();
+//   };
+// }, [dispatch]);

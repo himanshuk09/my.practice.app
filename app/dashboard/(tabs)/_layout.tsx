@@ -139,6 +139,7 @@ const TabNavigatorLayout = () => {
   const isIdRoute =
     /^\/dashboard\/test\/\d+$/.test(pathname) ||
     /^\/dashboard\/loaddata\/\d+$/.test(pathname) ||
+    /^\/dashboard\/loaddata\/\d+\/\d+$/.test(pathname) ||
     /^\/dashboard\/signals\/\d+$/.test(pathname) ||
     /^\/dashboard\/prices\/\d+$/.test(pathname) ||
     /^\/dashboard\/pfc\/\d+$/.test(pathname) ||

@@ -88,7 +88,14 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
                 className="my-1 bg-gray-100 shadow-slate-200 shadow-lg p-3  items-center justify-center  rounded-sm text-center border-y-4 border-y-white h-20"
                 onPress={() => {
                   startLoader();
-                  setTimeout(() => router.push(detail.route as Href));
+                  // setTimeout(() => router.push(detail.route as Href));
+                  setTimeout(() =>
+                    router.push(
+                      `/dashboard/loaddata/${item?.id}/${detail?.id}` as Href
+                    )
+                  );
+
+                  console.log(item?.id);
                 }}
               >
                 <Text className="text-md font-normal text-gray-500">
