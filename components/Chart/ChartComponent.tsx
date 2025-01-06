@@ -1,4 +1,11 @@
-import { Platform, TouchableOpacity, BackHandler } from "react-native";
+import {
+  Platform,
+  TouchableOpacity,
+  BackHandler,
+  StyleSheet,
+  View,
+  Text,
+} from "react-native";
 import React, { useEffect } from "react";
 import WebView from "react-native-webview";
 import * as FileSystem from "expo-file-system";
@@ -10,6 +17,12 @@ import { setOrientation } from "@/store/chartSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
+
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+  PinchGestureHandler,
+} from "react-native-gesture-handler";
 type ChartComponentProps = {
   webViewRef: React.RefObject<any>;
   iFrameRef?: React.RefObject<any>;
@@ -75,7 +88,41 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     );
     dispatch(setOrientation(!isLandscape));
   };
+  const executeFunction = (functionName: any) => {
+    webViewRef.current.injectJavaScript(`${functionName}(); true;`);
+  };
+  // Handle Pan Gesture for Move Left and Move Right
+  const handlePanGesture = (event: any) => {
+    const { translationX } = event.nativeEvent;
 
+    if (translationX > 50) {
+      console.log("Gesture: Move Right");
+    } else if (translationX < -50) {
+      console.log("Gesture: Move Left");
+    }
+  };
+
+  // Handle Pinch Gesture for Pinch In and Pinch Out
+  const handlePinchGesture = (event: any) => {
+    const { scale } = event.nativeEvent;
+
+    if (scale > 1) {
+      console.log("Gesture: Pinch Out");
+    } else if (scale < 1) {
+      console.log("Gesture: Pinch In");
+    }
+  };
+  const handleGesture = (event: any) => {
+    const { translationX } = event.nativeEvent;
+
+    if (translationX > 50) {
+      // Swipe right
+      executeFunction("customPanRight");
+    } else if (translationX < -50) {
+      // Swipe left
+      executeFunction("customPanLeft");
+    }
+  };
   useEffect(() => {
     const handleBackPress = () => {
       if (isLandscape) {
@@ -94,11 +141,13 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
   }, [isLandscape, dispatch]);
+
   return (
     <>
       {Platform.OS !== "web" ? (
         <>
           {showToolbar && <ToolBarFloatingActionMenu webViewRef={webViewRef} />}
+
           <WebView
             key={refereshkey}
             className="z-50 "
@@ -183,6 +232,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 };
 
 export default ChartComponent;
+
 // const checkOrientation = async () => {
 //   const orientationInfo = await ScreenOrientation.getOrientationAsync();
 //   const isLandscapeMode =

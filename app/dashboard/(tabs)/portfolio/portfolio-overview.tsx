@@ -1,5 +1,5 @@
 import ChartComponent from "@/components/Chart/ChartComponent";
-import WebViewComponent from "@/components/WebViewComponent";
+
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
@@ -11,8 +11,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import WebView from "react-native-webview";
-import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
+
 import { useDispatch, useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";

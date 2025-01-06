@@ -232,8 +232,18 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                 },
                                 selection: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
-                                        JSON.stringify({ action: 'selection' })
+                                        JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
                                     );
+                                    const currentMin = chart.w.globals.minX;
+                                    const currentMax = chart.w.globals.maxX;
+                                    const zoomAmount = (currentMax - currentMin) * 0.1;
+                                    chart.updateOptions({
+                                        xaxis: {
+                                            min: currentMin - zoomAmount,
+                                            max: currentMax + zoomAmount,
+                                        },
+                                    });
+                                    
                                 },
                                 dataPointMouseEnter: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
@@ -325,7 +335,11 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                 },
                                 updated: function (chartContext) {
                                     window.ReactNativeWebView.postMessage(
-                                        JSON.stringify({ action: 'Chart updated' })
+                                        JSON.stringify({ action: 'Chart updated',values:[{
+                                            "zoomEnabled": chart.w.globals. zoomEnabled ,"panEnabled":
+                                             chart.w.globals.panEnabled,"selectionEnabled":
+                                             chart.w.globals.selectionEnabled
+                                        }]})
                                     );
                                     highlightMinAndMax(chartContext);
                                 },
@@ -791,7 +805,25 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                         },
                     });
                 };
-                
+                window.customPanRight = function () {
+                    
+                    const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+                  
+                    const newMinX = chart.w.globals.minX + moveFactor;
+                    const newMaxX = chart.w.globals.maxX + moveFactor;
+                  
+                    chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+                  };
+
+                  window.customPanLeft = function () {
+                   
+                    const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+                  
+                    const newMinX = chart.w.globals.minX - moveFactor;
+                    const newMaxX = chart.w.globals.maxX - moveFactor;
+                  
+                    chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+                  };
                 window.resetZoom = function () {
                     // Dynamically access the series and x-axis data from the chart instance
                     const seriesData = chart.w.config.series[0].data;
@@ -929,7 +961,48 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                     }
                 }
                
-      
+                function toggleModes() {
+                    if (chart.w.globals.zoomEnabled) {
+                      // Switch to Pan mode
+                      chart.w.globals.zoomEnabled = false;
+                      chart.w.globals.panEnabled = true;
+                      chart.w.globals.selectionEnabled = false;
+                    } else if (chart.w.globals.panEnabled) {
+                      // Switch to Selection mode
+                      chart.w.globals.zoomEnabled = false;
+                      chart.w.globals.panEnabled = false;
+                      chart.w.globals.selectionEnabled = true;
+                    } else if (chart.w.globals.selectionEnabled) {
+                      // Switch to Zoom mode
+                      chart.w.globals.zoomEnabled = true;
+                      chart.w.globals.panEnabled = false;
+                      chart.w.globals.selectionEnabled = false;
+                    } else {
+                      // Default to Zoom mode if no mode is enabled
+                      chart.w.globals.zoomEnabled = true;
+                      chart.w.globals.panEnabled = false;
+                      chart.w.globals.selectionEnabled = false;
+                    }
+                }
+                
+                window.toggleZoomAndSelection=()=> {
+                    if (chart.w.globals.zoomEnabled) {
+                      // Switch to Selection mode
+                      chart.w.globals.zoomEnabled = false;
+                      chart.w.globals.selectionEnabled = true;
+                    } else if (chart.w.globals.selectionEnabled) {
+                      // Switch to Zoom mode
+                      chart.w.globals.zoomEnabled = true;
+                      chart.w.globals.selectionEnabled = false;
+                    } else {
+                      // Default to Zoom mode if neither is enabled
+                      chart.w.globals.zoomEnabled = true;
+                      chart.w.globals.selectionEnabled = false;
+                    }
+                  }
+                  
+              
+                
                 document.addEventListener("DOMContentLoaded", () => {
                     renderChart();
                 });

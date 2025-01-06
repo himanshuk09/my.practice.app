@@ -1,9 +1,15 @@
 import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
-import { FontAwesome5, MaterialIcons } from "@expo/vector-icons"; // For icons
+import {
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons"; // For icons
 import { useState } from "react";
 
 export default function FloatingActionMenu({ webViewRef }: any) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isZoomIn, setIsZoomIn] = useState(true);
   const [animation] = useState(new Animated.Value(0));
   const [tooltip, setTooltip] = useState(false);
   const toggleMenu = () => {
@@ -30,13 +36,19 @@ export default function FloatingActionMenu({ webViewRef }: any) {
 
   const menuItems = [
     {
-      icon: "search-plus",
+      icon: isZoomIn ? "search-plus" : "search-minus",
+      action: "toggleZoomAndSelection()",
+      size: 14,
+      color: "#848484",
+    },
+    {
+      icon: "plus-circle",
       action: "zoomIn()",
       size: 14,
       color: "#848484",
     },
     {
-      icon: "search-minus",
+      icon: "minus-circle",
       action: "zoomOut()",
       size: 14,
       color: "#848484",
@@ -44,6 +56,18 @@ export default function FloatingActionMenu({ webViewRef }: any) {
     {
       icon: "home",
       action: "resetZoom()",
+      size: 14,
+      color: "#848484",
+    },
+    {
+      icon: "hand-point-left",
+      action: "customPanLeft()",
+      size: 14,
+      color: "#848484",
+    },
+    {
+      icon: "hand-point-right",
+      action: "customPanRight()",
       size: 14,
       color: "#848484",
     },
@@ -74,6 +98,9 @@ export default function FloatingActionMenu({ webViewRef }: any) {
 
                 if (item.action === `toggleMarkers()`) {
                   setTooltip(!tooltip);
+                }
+                if (item.action === `toggleZoomAndSelection()`) {
+                  setIsZoomIn(!isZoomIn);
                 }
               }}
             >
