@@ -30,7 +30,7 @@ const FlatListBlock1 = ({
   const ListItem = memo(({ item, router }: any) => (
     <TouchableOpacity
       key={item.id}
-      className="flex justify-start p-5 text-lg font-serif font-medium rounded-sm my-1 shadow-slate-400 shadow-lg bg-white h-20 space-x-1"
+      className="flex justify-start p-5 text-lg font-serif font-medium rounded-sm my-1 shadow-slate-400 shadow-lg bg-white h-[4.7rem] space-x-1"
       onPress={() => {
         dispatch(activeLoading());
         setTimeout(() => {
@@ -66,7 +66,7 @@ const FlatListBlock1 = ({
           } catch (error) {
             console.warn("Scroll Error:", error);
           }
-        }, 250);
+        }, 1500);
       }
     }
   }, [items, enableAutoScroll, currentYear, isFocused]);
@@ -98,7 +98,7 @@ const FlatListBlock1 = ({
           offset: ITEM_HEIGHT * index,
           index,
         })}
-        initialNumToRender={5} // Ensure enough items render initially
+        initialNumToRender={1} // Ensure enough items render initially
         className="bg-gray-100 overflow-scroll mx-2"
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

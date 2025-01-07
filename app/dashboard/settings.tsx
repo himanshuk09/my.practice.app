@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StatusBar,
-  Switch,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { AppDispatch, RootState } from "@/store/store";
@@ -34,7 +27,6 @@ const Settings = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar />
       <View className=" w-full z-50 p-3 mt-1 bg-[#e31837]">
         <Text className="flex justify-start font-semibold  py-2 p-3  items-center  h-16 text-xl capitalize rounded-sm text-white">
           {i18n.t("settings")}

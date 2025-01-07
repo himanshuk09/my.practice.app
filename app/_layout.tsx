@@ -8,6 +8,8 @@ import * as SplashScreen from "expo-splash-screen";
 import * as ScreenOrientation from "expo-screen-orientation";
 import Drawer from "@/components/Drawer";
 import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
+import toastConfig from "@/components/ToastConfig";
+import Toast from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,6 +43,7 @@ const Layout = () => {
         <NavigationWatcher>
           <AppLoader>
             <RootLayout />
+            <Toast config={toastConfig} />
           </AppLoader>
         </NavigationWatcher>
       </SwipeDetectionWrapper>

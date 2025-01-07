@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { SafeAreaView, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
@@ -14,7 +14,6 @@ const PFC = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar />
       {PFCGas && (
         <FlatListBlock title="Gas" items={PFCGas} enableAutoScroll={false} />
       )}

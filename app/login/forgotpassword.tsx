@@ -2,7 +2,6 @@ import {
   View,
   Text,
   SafeAreaView,
-  StatusBar,
   TextInput,
   TouchableOpacity,
   Pressable,
@@ -34,7 +33,6 @@ const Forgotpassword = () => {
   }, [email]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
       <View className="flex-1 justify-center items-center bg-white">
         <View className="w-11/12 max-w-md p-5">
           <View className="items-center mb-10 w-full">

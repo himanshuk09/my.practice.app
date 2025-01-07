@@ -125,7 +125,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             type: "line",
                             height: '100%',
                             background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
-                            background:"white",
+                            
                             stacked: false,
                             locales: [locales.en, locales.de],
                             defaultLocale: "en",
@@ -777,8 +777,8 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             chart: { 
                                 width: '100%' , 
                                  height:'91%',
-                                // background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center ",
-                                background:"white",
+                                 background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center ",
+                               
                             }, 
                             xaxis: 
                                 {   
@@ -1720,7 +1720,7 @@ export const webviewDonutChartHtml = `
       <script>
       document.addEventListener("DOMContentLoaded", function() {
           var options = {
-              series: [30, 70],
+              series: [70,30],
               labels: ["Open", "Closed"],
               chart: {
                   type: 'donut',
@@ -1730,6 +1730,18 @@ export const webviewDonutChartHtml = `
                   animations: { enabled: true },
                   toolbar: { show: false },
               },
+              noData: {
+                text: "N/A",
+                align: "center",
+                verticalAlign: "middle",
+                offsetX: 0,
+                offsetY: -10,
+                style: {
+                    color: "#e31837",
+                    fontSize: "25px",
+                    fontFamily: "Helvetica, Arial, sans-serif",
+                },
+            },
               colors: ["#7f7f7f", "#e31837"],
               plotOptions: {
                   pie: {
@@ -1874,7 +1886,7 @@ export const webviewAreaHtmlcontent = `
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
           <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
           <style>
-                    * {
+                * {
                     margin: 0;
                     padding: 0;
                     box-sizing: border-box;
@@ -1915,93 +1927,109 @@ export const webviewAreaHtmlcontent = `
               }
               });
           }
+         let dummy=[ {
+            name: 'Forward',
+            data: [10, 25, 15, 30, 20, 35, 25, 40, 20, 15, 10, 30],
+            },
+            {
+            name: 'IbISwing',
+            data: [15, 20, 10, 35, 25, 30, 20, 25, 15, 20, 25, 15],
+            },
+            {
+            name: 'IbIspot',
+            data: [20, 10, 30, 25, 35, 20, 10, 15, 30, 25, 35, 20],
+            },
+            {
+            name: 'Closed',
+            data: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+            },]
           var options = {
               series: [
-                  {
-                  name: 'Forward',
-                  data: [10, 25, 15, 30, 20, 35, 25, 40, 20, 15, 10, 30],
+                {
+                    "name": "Forward",
+                    "data": [10, 9, 8, 8, 7, 7, 7, 6, 6, 6, 6, 5]
                   },
                   {
-                  name: 'IbISwing',
-                  data: [15, 20, 10, 35, 25, 30, 20, 25, 15, 20, 25, 15],
+                    "name": "lblSwing",
+                    "data": [15, 14, 14, 14, 13, 12, 12, 11, 11, 10, 10, 9]
                   },
                   {
-                  name: 'IbIspot',
-                  data: [20, 10, 30, 25, 35, 20, 10, 15, 30, 25, 35, 20],
+                    "name": "lblSpot",
+                    "data": [20, 18, 17, 16, 15, 14, 14, 14, 13, 12, 12, 12]
                   },
                   {
-                  name: 'Closed',
-                  data: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-                  },
-              ],
-              colors: ["#cecece", "#e4e4e4","#b5b5b5","#c32442"],
-              chart: {
-                  height: '67%',
-                  width:'102%',
-                  type: "area",
-                  offsetX: -5,
-                  offsetY: 0,
-                  zoom: {
-                      enabled: true,
-                      type: 'x', 
-                      autoScaleYaxis: true, 
-                  },
-                  background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
-                  toolbar: {
-                      show: false,
-                      offsetX: 0,
-                      offsetY: 0,
-                      autoSelected:'zoom',
-                      tools: {
-                      download: true,
-                      selection: false,
-                      zoom: true,
-                      zoomin: true,
-                      zoomout: true,
-                      pan: false,
-                      reset: true,
-                      },
-                  },
-                  animations: {
-                      enabled: true,
-                      easing: "linear",
-                      speed: 1000,
-                      dynamicAnimation: { enabled: true, speed: 1000 },
-                      animategradually: { enabled: true, delay: 2000 },
-                      initialAnimation: {enabled: true}
-                  },
-                  events:{
-                    selection: function(chartContext, { xaxis, yaxis }) {
-                        window.ReactNativeWebView.postMessage(
-                            JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
-                        );
-                        const currentMin = chart.w.globals.minX;
-                        const currentMax = chart.w.globals.maxX;
-                        const zoomAmount = (currentMax - currentMin) * 0.1;
-                        chart.updateOptions({
-                            xaxis: {
-                                min: currentMin - zoomAmount,
-                                max: currentMax + zoomAmount,
-                            },
-                        });
-                        
-                    },
+                    "name": "Closed",
+                    "data": [2,2,2,2,2,2,2,2,2,2,2,2]
                   }
+              ],
+              colors: ["#e4e4e4","#cecece", "#b5b5b5","#c32442"],
+              chart: {
+                    height: '100%',
+                    width:'102%',
+                    type: "area",
+                    offsetX: -5,
+                    offsetY: 0,
+                    zoom: {
+                        enabled: true,
+                        type: 'x', 
+                        autoScaleYaxis: true, 
+                    },
+                    background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+                    toolbar: {
+                        show: false,
+                        offsetX: 0,
+                        offsetY: 0,
+                        autoSelected:'zoom',
+                        tools: {
+                        download: true,
+                        selection: false,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: false,
+                        reset: true,
+                        },
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: "linear",
+                        speed: 1000,
+                        dynamicAnimation: { enabled: true, speed: 1000 },
+                        animategradually: { enabled: true, delay: 2000 },
+                        initialAnimation: {enabled: true}
+                    },
+                    events:{
+                        selection: function(chartContext, { xaxis, yaxis }) {
+                            window.ReactNativeWebView.postMessage(
+                                JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
+                            );
+                            const currentMin = chart.w.globals.minX;
+                            const currentMax = chart.w.globals.maxX;
+                            const zoomAmount = (currentMax - currentMin) * 0.1;
+                            chart.updateOptions({
+                                xaxis: {
+                                    min: currentMin - zoomAmount,
+                                    max: currentMax + zoomAmount,
+                                },
+                            });
+                            updateLocale();
+                        },
+                    }
               },
               title: {
                   text: "Target 2024",
-                  align: "left",
+                  align: "center",
                   margin: 0,
                   offsetX: 0,
-                  offsetY:3,
+                  offsetY:10,
                   style: {
-                      fontSize: "14px",
-                      fontWeight: "600",
+                      fontSize: "13px",
+                      fontWeight: "500",
                       color: "#474747",
                   },
               },
               noData: {
-                  text: "no data",
+                  text: "Data not available",
                   align: "center",
                   verticalAlign: "middle",
                   offsetX: 0,
@@ -2039,173 +2067,172 @@ export const webviewAreaHtmlcontent = `
                   },
               }, 
               xaxis: {
-                  type: "category",
-                  categories,
-                  labels: {
-                  show: true,
-                  rotate: -45,
-                  rotateAlways: false,
-                  position: "top",
-                  textAnchor: "end",
-                  hideOverlappingLabels: true,
-                  showDuplicates: false,
-                  trim: false,
-                  maxHeight: 120,
-                  style: 
-                  {
-                      fontSize: "10px",
-                      fontFamily: "Helvetica, Arial, sans-serif",
-                      fontWeight: 600,
-                  },
-                  
-              },
-              axisBorder: {
-                  show: true,
-                  color: "#78909C",
-                  height: 1,
-                  width: "100%",
-                  offsetX: 0,
-                  offsetY: 0,  
-              },
-              axisTicks: {
-                  show: true,
-                  borderType: "solid",
-                  color: "#78909C",
-                  height: 6,
-                  offsetX: 0,
-                  offsetY: 0,
-                  },  
-              },
-              yaxis: {
-                  show: true,
-                  showAlways: false,
-                  showForNullSeries: true,
-                  seriesName: undefined,
-                  opposite: false,
-                  reversed: false,
-                  logarithmic: false,
-                  logBase: 0,
-                  tickAmount: undefined,
-                  min: undefined,
-                  max: undefined,
-                  // stepSize: 5,
-                  forceNiceScale: false,
-                  floating: false,
-                  decimalsInFloat: undefined,
-                  title: { text: "MW" },
-                  labels: {
-                      show: true,
-                      minWidth: 0,
-                      maxWidth: 160,
-                      style: {
-                          fontSize: "10px",
-                          fontFamily: "Helvetica, Arial, sans-serif",
-                          fontWeight: 600,
-                      },
-                      offsetX: 0,
-                      offsetY: 0,
-                      formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 0 }).format(value),
-                  },
-                  axisBorder: {
-                      show: false,
-                      color: "#78909C",
-                      offsetX: 0,
-                      offsetY: 0,
-                  },
-                  axisTicks: {
-                      show: true,
-                      borderType: "solid",
-                      color: "#78909C",
-                      width: 1,
-                      offsetX: -5,
-                      offsetY: 0,
-                  },
-              },
-              grid: {
-                  show: true,
-                  borderColor: "#ccc",
-                  strokeDashArray: 1,
-                  position: "back",
-                  padding: {
-                      top: 0,
-                      right:-1,
-                      bottom: 0,
-                      left:5,
-                  },
-              },
-              legend: {
-                  show: true,
-                  position: "bottom",
-                  markers: {
-                      width: 30, // Makes the marker wide like a line
-                      height: 1, // Reduces the height to appear as a thin line
-                      radius: 0, // No rounded corners, to maintain a line shape
-                      offsetX: -5, // Adjust the position slightly
-                  },
-              },
-              tooltip: {
-                  enabled: true,
-                  shared: true,  
-                  followCursor: false,
-                  intersect: false,
-                  inverseOrder: false,
-                  hideEmptySeries: true,
-                  fillSeriesColor: false,
-                  // theme: true,
-                  style: {
-                    fontSize: '12px',
-                    fontFamily: 'Arial, sans-serif',
-                    background: '#333',  
-                      color: '#fff', 
-                      borderRadius: '10px',  
-                      padding: '10px', 
-                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', 
-                  },
-                  onDatasetHover: {
-                    highlightDataSeries: true,  
-                  },
-                  x: {
-                      show: true,
-                      format: 'MMMM',  // Display full month names
-                      formatter: (value) => {
-                        const months = [
-                          "initial","January", "February", "March", "April", "May", "June", 
-                          "July", "August", "September", "October", "November", "December"
-                        ];
-                        return months[value];  // Map the month number to the full month name
-                      },
-                  },
-                  y: {
-                    formatter: (value) => value + ' MW',  // Add 'MW' unit after y-axis value
-                    title: {
-                      formatter: (seriesName) => seriesName,  // Use the series name as the title (optional)
+                    type: "category",
+                    categories,
+                    labels: {
+                        show: true,
+                        rotate: -45,
+                        rotateAlways: false,
+                        position: "top",
+                        textAnchor: "start",
+                        hideOverlappingLabels: true,
+                        showDuplicates: false,
+                        trim: false,
+                        maxHeight: 120,
+                        style: 
+                        {
+                            fontSize: "9px",
+                            fontFamily: "Helvetica, Arial, sans-serif",
+                            fontWeight: 600,
+                        },
                     },
-                  },
-                  z: {
-                    formatter: undefined,
-                    title: 'Size: ',
-                  },
-                  marker: {
-                    show: true,  // Show the marker for tooltips
-                    fillColor: '#FF0000',  // You can specify the color of the marker (optional)
-                    shape: 'circle',  // Default marker shape (circle, square, or custom)
-                  },
-                  items: {
-                    display: 'flex', 
-                  },
-                  fixed: {
-                    enabled: false,
-                    position: 'topRight',
-                    offsetX: 0,
-                    offsetY: 0,
-                  },
-                  legend: {
-                    markers: {
-                      shape: 'star',  // Change the marker to a star (This is hypothetical and may require custom implementation)
-                    }
-                  },
+                    axisBorder: {
+                        show: true,
+                        color: "#78909C",
+                        height: 1,
+                        width: "100%",
+                        offsetX: 0,
+                        offsetY: 0,  
+                    },
+                    axisTicks: {
+                        show: true,
+                        borderType: "solid",
+                        color: "#78909C",
+                        height: 6,
+                        offsetX: 0,
+                        offsetY: 0,
+                    },  
                 },
-                
+                yaxis: {
+                    show: true,
+                    showAlways: false,
+                    showForNullSeries: true,
+                    seriesName: undefined,
+                    opposite: false,
+                    reversed: false,
+                    logarithmic: false,
+                    logBase: 0,
+                    tickAmount: undefined,
+                    min: undefined,
+                    max: undefined,
+                    // stepSize: 5,
+                    forceNiceScale: false,
+                    floating: false,
+                    decimalsInFloat: undefined,
+                    title: { text: "MW" },
+                    labels: {
+                        show: true,
+                        minWidth: 0,
+                        maxWidth: 160,
+                        style: {
+                            fontSize: "10px",
+                            fontFamily: "Helvetica, Arial, sans-serif",
+                            fontWeight: 600,
+                        },
+                        offsetX: 0,
+                        offsetY: 0,
+                        formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 0 }).format(value),
+                    },
+                    axisBorder: {
+                        show: false,
+                        color: "#78909C",
+                        offsetX: 0,
+                        offsetY: 0,
+                    },
+                    axisTicks: {
+                        show: true,
+                        borderType: "solid",
+                        color: "#78909C",
+                        width: 1,
+                        offsetX: -5,
+                        offsetY: 0,
+                    },
+                },
+                grid: {
+                    show: true,
+                    borderColor: "#ccc",
+                    strokeDashArray: 1,
+                    position: "back",
+                    padding: {
+                        top: 0,
+                        right:-1,
+                        bottom: 0,
+                        left:5,
+                    },
+                },
+                legend: {
+                    show: true,
+                    position: "bottom",
+                    markers: {
+                        width: 30, // Makes the marker wide like a line
+                        height: 1, // Reduces the height to appear as a thin line
+                        radius: 0, // No rounded corners, to maintain a line shape
+                        offsetX: -5, // Adjust the position slightly
+                    },
+                },
+                tooltip: {
+                    enabled: true,
+                    shared: true,  
+                    followCursor: false,
+                    intersect: false,
+                    inverseOrder: false,
+                    hideEmptySeries: true,
+                    fillSeriesColor: false,
+                    // theme: true,
+                    style: {
+                        fontSize: '12px',
+                        fontFamily: 'Arial, sans-serif',
+                        background: '#333',  
+                        color: '#fff', 
+                        borderRadius: '10px',  
+                        padding: '10px', 
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', 
+                    },
+                    onDatasetHover: {
+                        highlightDataSeries: true,  
+                    },
+                    x: {
+                        show: true,
+                        format: 'MMMM',  // Display full month names
+                        formatter: (value) => {
+                            const months = [
+                            "initial","January", "February", "March", "April", "May", "June", 
+                            "July", "August", "September", "October", "November", "December"
+                            ];
+                            return months[value];  // Map the month number to the full month name
+                        },
+                    },
+                    y: {
+                        formatter: (value) => value + ' MW',  // Add 'MW' unit after y-axis value
+                        title: {
+                        formatter: (seriesName) => seriesName,  // Use the series name as the title (optional)
+                        },
+                    },
+                    z: {
+                        formatter: undefined,
+                        title: 'Size: ',
+                    },
+                    marker: {
+                        show: true,  // Show the marker for tooltips
+                        fillColor: '#FF0000',  // You can specify the color of the marker (optional)
+                        shape: 'circle',  // Default marker shape (circle, square, or custom)
+                    },
+                    items: {
+                        display: 'flex', 
+                    },
+                    fixed: {
+                        enabled: false,
+                        position: 'topRight',
+                        offsetX: 0,
+                        offsetY: 0,
+                    },
+                    legend: {
+                        markers: {
+                        shape: 'star',  // Change the marker to a star (This is hypothetical and may require custom implementation)
+                        }
+                    },
+                },
+                    
               };	
 
           var chart = new ApexCharts(document.querySelector("#chart"), options);

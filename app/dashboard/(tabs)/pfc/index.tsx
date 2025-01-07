@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { SafeAreaView, StatusBar } from "react-native";
+import { FlatList, SafeAreaView, View } from "react-native";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
@@ -9,22 +9,34 @@ import { useIsFocused } from "@react-navigation/native";
 const PFC = () => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+
+  const combinedData = [
+    { type: "header", title: "Gas", data: PFCGas },
+    { type: "header", title: "Strom", data: PFCStrom },
+  ];
+  const renderItem = ({ item }: any) => {
+    if (item.type === "header") {
+      return (
+        <FlatListBlock
+          title={item.title}
+          items={item.data}
+          enableAutoScroll={false}
+        />
+      );
+    }
+    return null;
+  };
   useEffect(() => {
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar />
-      {PFCGas && (
-        <FlatListBlock title="Gas" items={PFCGas} enableAutoScroll={false} />
-      )}
-      {PFCStrom && (
-        <FlatListBlock
-          title="Strom"
-          items={PFCStrom}
-          enableAutoScroll={false}
-        />
-      )}
+      <FlatList
+        data={combinedData}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `${item.title}-${index}`}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 };

@@ -8,6 +8,11 @@
     "scheme": "enexion",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "androidStatusBar": {
+      "backgroundColor": "#cccccc",
+      "translucent": true,
+      "barStyle": "light-content"
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -41,7 +46,8 @@
         {
           "initialOrientation": "DEFAULT"
         }
-      ]
+      ],
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true

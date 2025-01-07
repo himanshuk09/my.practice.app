@@ -3,7 +3,6 @@ import {
   FlatList,
   SafeAreaView,
   Platform,
-  StatusBar,
   Button,
   PanResponder,
 } from "react-native";
@@ -40,13 +39,7 @@ const Dashboard: React.FC = () => {
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);
   return (
-    <SafeAreaView
-      className="flex-1 bg-white"
-      style={{
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      }}
-    >
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+    <SafeAreaView className="flex-1 bg-white">
       <View className="justify-center items-center">
         <FlatList
           data={jsonData}

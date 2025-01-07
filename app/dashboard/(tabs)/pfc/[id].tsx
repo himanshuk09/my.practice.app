@@ -1,6 +1,6 @@
-import { View, Text, StatusBar, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,8 +43,6 @@ const PFCDetails = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 ">
-      <StatusBar />
-
       <View className="flex-1  bg-white">
         {/* Header Section */}
         {!isLandscape && (

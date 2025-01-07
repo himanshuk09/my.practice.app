@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   SafeAreaView,
-  StatusBar,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
@@ -68,8 +66,6 @@ const Rate = () => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView className="flex-1 bg-white">
-          <StatusBar />
-
           {/* Header */}
           <View className="top-0 w-full z-50 p-3 bg-[#e31837] h-20">
             <Text className="text-xl font-semibold text-white capitalize">

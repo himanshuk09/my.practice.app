@@ -1,12 +1,10 @@
 import {
   View,
   Text,
-  StatusBar,
   SafeAreaView,
   TouchableOpacity,
   Animated,
   Easing,
-  StyleSheet,
   ScrollView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
@@ -133,8 +131,6 @@ const PricesDetails = () => {
   ];
   return (
     <SafeAreaView className="flex-1 ">
-      <StatusBar />
-
       <View className="flex-1  bg-white">
         {/* Header Section */}
         {!isLandscape && (

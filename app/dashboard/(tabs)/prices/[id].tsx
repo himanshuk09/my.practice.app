@@ -1,18 +1,10 @@
-import {
-  View,
-  Text,
-  StatusBar,
-  SafeAreaView,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { PricesItem } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
-import TabToggleButtons from "@/components/TabToggleButtons";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
@@ -54,8 +46,6 @@ const PricesDetails = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 ">
-      <StatusBar />
-
       <View className="flex-1  bg-white">
         {/* Header Section */}
 

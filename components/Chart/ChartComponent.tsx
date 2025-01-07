@@ -5,8 +5,9 @@ import {
   StyleSheet,
   View,
   Text,
+  Alert,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import WebView from "react-native-webview";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
@@ -17,6 +18,7 @@ import { setOrientation } from "@/store/chartSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
+import ViewShot from "react-native-view-shot";
 
 type ChartComponentProps = {
   webViewRef: React.RefObject<any>;
@@ -45,6 +47,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   showToggle,
 }) => {
   const dispatch = useDispatch();
+  const viewShotRef = useRef<any>(null);
   const isLandscape = useSelector(
     (state: RootState) => state.orientation.isLandscape
   );
@@ -104,6 +107,39 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
   }, [isLandscape, dispatch]);
+  const captureWebView = useCallback(async () => {
+    try {
+      const uri = await viewShotRef?.current?.capture(); // Capture the WebView
+      console.log("Captured URI:", uri);
+
+      // Save the file locally
+      const fileUri = `${FileSystem.documentDirectory}webview_capture.png`;
+      const fileName = `${FileSystem.documentDirectory}cockpi_chart_${new Date()
+        .toISOString()
+        .replace(/:/g, "-")
+        .replace(/T/, "_")
+        .replace(/\..+/, "")}.png`;
+      await FileSystem.moveAsync({
+        from: uri,
+        to: fileName,
+      });
+
+      // Alert.alert("Success", "Screenshot saved to your device!");
+
+      // Share the file
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileName);
+      } else {
+        Alert.alert(
+          "Sharing not available",
+          "The image is saved to your device."
+        );
+      }
+    } catch (error) {
+      // console.error("Error capturing WebView:", error);
+      Alert.alert("Error", "Failed to capture WebView.");
+    }
+  }, []);
 
   return (
     <>
@@ -113,56 +149,65 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             <ToolBarFloatingActionMenu
               webViewRef={webViewRef}
               showToggle={showToggle}
+              captureWebView={captureWebView}
             />
           )}
-
-          <WebView
-            key={refereshkey}
-            className="z-50 "
-            ref={webViewRef}
-            originWhitelist={["*"]}
-            source={{ html: webViewhtmlContent }}
-            onLoadStart={() => console.log("WebView start Load")}
-            onLoad={() => console.log("WebView Loaded")}
-            onLoadEnd={() => console.log("WebView end Load")}
-            onMessage={onMessage}
-            onFileDownload={({ nativeEvent }: any) => {
-              const { downloadUrl } = nativeEvent;
-              console.log("DownloadUrl", downloadUrl);
+          <ViewShot
+            ref={viewShotRef}
+            options={{
+              format: "png",
+              quality: 1,
             }}
-            onHttpError={(syntheticEvent) => {
-              const { statusCode } = syntheticEvent.nativeEvent;
-              console.log("HTTP error status code", statusCode);
-            }}
-            containerStyle={{
-              overflow: "hidden",
-              width: "100%",
-              height: "100%",
-              border: "2px solid black", // Adding a 2px solid black border
-              pointerEvents: "auto",
-              margin: 1,
-            }}
-            overScrollMode="content"
-            gestureHandling="auto"
-            injectedJavaScriptBeforeContentLoaded={webViewhtmlContent}
-            scrollEnabled={false}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            allowFileAccess={true}
-            useWebkit={true}
-            allowsFullscreenVideo={true}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            setWebContentsDebuggingEnabled={true}
-            scalesPageToFit={true}
-            setBuiltInZoomControls={false}
-            allowsInlineMediaPlayback={true}
-            bounces={false}
-            zoomEnabled={false}
-            nestedScrollEnabled={true}
-            // startInLoadingState
-          />
-
+            style={{ flex: 1, padding: 1 }}
+          >
+            <WebView
+              key={refereshkey}
+              className="z-50 "
+              ref={webViewRef}
+              originWhitelist={["*"]}
+              source={{ html: webViewhtmlContent }}
+              onLoadStart={() => console.log("WebView start Load")}
+              onLoad={() => console.log("WebView Loaded")}
+              onLoadEnd={() => console.log("WebView end Load")}
+              onMessage={onMessage}
+              onFileDownload={({ nativeEvent }: any) => {
+                const { downloadUrl } = nativeEvent;
+                console.log("DownloadUrl", downloadUrl);
+              }}
+              onHttpError={(syntheticEvent) => {
+                const { statusCode } = syntheticEvent.nativeEvent;
+                console.log("HTTP error status code", statusCode);
+              }}
+              containerStyle={{
+                overflow: "hidden",
+                width: "100%",
+                height: "100%",
+                // border: "2px solid black", // Adding a 2px solid black border
+                pointerEvents: "auto",
+                margin: 1,
+                padding: 5,
+              }}
+              overScrollMode="content"
+              gestureHandling="auto"
+              injectedJavaScriptBeforeContentLoaded={webViewhtmlContent}
+              scrollEnabled={false}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              allowFileAccess={true}
+              useWebkit={true}
+              allowsFullscreenVideo={true}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              setWebContentsDebuggingEnabled={true}
+              scalesPageToFit={true}
+              setBuiltInZoomControls={false}
+              allowsInlineMediaPlayback={true}
+              bounces={false}
+              zoomEnabled={false}
+              nestedScrollEnabled={true}
+              // startInLoadingState
+            />
+          </ViewShot>
           {showToggleOrientation && (
             <TouchableOpacity
               style={{
@@ -200,7 +245,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 };
 
 export default ChartComponent;
-
+const styles = StyleSheet.create({
+  webviewContainer: {
+    flex: 1,
+  },
+});
 // const checkOrientation = async () => {
 //   const orientationInfo = await ScreenOrientation.getOrientationAsync();
 //   const isLandscapeMode =

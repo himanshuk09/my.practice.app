@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, SafeAreaView, StatusBar, FlatList } from "react-native";
+import { View, SafeAreaView, FlatList } from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { useDispatch } from "react-redux";
@@ -33,7 +33,6 @@ const Signals = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar />
       <FlatList
         data={combinedData}
         renderItem={renderItem}

@@ -100,7 +100,7 @@ const ToggleChartComponent = ({
   const updateChartData = (filteredData: any) => {
     if (filteredData?.length === 0) {
       updateChart("options", {
-        noData: { text: "no data" },
+        noData: { text: "Data not available" },
       });
       updateChart("series", []);
       setTimeout(() => {
@@ -269,7 +269,7 @@ const ToggleChartComponent = ({
     let rangeFilterData = filterDataByDateRange(startDate, endDate);
     if (rangeFilterData.length === 0) {
       updateChart("options", {
-        noData: { text: "No data" },
+        noData: { text: "Data not available" },
       });
       updateChart("series", []);
     } else {
@@ -296,7 +296,7 @@ const ToggleChartComponent = ({
     // setLoading(true);
     // if (rangeFilterData?.length <= 0) {
     //   updateChart("options", {
-    //     noData: { text: "no data" },
+    //     noData: { text: "Data not available" },
     //   });
 
     //   setTimeout(() => {
@@ -372,7 +372,7 @@ const ToggleChartComponent = ({
           await Sharing.shareAsync(fileName);
         }
       } catch (error) {
-        console.error("Error saving chart image:", error);
+        // console.error("Error saving chart image:", error);
       }
     }
 
@@ -426,7 +426,7 @@ const ToggleChartComponent = ({
       updateLocale();
       updateChartData(cockpitChartData);
     }, 1000);
-  }, [isFocused, locale]);
+  }, [locale]);
   return (
     <View className="flex-1  bg-white">
       {!isLandscape ? (
@@ -566,7 +566,7 @@ export default ToggleChartComponent;
 //   },
 // };
 // const updateNoDataOptions = {
-//   noData: { text: "no data" },
+//   noData: { text: "Data not available" },
 //   xaxis: {
 //     ...xAxisFormater,
 //   },

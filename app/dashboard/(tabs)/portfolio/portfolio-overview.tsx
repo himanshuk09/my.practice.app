@@ -2,10 +2,9 @@ import ChartComponent from "@/components/Chart/ChartComponent";
 
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   View,
-  StatusBar,
   Platform,
   SafeAreaView,
   Text,
@@ -31,11 +30,13 @@ const InfoItem = ({
 }: {
   value: string;
   unit: string;
-  width: string;
+  width?: string;
 }) => (
-  <View className={`flex-row justify-between ${width}`}>
-    <Text className="text-xs font-medium text-slate-400 ml-2">{value}</Text>
-    <Text className="text-xs font-medium text-slate-400">{unit}</Text>
+  <View className={`flex-row justify-between ${width}   `}>
+    <Text className="text-xs font-medium text-slate-400 ml-2 ">{value}</Text>
+    <Text className="text-xs font-medium text-slate-400 items-end ">
+      {unit}
+    </Text>
   </View>
 );
 const Portfolio_OverView = () => {
@@ -214,11 +215,16 @@ const Portfolio_OverView = () => {
     const filteredData = [45, 45];
     const newOptions = {
       colors: ["#4CAF50", "#FFC107"],
+      title: {
+        text: "Strom 2025",
+      },
     };
     updateDonutChart("series", filteredData);
     updateDonutChart("options", newOptions);
+
     updateLocale();
     updateAreaChart("series", updatedSeries);
+    updateAreaChart("options", { title: { text: "Target 2025" } });
   };
 
   const closedData = [
@@ -242,22 +248,20 @@ const Portfolio_OverView = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
-      <View className="flex-1 bg-white p-1">
-        <View className="flex flex-row justify-between h-[30%] md:h-[27%] mb-2">
-          <View className="w-[45%] ">
-            <ChartComponent
-              webViewRef={donutwebViewRef}
-              iFrameRef={donutIFrameRef}
-              onMessage={onMessage}
-              webViewhtmlContent={webviewDonutChartHtml}
-              iFramehtmlContent={iFreameDonutChartHtml}
-              showToggleOrientation={false}
-              showToolbar={false}
-            />
-          </View>
-          <View className="flex flex-col justify-start items-start my-1">
-            <View className="mb-2">
+      <View className="flex-1 bg-white">
+        <View className="flex flex-row justify-between h-[28%] md:h-[27%]">
+          <ChartComponent
+            webViewRef={donutwebViewRef}
+            iFrameRef={donutIFrameRef}
+            onMessage={onMessage}
+            webViewhtmlContent={webviewDonutChartHtml}
+            iFramehtmlContent={iFreameDonutChartHtml}
+            showToggleOrientation={false}
+            showToolbar={false}
+          />
+
+          <View className="flex flex-col justify-start   items-start my-1">
+            <View className="my-2">
               <Text className="text-sm text-[#e31837] font-semibold">
                 Closed
               </Text>
@@ -266,7 +270,7 @@ const Portfolio_OverView = () => {
                   key={index}
                   value={item.value}
                   unit={item.unit}
-                  width={["w-24", "w-32", "w-36"][index]}
+                  width={["w-28", "w-34", "w-28"][index]}
                 />
               ))}
             </View>
@@ -277,12 +281,12 @@ const Portfolio_OverView = () => {
                   key={index}
                   value={item.value}
                   unit={item.unit}
-                  width={["w-24", "w-32", "w-36"][index]}
+                  width={["w-28", "w-34", "w-28"][index]}
                 />
               ))}
             </View>
           </View>
-          <View className="mr-10 ml-5 mt-3">
+          <View className="mr-10 ml-7 mt-3">
             <FontAwesome5
               name="file-download"
               size={35}
@@ -292,7 +296,7 @@ const Portfolio_OverView = () => {
           </View>
         </View>
         <View className="h-1 bg-slate-300 my-1" />
-        <View className="h-[100%] w-[100%]">
+        <View className="h-[63%] pt-5">
           <ChartComponent
             webViewRef={areaWebViewRef}
             iFrameRef={areaIFrameRef}
@@ -300,11 +304,9 @@ const Portfolio_OverView = () => {
             webViewhtmlContent={webviewAreaHtmlcontent}
             iFramehtmlContent={iframeAreahtlcontent}
             showToggleOrientation={false}
-            showToggle={true}
+            showToggle={false}
           />
         </View>
-      </View>
-      <View className="p-1">
         <TouchableOpacity
           className="h-12  items-center bg-[#e31837] m-2 justify-center"
           onPress={updateArea}
@@ -312,6 +314,7 @@ const Portfolio_OverView = () => {
           <Text className="text-white font-bold">VIEW DETAILS</Text>
         </TouchableOpacity>
       </View>
+      <View className="p-1"></View>
     </SafeAreaView>
   );
 };

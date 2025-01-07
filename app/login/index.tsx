@@ -4,7 +4,6 @@ import {
   TextInput,
   Text,
   TouchableOpacity,
-  StatusBar,
   Keyboard,
   Pressable,
 } from "react-native";
@@ -17,6 +16,7 @@ import Logo from "@/components/SVG/Logo";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { loginUser } from "@/services/auth.services";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 const SignIn: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
@@ -69,10 +69,29 @@ const SignIn: React.FC = () => {
       if (response?.status === 201) {
         dispatch(setUser());
         router.push("/dashboard" as Href);
+        setTimeout(() => {
+          Toast.show({
+            type: "success", // 'success', 'error', 'info', etc.
+            text1: "LoggedIn Successful",
+
+            position: "bottom",
+            bottomOffset: 25,
+            visibilityTime: 2000,
+          });
+        }, 2000);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setErrorMessage(err?.message || "An_error_occurred_Please_try_again");
+        setTimeout(() => {
+          Toast.show({
+            type: "error", // 'success', 'error', 'info', etc.
+            text1: err?.message || "An_error_occurred_Please_try_again",
+            position: "bottom",
+            bottomOffset: 30,
+            visibilityTime: 1000,
+          });
+        }, 1000);
       } else {
         setErrorMessage("An unknown error occurred. Please try again.");
       }
@@ -83,7 +102,6 @@ const SignIn: React.FC = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
       <View className="flex-1 justify-center items-center">
         <View className="w-11/12 max-w-md p-5">
           <View className="items-center mb-5 w-full">

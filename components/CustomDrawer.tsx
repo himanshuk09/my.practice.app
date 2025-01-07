@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  StatusBar,
   Animated,
   Easing,
   View,
@@ -213,7 +212,6 @@ const CustomDrawer = memo((props: any) => {
   return (
     <ScrollView
       className="flex-1 bg-[#fff]"
-      // style={{ paddingTop: (StatusBar.currentHeight || 0) + 25 }}
       showsVerticalScrollIndicator={false}
     >
       {menuItems.map((item, index) => (

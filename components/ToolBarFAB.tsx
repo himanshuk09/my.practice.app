@@ -11,6 +11,7 @@ import { Text } from "react-native";
 export default function FloatingActionMenu({
   webViewRef,
   showToggle = false,
+  captureWebView,
 }: any) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isZoomIn, setIsZoomIn] = useState(true);
@@ -94,7 +95,8 @@ export default function FloatingActionMenu({
     },
     {
       icon: "download",
-      action: `exportChart()`,
+      // action: `exportChart()`,
+      action: () => captureWebView(),
       size: 15,
       color: "#848484",
       label: "Download",
@@ -123,14 +125,16 @@ export default function FloatingActionMenu({
             { right: 32 },
           ]}
         >
-          {menuItems.map((item, index) => (
+          {menuItems.map((item: any, index) => (
             <View style={styles.menuItem} key={index}>
               <TouchableOpacity
                 style={styles.menuIcon}
                 onPress={() => {
-                  (webViewRef?.current as any)?.injectJavaScript(item.action);
-                  console.log("menuItems");
-
+                  if (item.label === "Download") {
+                    item?.action();
+                  } else {
+                    (webViewRef?.current as any)?.injectJavaScript(item.action);
+                  }
                   if (item.action === `toggleMarkers()`) {
                     setTooltip(!tooltip);
                   }
@@ -163,13 +167,16 @@ export default function FloatingActionMenu({
   ) : (
     <View style={styles.container}>
       <View style={[styles.menuItemsContainer, { right: 5 }]}>
-        {menuItems.map((item, index) => (
+        {menuItems.map((item: any, index) => (
           <View style={styles.menuItem} key={index}>
             <TouchableOpacity
               style={styles.menuIcon}
               onPress={() => {
-                (webViewRef?.current as any)?.injectJavaScript(item.action);
-                console.log("menuItems");
+                if (item.label === "Download") {
+                  item?.action();
+                } else {
+                  (webViewRef?.current as any)?.injectJavaScript(item.action);
+                }
 
                 if (item.action === `toggleMarkers()`) {
                   setTooltip(!tooltip);

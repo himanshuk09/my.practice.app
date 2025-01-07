@@ -2,7 +2,6 @@ import {
   View,
   Text,
   SafeAreaView,
-  StatusBar,
   FlatList,
   TouchableOpacity,
 } from "react-native";
@@ -22,7 +21,7 @@ const Prices = () => {
   const ListItem = memo(({ item }: any) => (
     <TouchableOpacity
       key={item.id}
-      className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1  bg-white h-20"
+      className="flex flex-row justify-between items-center w-auto p-3 px-2  rounded-sm font-medium my-1  bg-white h-20 shadow-lg shadow-slate-700"
       onPress={() => {
         dispatch(activeLoading());
 
@@ -70,7 +69,6 @@ const Prices = () => {
   }, [isFocused]);
   return (
     <SafeAreaView>
-      <StatusBar barStyle="dark-content" backgroundColor="#f3f4f6" />
       <View className="h-auto">
         <View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-[#e31837] ">
           <View className="flex flex-col justify-evenly w-[60%]">
