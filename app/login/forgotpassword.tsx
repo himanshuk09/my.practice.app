@@ -5,12 +5,10 @@ import {
   StatusBar,
   TextInput,
   TouchableOpacity,
-  Image,
   Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, useRouter } from "expo-router";
-
+import { Href, useRouter } from "expo-router";
 import Logo from "@/components/SVG/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
 import { i18n } from "@/languageKeys/i18nConfig";
@@ -60,6 +58,7 @@ const Forgotpassword = () => {
                   errorMessage && "border-red-500 shadow-red-500 shadow-sm"
                 }`}
                 placeholder={i18n.t("email")}
+                placeholderTextColor="#808080"
                 textContentType="emailAddress"
                 value={email}
                 onChangeText={(text) => {
@@ -83,7 +82,7 @@ const Forgotpassword = () => {
             </TouchableOpacity>
 
             <Pressable
-              onPress={() => router.replace(`/login`)}
+              onPress={() => router.replace(`/login` as Href)}
               className="mx-auto my-5  p-4"
             >
               <Text className="text-red-600 capitalize underline text-center text-sm">

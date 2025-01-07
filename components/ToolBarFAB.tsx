@@ -6,12 +6,18 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons"; // For icons
 import { useState } from "react";
+import { Text } from "react-native";
 
-export default function FloatingActionMenu({ webViewRef }: any) {
+export default function FloatingActionMenu({
+  webViewRef,
+  showToggle = false,
+}: any) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isZoomIn, setIsZoomIn] = useState(true);
   const [animation] = useState(new Animated.Value(0));
   const [tooltip, setTooltip] = useState(false);
+  const [tooltipLabel, setTooltipLabel] = useState<any>(null);
+  const [pressedItem, setPressedItem] = useState<any>(null);
   const toggleMenu = () => {
     const toValue = isMenuOpen ? 0 : 1;
 
@@ -38,85 +44,63 @@ export default function FloatingActionMenu({ webViewRef }: any) {
     {
       icon: isZoomIn ? "search-plus" : "search-minus",
       action: "toggleZoomAndSelection()",
-      size: 14,
-      color: "#848484",
+      size: 15,
+      // color: !isZoomIn ? "blue" : "#848484",
+      color: "#e31837",
+      label: "Zoom",
     },
     {
       icon: "plus-circle",
       action: "zoomIn()",
-      size: 14,
+      size: 15,
       color: "#848484",
+      label: "Zoom In",
     },
     {
       icon: "minus-circle",
       action: "zoomOut()",
-      size: 14,
+      size: 15,
       color: "#848484",
+      label: "Zoom Out",
     },
     {
       icon: "home",
       action: "resetZoom()",
-      size: 14,
+      size: 15,
       color: "#848484",
+      label: "Reset Zoom",
     },
     {
       icon: "hand-point-left",
       action: "customPanLeft()",
-      size: 14,
+      size: 15,
       color: "#848484",
+      label: "Pan Left",
     },
     {
       icon: "hand-point-right",
       action: "customPanRight()",
-      size: 14,
+      size: 15,
       color: "#848484",
+      label: "Pan Right",
     },
 
     {
       icon: tooltip ? "circle" : "dot-circle",
       action: `toggleMarkers()`,
-      size: 14,
-      color: "#848484",
+      size: 15,
+      color: tooltip ? "#e31837" : "#848484",
+      label: "Markers",
     },
     {
       icon: "download",
       action: `exportChart()`,
-      size: 14,
+      size: 15,
       color: "#848484",
+      label: "Download",
     },
   ];
-  return (
-    <View style={styles.container}>
-      <View style={styles.menuItemsContainer}>
-        {menuItems.map((item, index) => (
-          <View style={styles.menuItem} key={index}>
-            <TouchableOpacity
-              style={styles.menuIcon}
-              onPress={() => {
-                (webViewRef?.current as any)?.injectJavaScript(item.action);
-                console.log("menuItems");
-
-                if (item.action === `toggleMarkers()`) {
-                  setTooltip(!tooltip);
-                }
-                if (item.action === `toggleZoomAndSelection()`) {
-                  setIsZoomIn(!isZoomIn);
-                }
-              }}
-            >
-              <FontAwesome5
-                name={item.icon}
-                size={item.size}
-                color={item.color}
-              />
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-
-  return (
+  return showToggle ? (
     <View style={styles.container}>
       {/* Floating Action Button */}
       <TouchableOpacity style={styles.fab} onPress={toggleMenu}>
@@ -136,6 +120,7 @@ export default function FloatingActionMenu({ webViewRef }: any) {
               opacity: menuOpacity,
               transform: [{ translateX: menuTranslateX }],
             },
+            { right: 32 },
           ]}
         >
           {menuItems.map((item, index) => (
@@ -143,11 +128,22 @@ export default function FloatingActionMenu({ webViewRef }: any) {
               <TouchableOpacity
                 style={styles.menuIcon}
                 onPress={() => {
-                  // Dynamically inject JavaScript based on the action in the JSON
                   (webViewRef?.current as any)?.injectJavaScript(item.action);
+                  console.log("menuItems");
+
                   if (item.action === `toggleMarkers()`) {
                     setTooltip(!tooltip);
                   }
+                  if (item.action === `toggleZoomAndSelection()`) {
+                    setIsZoomIn(!isZoomIn);
+                  }
+                  setPressedItem(
+                    pressedItem === item.label ? null : item.label
+                  );
+                }}
+                onLongPress={() => {
+                  // Show the tooltip label on long press
+                  setTooltipLabel(item?.label);
                 }}
               >
                 <FontAwesome5
@@ -155,11 +151,53 @@ export default function FloatingActionMenu({ webViewRef }: any) {
                   size={item.size}
                   color={item.color}
                 />
+                {tooltipLabel === item.label && (
+                  <Text style={styles.tooltipText}>{item.label}</Text>
+                )}
               </TouchableOpacity>
             </View>
           ))}
         </Animated.View>
       )}
+    </View>
+  ) : (
+    <View style={styles.container}>
+      <View style={[styles.menuItemsContainer, { right: 5 }]}>
+        {menuItems.map((item, index) => (
+          <View style={styles.menuItem} key={index}>
+            <TouchableOpacity
+              style={styles.menuIcon}
+              onPress={() => {
+                (webViewRef?.current as any)?.injectJavaScript(item.action);
+                console.log("menuItems");
+
+                if (item.action === `toggleMarkers()`) {
+                  setTooltip(!tooltip);
+                }
+                if (item.action === `toggleZoomAndSelection()`) {
+                  setIsZoomIn(!isZoomIn);
+                }
+                setTooltipLabel(null);
+                setPressedItem(pressedItem === item.label ? null : item.label);
+              }}
+              onLongPress={() => {
+                // Show the tooltip label on long press
+                setTooltipLabel(item?.label);
+              }}
+            >
+              <FontAwesome5
+                name={item.icon}
+                size={item.size}
+                color={item.color}
+                // color={pressedItem === item.label ? "blue" : item.color}
+              />
+              {tooltipLabel === item.label && (
+                <Text style={styles.tooltipText}>{item.label}</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
@@ -180,12 +218,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 5,
+    elevation: 2,
   },
   menuItemsContainer: {
     position: "absolute",
-    top: 5,
-    right: 10,
+    top: 3,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -211,5 +248,14 @@ const styles = StyleSheet.create({
   },
   inactiveMenuItem: {
     backgroundColor: "#f3f4f6",
+  },
+  tooltipText: {
+    marginTop: 5,
+    fontSize: 12,
+    color: "#848484",
+    textAlign: "center",
+    top: 13,
+    position: "absolute",
+    width: 50,
   },
 });

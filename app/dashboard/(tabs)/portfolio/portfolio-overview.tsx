@@ -233,7 +233,12 @@ const Portfolio_OverView = () => {
   ];
 
   useEffect(() => {
-    setTimeout(() => dispatch(inActiveLoading()), 100);
+    setTimeout(() => {
+      dispatch(inActiveLoading());
+    }, 100);
+    setTimeout(() => {
+      updateLocale();
+    }, 2000);
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1">
@@ -251,7 +256,7 @@ const Portfolio_OverView = () => {
               showToolbar={false}
             />
           </View>
-          <View className="flex flex-col justify-end items-start my-1">
+          <View className="flex flex-col justify-start items-start my-1">
             <View className="mb-2">
               <Text className="text-sm text-[#e31837] font-semibold">
                 Closed
@@ -277,7 +282,7 @@ const Portfolio_OverView = () => {
               ))}
             </View>
           </View>
-          <View className="mr-10 mt-5">
+          <View className="mr-10 ml-5 mt-3">
             <FontAwesome5
               name="file-download"
               size={35}
@@ -295,6 +300,7 @@ const Portfolio_OverView = () => {
             webViewhtmlContent={webviewAreaHtmlcontent}
             iFramehtmlContent={iframeAreahtlcontent}
             showToggleOrientation={false}
+            showToggle={true}
           />
         </View>
       </View>

@@ -12,6 +12,12 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useDispatch } from "react-redux";
+interface CustomTabBarProps {
+  state: any;
+  descriptors: any;
+  navigation: any;
+  notificationCounts: Record<string, number>;
+}
 
 // Custom Tab Bar
 const CustomTabBar = ({
@@ -19,7 +25,7 @@ const CustomTabBar = ({
   descriptors,
   navigation,
   notificationCounts,
-}: any) => {
+}: CustomTabBarProps) => {
   const dispatch = useDispatch();
   const scrollViewRef = useRef<ScrollView | null>(null);
   const tabRefs = useRef<(View | null)[]>([]);

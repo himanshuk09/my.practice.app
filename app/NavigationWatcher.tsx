@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSegments } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 
 import { BackHandler, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,7 +22,9 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMounted, setIsMounted] = useState(true);
   const currentPath = "/" + segments.join("/");
-  const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
+
+  const store = useStore();
+
   const [drawerOpen, SetDrawerOpen] = useState(false);
   // Fetch user login status and initialize app
   const fetchUserLoginStatus = async () => {
@@ -44,13 +46,13 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 
   useEffect(() => {
     const backAction = () => {
-      console.log("isDrawerOpen", isDrawerOpen, drawerOpen);
+      const state: any = store.getState();
+      const isDrawerOpen = state?.drawer?.isDrawerOpen;
 
       if (isDrawerOpen) {
         dispatch(closeDrawer());
         return true;
       }
-
       if (currentPath === "/dashboard") {
         if (shouldExitApp) {
           Alert.alert(
@@ -78,7 +80,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
           "/dashboard/(tabs)/pfc",
           "/dashboard/(tabs)/loaddata",
           "/dashboard/(tabs)/signals",
-          "/dashboard/(tabs)/porfolio",
+          "/dashboard/(tabs)/portfolio",
         ].includes(currentPath)
       ) {
         dispatch(activeLoading());

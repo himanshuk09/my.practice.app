@@ -6,9 +6,18 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
             <title>Simple Apex Chart</title>
             <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
             <style>
-               
+                * {
+                    margin: 0;
+                    padding: 1;
+                    box-sizing: border-box;
+                }
+                body {
+                    height: 100vh;
+                    position: relative;
+                }
                 #chart {
-                    width: 100%;
+                    position: absolute;
+                    width: 98%;
                     touch-action: none;
                 }
                 .apexcharts-element-hidden {
@@ -114,13 +123,14 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                         series: [{ name: "Energy Use", data: []}],
                         chart: {
                             type: "line",
-                            height: 270,
-                            // background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+                            height: '100%',
+                            background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
                             background:"white",
                             stacked: false,
                             locales: [locales.en, locales.de],
                             defaultLocale: "en",
                             selection: { enabled: true },
+
                             zoom: { 
                                 type: "x", enabled: true, 
                                 autoScaleYaxis: true,
@@ -129,12 +139,14 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                     strokeColor: '#fff', // Optional: change stroke color of zoom area
                                 },
                             },
+
                             pan: {
                                 enabled: true,
                                 type: 'xy', // Allows both vertical and horizontal panning
                                 threshold: 1 // Set threshold to control the panning speed
                               },
-                            offsetX: -2,
+
+                            offsetX: 0,
                             offsetY: 30,
                             animations: {
                                 enabled: false,
@@ -144,6 +156,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                 animategradually: { enabled: true, delay: 2000 },
                                 initialAnimation: {enabled: false}
                             },
+
                             // animations: {
                             //     enabled: true,
                             //     easing: "ease-in",
@@ -151,6 +164,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             //     dynamicAnimation: { enabled: true, speed: 100 },
                             //     animategradually: { enabled: false, delay: 0 }
                             // },
+                            
                             toolbar: {
                                 show: false,
                                 offsetX:-5,
@@ -188,6 +202,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                     svg: true   
                                 }
                             },
+
                             events: {
                                 dataURI: function (event, chartContext, config) {
                                     window.ReactNativeWebView.postMessage(JSON.stringify({
@@ -195,41 +210,49 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                         dataURI: config.dataURI
                                     }));
                                 },
+
                                 animationEnd: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'animationEnd' })
                                     );
                                 },
+
                                 mouseMove: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'mouseMove' })
                                     );
                                 },
+
                                 mouseLeave: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'mouseLeave' })
                                     );
                                 },
+
                                 click: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'click' })
                                     );
                                 },
+
                                 legendClick: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'legendClick' })
                                     );
                                 },
+
                                 markerClick: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'markerClick' })
                                     );
                                 },
+
                                 xAxisLabelClick: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'xAxisLabelClick' })
                                     );
                                 },
+
                                 selection: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
@@ -245,21 +268,25 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                     });
                                     
                                 },
+
                                 dataPointMouseEnter: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'dataPointMouseEnter' })
                                     );
                                 },
+
                                 dataPointMouseLeave: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'dataPointMouseLeave' })
                                     );
                                 },
+
                                 scrolled: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'scrolled' })
                                     );
                                 },
+
                                 beforeZoom: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoom Start' }));
                                     window.ReactNativeWebView.postMessage(
@@ -306,33 +333,39 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                         },
                                     };
                                 },
+
                                 beforeResetZoom: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'beforeResetZoom' })
                                     );
                                 },
+
                                 zoomed: function(chartContext, { xaxis, yaxis }) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'chartZoomed', isZoomed: true })
                                     );
                                     window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoomed' }));
                                 },
+
                                 beforeMount: function (chartContext) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'beforeMount' })
                                     );
                                 },
+
                                 mounted: function (chartContext) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'mounted' })
                                     );
                                     highlightMinAndMax(chartContext);
                                 },
+
                                 dataPointSelection: function (event, chartContext, config) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'dataPointSelection' })
                                     );
                                 },
+
                                 updated: function (chartContext) {
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'Chart updated',values:[{
@@ -347,10 +380,10 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                         },
                         
                         stroke: 
-                            { 
-                                curve: "monotoneCubic", 
-                                width: 1.5 //['straight', 'smooth', 'monotoneCubic', 'stepline']
-                            },
+                        { 
+                            curve: "monotoneCubic", 
+                            width: 1.5 //['straight', 'smooth', 'monotoneCubic', 'stepline']
+                        },
                         noData: {
                             text: "",
                             align: "center",
@@ -390,7 +423,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                 },
                             },
                             padding: {
-                                top: -25,
+                                top: -20,
                                 right:0,
                                 bottom: -5,
                                 left:0,
@@ -529,7 +562,6 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             },
                         },
                         fill: {
-                            //#e31837
                             colors: ["#e31837"],
                             gradient: {
                                 shadeIntensity: 1,
@@ -543,10 +575,9 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             breakpoint: 480,
                             options: {
                             chart: { 
-                                width: '100%' , 
-                                height:400,
-                                // background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center",
-                                background:"white",
+                                // width: '95%' , 
+                                height:'91%',
+                                background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center",
                             }, 
                             xaxis: 
                                 {   
@@ -571,20 +602,13 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                     
                     chart = new ApexCharts(document.querySelector("#chart"), options);
                     chart.render().then(() => {
-                        // Manually override the isTouchDevice detection
                         chart.w.globals.isTouchDevice = false;
-                       
                       }).catch(error => {
                         console.error('Chart failed to render:', error);
                       });
                 }
                 //..........
-                function getChartHeight() {
-                    // Get the screen height and set a percentage or adjust as needed
-                    const screenHeight = window.innerHeight;
-                    const chartHeight = screenHeight * 0.9; // 50% of the screen height
-                    return chartHeight;
-                  }
+                
                 window.ReactNativeWebView.postMessage('Chart loaded');
                 
                 // Export the chart as a PNG image
@@ -752,7 +776,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             options: {
                             chart: { 
                                 width: '100%' , 
-                                height:400,
+                                 height:'91%',
                                 // background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center ",
                                 background:"white",
                             }, 
@@ -1340,7 +1364,7 @@ export let iFrameLineHtmlcontent = `
                     breakpoint: 1000, // For laptop and large screens
                     options: {
                         chart: {
-                            height: 550,
+                            // height: 550,
                              background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
                             toolbar: {
                                 show: true,
@@ -1365,7 +1389,7 @@ export let iFrameLineHtmlcontent = `
                     breakpoint: 950, // For tablets and smaller laptops
                     options: {
                         chart: {
-                            height: 500,
+                            // height: 500,
                              background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
                             toolbar: {
                                 show: true,
@@ -1390,7 +1414,7 @@ export let iFrameLineHtmlcontent = `
                     breakpoint: 600, // For mobile phones
                     options: {
                         chart: {
-                            height: 520,
+                            // height: 520,
                             background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
                             toolbar: {
                                 show: true, // Hide toolbar on small screens for better UI
@@ -1850,9 +1874,19 @@ export const webviewAreaHtmlcontent = `
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
           <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
           <style>
+                    * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    height: 100vh;
+                    position: relative;
+                }
               #chart {
                   width: 100%;
-                  height:100%;
+                  position: absolute;
                   touch-action: none;
               }
           </style>
@@ -1902,7 +1936,7 @@ export const webviewAreaHtmlcontent = `
               ],
               colors: ["#cecece", "#e4e4e4","#b5b5b5","#c32442"],
               chart: {
-                  height: 365,
+                  height: '67%',
                   width:'102%',
                   type: "area",
                   offsetX: -5,
@@ -1917,6 +1951,7 @@ export const webviewAreaHtmlcontent = `
                       show: false,
                       offsetX: 0,
                       offsetY: 0,
+                      autoSelected:'zoom',
                       tools: {
                       download: true,
                       selection: false,
@@ -1935,12 +1970,29 @@ export const webviewAreaHtmlcontent = `
                       animategradually: { enabled: true, delay: 2000 },
                       initialAnimation: {enabled: true}
                   },
+                  events:{
+                    selection: function(chartContext, { xaxis, yaxis }) {
+                        window.ReactNativeWebView.postMessage(
+                            JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
+                        );
+                        const currentMin = chart.w.globals.minX;
+                        const currentMax = chart.w.globals.maxX;
+                        const zoomAmount = (currentMax - currentMin) * 0.1;
+                        chart.updateOptions({
+                            xaxis: {
+                                min: currentMin - zoomAmount,
+                                max: currentMax + zoomAmount,
+                            },
+                        });
+                        
+                    },
+                  }
               },
               title: {
                   text: "Target 2024",
                   align: "left",
                   margin: 0,
-                  offsetX: 40,
+                  offsetX: 0,
                   offsetY:3,
                   style: {
                       fontSize: "14px",
@@ -1964,7 +2016,7 @@ export const webviewAreaHtmlcontent = `
                   enabled: false
               },
               stroke: {
-                  curve: 'smooth',width:0.5
+                  curve: 'monotoneCubic',width:0.5//['straight', 'smooth', 'monotoneCubic', 'stepline']
               },
               markers: {
                   size: 0,
@@ -2261,7 +2313,42 @@ export const webviewAreaHtmlcontent = `
                   console.error("Series data is empty, unable to reset zoom.");
               }
           };
-      
+          window.customPanRight = function () {
+                    
+            const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+          
+            const newMinX = chart.w.globals.minX + moveFactor;
+            const newMaxX = chart.w.globals.maxX + moveFactor;
+          
+            chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+            updateLocale()
+          };
+
+          window.customPanLeft = function () {
+           
+            const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+          
+            const newMinX = chart.w.globals.minX - moveFactor;
+            const newMaxX = chart.w.globals.maxX - moveFactor;
+          
+            chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+            updateLocale()
+          };
+          window.toggleZoomAndSelection=()=> {
+            if (chart.w.globals.zoomEnabled) {
+              // Switch to Selection mode
+              chart.w.globals.zoomEnabled = false;
+              chart.w.globals.selectionEnabled = true;
+            } else if (chart.w.globals.selectionEnabled) {
+              // Switch to Zoom mode
+              chart.w.globals.zoomEnabled = true;
+              chart.w.globals.selectionEnabled = false;
+            } else {
+              // Default to Zoom mode if neither is enabled
+              chart.w.globals.zoomEnabled = true;
+              chart.w.globals.selectionEnabled = false;
+            }
+          }
       </script>
       </body>
       </html>

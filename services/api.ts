@@ -3,16 +3,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
 const url = "https://api.escuelajs.co/api/v1";
 const api = axios.create({
-  baseURL: url,
+  baseURL: baseUrl,
 });
 
 const getToken = async () => {
   const token = await AsyncStorage.getItem("token");
-  // const expiration = await AsyncStorage.getItem("token_expiration");
-  // If there's no token or the token is expired, return null
-  // if (!token || !expiration || Date.now() > Number(expiration)) {
-  //     return null;
-  //  }
   // If there's no token , return null
   if (!token) {
     return;

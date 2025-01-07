@@ -7,9 +7,19 @@ import PFC from "@/components/SVG/PFC";
 import Load from "@/components/SVG/Load";
 import Settings from "@/components/SVG/Settings";
 import { i18n } from "@/languageKeys/i18nConfig";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import Signals from "./SVG/Signals";
-
+interface MenuCardProps {
+  item: {
+    id: number;
+    title: string;
+    icon: string;
+    notificationCount: number;
+    route: Href;
+  };
+  index: number;
+  startLoader: () => void; // Function to start the loader
+}
 const routeToComponent = (icon: string) => {
   switch (icon) {
     case "PRICES":
@@ -51,7 +61,7 @@ const NotificationIcon = ({ count }: { count: number }) => (
   </Svg>
 );
 
-const MenuCard = memo(({ item, index, startLoader }: any) => {
+const MenuCard = memo(({ item, index, startLoader }: MenuCardProps) => {
   return (
     <Pressable
       className=" m-1 items-center"

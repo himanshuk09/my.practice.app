@@ -23,7 +23,9 @@ const FlatListBlock1 = ({
   const router = useRouter();
   const flatListRef = useRef<any>(null);
   const currentYear = new Date().getFullYear();
-  const ITEM_HEIGHT = Platform.OS === "web" ? 75 : 63;
+  console.log(currentYear);
+
+  const ITEM_HEIGHT = Platform.OS === "web" ? 75 : 68;
   const isFocused = useIsFocused();
   const ListItem = memo(({ item, router }: any) => (
     <TouchableOpacity
@@ -64,18 +66,7 @@ const FlatListBlock1 = ({
           } catch (error) {
             console.warn("Scroll Error:", error);
           }
-        }, 500);
-        // const scrollOffset = new Animated.Value(0);
-        // Animated.timing(scrollOffset, {
-        //   toValue: offset,
-        //   duration: 500, // Adjust the duration for slower scroll speed
-        //   useNativeDriver: true,
-        // }).start(() => {
-        //   flatListRef.current.scrollToOffset({
-        //     offset: offset, // Use the animated offset
-        //     animated: true,
-        //   });
-        // });
+        }, 250);
       }
     }
   }, [items, enableAutoScroll, currentYear, isFocused]);
@@ -107,7 +98,7 @@ const FlatListBlock1 = ({
           offset: ITEM_HEIGHT * index,
           index,
         })}
-        initialNumToRender={10} // Ensure enough items render initially
+        initialNumToRender={5} // Ensure enough items render initially
         className="bg-gray-100 overflow-scroll mx-2"
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

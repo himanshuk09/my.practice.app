@@ -8,7 +8,7 @@ import {
   Keyboard,
   Pressable,
 } from "react-native";
-import { Href, Link, useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
@@ -44,13 +44,8 @@ const SignIn: React.FC = () => {
     const regex = /^[a-zA-Z0-9]+$/;
     return regex.test(username);
   };
-  let payload = {
-    email: "john@mail.com",
-    password: "changeme",
-  };
   const handleSubmit = async (): Promise<void> => {
     Keyboard.dismiss();
-
     // Validate input
     const validationError = validateInput(userName, password);
     if (validationError) {
@@ -69,13 +64,18 @@ const SignIn: React.FC = () => {
 
       // Call the loginUser API function
       const response = await loginUser(payload);
+      console.log("response", response);
 
-      if (response) {
-        dispatch(setUser()); // Assuming 'response' contains user data
-        router.push("/dashboard"); // Redirect to dashboard
+      if (response?.status === 201) {
+        dispatch(setUser());
+        router.push("/dashboard" as Href);
       }
-    } catch (err: any) {
-      setErrorMessage(err?.message || "An_error_occurred_Please_try_again");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErrorMessage(err?.message || "An_error_occurred_Please_try_again");
+      } else {
+        setErrorMessage("An unknown error occurred. Please try again.");
+      }
     } finally {
       dispatch(inActiveLoading());
     }
@@ -108,6 +108,7 @@ const SignIn: React.FC = () => {
                 }`}
                 placeholder={i18n.t("username")}
                 textContentType="username"
+                placeholderTextColor="#808080"
                 value={userName}
                 onChangeText={(text) => {
                   setUserName(text);
@@ -115,12 +116,16 @@ const SignIn: React.FC = () => {
                 }}
                 autoCapitalize="none"
               />
-              <FontAwesome
-                style={{ position: "absolute", right: 12, top: 12 }}
-                name="user"
-                size={24}
-                color="#6b7280"
-              />
+              <TouchableOpacity
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: 12,
+                  zIndex: 100,
+                }}
+              >
+                <FontAwesome name="user" size={24} color="#6b7280" />
+              </TouchableOpacity>
             </View>
             {/**Password Feild */}
 
@@ -141,7 +146,12 @@ const SignIn: React.FC = () => {
                 autoCapitalize="none"
               />
               <TouchableOpacity
-                style={{ position: "absolute", right: 12, top: 12 }}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: 12,
+                  zIndex: 100,
+                }}
                 onPress={() => setHidePassword(!hidePassword)}
               >
                 <FontAwesome
@@ -177,29 +187,3 @@ const SignIn: React.FC = () => {
 };
 
 export default SignIn;
-// const handleSubmit1 = (): void => {
-//   switch (true) {
-//     case userName.trim() === "" && password.trim() === "":
-//       setErrorMessage("Please enter your username and password.");
-//       return;
-//     case userName.trim() === "":
-//       setErrorMessage("Please enter your username.");
-//       return;
-//     case password.trim() === "":
-//       setErrorMessage("Please enter your password.");
-//       return;
-//     case !validateUserName(userName):
-//       setErrorMessage("Username should not contain special characters.");
-//       return;
-//     case userName.toLowerCase() === "admin" && password === "enexion1":
-//       dispatch(activeLoading());
-//       // dispatch(setUser());
-//       setTimeout(() => router.push("/dashboard" as Href), 1000);
-//       setUserName("");
-//       setPassword("");
-//       return;
-//     default:
-//       setErrorMessage("The username or password you entered is incorrect.");
-//       return;
-//   }
-// };

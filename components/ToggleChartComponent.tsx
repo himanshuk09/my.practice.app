@@ -445,6 +445,7 @@ const ToggleChartComponent = ({
           activeTab={activeTab}
           webViewhtmlContent={WebviewLineHtmlContent}
           iFramehtmlContent={iFrameLineHtmlcontent}
+          showToggle={false}
         />
       </View>
 

@@ -18,11 +18,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-  PinchGestureHandler,
-} from "react-native-gesture-handler";
 type ChartComponentProps = {
   webViewRef: React.RefObject<any>;
   iFrameRef?: React.RefObject<any>;
@@ -34,6 +29,7 @@ type ChartComponentProps = {
   iFramehtmlContent?: any;
   showToggleOrientation?: boolean;
   showToolbar?: boolean;
+  showToggle?: boolean;
 };
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
@@ -46,6 +42,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
   iFramehtmlContent,
   showToggleOrientation = true,
   showToolbar = true,
+  showToggle,
 }) => {
   const dispatch = useDispatch();
   const isLandscape = useSelector(
@@ -88,41 +85,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     );
     dispatch(setOrientation(!isLandscape));
   };
-  const executeFunction = (functionName: any) => {
-    webViewRef.current.injectJavaScript(`${functionName}(); true;`);
-  };
-  // Handle Pan Gesture for Move Left and Move Right
-  const handlePanGesture = (event: any) => {
-    const { translationX } = event.nativeEvent;
 
-    if (translationX > 50) {
-      console.log("Gesture: Move Right");
-    } else if (translationX < -50) {
-      console.log("Gesture: Move Left");
-    }
-  };
-
-  // Handle Pinch Gesture for Pinch In and Pinch Out
-  const handlePinchGesture = (event: any) => {
-    const { scale } = event.nativeEvent;
-
-    if (scale > 1) {
-      console.log("Gesture: Pinch Out");
-    } else if (scale < 1) {
-      console.log("Gesture: Pinch In");
-    }
-  };
-  const handleGesture = (event: any) => {
-    const { translationX } = event.nativeEvent;
-
-    if (translationX > 50) {
-      // Swipe right
-      executeFunction("customPanRight");
-    } else if (translationX < -50) {
-      // Swipe left
-      executeFunction("customPanLeft");
-    }
-  };
   useEffect(() => {
     const handleBackPress = () => {
       if (isLandscape) {
@@ -146,7 +109,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     <>
       {Platform.OS !== "web" ? (
         <>
-          {showToolbar && <ToolBarFloatingActionMenu webViewRef={webViewRef} />}
+          {showToolbar && (
+            <ToolBarFloatingActionMenu
+              webViewRef={webViewRef}
+              showToggle={showToggle}
+            />
+          )}
 
           <WebView
             key={refereshkey}
@@ -170,7 +138,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
               overflow: "hidden",
               width: "100%",
               height: "100%",
-              border: "none",
+              border: "2px solid black", // Adding a 2px solid black border
               pointerEvents: "auto",
               margin: 1,
             }}

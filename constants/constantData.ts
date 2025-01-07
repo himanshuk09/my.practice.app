@@ -213,9 +213,51 @@ export const gasItems = [
   },
   {
     id: 17,
-    title: "Gas 2023 NCG-L",
+    title: "Gas 2025 NCG-L",
     route: "dashboard/portfolio/portfolio-overview",
     year: 2025,
+  },
+  {
+    id: 18,
+    title: "Gas 2025 Swing",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2025,
+  },
+  {
+    id: 19,
+    title: "Gas 2025 Swing",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2025,
+  },
+  {
+    id: 20,
+    title: "Gas 2025 Swing",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2025,
+  },
+  {
+    id: 21,
+    title: "Gas 2026 Swing",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2026,
+  },
+  {
+    id: 22,
+    title: "Gas 2027 Swing",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2027,
+  },
+  {
+    id: 23,
+    title: "Gas 2027 Swing",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2027,
+  },
+  {
+    id: 24,
+    title: "Gas 2027 Swing",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2027,
   },
 ];
 export const powerItems = [
@@ -265,13 +307,13 @@ export const powerItems = [
     year: 2024,
   },
   {
-    id: 1330,
+    id: 140,
     title: "Strom 2024",
     route: "dashboard/portfolio/portfolio-overview",
     year: 2024,
   },
   {
-    id: 1130,
+    id: 150,
     title: "Strom 2024",
     route: "dashboard/portfolio/portfolio-overview",
     year: 2024,
@@ -284,9 +326,57 @@ export const powerItems = [
   },
   {
     id: 190,
+    title: "Strom 2025 ",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2025,
+  },
+  {
+    id: 200,
+    title: "Strom 2025 ",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2025,
+  },
+  {
+    id: 201,
+    title: "Strom 2025 ",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2025,
+  },
+  {
+    id: 202,
     title: "Strom 2026 ",
     route: "dashboard/portfolio/portfolio-overview",
     year: 2026,
+  },
+  {
+    id: 203,
+    title: "Strom 2026 ",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2026,
+  },
+  {
+    id: 2033,
+    title: "Strom 2026 ",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2026,
+  },
+  {
+    id: 1920,
+    title: "Strom 2027 ",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2027,
+  },
+  {
+    id: 1690,
+    title: "Strom 2027 ",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2027,
+  },
+  {
+    id: 163290,
+    title: "Strom 2027 ",
+    route: "dashboard/portfolio/portfolio-overview",
+    year: 2027,
   },
 ];
 export const DashboardCardsEng = [

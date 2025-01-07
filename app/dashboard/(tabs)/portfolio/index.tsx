@@ -32,14 +32,12 @@ const Portfolio: React.FC = () => {
       <FlatListBlock
         title="Gas"
         items={gasData}
-        enableAutoScroll={true}
-        height={Platform.OS === "web" ? 380 : 300}
+        height={Platform.OS === "web" ? 380 : "50%"}
       />
       <FlatListBlock
         title="Power"
         items={powerData}
-        enableAutoScroll={true}
-        height={Platform.OS === "web" ? 380 : 300}
+        height={Platform.OS === "web" ? 380 : "50%"}
       />
     </>
   );

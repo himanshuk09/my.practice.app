@@ -9,10 +9,10 @@ const loginUser = async (payload: any) => {
     if (response.data) {
       await AsyncStorage.setItem(
         "token",
-        JSON.stringify(response.data.access_token)
+        JSON.stringify(response?.data?.access_token)
       );
     }
-    return response.data;
+    return response;
   } catch (err) {
     console.error("Login Failed", err);
     throw new Error("Login failed. Please try again.");

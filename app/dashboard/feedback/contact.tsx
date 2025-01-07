@@ -130,7 +130,7 @@ const ContactUs = () => {
                 router.back();
               }}
             >
-              <Text className="text-center text-[#e31837] font-normal uppercase">
+              <Text className="text-center text-[#e31837] font-normal uppercase bg-white">
                 {i18n.t("cancel")}
               </Text>
             </TouchableOpacity>

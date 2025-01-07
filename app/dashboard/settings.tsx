@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
-import { AppDispatch } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLocale } from "@/store/languageSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
@@ -18,7 +18,7 @@ import { useIsFocused } from "@react-navigation/native";
 import CustomSwitch from "@/components/CustomSwitch";
 
 const Settings = () => {
-  const { locale } = useSelector((state: any) => state.language);
+  const { locale } = useSelector((state: RootState) => state.language);
   const [selectedLanguage, setSelectedLanguage] = useState(locale);
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
@@ -92,16 +92,6 @@ const Settings = () => {
             {i18n.t("signals")}
           </Text>
           <View className="w-20 mr-3">
-            {/* <Switch
-              style={{
-                transform: [{ scaleX: 1.4 }, { scaleY: 1.2 }],
-              }}
-              trackColor={{ false: "gray", true: "#e31837" }}
-              thumbColor={isEnabled ? "#f9fafb" : "#f9fafb"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}
-            /> */}
             <CustomSwitch
               isEnabled={isSignalsEnabled}
               setIsEnabled={setIsSignalsEnabled}
@@ -117,7 +107,7 @@ const Settings = () => {
             setSelectedLanguage(locale);
           }}
         >
-          <Text className="text-center text-[#e31837] font-normal uppercase">
+          <Text className="text-center text-[#e31837] font-normal uppercase bg-white">
             {i18n.t("cancel")}
           </Text>
         </TouchableOpacity>
