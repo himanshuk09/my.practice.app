@@ -1,5 +1,4 @@
 import ChartComponent from "@/components/Chart/ChartComponent";
-
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,7 +13,6 @@ import {
   FlatList,
   StatusBar,
 } from "react-native";
-
 import { useDispatch, useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
@@ -25,10 +23,8 @@ import {
   webviewAreaHtmlcontent,
   webviewDonutChartHtml,
 } from "@/components/Chart/charthtmlcontent";
-import CustomSwitch from "@/components/CustomSwitch";
-import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { i18n } from "@/languageKeys/i18nConfig";
-import { isEnabled } from "react-native/Libraries/Performance/Systrace";
+import { portfolioCards } from "@/constants/constantData";
 type ChartUpdateType = "series" | "options" | "chart";
 
 const InfoItem = ({
@@ -49,24 +45,28 @@ const InfoItem = ({
 );
 const Card = ({ title, data }: any) => {
   return (
-    <View className="bg-[#ebebeb] rounded-lg p-4 mb-4 shadow-md shadow-black">
+    <View className="bg-[#ebebeb] rounded-lg p-3 my-1 shadow-md shadow-black">
       <Text className="text-sm text-gray-800 font-medium mb-2">{title}</Text>
       <View className="space-y-2 flex-row justify-between">
         <View className="flex-col w-[45%]">
           <View className="flex-row justify-between ">
-            <Text className="text-xs text-gray-500">Direction:</Text>
+            <Text className="text-xs text-gray-500">
+              {i18n.t("Direction")}:
+            </Text>
             <View className="items-start justify-start w-[30%]">
               <Text className="text-xs text-gray-700">{data.direction}</Text>
             </View>
           </View>
           <View className="flex-row justify-between ">
-            <Text className="text-xs text-gray-500">Amount:</Text>
+            <Text className="text-xs text-gray-500">{i18n.t("Amount")}:</Text>
             <View className="items-start justify-start w-[30%]">
               <Text className="text-xs  text-gray-700">{data.amount}</Text>
             </View>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-xs text-gray-500 w-[70%]">Price:</Text>
+            <Text className="text-xs text-gray-500 w-[70%]">
+              {i18n.t("Price")}:
+            </Text>
             <View className="items-start justify-start w-[50%]">
               <Text className="text-xs text-gray-700">{data.price}</Text>
             </View>
@@ -74,21 +74,21 @@ const Card = ({ title, data }: any) => {
         </View>
         <View className="flex-col w-[45%]">
           <View className="flex-row justify-between">
-            <Text className="text-xs text-gray-500">Trader:</Text>
+            <Text className="text-xs text-gray-500">{i18n.t("Trader")}:</Text>
 
             <View className="items-start justify-start w-[50%]">
               <Text className="text-xs text-gray-700">{data.trader}</Text>
             </View>
           </View>
           <View className="flex-row justify-between ">
-            <Text className="text-xs text-gray-500">Date:</Text>
+            <Text className="text-xs text-gray-500">{i18n.t("Date")}:</Text>
 
             <View className="items-start justify-start w-[50%]">
               <Text className="text-xs text-gray-700">{data.date}</Text>
             </View>
           </View>
           <View className="flex-row justify-between ">
-            <Text className="text-xs text-gray-500">State:</Text>
+            <Text className="text-xs text-gray-500">{i18n.t("State")}:</Text>
             <View className="items-start justify-start w-[50%]">
               <Text className="text-xs text-gray-700">{data.state}</Text>
             </View>
@@ -97,62 +97,10 @@ const Card = ({ title, data }: any) => {
       </View>
     </View>
   );
-  return (
-    <View className="bg-gray-100 rounded-lg p-4 my-2 shadow-md">
-      {/* Title */}
-      <Text className="text-lg flex-col font-bold text-gray-800 mb-2">
-        {title}
-      </Text>
-
-      {/* Rows */}
-      <View>
-        <View className="flex-row justify-between mb-1">
-          <Text className="text-sm text-gray-500">Direction:</Text>
-          <Text className="text-sm font-medium text-gray-700">
-            {data.direction}
-          </Text>
-        </View>
-
-        <View className="flex-row justify-between mb-1">
-          <Text className="text-sm text-gray-500">Trader:</Text>
-          <Text className="text-sm font-medium text-gray-700">
-            {data.trader}
-          </Text>
-        </View>
-
-        <View className="flex-row justify-between mb-1">
-          <Text className="text-sm text-gray-500">Amount:</Text>
-          <Text className="text-sm font-medium text-gray-700">
-            {data.amount}
-          </Text>
-        </View>
-      </View>
-      <View>
-        <View className="flex-row justify-between mb-1">
-          <Text className="text-sm text-gray-500">Date:</Text>
-          <Text className="text-sm font-medium text-gray-700">{data.date}</Text>
-        </View>
-
-        <View className="flex-row justify-between mb-1">
-          <Text className="text-sm text-gray-500">Price:</Text>
-          <Text className="text-sm font-medium text-gray-700">
-            {data.price}
-          </Text>
-        </View>
-
-        <View className="flex-row justify-between">
-          <Text className="text-sm text-gray-500">State:</Text>
-          <Text className="text-sm font-medium text-gray-700">
-            {data.state}
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
 };
 const Transactions = ({ cards }: any) => {
   return (
-    <View className="">
+    <View className="flex-1">
       <View className="flex justify-between bg-white flex-row  m-1  h-20 px-4 shadow-2xl shadow-black ">
         <View className="justify-center items-start">
           <Text className="text-xl font-semibold  text-[#b5b5b5]">
@@ -172,18 +120,24 @@ const Transactions = ({ cards }: any) => {
           />
         </View>
       </View>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        data={cards}
-        renderItem={({ item, index }) => (
-          <Card key={index} title={item.title} data={item} />
-        )}
-        keyExtractor={(item: any, index) => index.toString()}
-        scrollEnabled={true}
-        className="bg-gray-100 overflow-scroll  p-2"
-        contentContainerStyle={{ paddingTop: 4 }}
-      />
+      {cards?.length === 0 ? (
+        <View className="items-center justify-center h-full w-full">
+          <Text>Data Not Available</Text>
+        </View>
+      ) : (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          data={cards}
+          renderItem={({ item, index }) => (
+            <Card key={index} title={item.title} data={item} />
+          )}
+          keyExtractor={(item: any, index) => index.toString()}
+          scrollEnabled={true}
+          className="bg-gray-100 overflow-scroll  p-2"
+          contentContainerStyle={{ paddingTop: 4 }}
+        />
+      )}
     </View>
   );
 };
@@ -372,7 +326,6 @@ const Portfolio_OverView = () => {
     };
     updateDonutChart("series", filteredData);
     updateDonutChart("options", newOptions);
-
     updateLocale();
     updateAreaChart("series", updatedSeries);
     updateAreaChart("options", { title: { text: "Target 2025" } });
@@ -412,26 +365,7 @@ const Portfolio_OverView = () => {
     const { width } = e.nativeEvent.layout;
     setBlockWidth(width);
   };
-  const cards: any = [
-    {
-      title: "2024 Cal Base",
-      direction: "Buy",
-      trader: "RheinEnergie",
-      amount: "1 MW",
-      date: "26/03/2020",
-      price: "41.56 €/MWh",
-      state: "Confirmed",
-    },
-    {
-      title: "2024 Cal Base",
-      direction: "Buy",
-      trader: "RheinEnergie",
-      amount: "1 MW",
-      date: "07/04/2020",
-      price: "46.1 €/MWh",
-      state: "Confirmed",
-    },
-  ];
+
   return (
     <SafeAreaView className="flex-1 ">
       <StatusBar
@@ -539,7 +473,7 @@ const Portfolio_OverView = () => {
           ]}
           className={`${"h-full w-full absolute"} `}
         >
-          {!isChartVisible && <Transactions cards={cards} />}
+          {!isChartVisible && <Transactions cards={portfolioCards} />}
         </Animated.View>
       </View>
       <TouchableOpacity

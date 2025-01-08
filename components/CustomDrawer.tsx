@@ -124,7 +124,7 @@ const CustomDrawer = memo((props: any) => {
       label: "consumption",
       key: "consumption",
       icon: <Ionicons name="speedometer-sharp" size={24} color="gray" />,
-      items: [{ label: "loaddata", route: "/dashboard/load" }],
+      items: [{ label: "loaddata", route: "/dashboard/loaddata" }],
       height: 50,
     },
     {

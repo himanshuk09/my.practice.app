@@ -101,21 +101,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
     };
   }, [currentPath, history, shouldExitApp, dispatch, router, segments]);
 
-  // useEffect(() => {
-  //   if (!isMounted) return;
-  //   if (
-  //     !isLoggedIn &&
-  //     !["/", "/login", "/login/forgotpassword"].includes(currentPath)
-  //   ) {
-  //     router.replace("/");
-  //   } else if (
-  //     isLoggedIn &&
-  //     ["/", "/login", "/login/forgotpassword"].includes(currentPath)
-  //   ) {
-  //     router.replace("/dashboard");
-  //   }
-  // }, [isLoggedIn, currentPath, router, isMounted]);
-
   return children;
 };
 

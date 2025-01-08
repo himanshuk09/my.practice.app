@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { PricesItem } from "@/constants/constantData";
+import { PricesItem, signalsCards } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
@@ -30,15 +30,15 @@ const Card = ({ title, data }: any) => {
             <Text className=" text-sm text-gray-600">
               {i18n.t("Low_Soft")}:
             </Text>
-            <Text className="">{data.lowSoft}</Text>
+            <Text className="text-gray-500">{data.lowSoft}</Text>
           </View>
           <View className="flex-row justify-between">
             <Text className="text-sm text-gray-600">{i18n.t("Low_Hard")}</Text>
-            <Text className="">{data.lowHard}</Text>
+            <Text className="text-gray-500">{data.lowHard}</Text>
           </View>
           <View className="flex-row justify-between">
             <Text className="text-sm text-gray-600">{i18n.t("Negative")}:</Text>
-            <Text className="">{i18n.t(data.negative)}</Text>
+            <Text className="text-gray-500">{i18n.t(data.negative)}</Text>
           </View>
         </View>
         <View className="flex-col w-[45%]">
@@ -46,17 +46,17 @@ const Card = ({ title, data }: any) => {
             <Text className="text-sm text-gray-600">
               {i18n.t("High_Soft")}:
             </Text>
-            <Text className="">{data.highSoft}</Text>
+            <Text className="text-gray-500">{data.highSoft}</Text>
           </View>
           <View className="flex-row justify-between">
             <Text className="text-sm text-gray-600">
               {i18n.t("High_Hard")}:
             </Text>
-            <Text className="">{data.highHard}</Text>
+            <Text className="text-gray-500">{data.highHard}</Text>
           </View>
           <View className="flex-row justify-between">
             <Text className="text-sm text-gray-600">{i18n.t("Days")}:</Text>
-            <Text className="">{data.days}</Text>
+            <Text className="text-gray-500">{data.days}</Text>
           </View>
         </View>
       </View>
@@ -64,7 +64,11 @@ const Card = ({ title, data }: any) => {
   );
 };
 const SignalSettings = ({ cards }: any) => {
-  return (
+  return cards?.length === 0 ? (
+    <View className="items-center bg-gray-100 overflow-scroll  p-2 justify-center h-full w-full">
+      <Text>Data Not Available</Text>
+    </View>
+  ) : (
     <FlatList
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
@@ -121,382 +125,7 @@ const PricesDetails = () => {
     setTimeout(() => dispatch(inActiveLoading()), 100);
   }, [isFocused]);
   console.log("isChartVisible", isChartVisible);
-  const cards: any = [
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-    {
-      title: "BB EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 10,
-        lowHard: 5,
-        negative: "No",
-        highSoft: 20,
-        highHard: 30,
-        days: 20,
-      },
-    },
-    {
-      title: "RSI EEX HGas Cal Base + 1",
-      data: {
-        lowSoft: 20,
-        lowHard: 10,
-        negative: "No",
-        highSoft: 80,
-        highHard: 90,
-        days: 10,
-      },
-    },
-  ];
+
   return (
     <SafeAreaView className="flex-1 ">
       <StatusBar
@@ -563,7 +192,7 @@ const PricesDetails = () => {
                 },
               ]}
             >
-              {!isChartVisible && <SignalSettings cards={cards} />}
+              {!isChartVisible && <SignalSettings cards={signalsCards} />}
             </Animated.View>
           )}
         </View>

@@ -1,12 +1,36 @@
-import { Stack } from "expo-router";
+import { Href, Stack, useRouter } from "expo-router";
 
 import "react-native-reanimated";
 import "../global.css";
 import { AppState } from "react-native";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 const RootLayout = () => {
   console.log("AppState", AppState.currentState, AppState.isAvailable);
-
+  const [appState, setAppState] = useState(AppState.currentState);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: any) => {
+      if (appState.match(/inactive|background/) && nextAppState === "active") {
+        dispatch(activeLoading());
+        setTimeout(() => {
+          dispatch(inActiveLoading());
+          router.push("/dashboard" as Href);
+        }, 2000);
+      }
+      setAppState(nextAppState);
+    };
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, [appState]);
   return (
     <Stack
       screenOptions={{
