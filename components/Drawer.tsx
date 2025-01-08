@@ -21,7 +21,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
   React.useEffect(() => {
     Animated.timing(translateX, {
       toValue: isDrawerOpen ? 0 : -drawerWidth,
-      duration: 200,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   }, [isDrawerOpen]);

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
@@ -43,6 +43,13 @@ const PFCDetails = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 ">
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <View className="flex-1  bg-white">
         {/* Header Section */}
         {!isLandscape && (

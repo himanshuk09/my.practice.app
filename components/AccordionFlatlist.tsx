@@ -36,7 +36,7 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
         if (animations[key]) {
           Animated.timing(animations[key], {
             toValue: 0,
-            duration: 500,
+            duration: 300,
             useNativeDriver: false,
           }).start();
         }

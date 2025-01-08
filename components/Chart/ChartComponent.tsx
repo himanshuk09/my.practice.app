@@ -245,11 +245,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 };
 
 export default ChartComponent;
-const styles = StyleSheet.create({
-  webviewContainer: {
-    flex: 1,
-  },
-});
+
 // const checkOrientation = async () => {
 //   const orientationInfo = await ScreenOrientation.getOrientationAsync();
 //   const isLandscapeMode =

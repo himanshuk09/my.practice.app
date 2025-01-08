@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Platform } from "react-native";
+import { View, Text, SafeAreaView, Platform, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { AccordionData } from "@/constants/constantData";
@@ -69,6 +69,13 @@ const LoadDataDetails = () => {
 
   return (
     <SafeAreaView className="flex-1 ">
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <View className="flex-1  bg-white">
         {!isLandscape && (
           <View className="flex justify-between bg-white  flex-row px-4  m-1 h-28 shadow-2xl shadow-black ">

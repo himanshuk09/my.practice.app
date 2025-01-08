@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
+import { StatusBar } from "react-native";
 
 const PricesSettings = () => {
   const [selectedPlace, setSelectedPlace] = useState();
@@ -125,6 +126,13 @@ const PricesSettings = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       {/* Market Place Section */}
       <View className="p-2 mb-3 py-3 w-full bg-white shadow-lg shadow-black ">
         <Text className="text-lg font-bold ml-3 capitalize text-[#9a9b9d] mb-1">

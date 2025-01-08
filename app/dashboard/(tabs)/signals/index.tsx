@@ -5,6 +5,7 @@ import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
+import { StatusBar } from "react-native";
 
 const Signals = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,13 @@ const Signals = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <FlatList
         data={combinedData}
         renderItem={renderItem}

@@ -41,14 +41,14 @@ const Submenu = memo(
     React.useEffect(() => {
       Animated.timing(heightAnim, {
         toValue: isVisible ? height : 0,
-        duration: 300,
+        duration: 100,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: false,
       }).start();
 
       Animated.timing(opacityAnim, {
         toValue: isVisible ? 1 : 0,
-        duration: 200,
+        duration: 100,
         useNativeDriver: false,
       }).start();
     }, [isVisible]);
@@ -211,7 +211,7 @@ const CustomDrawer = memo((props: any) => {
   };
   return (
     <ScrollView
-      className="flex-1 bg-[#fff]"
+      className="flex-1 bg-[#fff] "
       showsVerticalScrollIndicator={false}
     >
       {menuItems.map((item, index) => (

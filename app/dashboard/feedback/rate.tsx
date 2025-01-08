@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  StatusBar,
 } from "react-native";
 // import StarRating from "react-native-star-rating-widget";
 import { FontAwesome } from "@expo/vector-icons";
@@ -64,6 +65,13 @@ const Rate = () => {
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView className="flex-1 bg-white">
           {/* Header */}

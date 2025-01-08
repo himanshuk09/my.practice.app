@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FlatList, SafeAreaView, View } from "react-native";
+import { FlatList, SafeAreaView, StatusBar, View } from "react-native";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
@@ -31,6 +31,13 @@ const PFC = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <FlatList
         data={combinedData}
         renderItem={renderItem}

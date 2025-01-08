@@ -38,7 +38,7 @@ const Layout = () => {
   }, []);
   return (
     <Provider store={store}>
-      <Drawer drawerWidth={250} />
+      <Drawer drawerWidth={275} />
       <SwipeDetectionWrapper>
         <NavigationWatcher>
           <AppLoader>

@@ -2,13 +2,17 @@ import ChartComponent from "@/components/Chart/ChartComponent";
 
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Platform,
   SafeAreaView,
   Text,
   TouchableOpacity,
+  Animated,
+  Easing,
+  FlatList,
+  StatusBar,
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +25,10 @@ import {
   webviewAreaHtmlcontent,
   webviewDonutChartHtml,
 } from "@/components/Chart/charthtmlcontent";
+import CustomSwitch from "@/components/CustomSwitch";
+import ToggleChartComponent from "@/components/ToggleChartComponent";
+import { i18n } from "@/languageKeys/i18nConfig";
+import { isEnabled } from "react-native/Libraries/Performance/Systrace";
 type ChartUpdateType = "series" | "options" | "chart";
 
 const InfoItem = ({
@@ -39,6 +47,146 @@ const InfoItem = ({
     </Text>
   </View>
 );
+const Card = ({ title, data }: any) => {
+  return (
+    <View className="bg-[#ebebeb] rounded-lg p-4 mb-4 shadow-md shadow-black">
+      <Text className="text-sm text-gray-800 font-medium mb-2">{title}</Text>
+      <View className="space-y-2 flex-row justify-between">
+        <View className="flex-col w-[45%]">
+          <View className="flex-row justify-between ">
+            <Text className="text-xs text-gray-500">Direction:</Text>
+            <View className="items-start justify-start w-[30%]">
+              <Text className="text-xs text-gray-700">{data.direction}</Text>
+            </View>
+          </View>
+          <View className="flex-row justify-between ">
+            <Text className="text-xs text-gray-500">Amount:</Text>
+            <View className="items-start justify-start w-[30%]">
+              <Text className="text-xs  text-gray-700">{data.amount}</Text>
+            </View>
+          </View>
+          <View className="flex-row justify-between">
+            <Text className="text-xs text-gray-500 w-[70%]">Price:</Text>
+            <View className="items-start justify-start w-[50%]">
+              <Text className="text-xs text-gray-700">{data.price}</Text>
+            </View>
+          </View>
+        </View>
+        <View className="flex-col w-[45%]">
+          <View className="flex-row justify-between">
+            <Text className="text-xs text-gray-500">Trader:</Text>
+
+            <View className="items-start justify-start w-[50%]">
+              <Text className="text-xs text-gray-700">{data.trader}</Text>
+            </View>
+          </View>
+          <View className="flex-row justify-between ">
+            <Text className="text-xs text-gray-500">Date:</Text>
+
+            <View className="items-start justify-start w-[50%]">
+              <Text className="text-xs text-gray-700">{data.date}</Text>
+            </View>
+          </View>
+          <View className="flex-row justify-between ">
+            <Text className="text-xs text-gray-500">State:</Text>
+            <View className="items-start justify-start w-[50%]">
+              <Text className="text-xs text-gray-700">{data.state}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+  return (
+    <View className="bg-gray-100 rounded-lg p-4 my-2 shadow-md">
+      {/* Title */}
+      <Text className="text-lg flex-col font-bold text-gray-800 mb-2">
+        {title}
+      </Text>
+
+      {/* Rows */}
+      <View>
+        <View className="flex-row justify-between mb-1">
+          <Text className="text-sm text-gray-500">Direction:</Text>
+          <Text className="text-sm font-medium text-gray-700">
+            {data.direction}
+          </Text>
+        </View>
+
+        <View className="flex-row justify-between mb-1">
+          <Text className="text-sm text-gray-500">Trader:</Text>
+          <Text className="text-sm font-medium text-gray-700">
+            {data.trader}
+          </Text>
+        </View>
+
+        <View className="flex-row justify-between mb-1">
+          <Text className="text-sm text-gray-500">Amount:</Text>
+          <Text className="text-sm font-medium text-gray-700">
+            {data.amount}
+          </Text>
+        </View>
+      </View>
+      <View>
+        <View className="flex-row justify-between mb-1">
+          <Text className="text-sm text-gray-500">Date:</Text>
+          <Text className="text-sm font-medium text-gray-700">{data.date}</Text>
+        </View>
+
+        <View className="flex-row justify-between mb-1">
+          <Text className="text-sm text-gray-500">Price:</Text>
+          <Text className="text-sm font-medium text-gray-700">
+            {data.price}
+          </Text>
+        </View>
+
+        <View className="flex-row justify-between">
+          <Text className="text-sm text-gray-500">State:</Text>
+          <Text className="text-sm font-medium text-gray-700">
+            {data.state}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+const Transactions = ({ cards }: any) => {
+  return (
+    <View className="">
+      <View className="flex justify-between bg-white flex-row  m-1  h-20 px-4 shadow-2xl shadow-black ">
+        <View className="justify-center items-start">
+          <Text className="text-xl font-semibold  text-[#b5b5b5]">
+            Strom 2024
+          </Text>
+          <Text className="text-md font-medium text-[#b5b5b5]">
+            Trade Transaction
+          </Text>
+        </View>
+
+        <View className="py-5 mr-5">
+          <FontAwesome5
+            name="file-download"
+            size={25}
+            color="#ef4444"
+            onPress={() => {}}
+          />
+        </View>
+      </View>
+      <FlatList
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        data={cards}
+        renderItem={({ item, index }) => (
+          <Card key={index} title={item.title} data={item} />
+        )}
+        keyExtractor={(item: any, index) => index.toString()}
+        scrollEnabled={true}
+        className="bg-gray-100 overflow-scroll  p-2"
+        contentContainerStyle={{ paddingTop: 4 }}
+      />
+    </View>
+  );
+};
 const Portfolio_OverView = () => {
   const locale = useSelector((state: any) => state.language.locale);
   const donutwebViewRef = useRef<any>(null);
@@ -47,7 +195,10 @@ const Portfolio_OverView = () => {
   const areaIFrameRef = useRef<any>(null);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-
+  const [isEnabled, setIsEnabled] = useState(true);
+  const [isChartVisible, setIsChartVisible] = useState(true);
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const [blockWidth, setBlockWidth] = useState(0);
   const onMessage = async (event: any) => {
     //for file share or save
     const base64Data = event.nativeEvent.data;
@@ -246,6 +397,162 @@ const Portfolio_OverView = () => {
       updateLocale();
     }, 2000);
   }, [isFocused]);
+  //.....
+  const toggleView = () => {
+    Animated.timing(slideAnim, {
+      toValue: isChartVisible ? 1 : 0,
+      duration: 500,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+    setIsChartVisible(!isChartVisible);
+  };
+
+  const onLayout = (e: any) => {
+    const { width } = e.nativeEvent.layout;
+    setBlockWidth(width);
+  };
+  const cards: any = [
+    {
+      title: "2024 Cal Base",
+      direction: "Buy",
+      trader: "RheinEnergie",
+      amount: "1 MW",
+      date: "26/03/2020",
+      price: "41.56 €/MWh",
+      state: "Confirmed",
+    },
+    {
+      title: "2024 Cal Base",
+      direction: "Buy",
+      trader: "RheinEnergie",
+      amount: "1 MW",
+      date: "07/04/2020",
+      price: "46.1 €/MWh",
+      state: "Confirmed",
+    },
+  ];
+  return (
+    <SafeAreaView className="flex-1 ">
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
+      <View style={{ flex: 1 }}>
+        <Animated.View
+          style={[
+            {
+              transform: [
+                {
+                  translateX: slideAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, -blockWidth],
+                  }),
+                },
+              ],
+            },
+            { height: "100%" },
+          ]}
+          onLayout={onLayout}
+        >
+          {isChartVisible && (
+            <View className="flex-1 bg-white">
+              <View className="flex flex-row justify-between h-[28%] md:h-[27%]">
+                <ChartComponent
+                  webViewRef={donutwebViewRef}
+                  iFrameRef={donutIFrameRef}
+                  onMessage={onMessage}
+                  webViewhtmlContent={webviewDonutChartHtml}
+                  iFramehtmlContent={iFreameDonutChartHtml}
+                  showToggleOrientation={false}
+                  showToolbar={false}
+                />
+
+                <View className="flex flex-col justify-start   items-start my-1">
+                  <View className="my-2">
+                    <Text className="text-sm text-[#e31837] font-semibold">
+                      Closed
+                    </Text>
+                    {closedData.map((item, index) => (
+                      <InfoItem
+                        key={index}
+                        value={item.value}
+                        unit={item.unit}
+                        width={["w-28", "w-34", "w-28"][index]}
+                      />
+                    ))}
+                  </View>
+                  <View>
+                    <Text className="text-sm text-[#7f7f7f] font-semibold">
+                      Open
+                    </Text>
+                    {openData.map((item, index) => (
+                      <InfoItem
+                        key={index}
+                        value={item.value}
+                        unit={item.unit}
+                        width={["w-28", "w-34", "w-28"][index]}
+                      />
+                    ))}
+                  </View>
+                </View>
+                <View className="mr-10 ml-7 mt-3">
+                  <FontAwesome5
+                    name="file-download"
+                    size={35}
+                    color="#ef4444"
+                    onPress={() => {}}
+                  />
+                </View>
+              </View>
+              <View className="h-1 bg-slate-300 my-1" />
+              <View className="h-[72%] pt-5">
+                <ChartComponent
+                  webViewRef={areaWebViewRef}
+                  iFrameRef={areaIFrameRef}
+                  onMessage={onMessage}
+                  webViewhtmlContent={webviewAreaHtmlcontent}
+                  iFramehtmlContent={iframeAreahtlcontent}
+                  showToggleOrientation={false}
+                  showToggle={false}
+                />
+              </View>
+            </View>
+          )}
+        </Animated.View>
+
+        <Animated.View
+          style={[
+            {
+              transform: [
+                {
+                  translateX: slideAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [blockWidth, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+          className={`${"h-full w-full absolute"} `}
+        >
+          {!isChartVisible && <Transactions cards={cards} />}
+        </Animated.View>
+      </View>
+      <TouchableOpacity
+        className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
+        // onPress={updateArea}
+        onPress={toggleView}
+      >
+        <Text className="text-white text-center text-base font-medium uppercase">
+          {i18n.t(isChartVisible ? "View_Deals" : "View_Portfolio")}
+        </Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1 bg-white">

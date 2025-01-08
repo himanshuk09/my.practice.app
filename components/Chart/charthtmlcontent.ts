@@ -576,7 +576,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             options: {
                             chart: { 
                                 // width: '95%' , 
-                                height:'91%',
+                                height:'93%',
                                 background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center",
                             }, 
                             xaxis: 

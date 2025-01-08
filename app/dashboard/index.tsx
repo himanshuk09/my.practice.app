@@ -5,6 +5,7 @@ import {
   Platform,
   Button,
   PanResponder,
+  StatusBar,
 } from "react-native";
 import "nativewind";
 import MenuCard from "@/components/MenuCard";
@@ -40,6 +41,13 @@ const Dashboard: React.FC = () => {
   }, [isFocused]);
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <View className="justify-center items-center">
         <FlatList
           data={jsonData}

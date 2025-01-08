@@ -2,8 +2,11 @@ import { Stack } from "expo-router";
 
 import "react-native-reanimated";
 import "../global.css";
+import { AppState } from "react-native";
 
 const RootLayout = () => {
+  console.log("AppState", AppState.currentState, AppState.isAvailable);
+
   return (
     <Stack
       screenOptions={{

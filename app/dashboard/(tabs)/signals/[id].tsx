@@ -6,6 +6,7 @@ import {
   Animated,
   Easing,
   ScrollView,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -17,50 +18,65 @@ import ToggleChartComponent from "@/components/ToggleChartComponent";
 import CustomSwitch from "@/components/CustomSwitch";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { RootState } from "@/store/store";
-const SignalSettings = ({ cards }: any) => {
-  return (
-    <ScrollView className="p-4 w-full h-full bg-white">
-      {cards.map((card: any, index: any) => (
-        <Card key={index} title={card.title} data={card.data} />
-      ))}
-    </ScrollView>
-  );
-};
+import { StatusBar } from "react-native";
+
 const Card = ({ title, data }: any) => {
   return (
-    <View className="bg-[#ebebeb] rounded-lg p-4 mb-4 shadow-sm">
-      <Text className="text-md font-medium mb-2">{title}</Text>
+    <View className="bg-[#ebebeb] rounded-lg p-3 my-1 shadow-md shadow-black">
+      <Text className="text-sm text-gray-800 font-normal mb-2">{title}</Text>
       <View className="space-y-2 flex-row justify-between">
         <View className="flex-col w-[45%]">
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Low Soft:</Text>
-            <Text className="font-bold">{data.lowSoft}</Text>
+            <Text className=" text-sm text-gray-600">
+              {i18n.t("Low_Soft")}:
+            </Text>
+            <Text className="">{data.lowSoft}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Low Hard:</Text>
-            <Text className="font-bold">{data.lowHard}</Text>
+            <Text className="text-sm text-gray-600">{i18n.t("Low_Hard")}</Text>
+            <Text className="">{data.lowHard}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Negative:</Text>
-            <Text className="font-bold">{data.negative}</Text>
+            <Text className="text-sm text-gray-600">{i18n.t("Negative")}:</Text>
+            <Text className="">{i18n.t(data.negative)}</Text>
           </View>
         </View>
         <View className="flex-col w-[45%]">
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">High Soft:</Text>
-            <Text className="font-bold">{data.highSoft}</Text>
+            <Text className="text-sm text-gray-600">
+              {i18n.t("High_Soft")}:
+            </Text>
+            <Text className="">{data.highSoft}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">High Hard:</Text>
-            <Text className="font-bold">{data.highHard}</Text>
+            <Text className="text-sm text-gray-600">
+              {i18n.t("High_Hard")}:
+            </Text>
+            <Text className="">{data.highHard}</Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">Days:</Text>
-            <Text className="font-bold">{data.days}</Text>
+            <Text className="text-sm text-gray-600">{i18n.t("Days")}:</Text>
+            <Text className="">{data.days}</Text>
           </View>
         </View>
       </View>
     </View>
+  );
+};
+const SignalSettings = ({ cards }: any) => {
+  return (
+    <FlatList
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      data={cards}
+      renderItem={({ item, index }) => (
+        <Card key={index} title={item.title} data={item.data} />
+      )}
+      keyExtractor={(item: any, index) => index.toString()}
+      scrollEnabled={true}
+      className="bg-gray-100 overflow-scroll  p-2"
+      contentContainerStyle={{ paddingTop: 4 }}
+    />
   );
 };
 
@@ -128,10 +144,369 @@ const PricesDetails = () => {
         days: 10,
       },
     },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
+    {
+      title: "BB EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 10,
+        lowHard: 5,
+        negative: "No",
+        highSoft: 20,
+        highHard: 30,
+        days: 20,
+      },
+    },
+    {
+      title: "RSI EEX HGas Cal Base + 1",
+      data: {
+        lowSoft: 20,
+        lowHard: 10,
+        negative: "No",
+        highSoft: 80,
+        highHard: 90,
+        days: 10,
+      },
+    },
   ];
   return (
     <SafeAreaView className="flex-1 ">
-      <View className="flex-1  bg-white">
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
+      <View className="flex-1  bg-transparent">
         {/* Header Section */}
         {!isLandscape && (
           <View className="flex justify-between bg-white flex-row  m-1  h-20 px-4 shadow-2xl shadow-black ">
@@ -149,61 +524,60 @@ const PricesDetails = () => {
           </View>
         )}
 
-        {!isLandscape ? (
-          <>
-            <View style={{ flex: 1 }}>
-              <Animated.View
-                style={[
+        <View style={{ flex: 1 }}>
+          <Animated.View
+            style={[
+              {
+                transform: [
                   {
-                    transform: [
-                      {
-                        translateX: slideAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, -blockWidth],
-                        }),
-                      },
-                    ],
+                    translateX: slideAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, -blockWidth],
+                    }),
                   },
-                  { height: "100%" },
-                ]}
-                onLayout={onLayout}
-                className="h-full w-full absolute justify-center items-center bg-white"
-              >
-                {isChartVisible && (
-                  <ToggleChartComponent isSignaleScreen={true} />
-                )}
-              </Animated.View>
+                ],
+              },
+              { height: "100%" },
+            ]}
+            onLayout={onLayout}
+            className={`${
+              !isLandscape &&
+              "h-full w-full absolute justify-center items-center bg-white"
+            } `}
+          >
+            {isChartVisible && <ToggleChartComponent isSignaleScreen={true} />}
+          </Animated.View>
 
-              <Animated.View
-                style={[
-                  {
-                    transform: [
-                      {
-                        translateX: slideAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [blockWidth, 0],
-                        }),
-                      },
-                    ],
-                  },
-                ]}
-              >
-                {!isChartVisible && <SignalSettings cards={cards} />}
-              </Animated.View>
-            </View>
-            <TouchableOpacity
-              className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
-              onPress={toggleView}
+          {!isLandscape && (
+            <Animated.View
+              style={[
+                {
+                  transform: [
+                    {
+                      translateX: slideAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [blockWidth, 0],
+                      }),
+                    },
+                  ],
+                },
+              ]}
             >
-              <Text className="text-white text-center text-base font-medium uppercase">
-                {i18n.t(
-                  isChartVisible ? "View_Signal_Settings" : "View_Signal_Chart"
-                )}
-              </Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <ToggleChartComponent isSignaleScreen={true} />
+              {!isChartVisible && <SignalSettings cards={cards} />}
+            </Animated.View>
+          )}
+        </View>
+        {!isLandscape && (
+          <TouchableOpacity
+            className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
+            onPress={toggleView}
+          >
+            <Text className="text-white text-center text-base font-medium uppercase">
+              {i18n.t(
+                isChartVisible ? "View_Signal_Settings" : "View_Signal_Chart"
+              )}
+            </Text>
+          </TouchableOpacity>
         )}
       </View>
     </SafeAreaView>

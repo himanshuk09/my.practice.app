@@ -18,7 +18,7 @@ const DashboardLayout = () => {
         name="index"
         options={{
           headerShown: true,
-          animation: "slide_from_right",
+          animation: "slide_from_left",
           animationDuration: 4000,
           header: ({ navigation }) => <Header navigation={navigation} />,
         }}
@@ -44,7 +44,7 @@ const DashboardLayout = () => {
         name="settings"
         options={{
           headerShown: true,
-          animation: "slide_from_left",
+          animation: "slide_from_right",
           animationDuration: 500,
           header: ({ navigation }) => <Header navigation={navigation} />,
         }}

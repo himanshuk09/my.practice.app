@@ -22,7 +22,7 @@ const PFCLayout = () => {
         name="[id]"
         options={{
           headerShown: Platform.OS === "web" ? true : !isLandscape,
-          animation: "slide_from_left",
+          animation: "slide_from_right",
           header: ({ navigation }) => (
             <View className="bg-[#ebebeb] px-4 items-center justify-start py-6 flex-row h-20">
               <TouchableOpacity

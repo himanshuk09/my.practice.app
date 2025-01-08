@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   Animated,
+  Easing,
 } from "react-native";
 import { Href, useRouter } from "expo-router";
 import Loader from "./Loader";
@@ -23,9 +24,8 @@ const FlatListBlock1 = ({
   const router = useRouter();
   const flatListRef = useRef<any>(null);
   const currentYear = new Date().getFullYear();
-  console.log(currentYear);
 
-  const ITEM_HEIGHT = Platform.OS === "web" ? 75 : 68;
+  const ITEM_HEIGHT = Platform.OS === "web" ? 75 : 64;
   const isFocused = useIsFocused();
   const ListItem = memo(({ item, router }: any) => (
     <TouchableOpacity
@@ -57,16 +57,29 @@ const FlatListBlock1 = ({
         // Scroll to the first matched item (current year)
         const offset = (targetIndex + 1) * ITEM_HEIGHT + 20;
 
+        const scrollValue = new Animated.Value(0); // Start with 0
+
         setTimeout(() => {
           try {
-            flatListRef.current.scrollToOffset({
-              offset, // Scroll to the first matched index
-              animated: true,
+            // Animate the scrolling smoothly
+            Animated.timing(scrollValue, {
+              toValue: offset, // Scroll target offset
+              duration: 1000, // Duration in milliseconds
+              easing: Easing.inOut(Easing.quad), // Smooth easing function
+              useNativeDriver: false, // Disable for scrolling animations
+            }).start();
+
+            // Attach the animation to the FlatList's scroll position
+            scrollValue.addListener(({ value }) => {
+              flatListRef.current?.scrollToOffset({
+                offset: value, // Update offset during animation
+                animated: false, // Manual control of animation
+              });
             });
           } catch (error) {
             console.warn("Scroll Error:", error);
           }
-        }, 1500);
+        }, 1000);
       }
     }
   }, [items, enableAutoScroll, currentYear, isFocused]);
@@ -98,7 +111,7 @@ const FlatListBlock1 = ({
           offset: ITEM_HEIGHT * index,
           index,
         })}
-        initialNumToRender={1} // Ensure enough items render initially
+        initialNumToRender={5} // Ensure enough items render initially
         className="bg-gray-100 overflow-scroll mx-2"
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

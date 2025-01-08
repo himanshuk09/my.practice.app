@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Keyboard,
   Pressable,
+  StatusBar,
 } from "react-native";
 import { Href, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -102,6 +103,13 @@ const SignIn: React.FC = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <View className="flex-1 justify-center items-center">
         <View className="w-11/12 max-w-md p-5">
           <View className="items-center mb-5 w-full">

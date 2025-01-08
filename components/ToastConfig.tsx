@@ -5,7 +5,7 @@ import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 const toastConfig: any = {
   success: ({ text1, text2, ...rest }: any) => (
     <View className="flex-row justify-center items-center py-3 px-5   bg-[#ebebeb] rounded-full">
-      <MaterialIcons name="done-all" size={24} color="green" className="mr-2" />
+      {/* <MaterialIcons name="done-all" size={24} color="green" className="mr-2" /> */}
 
       <View>
         <Text className="text-lg justify-center items-center font-semibold text-gray-600">

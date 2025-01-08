@@ -5,7 +5,8 @@ import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import { Platform } from "react-native";
+import { Platform, SafeAreaView } from "react-native";
+import { StatusBar } from "react-native";
 const Portfolio: React.FC = () => {
   const [gasData, setGasData] = useState<any>([]);
   const [powerData, setPowerData] = useState<any>([]);
@@ -28,7 +29,14 @@ const Portfolio: React.FC = () => {
   }, [isFocused]);
 
   return (
-    <>
+    <SafeAreaView>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <FlatListBlock
         title="Gas"
         items={gasData}
@@ -39,7 +47,7 @@ const Portfolio: React.FC = () => {
         items={powerData}
         height={Platform.OS === "web" ? 380 : "49%"}
       />
-    </>
+    </SafeAreaView>
   );
 };
 

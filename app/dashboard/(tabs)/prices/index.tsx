@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import React, { act, memo, useEffect } from "react";
 import { PricesItem } from "@/constants/constantData";
@@ -69,6 +70,13 @@ const Prices = () => {
   }, [isFocused]);
   return (
     <SafeAreaView>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        animated
+        showHideTransition={"slide"}
+        networkActivityIndicatorVisible
+      />
       <View className="h-auto">
         <View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-[#e31837] ">
           <View className="flex flex-col justify-evenly w-[60%]">
