@@ -45,7 +45,7 @@ const PFCDetails = () => {
         <SafeAreaView className="flex-1 ">
             <StatusBar
                 barStyle="dark-content"
-                backgroundColor="#C3C3C3"
+                backgroundColor={isLandscape ? "#ffffff" : "#C3C3C3"}
                 animated
                 showHideTransition={"slide"}
                 networkActivityIndicatorVisible

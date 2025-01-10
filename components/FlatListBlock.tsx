@@ -19,7 +19,7 @@ const FlatListBlock1 = ({
     title,
     items,
     enableAutoScroll = true,
-    height = "auto",
+    height = "100%",
     scrollHeight,
 }: any) => {
     const dispatch = useDispatch();
@@ -120,7 +120,6 @@ const FlatListBlock1 = ({
                     index,
                 })}
                 initialNumToRender={5}
-                className=" overflow-scroll"
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
             />

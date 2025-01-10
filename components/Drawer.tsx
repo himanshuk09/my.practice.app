@@ -8,6 +8,7 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
     PanResponder,
+    Platform,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
@@ -97,14 +98,16 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
             {isDrawerOpen && (
                 <TouchableWithoutFeedback onPress={handleCloseDrawer}>
                     <View style={styles.overlayContainer}>
-                        <View style={styles.iconContainer}>
-                            <Entypo
-                                name="menu"
-                                size={45}
-                                color="#fff"
-                                className="m-2"
-                            />
-                        </View>
+                        {Platform.OS !== "web" && (
+                            <View style={styles.iconContainer}>
+                                <Entypo
+                                    name="menu"
+                                    size={45}
+                                    color="#fff"
+                                    className="m-2"
+                                />
+                            </View>
+                        )}
 
                         <View style={styles.overlay} />
                     </View>

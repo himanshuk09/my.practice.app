@@ -131,7 +131,6 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
                 contentContainerStyle={{
                     padding: 10,
                 }}
-                className="overflow-scroll"
             />
         </>
     );

@@ -381,8 +381,7 @@ const ToggleChartComponent = ({
                 <>
                     <TouchableOpacity
                         className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
-                        // onPress={() => setModalVisible(!modalVisible)}
-                        onPress={UpdateXaxisFormate}
+                        onPress={() => setModalVisible(!modalVisible)}
                     >
                         <Text className="text-white text-center text-base font-normal uppercase">
                             {i18n.t(bottonTitle)}
