@@ -398,14 +398,14 @@ export const DashboardCardsEng = [
         id: 3,
         title: "loaddata",
         icon: "LOAD",
-        notificationCount: 1,
+        notificationCount: 0,
         route: "dashboard/(tabs)/loaddata",
     },
     {
         id: 4,
         title: "signals",
         icon: "SIGNALS",
-        notificationCount: 0,
+        notificationCount: 3,
         route: "dashboard/(tabs)/signals",
     },
     {
@@ -419,7 +419,7 @@ export const DashboardCardsEng = [
         id: 6,
         title: "settings",
         icon: "SETTINGS",
-        notificationCount: 4,
+        notificationCount: 0,
         route: "dashboard/settings",
     },
 ];

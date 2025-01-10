@@ -26,7 +26,7 @@ const Imprint = () => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
     return (
-        <SafeAreaView className="flex-1">
+        <SafeAreaView className="flex-1 bg-white">
             <StatusBar
                 barStyle="dark-content"
                 backgroundColor="#C3C3C3"

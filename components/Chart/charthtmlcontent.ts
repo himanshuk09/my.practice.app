@@ -1159,7 +1159,7 @@ export let iFrameLineHtmlcontent = `
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body style="margin:0; padding:0; display:flex; justify-content:center; align-items:center; height:100vh;">
-<div id="chart" style="width:100%; height:100%;"></div>
+<div id="chart" style="width:100%; height:100%; overflow:hidden"></div>
 <script>
         const locales = {
             en: {
@@ -1205,7 +1205,7 @@ export let iFrameLineHtmlcontent = `
         var options = {
             series: [],
             chart: {
-                height: 550,
+                height: "90%",
                 type: "line",
                 offsetX: 0,
                 offsetY: 43,
@@ -1214,7 +1214,7 @@ export let iFrameLineHtmlcontent = `
                 stacked: false,
                 locales: [locales.en, locales.de],
                 defaultLocale: "en",
-                zoom: { type: "xy", enabled: true, autoScaleYaxis: true },
+                zoom: { type: "x", enabled: true, autoScaleYaxis: true },
                 animations: {
                     enabled: true,
                     easing: "linear",
@@ -1734,13 +1734,10 @@ export const iFreameDonutChartHtml = `
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
             #donut-chart {
-              width: 100%;
               touch-action: none;
-              align-items:center;
-              justify-content:center;
-              padding-top: 20px; /* Adjust as needed */
-              margin-bottom: 20px;
-              overflow:hidden 	   
+              overflow:hidden;
+              height:"100%";
+              width:"100%";
             }
     </style>
 </head>
@@ -1753,8 +1750,8 @@ export const iFreameDonutChartHtml = `
             labels: ["Open", "Closed"],
             chart: {
                 type: 'donut',
-                 height: '85%',
-              //   width: '80%',
+                 height: '120%',
+                 width: '100%',
                 background: "none",
                 animations: { enabled: true },
                 toolbar: { show: false },
@@ -1840,7 +1837,7 @@ export const iFreameDonutChartHtml = `
             responsive: [{
                 breakpoint: 480,
                 options: {
-                    chart: { width: '100%' },
+                    chart: { width: '100%',height:"120%" },
                     legend: { position: 'bottom' },
                 },
             }],
@@ -2628,7 +2625,7 @@ export const iframeAreahtlcontent = ` <!DOCTYPE html>
         ],
         colors: ["#cecece", "#e4e4e4","#b5b5b5","#c32442"],
         chart: {
-            height: 450,
+            height: "95%",
             type: "area",
             zoom: {
               enabled: true,

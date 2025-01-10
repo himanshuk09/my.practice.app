@@ -161,7 +161,7 @@ const TabNavigatorLayout = () => {
         prices: 0,
         pfc: 0,
         loaddata: 0,
-        signals: 2,
+        signals: 3,
         portfolio: 0,
     };
     return (

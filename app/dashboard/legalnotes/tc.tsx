@@ -3,30 +3,17 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const TermsAndConditionsScreen = () => {
-    const termsDetails = [
-        { key: "terms", isHeader: true },
-        { key: "contractPartiesAndObject", isHeader: false },
-        { key: "term", isHeader: false },
-        { key: "scope", isHeader: false },
-        { key: "services", isHeader: false },
-        { key: "usersCommitments", isHeader: false },
-        { key: "intellectualProperty", isHeader: false },
-        { key: "enexionRights", isHeader: false },
-        { key: "termination", isHeader: false },
-        { key: "supplementaryAgreements", isHeader: false },
-        { key: "applicableLaw", isHeader: false },
-        { key: "severabilityClause", isHeader: false },
-    ];
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
+    const locale = useSelector((state: any) => state.language.locale);
     useEffect(() => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
     return (
-        <SafeAreaView className="flex-1">
+        <SafeAreaView className="flex-1 bg-white">
             <StatusBar
                 barStyle="dark-content"
                 backgroundColor="#C3C3C3"
@@ -48,7 +35,7 @@ const TermsAndConditionsScreen = () => {
                     <Text className="text-black py-2 text-lg font-medium">
                         {i18n.t("termsAndConditions.terms")}
                     </Text>
-                    <Text className="text-black py-2 text-lg font-medium">
+                    <Text className="text-black py-2 text-lg font-medium ">
                         {i18n.t("termsAndConditions.contractPartiesAndObject")}
                     </Text>
                     <Text className="text-[#4b4b4e] py-2 text-md font-normal">
@@ -125,9 +112,13 @@ const TermsAndConditionsScreen = () => {
                     <Text className="text-black py-2 text-lg font-medium">
                         {i18n.t("termsAndConditions.enexionRights")}
                     </Text>
-                    <Text className="text-[#4b4b4e] py-2  text-md font-normal">
-                        {i18n.t("termsAndConditions.enexionRightsDescription")}
-                    </Text>
+                    {locale === "de" && (
+                        <Text className="text-[#4b4b4e] py-2  text-md font-normal">
+                            {i18n.t(
+                                "termsAndConditions.enexionRightsDescription"
+                            )}
+                        </Text>
+                    )}
                     <Text className="text-[#4b4b4e] py-2  text-md font-normal">
                         {i18n.t("termsAndConditions.enexionRight1")}
                     </Text>

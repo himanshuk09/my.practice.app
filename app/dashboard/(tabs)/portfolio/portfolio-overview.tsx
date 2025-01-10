@@ -420,7 +420,7 @@ const Portfolio_OverView = () => {
                 >
                     {isChartVisible && (
                         <View className="flex-1 bg-white">
-                            <View className="flex flex-row justify-between h-[28%] md:h-[27%]">
+                            <View className="flex flex-row justify-between h-[28%] ">
                                 <ChartComponent
                                     webViewRef={donutwebViewRef}
                                     iFrameRef={donutIFrameRef}
@@ -429,6 +429,7 @@ const Portfolio_OverView = () => {
                                     iFramehtmlContent={iFreameDonutChartHtml}
                                     showToggleOrientation={false}
                                     showToolbar={false}
+                                    iFrameHeight="50%"
                                 />
 
                                 <View className="flex flex-col justify-start   items-start my-1">
@@ -512,7 +513,8 @@ const Portfolio_OverView = () => {
             </View>
             <TouchableOpacity
                 className={`bg-[#e31836]  bottom-0  h-12 py-3 mx-5 rounded-sm my-2 ${
-                    !isChartVisible && "absolute"
+                    !isChartVisible &&
+                    "absolute bg-[#e31836]  bottom-0 left-0 right-0  "
                 }`}
                 // onPress={updateArea}
                 onPress={toggleView}

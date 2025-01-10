@@ -63,7 +63,7 @@ const Prices = () => {
                             ? [{ rotate: "45deg" }]
                             : [],
                 }}
-                className="mr-2"
+                className="mr-5"
             />
         </TouchableOpacity>
     ));
