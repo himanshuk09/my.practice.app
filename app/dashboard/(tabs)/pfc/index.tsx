@@ -42,7 +42,9 @@ const PFC = () => {
                 data={combinedData}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item.title}-${index}`}
+                className="overflow-scroll"
                 showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
             />
         </SafeAreaView>
     );

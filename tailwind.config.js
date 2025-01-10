@@ -8,6 +8,9 @@ module.exports = {
     presets: [require("nativewind/preset")],
     theme: {
         extend: {
+            screens: {
+                xxs: "1rem", // min-width
+            },
             colors: {
                 primary: "#e31836", // Used for primary accent, buttons, etc.
                 secondary: "#ebebeb", // Background colors for cards, submenus, etc.

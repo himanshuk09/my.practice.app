@@ -13,6 +13,7 @@ import Loader from "./Loader";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 
 const FlatListBlock1 = ({
     title,
@@ -30,7 +31,7 @@ const FlatListBlock1 = ({
     const ListItem = memo(({ item, router }: any) => (
         <TouchableOpacity
             key={item.id}
-            className="flex justify-start px-5 py-6  text-lg font-serif font-medium rounded-sm my-1 shadow-2xl shadow-gray-500 mx-2 bg-white h-[4.7rem] "
+            className="flex justify-start flex-row px-5  py-6  text-lg font-serif font-medium rounded-sm my-1 shadow-2xl shadow-gray-500 mx-2 bg-white h-[4.7rem] "
             onPress={() => {
                 dispatch(activeLoading());
                 setTimeout(() => {
@@ -38,6 +39,14 @@ const FlatListBlock1 = ({
                 });
             }}
         >
+            {item?.notificationCount && (
+                <FontAwesome
+                    name="circle"
+                    size={8}
+                    color="#e31837"
+                    className="mr-1 mt-[0.4rem]"
+                />
+            )}
             <Text className="text-listText text-sm">{item.title}</Text>
         </TouchableOpacity>
     ));

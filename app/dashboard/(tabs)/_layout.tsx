@@ -126,10 +126,10 @@ const CustomTabBar = ({
                                 </Text>
                                 {notificationCount > 0 && (
                                     <View
-                                        className="bg-primary rounded-full justify-center items-center absolute top-0 right-0 w-5 h-5"
+                                        className="bg-primary rounded-full justify-center items-center absolute top-0 right-0 w-4 h-4"
                                         style={{ alignSelf: "flex-start" }}
                                     >
-                                        <Text className="text-white text-xs font-bold">
+                                        <Text className="text-white text-[8px] font-bold">
                                             {notificationCount}
                                         </Text>
                                     </View>

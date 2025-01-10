@@ -31,7 +31,10 @@ const PricesLayout = () => {
                         <View className="bg-[#ebebeb] px-4 items-center justify-start py-6 flex-row h-20">
                             <TouchableOpacity
                                 onPress={() => {
-                                    setTimeout(() => navigation.goBack());
+                                    navigation.goBack();
+                                    if (Platform.OS === "web") {
+                                        window.history.back();
+                                    }
                                 }}
                                 className="w-9"
                             >

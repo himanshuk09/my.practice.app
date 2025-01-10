@@ -825,6 +825,99 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                     });
                 }
 
+                function updateFormate(type) {
+                    window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateFormate',values: type}));
+                    chart.updateOptions({
+                        xaxis: {
+                            labels: {
+                                show: true,
+                                rotate: 0,
+                                rotateAlways: false,
+                                position: "top",
+                                textAnchor: "end",
+                                hideOverlappingLabels: true,
+                                showDuplicates: false,
+                                trim: false,
+                                maxHeight: 120,
+                                style: {
+                                    fontSize: "8px",
+                                    fontFamily: "Helvetica, Arial, sans-serif",
+                                    fontWeight: 300,
+                                },
+                                
+                                formatter: (value) => {
+                                    const xAxisData = chart.w.globals.initialSeries[0].data;
+                                    const index = chart.w.globals.labels.indexOf(value);
+                                    const date = new Date(value);
+                                    let formatOptions = {};
+                                    switch (type) {
+                                        case 'Day':
+                                                // formatOptions = {
+                                                //     year: "numeric",
+                                                //     month: "short",
+                                                //     day: "2-digit",
+                                                //     hour: "2-digit",
+                                                //     minute: "2-digit",
+                                                //     timeZone: "Europe/Berlin",
+                                                // };
+                                                if (index === 0) {
+                                                    formatOptions ={
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "2-digit",
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                        timeZone: "Europe/Berlin",
+                                                    };
+                                                } else {
+                                                    formatOptions = {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                        timeZone: "Europe/Berlin",
+                                                    };
+                                                }
+                                            break;
+                                        case 'Week':
+                                        case 'Month':
+                                            formatOptions = {
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "2-digit",
+                                                timeZone: "Europe/Berlin",
+                                            };
+                                            break;
+                                        default:
+                                            formatOptions = {
+                                                year: "numeric",
+                                                month: "short",
+                                                timeZone: "Europe/Berlin",
+                                            };
+                                            break;
+                                    }
+                
+                                    return date.toLocaleString('de-DE', formatOptions);
+                                },
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: "#78909C",
+                                height: 1,
+                                width: "100%",
+                                offsetX: 0,
+                                offsetY: 0,
+                            },
+                            axisTicks: {
+                                show: true,
+                                borderType: "solid",
+                                color: "#78909C",
+                                height: 6,
+                                offsetX: 0,
+                                offsetY: 0,
+                            },
+                        },
+                    })
+                }
+
                 window.zoomIn = function () {
                     window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoom Start' }));
                    
@@ -1121,18 +1214,18 @@ export let iFrameLineHtmlcontent = `
                 stacked: false,
                 locales: [locales.en, locales.de],
                 defaultLocale: "en",
-                zoom: { type: "x", enabled: true, autoScaleYaxis: true },
+                zoom: { type: "xy", enabled: true, autoScaleYaxis: true },
                 animations: {
                     enabled: true,
                     easing: "linear",
                     speed: 1000,
                     dynamicAnimation: {
                         enabled: true,
-                        speed: 1000,
+                        speed: 2000,
                     },
                     animategradually: {
                         enabled: true,
-                        delay: 800
+                        delay: 2000
                     },
                 },  
                 selection: {
@@ -1176,20 +1269,7 @@ export let iFrameLineHtmlcontent = `
                                     }
                                 }
                             },
-                            {
-                                icon: '<span class="apexcharts-custom-icon">⬇️</span>',
-                                index: -7,
-                                title: 'Download Chart',
-                                class: 'custom-download-icon',
-                                click: function () {
-                                chart.dataURI().then(({ imgURI, blob }) => {
-                                    const link = document.createElement('a');
-                                    link.href = imgURI;
-                                    link.download = 'chart.png';
-                                    link.click();
-                                });
-                                }
-                            }
+                           
                         ]
                     },
                 },
@@ -1399,9 +1479,9 @@ export let iFrameLineHtmlcontent = `
                                     reset: true,
                                     zoomin: true,
                                     zoomout: true,
-                                    zoom: false,
-                                    pan: false,
-                                    selection: false,
+                                    zoom: true,
+                                    pan: true,
+                                    selection: true,
                                 },
                             },
                         },
@@ -1424,9 +1504,9 @@ export let iFrameLineHtmlcontent = `
                                     reset: true,
                                     zoomin: true,
                                     zoomout: true,
-                                    zoom: false,
-                                    pan: false,
-                                    selection: false,
+                                    zoom: true,
+                                    pan: true,
+                                    selection: true,
                                 },
                             },
                         },
@@ -1449,9 +1529,9 @@ export let iFrameLineHtmlcontent = `
                                     reset: true, 
                                     zoomin: true,
                                     zoomout: true,
-                                    zoom: false,
-                                    pan: false,
-                                    selection: false,
+                                    zoom: true,
+                                    pan: true,
+                                    selection: true,
                                 },
                             },
                         },
@@ -1547,6 +1627,100 @@ export let iFrameLineHtmlcontent = `
                 },
                 },
             })}
+
+            function updateFormate(type) {
+                
+                chart.updateOptions({
+                    xaxis: {
+                        labels: {
+                            show: true,
+                            rotate: 0,
+                            rotateAlways: false,
+                            position: "top",
+                            textAnchor: "end",
+                            hideOverlappingLabels: true,
+                            showDuplicates: false,
+                            trim: false,
+                            maxHeight: 120,
+                            style: {
+                                fontSize: "8px",
+                                fontFamily: "Helvetica, Arial, sans-serif",
+                                fontWeight: 300,
+                            },
+                            
+                            formatter: (value) => {
+                                const xAxisData = chart.w.globals.initialSeries[0].data;
+                                const index = chart.w.globals.labels.indexOf(value);
+                                const date = new Date(value);
+                                let formatOptions = {};
+                                switch (type) {
+                                    case 'Day':
+                                            // formatOptions = {
+                                            //     year: "numeric",
+                                            //     month: "short",
+                                            //     day: "2-digit",
+                                            //     hour: "2-digit",
+                                            //     minute: "2-digit",
+                                            //     timeZone: "Europe/Berlin",
+                                            // };
+                                            if (index === 0) {
+                                                formatOptions ={
+                                                    day: "2-digit",
+                                                    month: "short",
+                                                    year: "2-digit",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                    timeZone: "Europe/Berlin",
+                                                };
+                                            } else {
+                                                formatOptions = {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                    timeZone: "Europe/Berlin",
+                                                };
+                                            }
+                                        break;
+                                    case 'Week':
+                                    case 'Month':
+                                        formatOptions = {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "2-digit",
+                                            timeZone: "Europe/Berlin",
+                                        };
+                                        break;
+                                    default:
+                                        formatOptions = {
+                                            year: "numeric",
+                                            month: "short",
+                                            timeZone: "Europe/Berlin",
+                                        };
+                                        break;
+                                }
+            
+                                return date.toLocaleString('de-DE', formatOptions);
+                            },
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#78909C",
+                            height: 1,
+                            width: "100%",
+                            offsetX: 0,
+                            offsetY: 0,
+                        },
+                        axisTicks: {
+                            show: true,
+                            borderType: "solid",
+                            color: "#78909C",
+                            height: 6,
+                            offsetX: 0,
+                            offsetY: 0,
+                        },
+                    },
+                })
+            }
+
 </script>
 </body>
 </html>

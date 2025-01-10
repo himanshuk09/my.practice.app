@@ -1,7 +1,7 @@
 import { i18n } from "@/languageKeys/i18nConfig";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
 const PortfolioLayout = () => {
     return (
         <Stack
@@ -22,7 +22,12 @@ const PortfolioLayout = () => {
                     header: ({ navigation }) => (
                         <View className="bg-chartHeaderBg px-4 items-center justify-start py-6 flex-row h-20">
                             <TouchableOpacity
-                                onPress={() => navigation.goBack()}
+                                onPress={() => {
+                                    navigation.goBack();
+                                    if (Platform.OS === "web") {
+                                        window.history.back();
+                                    }
+                                }}
                                 className="w-9"
                             >
                                 <MaterialIcons

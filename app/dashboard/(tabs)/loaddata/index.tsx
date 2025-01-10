@@ -28,7 +28,7 @@ const LoadData = () => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
     return (
-        <SafeAreaView>
+        <SafeAreaView className="flex-1 bg-white">
             <StatusBar
                 barStyle="dark-content"
                 backgroundColor="#C3C3C3"
@@ -39,6 +39,7 @@ const LoadData = () => {
             <FlatList
                 data={data}
                 keyExtractor={(item) => item.id}
+                className=" overflow-scroll"
                 renderItem={renderItem}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}

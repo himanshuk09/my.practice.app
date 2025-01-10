@@ -26,7 +26,12 @@ const PFCLayout = () => {
                     header: ({ navigation }) => (
                         <View className="bg-chartHeaderBg px-4 items-center justify-start py-6 flex-row h-20">
                             <TouchableOpacity
-                                onPress={() => navigation.goBack()}
+                                onPress={() => {
+                                    navigation.goBack();
+                                    if (Platform.OS === "web") {
+                                        window.history.back();
+                                    }
+                                }}
                                 className="w-9"
                             >
                                 <MaterialIcons
