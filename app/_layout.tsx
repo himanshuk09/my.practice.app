@@ -14,41 +14,43 @@ import Toast from "react-native-toast-message";
 SplashScreen.preventAutoHideAsync();
 
 SplashScreen.setOptions({
-  duration: 1000,
-  fade: true,
+    duration: 1000,
+    fade: true,
 });
 
 const Layout = () => {
-  useEffect(() => {
-    let timer = setTimeout(() => {
-      SplashScreen.hideAsync();
-    }, 2000);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
-  useEffect(() => {
-    // Lock orientation to portrait
-    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    useEffect(() => {
+        let timer = setTimeout(() => {
+            SplashScreen.hideAsync();
+        }, 2000);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
+    useEffect(() => {
+        // Lock orientation to portrait
+        ScreenOrientation.lockAsync(
+            ScreenOrientation.OrientationLock.PORTRAIT_UP
+        );
 
-    return () => {
-      // Unlock orientation when leaving the screen (optional)
-      ScreenOrientation.unlockAsync();
-    };
-  }, []);
-  return (
-    <Provider store={store}>
-      <Drawer drawerWidth={275} />
-      <SwipeDetectionWrapper>
-        <NavigationWatcher>
-          <AppLoader>
-            <RootLayout />
-            <Toast config={toastConfig} />
-          </AppLoader>
-        </NavigationWatcher>
-      </SwipeDetectionWrapper>
-    </Provider>
-  );
+        return () => {
+            // Unlock orientation when leaving the screen (optional)
+            ScreenOrientation.unlockAsync();
+        };
+    }, []);
+    return (
+        <Provider store={store}>
+            <Drawer drawerWidth={290} />
+            <SwipeDetectionWrapper>
+                <NavigationWatcher>
+                    <AppLoader>
+                        <RootLayout />
+                        <Toast config={toastConfig} />
+                    </AppLoader>
+                </NavigationWatcher>
+            </SwipeDetectionWrapper>
+        </Provider>
+    );
 };
 
 export default Layout;

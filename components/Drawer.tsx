@@ -2,116 +2,160 @@
 import { closeDrawer, openDrawer, toggleDrawer } from "@/store/drawerSlice";
 import React, { useRef } from "react";
 import {
-  View,
-  Text,
-  Animated,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  PanResponder,
+    View,
+    Text,
+    Animated,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    PanResponder,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import CustomDrawer from "./CustomDrawer";
+import { Entypo } from "@expo/vector-icons";
 
 const Drawer = ({ drawerWidth = 280 }: any) => {
-  const dispatch = useDispatch();
-  const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
-  const translateX = React.useRef(new Animated.Value(-drawerWidth)).current;
+    const dispatch = useDispatch();
+    const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
+    const translateX = React.useRef(new Animated.Value(-drawerWidth)).current;
 
-  React.useEffect(() => {
-    Animated.timing(translateX, {
-      toValue: isDrawerOpen ? 0 : -drawerWidth,
-      duration: 150,
-      useNativeDriver: true,
-    }).start();
-  }, [isDrawerOpen]);
+    React.useEffect(() => {
+        Animated.timing(translateX, {
+            toValue: isDrawerOpen ? 0 : -drawerWidth,
+            duration: 150,
+            useNativeDriver: true,
+        }).start();
+    }, [isDrawerOpen]);
 
-  const handleCloseDrawer = () => {
-    dispatch(closeDrawer());
-  };
-  const startLoader = () => {
-    dispatch(activeLoading());
-  };
-  let debounceTimeout: any = null;
+    const handleCloseDrawer = () => {
+        dispatch(closeDrawer());
+    };
+    const startLoader = () => {
+        dispatch(activeLoading());
+    };
+    let debounceTimeout: any = null;
 
-  const debounceAction = (action: () => void) => {
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
-    }
-    debounceTimeout = setTimeout(action, 300);
-  };
-  const debounceToggleDrawer = () => {
-    debounceAction(() => {
-      console.log("Left swipe detected!");
-      dispatch(toggleDrawer());
+    const debounceAction = (action: () => void) => {
+        if (debounceTimeout) {
+            clearTimeout(debounceTimeout);
+        }
+        debounceTimeout = setTimeout(action, 300);
+    };
+    const debounceToggleDrawer = () => {
+        debounceAction(() => {
+            console.log("Left swipe detected!");
+            dispatch(toggleDrawer());
+        });
+    };
+    const debounceCloseDrawer = () => {
+        debounceAction(() => {
+            console.log("Right to left swipe detected, closing drawer!");
+            dispatch(closeDrawer());
+        });
+    };
+
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: (e, gestureState) => {
+            if (
+                gestureState.moveX < 50 &&
+                gestureState.dx > 20 &&
+                !isDrawerOpen
+            ) {
+                debounceToggleDrawer();
+            }
+            if (gestureState.dx < -20 && isDrawerOpen) {
+                debounceCloseDrawer();
+            }
+        },
+        onPanResponderRelease: () => true,
     });
-  };
-  const debounceCloseDrawer = () => {
-    debounceAction(() => {
-      console.log("Right to left swipe detected, closing drawer!");
-      dispatch(closeDrawer());
-    });
-  };
+    return (
+        <>
+            <View
+                {...panResponder.panHandlers}
+                style={StyleSheet.absoluteFill}
+            />
+            {/* Drawer Content */}
+            <Animated.View
+                style={[
+                    styles.drawer,
+                    { width: drawerWidth, transform: [{ translateX }] },
+                ]}
+                {...panResponder.panHandlers}
+            >
+                <CustomDrawer startLoader={startLoader} />
+            </Animated.View>
 
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: (e, gestureState) => {
-      if (gestureState.moveX < 50 && gestureState.dx > 20 && !isDrawerOpen) {
-        debounceToggleDrawer();
-      }
-      if (gestureState.dx < -20 && isDrawerOpen) {
-        debounceCloseDrawer();
-      }
-    },
-    onPanResponderRelease: () => true,
-  });
-  return (
-    <>
-      <View {...panResponder.panHandlers} style={StyleSheet.absoluteFill} />
-      {/* Drawer Content */}
-      <Animated.View
-        style={[
-          styles.drawer,
-          { width: drawerWidth, transform: [{ translateX }] },
-        ]}
-        {...panResponder.panHandlers}
-      >
-        <CustomDrawer startLoader={startLoader} />
-      </Animated.View>
+            {/* Overlay */}
+            {/* {isDrawerOpen && (
+                <TouchableWithoutFeedback onPress={handleCloseDrawer}>
+                    <View style={styles.overlay} />
+                </TouchableWithoutFeedback>
+            )} */}
+            {isDrawerOpen && (
+                <TouchableWithoutFeedback onPress={handleCloseDrawer}>
+                    <View style={styles.overlayContainer}>
+                        <View style={styles.iconContainer}>
+                            <Entypo
+                                name="menu"
+                                size={45}
+                                color="#fff"
+                                className="m-2"
+                            />
+                        </View>
 
-      {/* Overlay */}
-      {isDrawerOpen && (
-        <TouchableWithoutFeedback onPress={handleCloseDrawer}>
-          <View style={styles.overlay} />
-        </TouchableWithoutFeedback>
-      )}
-    </>
-  );
+                        <View style={styles.overlay} />
+                    </View>
+                </TouchableWithoutFeedback>
+            )}
+        </>
+    );
 };
 const styles = StyleSheet.create({
-  drawer: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 10,
-    zIndex: 100,
-    height: "100%",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 99,
-  },
+    drawer: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        backgroundColor: "#fff",
+        shadowColor: "#000",
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 10,
+        zIndex: 100,
+        height: "100%",
+    },
+    overlay: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        zIndex: 99,
+    },
+    overlayContainer: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 2,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    iconContainer: {
+        backgroundColor: "#e31837",
+        padding: 0,
+        width: 85,
+        position: "absolute",
+        top: 0,
+        right: -5,
+        zIndex: 100, // To make sure the icon is on top of the overlay
+        alignItems: "center",
+    },
 });
 
 export default Drawer;

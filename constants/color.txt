@@ -9,3 +9,56 @@ Dashboard bg #ffffff
 list bg #dfdfdf
 title header #dfdfdf
 cards #ebebeb
+
+..//////////..
+Dashboard bg color: white
+ dashboard menus card bg: #ebebeb
+svg color : e31836
+font color : #3c3c3c
+
+Tabs screen
+active text : #808080
+inactive text:#c8c8c8
+list bg : white
+list text : #484848
+list shadow: #ebebeb
+
+Accodeains submenus 
+bg:#ebebeb
+
+
+chart screen:
+header bg: #ebebeb
+text : #9a9b9f
+
+all touchableopacity color : #e31836
+
+dropdown Title text color: # #e6e6e6
+2nd title color:#9a9b9f
+active color : black 
+active bg : white 
+border :#e31837
+inactive text : #333333
+bg : #d6d6d6
+
+
+
+Screen Main card  header  
+bg:white
+text : #808081
+
+
+toggle: active bg: white
+text :#e31836
+border : #e31836
+inactive text #8b8c8c
+bg #f3f4f5
+
+cards bg: #ebebeb
+text header : #948988
+shadow: #e0e0e0
+
+start : #f5504e
+
+blue boarder : #66Afe9
+shadow: #d8eaf9

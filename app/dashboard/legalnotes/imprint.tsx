@@ -1,81 +1,61 @@
+import { View, Text, SafeAreaView, StatusBar, ScrollView } from "react-native";
+import React, { useEffect } from "react";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { Text, View, Animated, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
-
-const CustomSwitch = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [translateX] = useState(new Animated.Value(0));
-
-  const toggleSwitch = () => {
-    setIsEnabled(!isEnabled);
-    Animated.spring(translateX, {
-      toValue: isEnabled ? 0 : 30, // Adjusting to smaller size
-      useNativeDriver: true,
-    }).start();
-  };
-
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <TouchableOpacity
-        activeOpacity={0.9}
-        style={{
-          width: 53, // Reduced width
-          height: 24, // Reduced height
-          backgroundColor: isEnabled ? "#e31837" : "#c1c1c1",
-          borderRadius: 12, // Half of the height
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
-          padding: 1,
-        }}
-        onPress={toggleSwitch}
-      >
-        <Animated.View
-          style={{
-            width: 18, // Reduced size of the circle
-            height: 18, // Reduced size of the circle
-            borderRadius: 9, // Half of the height
-            backgroundColor: "white",
-            position: "absolute",
-            top: 3, // Adjusting for smaller size
-            left: 3, // Adjusting for smaller size
-            transform: [{ translateX }],
-          }}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-};
-
+const imprintDetails = [
+    "company",
+    "address1",
+    "address2",
+    "phone",
+    "fax",
+    "mail",
+    "web",
+    "court",
+    "hrb",
+    "taxId",
+    "directors",
+    "responsibleContent",
+    "liability",
+];
 const Imprint = () => {
-  const dispatch = useDispatch();
-  const isFocused = useIsFocused();
-  useEffect(() => {
-    setTimeout(() => dispatch(inActiveLoading()), 100);
-  }, [isFocused]);
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
-  return (
-    <View className="flex-1 justify-center items-center bg-gray-100">
-      {/* <ComingSoon /> */}
-
-      <Text className="text-4xl font-bold text-gray-700 mb-4">
-        {i18n.t("comingsoon")}
-      </Text>
-      <Text className="text-lg text-center  text-gray-500">
-        {i18n.t("We_re_working_hard_to_bring_you_something_amazing")}
-      </Text>
-      <CustomSwitch />
-    </View>
-  );
+    const dispatch = useDispatch();
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        setTimeout(() => dispatch(inActiveLoading()), 100);
+    }, [isFocused]);
+    return (
+        <SafeAreaView className="flex-1">
+            <StatusBar
+                barStyle="dark-content"
+                backgroundColor="#C3C3C3"
+                animated
+                showHideTransition={"slide"}
+                networkActivityIndicatorVisible
+            />
+            <View className="top-0 w-full z-50 p-5 bg-[#e31837] h-24">
+                <Text className="text-2xl font-normal text-white capitalize">
+                    {i18n.t("imprint")}
+                </Text>
+            </View>
+            <ScrollView
+                className="flex-1 px-5 mb-5"
+                contentContainerStyle={{ flexGrow: 1 }}
+            >
+                <View className="space-y-10 pl-4 pt-3">
+                    {imprintDetails.map((detail, index) => (
+                        <Text
+                            key={index}
+                            className="text-listText py-2 text-md font-normal"
+                        >
+                            {i18n.t(`imprints.${detail}`)}
+                        </Text>
+                    ))}
+                </View>
+            </ScrollView>
+        </SafeAreaView>
+    );
 };
 
 export default Imprint;

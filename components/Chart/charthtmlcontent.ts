@@ -17,7 +17,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                 }
                 #chart {
                     position: absolute;
-                    width: 98%;
+                    width: 99%;
                     touch-action: none;
                 }
                 .apexcharts-element-hidden {
@@ -503,7 +503,19 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             },
                         },
                         yaxis: {
-                            title: { text: "kWh" },
+                            title: { 
+                                text: "kWh",
+                                rotate: -90,
+                                offsetX: 5,
+                                offsetY: 0,
+                                style: {
+                                    color: "undefined",
+                                    fontSize: '12px',
+                                    fontFamily: 'Helvetica, Arial, sans-serif',
+                                    fontWeight: 700,
+                                    cssClass: 'apexcharts-yaxis-title',
+                                  },
+                            },
                             labels: {
                                 show: true,
                                 minWidth: 0,
@@ -575,8 +587,8 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             breakpoint: 480,
                             options: {
                             chart: { 
-                                // width: '95%' , 
-                                height:'93%',
+                                //width: '95%' , 
+                                height:'90%',
                                 background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center",
                             }, 
                             xaxis: 
@@ -596,7 +608,9 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                         position: "top"  
                                     },
                                 },
-                            }
+                            },
+                            
+
                         }],
                     };
                     
@@ -739,22 +753,31 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                             },
                         },
                         yaxis: {
-                            title: { text: "kWh" },
+                            title: { 
+                                text: "kWh",
+                                rotate: -90,
+                                offsetX: 5,
+                                offsetY: 0,
+                                style: {
+                                    color: "undefined",
+                                    fontSize: '12px',
+                                    fontFamily: 'Helvetica, Arial, sans-serif',
+                                    fontWeight: 700,
+                                    cssClass: 'apexcharts-yaxis-title',
+                                  },
+                            },
                             labels: {
                                 show: true,
                                 minWidth: 0,
                                 maxWidth: 160,
                                 style: {
-                                fontSize: "8px",
-                                fontFamily: "Helvetica, Arial, sans-serif",
-                                fontWeight: 300,
+                                    fontSize: "8px",
+                                    fontFamily: "Helvetica, Arial, sans-serif",
+                                    fontWeight: 300,
                                 },
                                 offsetX: -4,
                                 offsetY: 0,
-                                formatter: (value) => {
-                                    const formatter = new Intl.NumberFormat(newLocale === 'de' ? 'de-DE' : 'en-IN', { maximumFractionDigits: 0 });
-                                    return formatter.format(value);
-                                }
+                                formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 0 }).format(value),
                             },
                             axisBorder: {
                                 show: false,

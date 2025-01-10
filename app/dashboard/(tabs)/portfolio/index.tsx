@@ -8,47 +8,49 @@ import { useIsFocused } from "@react-navigation/native";
 import { Platform, SafeAreaView } from "react-native";
 import { StatusBar } from "react-native";
 const Portfolio: React.FC = () => {
-  const [gasData, setGasData] = useState<any>([]);
-  const [powerData, setPowerData] = useState<any>([]);
-  const dispatch = useDispatch();
-  const isFocused = useIsFocused();
+    const [gasData, setGasData] = useState<any>([]);
+    const [powerData, setPowerData] = useState<any>([]);
+    const dispatch = useDispatch();
+    const isFocused = useIsFocused();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setGasData(gasItems);
-        setPowerData(powerItems);
-        dispatch(inActiveLoading());
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        console.log("finally");
-      }
-    };
-    fetchData();
-  }, [isFocused]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setGasData(gasItems);
+                setPowerData(powerItems);
+                dispatch(inActiveLoading());
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                console.log("finally");
+            }
+        };
+        fetchData();
+    }, [isFocused]);
 
-  return (
-    <SafeAreaView>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#ffffff"
-        animated
-        showHideTransition={"slide"}
-        networkActivityIndicatorVisible
-      />
-      <FlatListBlock
-        title="Gas"
-        items={gasData}
-        height={Platform.OS === "web" ? 380 : "49%"}
-      />
-      <FlatListBlock
-        title="Power"
-        items={powerData}
-        height={Platform.OS === "web" ? 380 : "49%"}
-      />
-    </SafeAreaView>
-  );
+    return (
+        <SafeAreaView>
+            <StatusBar
+                barStyle="dark-content"
+                backgroundColor="#C3C3C3"
+                animated
+                showHideTransition={"slide"}
+                networkActivityIndicatorVisible
+            />
+            <FlatListBlock
+                title="Gas"
+                items={gasData}
+                height={Platform.OS === "web" ? 380 : "50%"}
+                scrollHeight={64}
+            />
+            <FlatListBlock
+                title="Power"
+                items={powerData}
+                height={Platform.OS === "web" ? 380 : "50%"}
+                scrollHeight={63}
+            />
+        </SafeAreaView>
+    );
 };
 
 export default Portfolio;
