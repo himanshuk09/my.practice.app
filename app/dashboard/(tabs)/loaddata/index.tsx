@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { FlatList, StatusBar } from "react-native";
-import AccordionFlatlist from "@/components/AccordionFlatlist";
-import { AccordionData } from "@/constants/constantData";
+import { FlatList, StatusBar, StyleSheet, View } from "react-native";
+import { Accordion } from "@/components/AccordionFlatlist";
+import { AccordionData, AccordionData2 } from "@/constants/constantData";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
@@ -18,15 +18,21 @@ const LoadData = () => {
         dispatch(activeLoading());
     };
     const renderItem = ({ item }: any) => (
-        <AccordionFlatlist
-            data={AccordionData}
-            title={item?.title}
-            startLoader={startLoader}
-        />
+        // <AccordionFlatlist
+        //     data={AccordionData}
+        //     title={item?.title}
+        //     startLoader={startLoader}
+        // />
+        <></>
     );
     useEffect(() => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
+    return (
+        <View style={styles.container}>
+            <Accordion data={AccordionData2} startLoader={startLoader} />
+        </View>
+    );
     return (
         <SafeAreaView className="flex-1 bg-white">
             <StatusBar
@@ -48,3 +54,44 @@ const LoadData = () => {
 };
 
 export default LoadData;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#f5f5f5",
+    },
+    headerContainer: {
+        backgroundColor: "#d32f2f",
+        padding: 15,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    headerText: {
+        color: "white",
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    itemContainer: {
+        backgroundColor: "#fff",
+        borderRadius: 5,
+        marginVertical: 5,
+        padding: 10,
+        elevation: 2,
+    },
+    itemTitleContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    itemTitle: {
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+    detailText: {
+        fontSize: 14,
+        color: "#555",
+        paddingLeft: 10,
+        marginVertical: 5,
+    },
+});

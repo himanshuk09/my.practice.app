@@ -90,12 +90,12 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
             </Animated.View>
 
             {/* Overlay */}
-            {/* {isDrawerOpen && (
+            {isDrawerOpen && (
                 <TouchableWithoutFeedback onPress={handleCloseDrawer}>
                     <View style={styles.overlay} />
                 </TouchableWithoutFeedback>
-            )} */}
-            {isDrawerOpen && (
+            )}
+            {/* {isDrawerOpen && (
                 <TouchableWithoutFeedback onPress={handleCloseDrawer}>
                     <View style={styles.overlayContainer}>
                         {Platform.OS !== "web" && (
@@ -112,7 +112,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
                         <View style={styles.overlay} />
                     </View>
                 </TouchableWithoutFeedback>
-            )}
+            )} */}
         </>
     );
 };
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         width: 85,
         position: "absolute",
         top: 0,
-        right: -5,
+        right: -85,
         zIndex: 100, // To make sure the icon is on top of the overlay
         alignItems: "center",
     },

@@ -210,8 +210,8 @@ const CustomDrawer = memo((props: any) => {
     };
     const navigationToRoute = (item: any) => {
         if (item?.route && !item?.route.startsWith("http")) {
-            router.push(item?.route as Href);
             dispatch(closeDrawer());
+            router.push(item?.route as Href);
             if (pathname !== item?.route) {
                 startLoader();
             }

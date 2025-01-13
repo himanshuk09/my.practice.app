@@ -484,7 +484,8 @@ export const AccordionData = [
 ];
 export const AccordionData2 = [
     {
-        Gas: [
+        header: "Gas",
+        data: [
             {
                 id: "10",
                 title: "Summenlastgänge | BILSTEIN GmbH & Co. KG",
@@ -547,13 +548,14 @@ export const AccordionData2 = [
         ],
     },
     {
-        Power: [
+        header: "Power",
+        data: [
             {
-                id: "10",
+                id: "100",
                 title: "Summenlastgänge | BILSTEIN GmbH & Co. KG",
                 details: [
                     {
-                        id: 0,
+                        id: 10,
                         channel:
                             "Gas| BILSTEIN GmbH & Co. KG | Summenlastgänge",
                         route: "/dashboard/loaddata/0/0",
@@ -561,29 +563,29 @@ export const AccordionData2 = [
                 ],
             },
             {
-                id: "11",
+                id: "110",
                 title: "Gas | BILSTEIN GmbH & Co. KG | 58119 Hagen",
                 details: [
                     {
-                        id: 1,
+                        id: 11,
                         channel:
                             "Werk I - Virtuell (Summe aus Bilstein Im Weinhof + Färberstr.) | MaLo: 50603374899 | Quelle: Kunde",
                         route: "/dashboard/loaddata/1",
                     },
                     {
-                        id: 2,
+                        id: 12,
                         channel:
                             "Werk II - Oeger Str. 11-35 | MaLo: 50601507997 | Quelle: Kunde",
                         route: "/dashboard/loaddata/2",
                     },
                     {
-                        id: 3,
+                        id: 13,
                         channel:
                             "Werk II - Oeger Str. 24 | MaLo: 50603613437 | Quelle: Kunde",
                         route: "/dashboard/loaddata/3",
                     },
                     {
-                        id: 4,
+                        id: 14,
                         channel:
                             "Werk II - Oeger Str. 24 | MaLo: 50603613437 | Quelle: Kunde",
                         route: "/dashboard/loaddata/4",
@@ -591,11 +593,11 @@ export const AccordionData2 = [
                 ],
             },
             {
-                id: "12",
+                id: "120",
                 title: "Gas | HUGO VOGELSANG GmbH & Co. KG | 58119 Hagen",
                 details: [
                     {
-                        id: 5,
+                        id: 15,
                         channel:
                             "Alemannenweg 29 | MaLo: 50603613578 | Quelle: kunde",
                         route: "/dashboard/loaddata/5",
@@ -603,13 +605,14 @@ export const AccordionData2 = [
                 ],
             },
             {
-                id: "13",
+                id: "130",
                 title: "Gas | BILSTEIN GmbH & Co. KG | 58093 Hagen",
                 details: [],
             },
         ],
     },
 ];
+
 export const PFCGas = [
     {
         id: 1,

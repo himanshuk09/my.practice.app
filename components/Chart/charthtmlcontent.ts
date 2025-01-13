@@ -2664,7 +2664,7 @@ export const iframeAreahtlcontent = ` <!DOCTYPE html>
       function appendChartData(data){
           chart.appendData(data)
       }
-
+     
       var chart = new ApexCharts(document.querySelector("#chart"), options);
       chart.render();
     </script>
