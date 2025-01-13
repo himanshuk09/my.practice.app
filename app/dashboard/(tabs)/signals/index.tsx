@@ -21,6 +21,7 @@ const Signals = () => {
                     title={item.title}
                     items={item.data}
                     enableAutoScroll={false}
+                    height={"auto"}
                 />
             );
         }

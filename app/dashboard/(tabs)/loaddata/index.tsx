@@ -39,7 +39,6 @@ const LoadData = () => {
             <FlatList
                 data={data}
                 keyExtractor={(item) => item.id}
-                className=" overflow-scroll"
                 renderItem={renderItem}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}

@@ -148,23 +148,31 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
 
                             offsetX: 0,
                             offsetY: 30,
-                            animations: {
-                                enabled: false,
-                                easing: "ease-in",
-                                speed: 500,
-                                dynamicAnimation: { enabled: true, speed: 1000 },
-                                animategradually: { enabled: true, delay: 2000 },
-                                initialAnimation: {enabled: false}
-                            },
-
                             // animations: {
-                            //     enabled: true,
-                            //     easing: "ease-in",
-                            //     speed: 1000,
-                            //     dynamicAnimation: { enabled: true, speed: 100 },
-                            //     animategradually: { enabled: false, delay: 0 }
+                            //     enabled: false,
+                            //     easing: "linear",
+                            //     speed: 500,
+                            //     dynamicAnimation: { enabled: true, speed: 1000 },
+                            //     animategradually: { enabled: true, delay: 2000 },
+                            //     initialAnimation: {enabled: false}
                             // },
-                            
+                            animations: {
+                                enabled: false,               // Ensure animation is enabled
+                                easing: "easeOutQuad",       // Smooth easing for mobile (or use "easeInOutCubic" for even smoother)
+                                speed: 800,                  // Increased speed to make the animation smoother
+                                dynamicAnimation: {
+                                    enabled: true,           // Enable dynamic animations for smooth transitions
+                                    speed: 600,              // Adjust the dynamic speed for better experience
+                                },
+                                animategradually: {
+                                    enabled: true,           // Gradual animation when needed
+                                    delay: 1000,             // Reduced delay for smoother gradual transitions
+                                },
+                                initialAnimation: {
+                                    enabled: true,           // Enable initial animation if desired
+                                    speed: 1000,             // Adjust the speed for initial loading animation
+                                },
+                            },
                             toolbar: {
                                 show: false,
                                 offsetX:-5,
@@ -354,10 +362,10 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                 },
 
                                 mounted: function (chartContext) {
+                                    highlightMinAndMax(chartContext);
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'mounted' })
                                     );
-                                    highlightMinAndMax(chartContext);
                                 },
 
                                 dataPointSelection: function (event, chartContext, config) {
@@ -368,11 +376,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
 
                                 updated: function (chartContext) {
                                     window.ReactNativeWebView.postMessage(
-                                        JSON.stringify({ action: 'Chart updated',values:[{
-                                            "zoomEnabled": chart.w.globals. zoomEnabled ,"panEnabled":
-                                             chart.w.globals.panEnabled,"selectionEnabled":
-                                             chart.w.globals.selectionEnabled
-                                        }]})
+                                        JSON.stringify({ action: 'Chart updated'})
                                     );
                                     highlightMinAndMax(chartContext);
                                 },
@@ -825,26 +829,13 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                     });
                 }
 
-                function updateFormate(type) {
-                    window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateFormate',values: type}));
+                function updateFormate(type,locale) {
+                    window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateFormate',values: [type,locale]}));
+                    let newLocale=locale==="de"?"de-DE":"en-EN";
+
                     chart.updateOptions({
                         xaxis: {
                             labels: {
-                                show: true,
-                                rotate: 0,
-                                rotateAlways: false,
-                                position: "top",
-                                textAnchor: "end",
-                                hideOverlappingLabels: true,
-                                showDuplicates: false,
-                                trim: false,
-                                maxHeight: 120,
-                                style: {
-                                    fontSize: "8px",
-                                    fontFamily: "Helvetica, Arial, sans-serif",
-                                    fontWeight: 300,
-                                },
-                                
                                 formatter: (value) => {
                                     const xAxisData = chart.w.globals.initialSeries[0].data;
                                     const index = chart.w.globals.labels.indexOf(value);
@@ -895,24 +886,8 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                             break;
                                     }
                 
-                                    return date.toLocaleString('de-DE', formatOptions);
+                                    return date.toLocaleString(newLocale, formatOptions);
                                 },
-                            },
-                            axisBorder: {
-                                show: true,
-                                color: "#78909C",
-                                height: 1,
-                                width: "100%",
-                                offsetX: 0,
-                                offsetY: 0,
-                            },
-                            axisTicks: {
-                                show: true,
-                                borderType: "solid",
-                                color: "#78909C",
-                                height: 6,
-                                offsetX: 0,
-                                offsetY: 0,
                             },
                         },
                     })
@@ -1628,26 +1603,12 @@ export let iFrameLineHtmlcontent = `
                 },
             })}
 
-            function updateFormate(type) {
-                
+            function updateFormate(type="Week",locale="en") {
+                let newLocale=locale==="de"?"de-DE":"en-EN";
                 chart.updateOptions({
                     xaxis: {
                         labels: {
-                            show: true,
-                            rotate: 0,
-                            rotateAlways: false,
-                            position: "top",
-                            textAnchor: "end",
-                            hideOverlappingLabels: true,
-                            showDuplicates: false,
-                            trim: false,
-                            maxHeight: 120,
-                            style: {
-                                fontSize: "8px",
-                                fontFamily: "Helvetica, Arial, sans-serif",
-                                fontWeight: 300,
-                            },
-                            
+                           
                             formatter: (value) => {
                                 const xAxisData = chart.w.globals.initialSeries[0].data;
                                 const index = chart.w.globals.labels.indexOf(value);
@@ -1698,25 +1659,10 @@ export let iFrameLineHtmlcontent = `
                                         break;
                                 }
             
-                                return date.toLocaleString('de-DE', formatOptions);
+                                return date.toLocaleString(newLocale, formatOptions);
                             },
                         },
-                        axisBorder: {
-                            show: true,
-                            color: "#78909C",
-                            height: 1,
-                            width: "100%",
-                            offsetX: 0,
-                            offsetY: 0,
-                        },
-                        axisTicks: {
-                            show: true,
-                            borderType: "solid",
-                            color: "#78909C",
-                            height: 6,
-                            offsetX: 0,
-                            offsetY: 0,
-                        },
+                        
                     },
                 })
             }

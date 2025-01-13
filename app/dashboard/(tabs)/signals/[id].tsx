@@ -19,6 +19,7 @@ import CustomSwitch from "@/components/CustomSwitch";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { RootState } from "@/store/store";
 import { StatusBar } from "react-native";
+import { fetchDataByToggle } from "@/services/auth.services";
 
 const Card = ({ title, data }: any) => {
     return (
@@ -135,7 +136,14 @@ const PricesDetails = () => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
     console.log("isChartVisible", isChartVisible);
-
+    const fetchChartData = async (tab: string) => {
+        try {
+            return fetchDataByToggle(tab);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            return null;
+        }
+    };
     return (
         <SafeAreaView className="flex-1 ">
             <StatusBar
@@ -188,7 +196,10 @@ const PricesDetails = () => {
                         } `}
                     >
                         {isChartVisible && (
-                            <ToggleChartComponent isSignaleScreen={true} />
+                            <ToggleChartComponent
+                                isSignaleScreen={true}
+                                fetchChartData={fetchChartData}
+                            />
                         )}
                     </Animated.View>
 

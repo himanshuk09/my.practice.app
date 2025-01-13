@@ -62,7 +62,7 @@ const AccordionFlatlist = ({ data, title, startLoader }: any) => {
             <View>
                 <TouchableOpacity
                     onPress={() => toggleExpand(item.id, item.details.length)}
-                    className="flex flex-row justify-between items-center p-4 text-lg font-serif font-medium rounded-sm my-1  shadow-slate-60000 shadow-xl bg-white space-x-1 h-20 "
+                    className="flex flex-row justify-between items-center p-4 mx-2 text-lg font-serif font-medium rounded-sm my-1  shadow-slate-600 shadow-xl bg-white space-x-1 h-20 "
                     activeOpacity={0.6}
                 >
                     <Text className="text-listText w-[95%] text-base  font-normal">

@@ -8,6 +8,7 @@ import { useIsFocused } from "@react-navigation/native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
+import { fetchDataByToggle } from "@/services/auth.services";
 
 const PricesDetails = () => {
     const { id } = useLocalSearchParams();
@@ -44,6 +45,14 @@ const PricesDetails = () => {
     useEffect(() => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
+    const fetchChartData = async (tab: string) => {
+        try {
+            return fetchDataByToggle(tab);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            return null;
+        }
+    };
     return (
         <SafeAreaView className="flex-1 ">
             <StatusBar
@@ -87,6 +96,7 @@ const PricesDetails = () => {
                     showRangePicker={true}
                     showPeriodOfTime={true}
                     showValueRange={false}
+                    fetchChartData={fetchChartData}
                 />
             </View>
         </SafeAreaView>

@@ -11,6 +11,8 @@ import * as Sharing from "expo-sharing";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { RootState } from "@/store/store";
 import { saveCSVToFile } from "@/components/ConstantFunctions/saveCSVFile";
+import { fetchDataByToggle } from "@/services/auth.services";
+import axios from "axios";
 
 const LoadDataDetails = () => {
     const isLandscape = useSelector(
@@ -35,7 +37,14 @@ const LoadDataDetails = () => {
             console.warn("No matching detail found");
         }
     }, [id]);
-
+    const fetchChartData = async (tab: string) => {
+        try {
+            return fetchDataByToggle(tab);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            return null;
+        }
+    };
     return (
         <SafeAreaView className="flex-1 ">
             <StatusBar
@@ -90,6 +99,7 @@ const LoadDataDetails = () => {
                     showRangePicker={false}
                     showPeriodOfTime={true}
                     showValueRange={true}
+                    fetchChartData={fetchChartData}
                 />
             </View>
         </SafeAreaView>

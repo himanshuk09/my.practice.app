@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import ChartComponent from "@/components/Chart/ChartComponent";
 import { i18n } from "@/languageKeys/i18nConfig";
@@ -32,17 +31,28 @@ import {
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
-type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "";
+type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
+type ToggleChartComponentProps = {
+    isSignaleScreen?: boolean;
+    bottonTitle?: string;
+    showRangePicker?: boolean;
+    showPeriodOfTime?: boolean;
+    showValueRange?: boolean;
+    visibleTabs?: any;
+    fetchChartData?: any;
+};
 const ToggleChartComponent = ({
     isSignaleScreen = false,
     bottonTitle = "Customize_View",
     showRangePicker,
     showPeriodOfTime,
     showValueRange,
-}: any) => {
-    const [isLoading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState<tabsType>("Year");
-    const [previousTab, setPreviousTab] = useState<tabsType>("Year");
+    visibleTabs,
+    fetchChartData,
+}: ToggleChartComponentProps) => {
+    const [isLoading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<tabsType>("Week");
+    const [previousTab, setPreviousTab] = useState<tabsType>("Week");
     const [startDate, setStartDate] = useState<any>();
     const [endDate, setEndDate] = useState<any>();
     const [modalVisible, setModalVisible] = useState(false);
@@ -52,10 +62,12 @@ const ToggleChartComponent = ({
     const dispatch = useDispatch();
     const webViewRef = useRef<any>(null);
     const iFrameRef = useRef<any>(null);
+    const isFirstRender = useRef(true);
     const [key, setKey] = useState<number>(Number(id));
     const reloadWebView = () => {
         setKey((prevKey: any) => prevKey + 1);
     };
+
     const isLandscape = useSelector(
         (state: RootState) => state.orientation.isLandscape
     );
@@ -113,18 +125,13 @@ const ToggleChartComponent = ({
             }, 500);
             return;
         }
-        // if (Platform.OS === "web") {
-        //     updateChart("series", filteredData);
-        //     setTimeout(() => {
-        //         setLoading(false);
-        //     }, 500);
-        //     return;
-        // }
         if (
             activeTab === "Year" ||
             previousTab === "Year" ||
             activeTab === "Quarter" ||
-            previousTab === "Quarter"
+            previousTab === "Quarter" ||
+            activeTab === "Year_3" ||
+            previousTab === "Year_3"
         ) {
             if (isChartZoomed) {
                 webViewRef?.current.injectJavaScript(
@@ -163,9 +170,11 @@ const ToggleChartComponent = ({
             });
             updateChart("series", filteredData);
         }
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
+        if (Platform.OS === "web") {
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
+        }
     };
     const handleRangeDataFilter = () => {
         let rangeFilterData = filterDataByDateRange(startDate, endDate);
@@ -178,51 +187,6 @@ const ToggleChartComponent = ({
             updateChart("series", rangeFilterData);
         }
         setActiveTab("");
-
-        // const formatter = (value: any) => {
-        //   const date = new Date(value);
-        //   return date.toLocaleString(locale === "de" ? "de-DE" : "en-IN", {
-        //     year: "numeric",
-        //     month: "short",
-        //     day: "2-digit",
-        //     hour12: false,
-        //     timeZone: berlineTimeZone,
-        //   });
-        // };
-        // const xAxisFormater = {
-        //   labels: {
-        //     show: true,
-        //     formatter: formatter,
-        //   },
-        // };
-        // setLoading(true);
-        // if (rangeFilterData?.length <= 0) {
-        //   updateChart("options", {
-        //     noData: { text: "Data not available" },
-        //   });
-
-        //   setTimeout(() => {
-        //     updateChart("series", []);
-        //   }, 500);
-        // } else {
-        //   updateChart("series", []);
-        //   updateChart("options", {
-        //     chart: {
-        //       animations: {
-        //         dynamicAnimation: { speed: 1000 },
-        //       },
-        //     },
-        //     noData: { text: "" },
-        //     xaxis: {
-        //       ...xAxisFormater,
-        //     },
-        //   });
-        //   setTimeout(() => {
-        //     updateChart("series", rangeFilterData);
-        //     setLoading(false);
-        //   }, 500);
-        // }
-        // setLoading(false);
     };
     const updateLocale = () => {
         let localOption = {
@@ -282,9 +246,18 @@ const ToggleChartComponent = ({
 
         //for loader on marker
         const message = JSON.parse(event.nativeEvent.data);
+        if (message.action === "updateFormate") {
+            setLoading(true);
+        }
         if (message.action === "updateChartSeries") {
             setLoading(true);
-        } else if (message.action === "Chart updated") {
+        }
+        // if (message.action === "Chart updated") {
+        //     setTimeout(() => {
+        //         setLoading(false);
+        //     }, 1000);
+        // }
+        if (message.action === "animationEnd") {
             setTimeout(() => {
                 setLoading(false);
             }, 500);
@@ -309,56 +282,86 @@ const ToggleChartComponent = ({
         if (message.action === "chartZoomed") {
             setIschartZoomed(message.isZoomed);
         }
-        console.log("message.action", message.action, message?.values);
+        // console.log("message.action", message.action, message?.values);
     };
 
-    useEffect(() => {
-        const getUpdatedData = () => {
-            setLoading(true);
-            if (activeTab === "Month") return filterByMonthYearUTC();
-            if (activeTab === "Week") return filterCurrentWeekDataUTC();
-            if (activeTab === "Day") return filterCurrentDayDataUTC();
-            if (activeTab === "Quarter") return filterByCurrentQuarterUTC();
-            if (activeTab === "Year") return cockpitChartData;
-        };
+    // useEffect(() => {
+    //     const getUpdatedData = () => {
+    //         setLoading(true);
+    //         if (activeTab === "Month") return filterByMonthYearUTC();
+    //         if (activeTab === "Week") return filterCurrentWeekDataUTC();
+    //         if (activeTab === "Day") return filterCurrentDayDataUTC();
+    //         if (activeTab === "Quarter") return filterByCurrentQuarterUTC();
+    //         if (activeTab === "Year") return cockpitChartData;
+    //         if (activeTab === "Year_3") return cockpitChartData;
+    //     };
 
-        if (activeTab !== "") {
-            let updatedData: any = getUpdatedData();
-            console.log(updatedData?.length, "activeTab");
-            updateChartData(updatedData);
-            setPreviousTab(activeTab);
-        }
-    }, [activeTab]);
-
-    useEffect(() => {
-        setTimeout(() => {
-            dispatch(inActiveLoading());
-            updateLocale();
-            updateChartData(cockpitChartData);
-        }, 1000);
-    }, [locale]);
+    //     if (activeTab !== "") {
+    //         let updatedData: any = getUpdatedData();
+    //         console.log(updatedData?.length, "activeTab");
+    //         updateChartData(updatedData);
+    //         setPreviousTab(activeTab);
+    //     }
+    // }, [activeTab]);
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         dispatch(inActiveLoading());
+    //         updateLocale();
+    //     }, 1000);
+    // }, [locale]);
     const UpdateXaxisFormate = () => {
         if (webViewRef?.current) {
-            const updateLocaleScript = `if (typeof updateLocale === 'function') {updateFormate('${activeTab}');}`;
-            console.log("updateFormate");
+            const updateLocaleScript = `if (typeof updateFormate === 'function') {updateFormate('${activeTab}','${locale}');}`;
             webViewRef.current.injectJavaScript(updateLocaleScript);
         }
         const iframe = iFrameRef.current;
         if (iframe && iframe.contentWindow) {
-            iframe.contentWindow.updateLocale?.(activeTab);
+            iframe.contentWindow.updateFormate?.(activeTab, locale);
         }
     };
+    const fetchData = async () => {
+        if (fetchChartData) {
+            try {
+                const data = await fetchChartData(activeTab);
+                UpdateXaxisFormate();
+                updateChartData(data);
+                setPreviousTab(activeTab);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+    };
+    useEffect(() => {
+        const executeAfterRender = async () => {
+            if (isFirstRender.current) {
+                setTimeout(() => {
+                    fetchData();
+                    updateLocale();
+                    isFirstRender.current = false;
+                    dispatch(inActiveLoading());
+                    console.log("called 1");
+                }, 500);
+            } else {
+                fetchData();
+                console.log("called 2");
+            }
+        };
+        executeAfterRender();
+    }, [activeTab, fetchChartData, locale]);
+
     return (
         <View className="flex-1  bg-white">
             {!isLandscape ? (
                 <TabToggleButtons
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
+                    visibleTabs={visibleTabs}
                 />
             ) : (
                 <FloatingActionMenu
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
+                    visibleTabs={visibleTabs}
                 />
             )}
             {/* Chart  */}
@@ -407,148 +410,3 @@ const ToggleChartComponent = ({
 };
 
 export default ToggleChartComponent;
-// const updateChartData1 = (filteredData: any) => {
-//   updateChart("series", filteredData);
-// setLoading(true);
-// const xAxisRange =
-//   filteredData?.length > 0
-//     ? [filteredData[0]?.x, filteredData[filteredData?.length - 1].x]
-//     : [0, 0];
-// let previousDate: Date | null = null;
-// const formatter: any = (value: any) => {
-//   const date = new Date(value);
-//   const isEdgeCase =
-//     (value === xAxisRange[0] || value === xAxisRange[1]) &&
-//     activeTab === "Day";
-//   const isNewDate =
-//     !previousDate ||
-//     date.getFullYear() !== previousDate.getFullYear() ||
-//     date.getMonth() !== previousDate.getMonth() ||
-//     date.getDate() !== previousDate.getDate();
-
-//   if (isEdgeCase || isNewDate) {
-//     previousDate = date;
-//     return new Intl.DateTimeFormat(localeFormatter, {
-//       year: "numeric",
-//       month: "short",
-//       day: "2-digit",
-//       timeZone: berlineTimeZone,
-//     }).format(date);
-//   }
-//   // Define date formatting options based on the active tab
-//   const options: Intl.DateTimeFormatOptions =
-//     activeTab === "Day"
-//       ? {
-//           hour: "2-digit",
-//           minute: "2-digit",
-//           hour12: false,
-//           timeZone: berlineTimeZone,
-//         }
-//       : activeTab === "Week" ||
-//         activeTab === "Month" ||
-//         activeTab === "Quarter" ||
-//         (startDate && endDate)
-//       ? {
-//           year: "numeric",
-//           month: "short",
-//           day: "2-digit",
-//           timeZone: berlineTimeZone,
-//         }
-//       : {
-//           year: "numeric",
-//           month: "short",
-//           timeZone: berlineTimeZone,
-//         };
-//   return new Intl.DateTimeFormat(localeFormatter, options).format(date);
-// };
-// const xAxisFormater = {
-//   labels: {
-//     show: true,
-//     formatter: formatter,
-//   },
-// };
-// // Define chart options in a more concise way
-// const updatedOptions = {
-//   chart: {
-//     animations: { dynamicAnimation: { speed: 1000 } },
-//   },
-//   noData: { text: "" },
-//   xaxis: {
-//     ...xAxisFormater,
-//   },
-// };
-// const updatedInitialOptions = {
-//   chart: {
-//     animations: { dynamicAnimation: { speed: 100 } },
-//   },
-//   noData: { text: "" },
-//   xaxis: {
-//     ...xAxisFormater,
-//   },
-// };
-// const updateEmptynoDataOptions = {
-//   noData: { text: "" },
-//   xaxis: {
-//     ...xAxisFormater,
-//   },
-// };
-// const updateNoDataOptions = {
-//   noData: { text: "Data not available" },
-//   xaxis: {
-//     ...xAxisFormater,
-//   },
-// };
-// const handleChartUpdate = (data: any, options: any) => {
-//   updateChart("chart", data, options);
-// };
-// if (filteredData?.length <= 0) {
-//   // Handle empty data
-//   if (initialRender) {
-//     handleChartUpdate([], updateEmptynoDataOptions);
-//     setInitialRender(false);
-//   } else {
-//     handleChartUpdate([], updateNoDataOptions);
-//   }
-// } else {
-//   // Handle non-empty data based on the selected filter
-//   if (activeTab === "Year" && previousTab === "Year") {
-//     // Initial state
-//     console.log("empty selected", filteredData.length);
-//     setTimeout(() => {
-//       updateChart("series", filteredData);
-//     });
-//     updateChart("options", updatedInitialOptions);
-//     // handleChartUpdate(filteredData, updatedInitialOptions);
-//   } else if (
-//     ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
-//     previousTab === "Year"
-//   ) {
-//     // Transition from initial state
-//     handleChartUpdate([], {
-//       chart: { animations: { dynamicAnimation: { speed: 1000 } } },
-//       xaxis: {
-//         ...xAxisFormater,
-//       },
-//     });
-//     updateChart("series", filteredData);
-//   } else if (
-//     ["Month", "Week", "Day", "Quarter"].includes(previousTab) &&
-//     activeTab === "Year"
-//   ) {
-//     // Switching back to initial state
-//     handleChartUpdate([], updatedInitialOptions);
-//     updateChart("series", filteredData);
-//   } else if (
-//     ["Month", "Week", "Day", "Quarter"].includes(activeTab) &&
-//     ["Month", "Week", "Day", "Quarter"].includes(previousTab)
-//   ) {
-//     // Switching between filters
-//     console.log("here");
-//     updateChart("options", updatedOptions);
-//     updateChart("series", filteredData);
-//   }
-// }
-//   setTimeout(() => {
-//     setLoading(false);
-//   }, 700);
-// };

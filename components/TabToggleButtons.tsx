@@ -8,12 +8,37 @@ interface TabToggleButtonsProps {
 }
 
 const TabToggleButtons: React.FC<any> = React.memo(
-    ({ activeTab, setActiveTab }) => {
-        const tabs = ["Day", "Week", "Month", "Quarter", "Year"];
-
+    ({ activeTab, setActiveTab, visibleTabs }) => {
+        const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
+        const tabs = visibleTabs || allTabs;
+        return (
+            <View className="flex-row justify-between border-t bg-gray-100 border-slate-200 w-full">
+                {tabs.map((tab: any) => (
+                    <TouchableOpacity
+                        key={tab}
+                        onPress={() => setActiveTab(tab)}
+                        className={`flex-1 py-3 text-center rounded-sm h-14 ${
+                            activeTab === tab
+                                ? "border-b-4 border-primary bg-white shadow-sm shadow-slate-200"
+                                : "bg-gray-100 shadow-lg border-b-0"
+                        }`}
+                    >
+                        <Text
+                            className={`text-lg text-center font-semibold ${
+                                activeTab === tab
+                                    ? "text-primary"
+                                    : "text-[#898a8c]"
+                            }`}
+                        >
+                            {i18n.t(tab)}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+        );
         return (
             <View className="flex-row justify-evenly border-t bg-gray-100 border-slate-200 w-full ">
-                {tabs.map((tab) => (
+                {tabs.map((tab: any) => (
                     <TouchableOpacity
                         key={tab}
                         onPress={() => setActiveTab(tab)}

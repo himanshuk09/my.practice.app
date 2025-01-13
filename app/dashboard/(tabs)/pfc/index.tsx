@@ -21,6 +21,7 @@ const PFC = () => {
                     title={item.title}
                     items={item.data}
                     enableAutoScroll={false}
+                    height={"auto"}
                 />
             );
         }
@@ -42,7 +43,6 @@ const PFC = () => {
                 data={combinedData}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item.title}-${index}`}
-                // className="overflow-scroll"
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
             />
