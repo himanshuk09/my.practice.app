@@ -10,7 +10,10 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { RootState } from "@/store/store";
-import { saveCSVToFile } from "@/components/ConstantFunctions/saveCSVFile";
+import {
+    saveCSVToFile,
+    saveCSVToFileWeb,
+} from "@/components/ConstantFunctions/saveCSVFile";
 import { fetchDataByToggle } from "@/services/auth.services";
 import axios from "axios";
 
@@ -89,7 +92,13 @@ const LoadDataDetails = () => {
                                 name="file-download"
                                 size={30}
                                 color="#e31837"
-                                onPress={() => saveCSVToFile(cockpitChartData)}
+                                onPress={() => {
+                                    if (Platform.OS === "web") {
+                                        saveCSVToFileWeb(cockpitChartData);
+                                    } else {
+                                        saveCSVToFile(cockpitChartData);
+                                    }
+                                }}
                             />
                         </View>
                     </View>

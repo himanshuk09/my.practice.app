@@ -1,13 +1,15 @@
 import { toggleDrawer } from "@/store/drawerSlice";
 import { Entypo } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import React from "react";
 import { SafeAreaView, View, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 import Logo from "./SVG/Logo";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 const Header = React.memo(({ navigation }: any) => {
     const dispatch = useDispatch();
+    const router = useRouter();
     return (
         <SafeAreaView style={{ backgroundColor: "white" }}>
             <View
@@ -34,9 +36,23 @@ const Header = React.memo(({ navigation }: any) => {
                 >
                     <Entypo name="menu" size={30} color="#9a9b9f" />
                 </TouchableOpacity>
-                <Link href={"/dashboard"}>
+                {/* <Link href={"/dashboard"}>
                     <Logo />
-                </Link>
+                </Link> */}
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => {
+                        setTimeout(() => {
+                            router.push("/dashboard");
+                        });
+                        dispatch(activeLoading());
+                        setTimeout(() => {
+                            dispatch(inActiveLoading());
+                        }, 2000);
+                    }}
+                >
+                    <Logo />
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );

@@ -10,6 +10,7 @@ import Drawer from "@/components/Drawer";
 import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
 import toastConfig from "@/components/ToastConfig";
 import Toast from "react-native-toast-message";
+import { Platform } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,14 +29,18 @@ const Layout = () => {
         };
     }, []);
     useEffect(() => {
-        // Lock orientation to portrait
-        ScreenOrientation.lockAsync(
-            ScreenOrientation.OrientationLock.PORTRAIT_UP
-        );
+        if (Platform.OS !== "web") {
+            // Lock orientation to portrait for mobile platforms
+            ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.PORTRAIT_UP
+            );
+        }
 
         return () => {
-            // Unlock orientation when leaving the screen (optional)
-            ScreenOrientation.unlockAsync();
+            if (Platform.OS !== "web") {
+                // Unlock orientation when leaving the screen (optional)
+                ScreenOrientation.unlockAsync();
+            }
         };
     }, []);
     return (

@@ -73,7 +73,7 @@ const FlatListBlock1 = ({
                         // Animate the scrolling smoothly
                         Animated.timing(scrollValue, {
                             toValue: offset, // Scroll target offset
-                            duration: 900, // Duration in milliseconds
+                            duration: 500, // Duration in milliseconds
                             easing: Easing.inOut(Easing.quad), // Smooth easing function
                             useNativeDriver: false, // Disable for scrolling animations
                         }).start();
