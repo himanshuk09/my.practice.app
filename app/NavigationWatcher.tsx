@@ -19,20 +19,17 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
     const history = useSelector((state: any) => state.navigation.history);
     const segments = useSegments();
     const [shouldExitApp, setShouldExitApp] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isMounted, setIsMounted] = useState(true);
+
     const currentPath = "/" + segments.join("/");
 
     const store = useStore();
 
-    const [drawerOpen, SetDrawerOpen] = useState(false);
     // Fetch user login status and initialize app
     const fetchUserLoginStatus = async () => {
         try {
             const value = await AsyncStorage.getItem("isLoggedIn");
             const language = await AsyncStorage.getItem("languagePreference");
             setShouldExitApp(value === "true");
-            setIsLoggedIn(value === "true");
             if (value === "true") {
                 dispatch(setInitialState(true));
                 dispatch(updateLocale(language || "en"));
@@ -88,7 +85,9 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
                 return true;
             }
             dispatch(activeLoading());
-            return false;
+            setTimeout(() => {
+                return false;
+            });
         };
         fetchUserLoginStatus();
         const backHandler = BackHandler.addEventListener(
@@ -98,7 +97,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 
         return () => {
             backHandler.remove();
-            setIsMounted(false);
         };
     }, [currentPath, history, shouldExitApp, dispatch, router, segments]);
 

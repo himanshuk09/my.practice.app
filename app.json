@@ -1,61 +1,64 @@
 {
-  "expo": {
-    "name": "enexion",
-    "slug": "enexion",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/applogo.png",
-    "scheme": "enexion",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/applogo.png",
-        "backgroundColor": "#cccccc"
-      },
-      "package": "com.himanshuk13.enexion",
-      "permissions": [
-        "WRITE_EXTERNAL_STORAGE",
-        "READ_EXTERNAL_STORAGE"
-      ]
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "single",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router",
-      "expo-localization",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/appicon.png",
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "imageWidth": 200
+    "expo": {
+        "name": "enexion",
+        "slug": "enexion",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/images/applogo.png",
+        "scheme": "enexion",
+        "userInterfaceStyle": "automatic",
+        "newArchEnabled": true,
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/images/applogo.png",
+                "backgroundColor": "#cccccc"
+            },
+            "package": "com.himanshuk13.enexion",
+            "permissions": ["WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"]
+        },
+        "web": {
+            "bundler": "metro",
+            "output": "single",
+            "favicon": "./assets/images/favicon.png"
+        },
+        "plugins": [
+            "expo-router",
+            "expo-localization",
+            [
+                "expo-splash-screen",
+                {
+                    "image": "./assets/images/appicon.png",
+                    "resizeMode": "contain",
+                    "backgroundColor": "#ffffff",
+                    "imageWidth": 200
+                }
+            ],
+            [
+                "expo-screen-orientation",
+                {
+                    "initialOrientation": "DEFAULT"
+                }
+            ],
+            [
+                "expo-secure-store",
+                {
+                    "configureAndroidBackup": true
+                }
+            ]
+        ],
+        "experiments": {
+            "typedRoutes": true
+        },
+        "extra": {
+            "router": {
+                "origin": false
+            },
+            "eas": {
+                "projectId": "663c3585-2b6e-40f7-939c-b19506490449"
+            }
         }
-      ],
-      [
-        "expo-screen-orientation",
-        {
-          "initialOrientation": "DEFAULT"
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "663c3585-2b6e-40f7-939c-b19506490449"
-      }
     }
-  }
 }

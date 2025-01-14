@@ -209,7 +209,7 @@ const PricesSettings = () => {
                 <TouchableOpacity
                     className="items-center p-5  w-[50%] bg-[#e31837]"
                     onPress={() => {
-                        router.push("/dashboard");
+                        router.back();
                     }}
                 >
                     <Text className="text-center text-white uppercase font-normal">

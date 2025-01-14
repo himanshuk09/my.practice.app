@@ -47,7 +47,7 @@ export const TranslationKeys: Translations | any = {
         consumption: "consumption",
         feedback: "feedback",
         rateus: "Rate Us",
-        contactus: "contact Us",
+        contactus: "Contact Us",
         visitwebsite: "Visit Website",
         imprintLegalNotes: "Imprint & Legal Notes",
         imprint: "Imprint",
