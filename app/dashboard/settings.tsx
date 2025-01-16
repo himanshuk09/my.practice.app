@@ -4,6 +4,7 @@ import {
     SafeAreaView,
     TouchableOpacity,
     StatusBar,
+    StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -15,6 +16,7 @@ import { useRouter } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import CustomSwitch from "@/components/CustomSwitch";
+import { st } from "@/utils/Styles";
 
 const Settings = () => {
     const { locale } = useSelector((state: RootState) => state.language);
@@ -22,15 +24,14 @@ const Settings = () => {
     const router = useRouter();
     const dispatch: AppDispatch = useDispatch();
     const isFocused = useIsFocused();
-    const [isEnabled, setIsEnabled] = useState(false);
     const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
     const [isSignalsEnabled, setIsSignalsEnabled] = useState(true);
-    const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
     useEffect(() => {
         let timer = setTimeout(() => dispatch(inActiveLoading()), 0);
         return () => clearTimeout(timer);
     }, [isFocused]);
+
     return (
         <SafeAreaView className="flex-1 bg-white">
             <StatusBar
@@ -45,7 +46,7 @@ const Settings = () => {
                     {i18n.t("settings")}
                 </Text>
             </View>
-            <View className="p-2 my-2 pl-5 shadow-cardBg shadow-2xl bg-white">
+            <View className="p-2 mb-2 pl-5 bg-white" style={st.boxShadow}>
                 <Text className="text-base font-semibold capitalize text-dropdownSecondTitle">
                     {i18n.t("language")}
                 </Text>
@@ -75,7 +76,7 @@ const Settings = () => {
                     />
                 </Picker>
             </View>
-            <View className="p-2 mx-1 pl-5 shadow-cardBg shadow-2xl bg-white">
+            <View className="p-2  pl-5  bg-white" style={st.boxShadow}>
                 <Text className="text-base capitalize font-semibold text-dropdownSecondTitle">
                     {i18n.t("notifications")}
                 </Text>
@@ -84,16 +85,6 @@ const Settings = () => {
                         {i18n.t("show_notifications")}
                     </Text>
                     <View className="w-20 mr-3">
-                        {/* <Switch
-                          style={{
-                            transform: [{ scaleX: 1.4 }, { scaleY: 1.2 }],
-                          }}
-                          trackColor={{ false: "gray", true: "#e31837" }}
-                          thumbColor={isEnabled ? "#f9fafb" : "#f9fafb"}
-                          ios_backgroundColor="#3e3e3e"
-                          onValueChange={toggleSwitch}
-                          value={isEnabled}
-                        /> */}
                         <CustomSwitch
                             isEnabled={isNotificationEnabled}
                             setIsEnabled={setIsNotificationEnabled}

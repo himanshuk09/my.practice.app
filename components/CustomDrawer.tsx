@@ -124,9 +124,9 @@ const CustomDrawer = memo((props: any) => {
             key: "marketInfo",
             icon: <FontAwesome name="bar-chart-o" size={20} color="#9a9b9f" />,
             items: [
-                { label: "prices", route: "/dashboard/prices" },
-                { label: "pfc", route: "/dashboard/pfc" },
-                { label: "signals", route: "/dashboard/signals" },
+                { label: "prices", route: "/dashboard/(tabs)/prices" },
+                { label: "pfc", route: "/dashboard/(tabs)/pfc" },
+                { label: "signals", route: "/dashboard/(tabs)/(tabs)/signals" },
             ],
             height: Platform.OS === "web" ? 156 : 137,
         },
@@ -136,7 +136,7 @@ const CustomDrawer = memo((props: any) => {
             icon: (
                 <Ionicons name="speedometer-sharp" size={24} color="#9a9b9f" />
             ),
-            items: [{ label: "loaddata", route: "/dashboard/loaddata" }],
+            items: [{ label: "loaddata", route: "/dashboard/(tabs)/loaddata" }],
             height: Platform.OS === "web" ? 52 : 45,
         },
         {
@@ -211,12 +211,14 @@ const CustomDrawer = memo((props: any) => {
         }
     };
     const navigationToRoute = (item: any) => {
+        dispatch(closeDrawer());
         if (item?.route && !item?.route.startsWith("http")) {
-            dispatch(closeDrawer());
-            router.push(item?.route as Href);
             setActiveSubmenu(null);
             if (pathname !== item?.route.replace(/\/\([^)]*\)\//g, "/")) {
                 startLoader();
+                setTimeout(() => {
+                    router.replace(item?.route as Href);
+                });
             }
         } else if (item?.route?.startsWith("http")) {
             if (Platform.OS === "web") {
@@ -263,7 +265,7 @@ const CustomDrawer = memo((props: any) => {
                 return (
                     <View key={index}>
                         <TouchableOpacity
-                            activeOpacity={0.9}
+                            activeOpacity={0.6}
                             className={`flex-row items-center  p-5   break-words  ${
                                 isPressed ? "bg-primary" : ""
                             }`}
@@ -295,6 +297,7 @@ const CustomDrawer = memo((props: any) => {
                         >
                             {submenu.items.map((item, subIndex) => (
                                 <TouchableOpacity
+                                    activeOpacity={0.6}
                                     key={subIndex}
                                     className={` pl-16  py-3   ${
                                         item.route.replace(

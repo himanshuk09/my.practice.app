@@ -79,6 +79,8 @@ const SignIn: React.FC = () => {
                         visibilityTime: 2000,
                     });
                 }, 2000);
+            } else {
+                setErrorMessage("Login failed. Please try again.");
             }
         } catch (err: unknown) {
             if (err instanceof Error) {

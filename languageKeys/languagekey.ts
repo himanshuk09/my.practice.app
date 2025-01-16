@@ -102,6 +102,7 @@ export const TranslationKeys: Translations | any = {
         portfolio_overview: "Portfolio Overview",
         PFC_Details: "PFC Details",
         Prices_Setting: "Prices Settings",
+        Prices_Details: "Prices Details",
         Signals_Details: "Signals Details",
         Low_Soft: "Low Soft",
         Low_Hard: "Low Hard",
@@ -339,6 +340,7 @@ export const TranslationKeys: Translations | any = {
         View_Portfolio: "Portfolio anzeigen",
         PFC_Details: " Details PFC",
         Prices_Setting: " Preise Einstellungen",
+        Prices_Details: "Details Preise",
         Signals_Details: "Details Signal",
         Please_enter_your_username_and_password:
             "Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein.",

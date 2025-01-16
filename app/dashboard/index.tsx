@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
                 showHideTransition={"slide"}
                 networkActivityIndicatorVisible
             />
-            <View className="justify-center items-center">
+            <View className="justify-center mt-6 items-center">
                 <FlatList
                     data={jsonData}
                     keyExtractor={(item) => item?.id?.toString()}

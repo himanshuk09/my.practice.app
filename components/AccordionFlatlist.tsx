@@ -9,6 +9,7 @@ import {
 import React, { useRef, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Href, useRouter } from "expo-router";
+import { st } from "@/utils/Styles";
 
 const AccordionFlatlist = ({
     data,
@@ -71,7 +72,8 @@ const AccordionFlatlist = ({
                         toggleExpand(item.id, item.details.length);
                         scrollToIndex(index);
                     }}
-                    className="flex flex-row justify-between items-center p-4 mx-2 text-lg font-serif font-medium rounded-sm my-1  shadow-slate-600 shadow-xl bg-white space-x-1 h-20 "
+                    style={st.boxShadow}
+                    className="flex flex-row justify-between items-center p-4 mx-2 text-lg font-serif font-medium rounded-sm my-1   bg-white space-x-1 h-20 "
                     activeOpacity={0.6}
                 >
                     <Text className="text-listText w-[95%] text-base  font-normal">

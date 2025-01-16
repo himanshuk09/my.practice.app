@@ -1,13 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-    FlatList,
-    RefreshControl,
-    StatusBar,
-    StyleSheet,
-    View,
-} from "react-native";
+import { FlatList, RefreshControl, StatusBar } from "react-native";
 import AccordionFlatlist from "@/components/AccordionFlatlist";
-import { AccordionData, AccordionData2 } from "@/constants/constantData";
+import { AccordionData } from "@/constants/constantData";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";

@@ -15,6 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
+import { st } from "@/utils/Styles";
 
 const FlatListBlock1 = ({
     title,
@@ -33,7 +34,8 @@ const FlatListBlock1 = ({
     const ListItem = memo(({ item, router }: any) => (
         <TouchableOpacity
             key={item.id}
-            className="flex justify-start flex-row px-5  py-6  text-lg font-serif font-medium rounded-sm my-1 shadow-2xl shadow-gray-500 mx-2 bg-white h-[4.7rem] "
+            className="flex justify-start flex-row px-5  py-6  text-lg font-serif font-medium rounded-sm my-1  mx-2 bg-white h-[4.7rem] "
+            style={st.boxShadow}
             onPress={() => {
                 dispatch(activeLoading());
                 setTimeout(() => {
@@ -128,7 +130,7 @@ const FlatListBlock1 = ({
                     offset: ITEM_HEIGHT * index,
                     index,
                 })}
-                initialNumToRender={5}
+                initialNumToRender={10}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
                 refreshControl={

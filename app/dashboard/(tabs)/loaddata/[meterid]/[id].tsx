@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { cockpitChartData } from "@/constants/cockpitchart";
-import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { RootState } from "@/store/store";
 import {
@@ -15,7 +13,6 @@ import {
     saveCSVToFileWeb,
 } from "@/components/ConstantFunctions/saveCSVFile";
 import { fetchDataByToggle } from "@/services/auth.services";
-import axios from "axios";
 
 const LoadDataDetails = () => {
     const isLandscape = useSelector(

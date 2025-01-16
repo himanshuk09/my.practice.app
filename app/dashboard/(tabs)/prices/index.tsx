@@ -7,7 +7,7 @@ import {
     StatusBar,
     RefreshControl,
 } from "react-native";
-import React, { act, memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { PricesItem } from "@/constants/constantData";
 import { Href } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
@@ -15,6 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { st } from "@/utils/Styles";
 
 const Prices = () => {
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -25,7 +26,8 @@ const Prices = () => {
     const ListItem = memo(({ item }: any) => (
         <TouchableOpacity
             key={item.id}
-            className="flex flex-row justify-between items-center w-auto p-3 px-1 pl-4 rounded-sm font-medium my-1  bg-white h-20 shadow-xl shadow-gray-500 mx-2"
+            className="flex flex-row justify-between items-center w-auto p-3 px-1 pl-4  font-medium my-1  bg-white h-20  mx-2"
+            style={st.boxShadow}
             onPress={() => {
                 dispatch(activeLoading());
 

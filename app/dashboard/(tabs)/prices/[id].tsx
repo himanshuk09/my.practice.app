@@ -9,6 +9,7 @@ import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
 import { fetchDataByToggle } from "@/services/auth.services";
+import { st } from "@/utils/Styles";
 
 const PricesDetails = () => {
     const { id } = useLocalSearchParams();
@@ -66,7 +67,10 @@ const PricesDetails = () => {
                 {/* Header Section */}
 
                 {!isLandscape && (
-                    <View className="flex justify-between bg-white flex-row  m-1  h-24 px-3 shadow-2xl shadow-black pt-3 pl-5">
+                    <View
+                        className="flex justify-between bg-white flex-row  m-1  h-24 px-3  pt-3 pl-5"
+                        style={[st.headerShadow, st.bottomShadow]}
+                    >
                         <View className="flex-col">
                             <Text className="text-xl break-words font-bold text-mainCardHeaderText">
                                 {pricesDetail?.title}

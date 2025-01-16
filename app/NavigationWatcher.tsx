@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSegments } from "expo-router";
 import { useDispatch, useSelector, useStore } from "react-redux";
-
 import { BackHandler, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setInitialState } from "@/store/authSlice";

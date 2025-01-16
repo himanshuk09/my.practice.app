@@ -7,13 +7,13 @@ import {
     Image,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { useRouter } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { StatusBar } from "react-native";
+import { st } from "@/utils/Styles";
 
 const PricesSettings = () => {
     const [selectedPlace, setSelectedPlace] = useState();
@@ -135,7 +135,10 @@ const PricesSettings = () => {
                 networkActivityIndicatorVisible
             />
             {/* Market Place Section */}
-            <View className="p-2 mb-3 py-3 w-full bg-white shadow-md shadow-black ">
+            <View
+                className="p-2 mb-1 py-3 w-full bg-white "
+                style={st.boxShadow}
+            >
                 <Text className="text-lg font-bold ml-3 capitalize text-dropdownSecondTitle mb-1">
                     Market Place
                 </Text>
@@ -196,7 +199,7 @@ const PricesSettings = () => {
             </View>
             <View className="bottom-0 w-full right-0 left-0 absolute flex flex-row justify-evenly border-y-2 border-primary">
                 <TouchableOpacity
-                    className="items-center p-5 w-[50%]"
+                    className="items-center p-6 w-[50%]"
                     onPress={() => {
                         router.back();
                     }}
@@ -207,7 +210,7 @@ const PricesSettings = () => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    className="items-center p-5  w-[50%] bg-[#e31837]"
+                    className="items-center p-6  w-[50%] bg-[#e31837]"
                     onPress={() => {
                         router.back();
                     }}

@@ -1,11 +1,9 @@
-import { Href, Stack, useRouter } from "expo-router";
-
+import { Stack, useRouter } from "expo-router";
 import "react-native-reanimated";
 import "../global.css";
 import { AppState } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 const RootLayout = () => {
     const [appState, setAppState] = useState(AppState.currentState);

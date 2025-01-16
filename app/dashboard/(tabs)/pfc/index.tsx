@@ -4,7 +4,6 @@ import {
     RefreshControl,
     SafeAreaView,
     StatusBar,
-    View,
 } from "react-native";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import FlatListBlock from "@/components/FlatListBlock";

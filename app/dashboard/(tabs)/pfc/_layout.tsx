@@ -1,13 +1,13 @@
-import { i18n } from "@/languageKeys/i18nConfig";
+import StackHeader from "@/components/StackHeader";
 import { RootState } from "@/store/store";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
-import { View, TouchableOpacity, Text, Platform } from "react-native";
+import { Platform } from "react-native";
 import { useSelector } from "react-redux";
 const PFCLayout = () => {
     const isLandscape = useSelector(
         (state: RootState) => state.orientation.isLandscape
     );
+
     return (
         <Stack
             screenOptions={{
@@ -24,26 +24,10 @@ const PFCLayout = () => {
                     headerShown: Platform.OS === "web" ? true : !isLandscape,
                     animation: "slide_from_right",
                     header: ({ navigation }) => (
-                        <View className="bg-chartHeaderBg px-4 items-center justify-start py-6 flex-row h-20">
-                            <TouchableOpacity
-                                onPress={() => {
-                                    navigation.goBack();
-                                    if (Platform.OS === "web") {
-                                        window.history.back();
-                                    }
-                                }}
-                                className="w-9"
-                            >
-                                <MaterialIcons
-                                    name="arrow-back"
-                                    size={30}
-                                    color="#9a9b9f"
-                                />
-                            </TouchableOpacity>
-                            <Text className="ml-4 font-semibold text-xl text-chartText">
-                                {i18n.t("PFC_Details")}
-                            </Text>
-                        </View>
+                        <StackHeader
+                            navigation={navigation}
+                            title={"PFC_Details"}
+                        />
                     ),
                 }}
             />

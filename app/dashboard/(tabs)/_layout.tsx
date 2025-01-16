@@ -1,7 +1,7 @@
 import Header from "@/components/MainHeader";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { activeLoading } from "@/store/navigationSlice";
-import { Slot, Tabs, usePathname } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import React, { useRef, useEffect } from "react";
 import {
     Animated,
