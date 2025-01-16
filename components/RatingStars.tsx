@@ -94,7 +94,7 @@ const RatingStars = ({ maxStars = 5 }: any) => {
                     );
                 })}
             </View>
-            {rating && color && emoji && text && (
+            {rating > 0 && color && emoji && text && (
                 <Text
                     className={`font-extrabold text-md ${color} text-center mb-1`}
                 >

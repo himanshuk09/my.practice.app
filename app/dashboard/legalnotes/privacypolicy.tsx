@@ -1,15 +1,30 @@
 import { i18n } from "@/languageKeys/i18nConfig";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import React, { useEffect } from "react";
-import { SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+    RefreshControl,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    Text,
+    View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const PrivacyAndPolicy = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
     const locale = useSelector((state: any) => state.language.locale);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        // Simulate a network request or refresh data logic
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 2000);
+    };
     useEffect(() => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
@@ -30,6 +45,15 @@ const PrivacyAndPolicy = () => {
             <ScrollView
                 className="flex-1 px-5 "
                 contentContainerStyle={{ flexGrow: 1 }}
+                nestedScrollEnabled={true}
+                scrollEnabled={true}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                    />
+                }
             >
                 <View className="pl-2 pt-3">
                     <Text className="text-black py-2 text-lg font-medium">

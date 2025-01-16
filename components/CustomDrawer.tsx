@@ -41,14 +41,14 @@ const Submenu = memo(
         React.useEffect(() => {
             Animated.timing(heightAnim, {
                 toValue: isVisible ? height : 0,
-                duration: 50,
+                duration: 0,
                 easing: Easing.inOut(Easing.ease),
                 useNativeDriver: false,
             }).start();
 
             Animated.timing(opacityAnim, {
                 toValue: isVisible ? 1 : 0,
-                duration: 100,
+                duration: 0,
                 useNativeDriver: false,
             }).start();
         }, [isVisible]);
@@ -70,12 +70,14 @@ const CustomDrawer = memo((props: any) => {
     const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
     const [isPressed, setIsPressed] = useState(false);
     const [pressedItemIndex, setPressedItemIndex] = useState(null);
+    const [pressedSubmenu, setPressedSubmenu] = useState(null);
     const dispatch = useDispatch();
     const pathnames = usePathname();
     const router = useRouter();
     const { startLoader } = props;
     const segments = useSegments();
     const pathname = usePathname();
+    console.log(pathname);
 
     const toggleSubmenu = (key: string) => {
         setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
@@ -100,7 +102,7 @@ const CustomDrawer = memo((props: any) => {
         },
         {
             label: "portfolio",
-            route: "/dashboard/portfolio",
+            route: "/dashboard/(tabs)/portfolio",
             icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
         },
         {
@@ -126,7 +128,7 @@ const CustomDrawer = memo((props: any) => {
                 { label: "pfc", route: "/dashboard/pfc" },
                 { label: "signals", route: "/dashboard/signals" },
             ],
-            height: 130,
+            height: Platform.OS === "web" ? 156 : 137,
         },
         {
             label: "consumption",
@@ -135,7 +137,7 @@ const CustomDrawer = memo((props: any) => {
                 <Ionicons name="speedometer-sharp" size={24} color="#9a9b9f" />
             ),
             items: [{ label: "loaddata", route: "/dashboard/loaddata" }],
-            height: 50,
+            height: Platform.OS === "web" ? 52 : 45,
         },
         {
             label: "feedback",
@@ -149,7 +151,7 @@ const CustomDrawer = memo((props: any) => {
                     route: "http://test-eec.enexion-sys.de/Cockpit.aspx",
                 },
             ],
-            height: 130,
+            height: Platform.OS === "web" ? 156 : 136,
         },
         {
             label: "imprintLegalNotes",
@@ -165,7 +167,7 @@ const CustomDrawer = memo((props: any) => {
                     route: "/dashboard/legalnotes/privacypolicy",
                 },
             ],
-            height: 130,
+            height: Platform.OS === "web" ? 160 : 138,
         },
     ];
 
@@ -212,7 +214,8 @@ const CustomDrawer = memo((props: any) => {
         if (item?.route && !item?.route.startsWith("http")) {
             dispatch(closeDrawer());
             router.push(item?.route as Href);
-            if (pathname !== item?.route) {
+            setActiveSubmenu(null);
+            if (pathname !== item?.route.replace(/\/\([^)]*\)\//g, "/")) {
                 startLoader();
             }
         } else if (item?.route?.startsWith("http")) {
@@ -233,7 +236,7 @@ const CustomDrawer = memo((props: any) => {
                     <TouchableOpacity
                         key={index}
                         activeOpacity={0.7}
-                        className={`flex-row items-center  rounded-md p-5 mx-3  ${
+                        className={`flex-row items-center   p-5   ${
                             item.route.replace(/\/\([^)]*\)\//g, "/") ===
                             pathnames
                                 ? "bg-primary"
@@ -255,70 +258,75 @@ const CustomDrawer = memo((props: any) => {
                 </View>
             ))}
 
-            {submenus.map((submenu, index) => (
-                <View key={index}>
-                    <TouchableOpacity
-                        activeOpacity={0.9}
-                        className={`flex-row items-center rounded-md p-5 mx-3 `}
-                        onPress={() => toggleSubmenu(submenu.key)}
-                    >
-                        {submenu.icon}
-                        <Text
-                            className="text-lg font-semibold  ml-4 text-chartText capitalize flex-1 break-words"
+            {submenus.map((submenu, index) => {
+                const isPressed = pressedSubmenu === submenu.key;
+                return (
+                    <View key={index}>
+                        <TouchableOpacity
+                            activeOpacity={0.9}
+                            className={`flex-row items-center  p-5   break-words  ${
+                                isPressed ? "bg-primary" : ""
+                            }`}
                             onPress={() => toggleSubmenu(submenu.key)}
                         >
-                            {i18n.t(submenu.label)}
-                        </Text>
-                        <Feather
-                            className="ml-auto"
-                            name={
-                                activeSubmenu === submenu.key
-                                    ? "chevron-up"
-                                    : "chevron-down"
-                            }
-                            size={24}
-                            color="#9a9b9f"
-                            onPress={() => toggleSubmenu(submenu.key)}
-                        />
-                    </TouchableOpacity>
-
-                    <Submenu
-                        isVisible={activeSubmenu === submenu.key}
-                        height={submenu?.height}
-                    >
-                        {submenu.items.map((item, subIndex) => (
-                            <TouchableOpacity
-                                key={subIndex}
-                                className={`pl-3 ml-16 rounded-md py-3 mr-3  ${
-                                    item.route.replace(
-                                        /\/\([^)]*\)\//g,
-                                        "/"
-                                    ) === pathnames
-                                        ? "bg-primary"
-                                        : "bg-transparent"
-                                }`}
-                                onPress={() => navigationToRoute(item)}
+                            {submenu.icon}
+                            <Text
+                                className="text-lg font-semibold ml-4 text-chartText capitalize flex-1 break-words"
+                                onPress={() => toggleSubmenu(submenu.key)}
                             >
-                                <Text
-                                    className="text-md  font-medium text-chartText"
-                                    style={getTextAndIconStyle(item.route)}
-                                >
-                                    {i18n.t(item.label)}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </Submenu>
-                </View>
-            ))}
+                                {i18n.t(submenu.label)}
+                            </Text>
+                            <Feather
+                                className="mr-10"
+                                name={
+                                    activeSubmenu === submenu.key
+                                        ? "chevron-up"
+                                        : "chevron-down"
+                                }
+                                size={22}
+                                color="#9a9b9f"
+                                onPress={() => toggleSubmenu(submenu.key)}
+                            />
+                        </TouchableOpacity>
 
-            <View className="w-full h-px bg-gray-300 my-4 mx-3" />
+                        <Submenu
+                            isVisible={activeSubmenu === submenu.key}
+                            height={submenu?.height}
+                        >
+                            {submenu.items.map((item, subIndex) => (
+                                <TouchableOpacity
+                                    key={subIndex}
+                                    className={` pl-16  py-3   ${
+                                        item.route.replace(
+                                            /\/\([^)]*\)\//g,
+                                            "/"
+                                        ) === pathnames
+                                            ? "bg-primary"
+                                            : "bg-transparent"
+                                    }`}
+                                    onPress={() => navigationToRoute(item)}
+                                >
+                                    <Text
+                                        className="text-lg  font-normal text-chartText"
+                                        style={getTextAndIconStyle(item.route)}
+                                    >
+                                        {i18n.t(item.label)}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </Submenu>
+                    </View>
+                );
+            })}
+
+            <View className="w-full h-px bg-gray-300 my-2 " />
 
             {/* Logout */}
             <TouchableOpacity
-                className={`flex-row items-center rounded-md p-5 mx-3 mt-4 ${
+                className={`flex-row items-center  p-5  mt-2 ${
                     isPressed && "bg-primary"
                 }`}
-                activeOpacity={0.9}
+                activeOpacity={1}
                 onPress={handleLogout}
                 onPressIn={() => setIsPressed(true)}
                 onPressOut={() => setIsPressed(false)}

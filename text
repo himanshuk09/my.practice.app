@@ -31,4 +31,410 @@
 //       "production": {}
 //     }
 //   }
-  
+
+import React, { memo, useMemo, useRef, useState } from "react";
+import {
+    Text,
+    TouchableOpacity,
+    ScrollView,
+    Animated,
+    Easing,
+    View,
+    Alert,
+    Platform,
+} from "react-native";
+import {
+    MaterialIcons,
+    FontAwesome,
+    Ionicons,
+    Feather,
+    FontAwesome6,
+} from "@expo/vector-icons";
+import { Href, usePathname, useRouter, useSegments } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { i18n } from "@/languageKeys/i18nConfig";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, setInitialState } from "@/store/authSlice";
+import * as Linking from "expo-linking";
+import { closeDrawer } from "@/store/drawerSlice";
+// Helper Components
+
+const Submenu = memo(
+    ({
+        isVisible,
+        children,
+        height,
+    }: {
+        isVisible: boolean;
+        children: React.ReactNode;
+        height: number | any;
+    }) => {
+        const heightAnim = useRef(new Animated.Value(0)).current;
+        const opacityAnim = useRef(new Animated.Value(0)).current;
+
+        React.useEffect(() => {
+            Animated.timing(heightAnim, {
+                toValue: isVisible ? height : 0,
+                duration: 0,
+                easing: Easing.inOut(Easing.ease),
+                useNativeDriver: false,
+            }).start();
+
+            Animated.timing(opacityAnim, {
+                toValue: isVisible ? 1 : 0,
+                duration: 0,
+                useNativeDriver: false,
+            }).start();
+        }, [isVisible]);
+
+        return (
+            <Animated.View
+                style={{
+                    height: heightAnim,
+                    opacity: opacityAnim,
+                    overflow: "hidden",
+                }}
+            >
+                {children}
+            </Animated.View>
+        );
+    }
+);
+const CustomDrawer = memo((props: any) => {
+    const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
+    const [isPressed, setIsPressed] = useState(false);
+    const [pressedMenuItem, setPressedMenuItem] = useState<any>(null);
+    const [pressedSubmenu, setPressedSubmenu] = useState<any>({});
+    const dispatch = useDispatch();
+    const pathnames = usePathname();
+    const router = useRouter();
+    const { startLoader } = props;
+    const segments = useSegments();
+    const pathname = usePathname();
+
+    const toggleSubmenu = (key: string) => {
+        setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
+    };
+
+    const getTextAndIconStyle = useMemo(
+        () => (routeName: string) => ({
+            color:
+                routeName.replace(/\(.*\)/g, "").replace(/\/\//g, "/") ===
+                pathnames
+                    ? "white"
+                    : "#9a9b9f",
+        }),
+        [pathnames]
+    );
+
+    const menuItems = [
+        {
+            label: "start",
+            route: "/dashboard",
+            icon: <FontAwesome name="home" size={23} />,
+        },
+        {
+            label: "portfolio",
+            route: "/dashboard/portfolio",
+            icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
+        },
+        {
+            label: "settings",
+            route: "/dashboard/settings",
+            icon: (
+                <MaterialIcons
+                    name="settings-suggest"
+                    size={25}
+                    color="#9a9b9f"
+                />
+            ),
+        },
+    ];
+
+    const submenus = [
+        {
+            label: "marketinfo",
+            key: "marketInfo",
+            icon: <FontAwesome name="bar-chart-o" size={20} color="#9a9b9f" />,
+            items: [
+                { label: "prices", route: "/dashboard/prices" },
+                { label: "pfc", route: "/dashboard/pfc" },
+                { label: "signals", route: "/dashboard/signals" },
+            ],
+            height: Platform.OS === "web" ? 156 : 137,
+        },
+        {
+            label: "consumption",
+            key: "consumption",
+            icon: (
+                <Ionicons name="speedometer-sharp" size={24} color="#9a9b9f" />
+            ),
+            items: [{ label: "loaddata", route: "/dashboard/loaddata" }],
+            height: Platform.OS === "web" ? 52 : 45,
+        },
+        {
+            label: "feedback",
+            key: "feedback",
+            icon: <MaterialIcons name="message" size={24} color="#9a9b9f" />,
+            items: [
+                { label: "rateus", route: "/dashboard/feedback/rate" },
+                { label: "contactus", route: "/dashboard/feedback/contact" },
+                {
+                    label: "visitwebsite",
+                    route: "http://test-eec.enexion-sys.de/Cockpit.aspx",
+                },
+            ],
+            height: Platform.OS === "web" ? 156 : 136,
+        },
+        {
+            label: "imprintLegalNotes",
+            key: "legalNotes",
+            icon: (
+                <FontAwesome6 name="scale-balanced" size={24} color="#9a9b9f" />
+            ),
+            items: [
+                { label: "imprint", route: "/dashboard/legalnotes/imprint" },
+                { label: "termsConditions", route: "/dashboard/legalnotes/tc" },
+                {
+                    label: "privacypolicy",
+                    route: "/dashboard/legalnotes/privacypolicy",
+                },
+            ],
+            height: Platform.OS === "web" ? 160 : 138,
+        },
+    ];
+
+    const clearStorageAndNavigate = async (router: any) => {
+        try {
+            await AsyncStorage.clear();
+            router.push("/");
+            dispatch(logout());
+            dispatch(setInitialState(false));
+        } catch (error) {
+            console.error("Error clearing AsyncStorage or navigating:", error);
+        }
+    };
+    const handleLogout = () => {
+        dispatch(closeDrawer());
+        if (typeof window !== "undefined" && Platform.OS === "web") {
+            const isConfirmed = window.confirm(
+                "Are you sure you want to logout?"
+            );
+            if (isConfirmed) {
+                clearStorageAndNavigate(router);
+            }
+        } else {
+            Alert.alert(
+                "Logout",
+                "Are you sure you want to logout?",
+                [
+                    {
+                        text: "Cancel",
+                        onPress: () => console.log("Logout canceled"),
+                        style: "cancel",
+                    },
+                    {
+                        text: "OK",
+                        onPress: () => clearStorageAndNavigate(router),
+                        style: "destructive",
+                    },
+                ],
+                { cancelable: true }
+            );
+        }
+    };
+    const navigationToRoute = (item: any) => {
+        if (item?.route && !item?.route.startsWith("http")) {
+            router.push(item?.route as Href);
+            dispatch(closeDrawer());
+            // setActiveSubmenu(null);
+            if (pathname !== item?.route) {
+                startLoader();
+            }
+        } else if (item?.route?.startsWith("http")) {
+            if (Platform.OS === "web") {
+                window.open(item.route, "_blank");
+            } else {
+                Linking.openURL(item.route);
+            }
+        }
+    };
+    const handlePressIn = (submenuKey: any) => {
+        setPressedSubmenu((prev: any) => ({
+            ...prev,
+            [submenuKey]: true, // Mark this submenu as pressed
+        }));
+    };
+
+    const handlePressOut = (submenuKey: any) => {
+        setPressedSubmenu((prev: any) => ({
+            ...prev,
+            [submenuKey]: false, // Mark this submenu as not pressed
+        }));
+    };
+    const getIconColor = (submenuKey: any) => {
+        return pressedSubmenu[submenuKey] ? "#fff" : "#9a9b9f"; // Change the color when pressed
+    };
+    return (
+        <ScrollView
+            className="flex-1 bg-[#fff] "
+            showsVerticalScrollIndicator={false}
+        >
+            {menuItems.map((item, index) => {
+                const isPressed = pressedMenuItem === index;
+
+                return (
+                    <View key={index} className="mt-3">
+                        <TouchableOpacity
+                            key={index}
+                            activeOpacity={1}
+                            className={`flex-row items-center w-full p-5 break-words ${
+                                // Change background color based on press state
+                                isPressed
+                                    ? "bg-primary" // Background color when pressed
+                                    : item.route.replace(
+                                          /\/\([^)]*\)\//g,
+                                          "/"
+                                      ) === pathnames
+                                    ? "bg-primary" // Background color if route matches
+                                    : "bg-transparent" // Default background color
+                            }`}
+                            onPress={() => navigationToRoute(item)}
+                            onPressIn={() => setPressedMenuItem(index)} // Set pressed to true when the touch starts
+                            onPressOut={() => setPressedMenuItem(null)}
+                        >
+                            {React.cloneElement(item.icon, {
+                                color: isPressed
+                                    ? "white" // Background color when pressed
+                                    : item.route.replace(
+                                          /\/\([^)]*\)\//g,
+                                          "/"
+                                      ) === pathnames
+                                    ? "white" // Background color if route matches
+                                    : "#9a9b9f", // Change color based on press state
+                            })}
+                            <Text
+                                className={`text-lg font-semibold ml-4 capitalize text-chartText ${
+                                    isPressed
+                                        ? "text-white" // Background color when pressed
+                                        : item.route.replace(
+                                              /\/\([^)]*\)\//g,
+                                              "/"
+                                          ) === pathnames
+                                        ? "text-white" // Background color if route matches
+                                        : "text-chartText" // Default background color
+                                }`}
+                            >
+                                {i18n.t(item.label)}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                );
+            })}
+
+            {submenus.map((submenu, index) => {
+                const isPressed = pressedSubmenu[submenu.key];
+                return (
+                    <View key={index}>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            className={`flex-row items-center  p-5  w-72 break-words  ${
+                                isPressed ? "bg-primary" : "bg-transparent"
+                            }`}
+                            onPress={() => {
+                                toggleSubmenu(submenu.key); // Your submenu toggle logic
+                            }}
+                            onPressIn={() => handlePressIn(submenu.key)} // Set submenu as pressed on press in
+                            onPressOut={() => handlePressOut(submenu.key)} // Handle press out
+                        >
+                            {/* {submenu.icon} */}
+                            {submenu.icon &&
+                                React.cloneElement(submenu.icon, {
+                                    color: pressedSubmenu[submenu.key]
+                                        ? "#fff"
+                                        : "#9a9b9f", // Change color based on press state
+                                })}
+                            <Text
+                                className={`text-lg font-semibold  ml-4 capitalize flex-1 break-words ${
+                                    isPressed ? "text-white" : "text-chartText "
+                                }`}
+                                onPress={() => toggleSubmenu(submenu.key)}
+                            >
+                                {i18n.t(submenu.label)}
+                            </Text>
+                            <Feather
+                                className="ml-auto"
+                                name={
+                                    activeSubmenu === submenu.key
+                                        ? "chevron-up"
+                                        : "chevron-down"
+                                }
+                                size={24}
+                                color={isPressed ? "white" : "#9a9b9f"}
+                                onPress={() => toggleSubmenu(submenu.key)}
+                            />
+                        </TouchableOpacity>
+
+                        <Submenu
+                            isVisible={activeSubmenu === submenu.key}
+                            height={submenu?.height}
+                        >
+                            {submenu.items.map((item, subIndex) => (
+                                <TouchableOpacity
+                                    key={subIndex}
+                                    className={` pl-16  py-3   ${
+                                        item.route.replace(
+                                            /\/\([^)]*\)\//g,
+                                            "/"
+                                        ) === pathnames
+                                            ? "bg-primary"
+                                            : "bg-transparent"
+                                    }`}
+                                    onPress={() => navigationToRoute(item)}
+                                >
+                                    <Text
+                                        className="text-lg  font-normal text-chartText"
+                                        style={getTextAndIconStyle(item.route)}
+                                    >
+                                        {i18n.t(item.label)}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </Submenu>
+                    </View>
+                );
+            })}
+
+            <View className="w-full h-px bg-gray-300 my-4 mx-3" />
+
+            {/* Logout */}
+            <TouchableOpacity
+                className={`flex-row items-center rounded-md p-5 mx-3 mt-4 ${
+                    isPressed && "bg-primary"
+                }`}
+                activeOpacity={0.9}
+                onPress={handleLogout}
+                onPressIn={() => setIsPressed(true)}
+                onPressOut={() => setIsPressed(false)}
+            >
+                <MaterialIcons
+                    name="logout"
+                    size={27}
+                    color={isPressed ? "white" : "#e31837"}
+                    style={{ transform: [{ scaleX: -1 }] }}
+                />
+                <Text
+                    className={`text-xl font-bold capitalize ml-4 ${
+                        isPressed ? "text-white" : "text-primary"
+                    } `}
+                >
+                    {i18n.t("logout")}
+                </Text>
+            </TouchableOpacity>
+        </ScrollView>
+    );
+});
+const areEqual = (prevProps: any, nextProps: any) =>
+    prevProps.pathnames === nextProps.pathnames;
+
+export default React.memo(CustomDrawer, areEqual);

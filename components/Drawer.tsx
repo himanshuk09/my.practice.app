@@ -77,6 +77,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
             <View
                 {...panResponder.panHandlers}
                 style={StyleSheet.absoluteFill}
+                className="font-sans "
             />
             {/* Drawer Content */}
             <Animated.View

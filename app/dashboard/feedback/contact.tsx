@@ -55,6 +55,8 @@ const ContactUs = () => {
                         className="flex-1"
                         contentContainerStyle={{ padding: 15 }}
                         keyboardShouldPersistTaps="handled"
+                        nestedScrollEnabled={true}
+                        scrollEnabled={true}
                     >
                         {/* Name Field */}
                         <View className="w-full p-2 relative mb-1">

@@ -7,6 +7,7 @@ import {
     Platform,
     Animated,
     Easing,
+    RefreshControl,
 } from "react-native";
 import { Href, useRouter } from "expo-router";
 import Loader from "./Loader";
@@ -28,6 +29,7 @@ const FlatListBlock1 = ({
     const currentYear = new Date().getFullYear();
     const ITEM_HEIGHT = Platform.OS === "web" ? 75 : scrollHeight;
     const isFocused = useIsFocused();
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const ListItem = memo(({ item, router }: any) => (
         <TouchableOpacity
             key={item.id}
@@ -51,6 +53,13 @@ const FlatListBlock1 = ({
         </TouchableOpacity>
     ));
 
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        // Simulate a network request or refresh data logic
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 2000);
+    };
     const renderItem = ({ item }: any) => (
         <ListItem item={item} router={router} />
     );
@@ -122,6 +131,13 @@ const FlatListBlock1 = ({
                 initialNumToRender={5}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                    />
+                }
             />
         </View>
     );

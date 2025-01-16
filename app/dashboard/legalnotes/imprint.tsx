@@ -1,5 +1,12 @@
-import { View, Text, SafeAreaView, StatusBar, ScrollView } from "react-native";
-import React, { useEffect } from "react";
+import {
+    View,
+    Text,
+    SafeAreaView,
+    StatusBar,
+    ScrollView,
+    RefreshControl,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
@@ -22,6 +29,15 @@ const imprintDetails = [
 const Imprint = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        // Simulate a network request or refresh data logic
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 2000);
+    };
     useEffect(() => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
@@ -42,6 +58,15 @@ const Imprint = () => {
             <ScrollView
                 className="flex-1 px-5 mb-5"
                 contentContainerStyle={{ flexGrow: 1 }}
+                nestedScrollEnabled={true}
+                scrollEnabled={true}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                    />
+                }
             >
                 <View className="space-y-10 pl-4 pt-3">
                     {imprintDetails.map((detail, index) => (

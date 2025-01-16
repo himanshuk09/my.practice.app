@@ -5,8 +5,9 @@ import {
     FlatList,
     TouchableOpacity,
     StatusBar,
+    RefreshControl,
 } from "react-native";
-import React, { act, memo, useEffect } from "react";
+import React, { act, memo, useEffect, useState } from "react";
 import { PricesItem } from "@/constants/constantData";
 import { Href } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
@@ -16,6 +17,8 @@ import { useDispatch } from "react-redux";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 const Prices = () => {
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
     const router = useRouter();
     const isFocused = useIsFocused();
     const dispatch = useDispatch();
@@ -68,6 +71,15 @@ const Prices = () => {
         </TouchableOpacity>
     ));
     const renderItem = ({ item }: any) => <ListItem item={item} />;
+
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        // Simulate a network request or refresh data logic
+
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 2000);
+    };
     useEffect(() => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
     }, [isFocused]);
@@ -111,10 +123,16 @@ const Prices = () => {
                 data={PricesItem}
                 renderItem={renderItem}
                 keyExtractor={(item: any, index) => index.toString()}
-                className="overflow-scroll "
                 contentContainerStyle={{ paddingTop: 4 }}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                    />
+                }
             />
         </SafeAreaView>
     );

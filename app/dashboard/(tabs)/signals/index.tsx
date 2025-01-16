@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, SafeAreaView, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, SafeAreaView, FlatList, RefreshControl } from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { useDispatch } from "react-redux";
@@ -10,6 +10,15 @@ import { StatusBar } from "react-native";
 const Signals = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        // Simulate a network request or refresh data logic
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 2000);
+    };
     const combinedData = [
         { type: "header", title: "Gas", data: SignalsGas },
         { type: "header", title: "Strom", data: SignalsStrom },
@@ -47,6 +56,13 @@ const Signals = () => {
                 keyExtractor={(item, index) => `${item.title}-${index}`}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                    />
+                }
             />
         </SafeAreaView>
     );

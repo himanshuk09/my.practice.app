@@ -72,7 +72,7 @@ const Rate = () => {
                         <View className="w-full p-2 relative">
                             <TextInput
                                 className="pr-10 pl-3 py-3 bg-gray-200 border h-40 w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 focus:shadow-[#D8EAF9] focus:shadow-2xl rounded-lg text-lg align-top z-1"
-                                placeholder={i18n.t("message")}
+                                // placeholder={i18n.t("message")}
                                 value={ratingMsg}
                                 onChangeText={setRatingMsg}
                                 multiline={true}

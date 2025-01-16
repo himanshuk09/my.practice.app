@@ -1,5 +1,11 @@
-import React, { useEffect } from "react";
-import { FlatList, SafeAreaView, StatusBar, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+    FlatList,
+    RefreshControl,
+    SafeAreaView,
+    StatusBar,
+    View,
+} from "react-native";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
@@ -9,6 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 const PFC = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const combinedData = [
         { type: "header", title: "Gas", data: PFCGas },
@@ -26,6 +33,14 @@ const PFC = () => {
             );
         }
         return null;
+    };
+
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        // Simulate a network request or refresh data logic
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 2000);
     };
     useEffect(() => {
         setTimeout(() => dispatch(inActiveLoading()), 100);
@@ -45,6 +60,13 @@ const PFC = () => {
                 keyExtractor={(item, index) => `${item.title}-${index}`}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                    />
+                }
             />
         </SafeAreaView>
     );

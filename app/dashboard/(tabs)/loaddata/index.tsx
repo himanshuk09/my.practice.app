@@ -1,5 +1,11 @@
-import React, { useEffect, useRef } from "react";
-import { FlatList, StatusBar, StyleSheet, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+    FlatList,
+    RefreshControl,
+    StatusBar,
+    StyleSheet,
+    View,
+} from "react-native";
 import AccordionFlatlist from "@/components/AccordionFlatlist";
 import { AccordionData, AccordionData2 } from "@/constants/constantData";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
@@ -10,6 +16,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const LoadData = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        // Simulate a network request or refresh data logic
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 2000);
+    };
     const data = [
         { id: "1", data: AccordionData, title: "Gas" },
         { id: "2", data: AccordionData, title: "Power" },
@@ -53,6 +68,13 @@ const LoadData = () => {
                 renderItem={renderItem}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                    />
+                }
             />
         </SafeAreaView>
     );
