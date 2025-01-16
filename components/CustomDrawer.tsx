@@ -126,7 +126,7 @@ const CustomDrawer = memo((props: any) => {
             items: [
                 { label: "prices", route: "/dashboard/(tabs)/prices" },
                 { label: "pfc", route: "/dashboard/(tabs)/pfc" },
-                { label: "signals", route: "/dashboard/(tabs)/(tabs)/signals" },
+                { label: "signals", route: "/dashboard/(tabs)/signals" },
             ],
             height: Platform.OS === "web" ? 156 : 137,
         },
