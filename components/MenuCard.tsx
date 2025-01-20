@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Platform } from "react-native";
 import Portfolio from "@/components/SVG/Portfolio";
 import Prices from "@/components/SVG/Prices";
 import PFC from "@/components/SVG/PFC";
@@ -70,7 +70,11 @@ const MenuCard = memo(({ item, index, startLoader }: MenuCardProps) => {
                 setTimeout(() => router.push(item.route));
             }}
         >
-            <View className="relative   bg-secondary w-44 h-40 my-5 mx-2 rounded-sm justify-center items-center">
+            <View
+                className={`relative  bg-secondary  h-40   rounded-sm justify-center items-center ${
+                    Platform.OS === "web" ? "w-40 my-1" : "w-44 mx-2 my-5"
+                }`}
+            >
                 {routeToComponent(item?.icon)}
                 <Text className="text-xl text-fontColor font-medium uppercase mt-1">
                     {i18n.t(item?.title)}

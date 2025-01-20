@@ -56,7 +56,7 @@ const LoadDataDetails = () => {
             />
             <View className="flex-1  bg-white">
                 {!isLandscape && (
-                    <View className="flex justify-between bg-white  flex-row px-3 pl-5 py-1 m-1 h-28 shadow-2xl shadow-black ">
+                    <View className="flex justify-between bg-white  flex-row px-3 pl-5 py-1 mb-1 h-28 shadow-2xl shadow-black ">
                         <View
                             className="flex-col py-1"
                             style={{
@@ -71,7 +71,10 @@ const LoadDataDetails = () => {
                                     {i18n.t("Energy")}:{" "}
                                 </Text>
                                 <Text className="text-mainCardHeaderText text-sm ml-5">
-                                    30,319 kWh
+                                    {new Intl.NumberFormat("en", {
+                                        useGrouping: true,
+                                    }).format(30319)}{" "}
+                                    kWh
                                 </Text>
                             </View>
                             <View className="flex-row justify-items-start  ">

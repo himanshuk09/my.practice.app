@@ -12,6 +12,7 @@ import {
     Easing,
     FlatList,
     StatusBar,
+    Dimensions,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
@@ -25,6 +26,7 @@ import {
 } from "@/components/Chart/charthtmlcontent";
 import { i18n } from "@/languageKeys/i18nConfig";
 import { portfolioCards } from "@/constants/constantData";
+import { st } from "@/utils/Styles";
 type ChartUpdateType = "series" | "options" | "chart";
 
 const InfoItem = ({
@@ -47,7 +49,7 @@ const InfoItem = ({
 );
 const Card = ({ title, data }: any) => {
     return (
-        <View className="bg-cardBg rounded-lg p-3 my-1 shadow-md shadow-[eoeoeo]">
+        <View className="bg-cardBg rounded-lg p-3 my-1 " style={st.boxShadow}>
             <Text className="text-sm text-cardTextHeader font-medium mb-2">
                 {title}
             </Text>
@@ -157,9 +159,10 @@ const Transactions = ({ cards }: any) => {
                         <Card key={index} title={item.title} data={item} />
                     )}
                     keyExtractor={(item: any, index) => index.toString()}
+                    nestedScrollEnabled={true}
                     scrollEnabled={true}
-                    className="bg-white overflow-scroll  p-2"
-                    contentContainerStyle={{ paddingTop: 4 }}
+                    style={{ padding: 8 }}
+                    // contentContainerStyle={{ paddingTop: 4 }}
                 />
             )}
         </View>
@@ -177,6 +180,7 @@ const Portfolio_OverView = () => {
     const [isChartVisible, setIsChartVisible] = useState(true);
     const slideAnim = useRef(new Animated.Value(0)).current;
     const [blockWidth, setBlockWidth] = useState(0);
+    const { height: screenHeight } = Dimensions.get("window");
     const onMessage = async (event: any) => {
         //for file share or save
         const base64Data = event.nativeEvent.data;
@@ -380,7 +384,7 @@ const Portfolio_OverView = () => {
     const toggleView = () => {
         Animated.timing(slideAnim, {
             toValue: isChartVisible ? 1 : 0,
-            duration: 500,
+            duration: 200,
             easing: Easing.inOut(Easing.ease),
             useNativeDriver: true,
         }).start();
@@ -414,13 +418,21 @@ const Portfolio_OverView = () => {
                                 },
                             ],
                         },
-                        { height: "100%" },
+                        { height: isChartVisible ? "100%" : undefined },
                     ]}
                     onLayout={onLayout}
                 >
                     {isChartVisible && (
                         <View className="flex-1 bg-white">
-                            <View className="flex flex-row justify-between h-[28%] ">
+                            <View
+                                className={`flex flex-row justify-between`}
+                                style={{
+                                    height:
+                                        Platform.OS === "web"
+                                            ? screenHeight * 0.25
+                                            : screenHeight * 0.23, // Dynamically set 30% height in style
+                                }}
+                            >
                                 <ChartComponent
                                     webViewRef={donutwebViewRef}
                                     iFrameRef={donutIFrameRef}
@@ -429,7 +441,7 @@ const Portfolio_OverView = () => {
                                     iFramehtmlContent={iFreameDonutChartHtml}
                                     showToggleOrientation={false}
                                     showToolbar={false}
-                                    iFrameHeight="50%"
+                                    iFrameWidth="50%"
                                 />
 
                                 <View className="flex flex-col justify-start   items-start my-1">
@@ -477,8 +489,18 @@ const Portfolio_OverView = () => {
                                     />
                                 </View>
                             </View>
-                            <View className="h-1 bg-[#DEDEDE] my-1" />
-                            <View className="h-[72%] pt-5">
+                            <View className="h-1 bg-[#DEDEDE] mt-1" />
+                            <View
+                                className=""
+                                style={{
+                                    height:
+                                        Platform.OS === "web"
+                                            ? screenHeight * 0.58
+                                            : screenHeight * 0.58,
+                                    paddingTop:
+                                        Platform.OS !== "web" ? 15 : undefined,
+                                }}
+                            >
                                 <ChartComponent
                                     webViewRef={areaWebViewRef}
                                     iFrameRef={areaIFrameRef}
@@ -504,6 +526,7 @@ const Portfolio_OverView = () => {
                                     }),
                                 },
                             ],
+                            flex: 1,
                         },
                     ]}
                     className={`${"h-full w-full absolute"} `}
@@ -516,7 +539,6 @@ const Portfolio_OverView = () => {
                     !isChartVisible &&
                     "absolute bg-[#e31836]  bottom-0 left-0 right-0  "
                 }`}
-                // onPress={updateArea}
                 onPress={toggleView}
             >
                 <Text className="text-white text-center text-base font-medium uppercase">

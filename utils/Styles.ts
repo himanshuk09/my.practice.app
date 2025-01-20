@@ -1,13 +1,14 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export const st = StyleSheet.create({
     boxShadow: {
         shadowColor: "#000", // Shadow color, can be any color
         shadowOffset: { width: 0, height: 0 }, // Set to 0 for uniform shadow on all sides
-        shadowOpacity: 0.7, // Adjust the opacity to control the visibility of the shadow
+        shadowOpacity: Platform.OS === "web" ? 0.3 : 0.7, // Adjust the opacity to control the visibility of the shadow
         shadowRadius: 5, // Larger radius for a soft, even shadow
         elevation: 7, // Use elevation for Android (this is the shadow equivalent for Android)
     },
+
     headerShadow: {
         shadowColor: "#000", // Shadow color
         shadowOffset: { width: 0, height: -5 }, // Top shadow (negative height to move shadow up)

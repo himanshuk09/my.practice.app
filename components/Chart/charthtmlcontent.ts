@@ -267,14 +267,13 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                     );
                                     const currentMin = chart.w.globals.minX;
                                     const currentMax = chart.w.globals.maxX;
-                                    const zoomAmount = (currentMax - currentMin) * 0.1;
+                                    const zoomAmount = (currentMax - currentMin) * 0.3;
                                     chart.updateOptions({
                                         xaxis: {
                                             min: currentMin - zoomAmount,
                                             max: currentMax + zoomAmount,
                                         },
                                     });
-                                    
                                 },
 
                                 dataPointMouseEnter: function(chartContext, { xaxis, yaxis }) {
@@ -300,46 +299,7 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                     window.ReactNativeWebView.postMessage(
                                         JSON.stringify({ action: 'beforeZoom' })
                                     );
-                                    // const zoomPercentage = 30; // Desired zoom percentage
-                                    // const range = xaxis.max - xaxis.min;
-
-                                    // const seriesData = chartContext.w.config.series[0].data;
-                                    // const minX = Math.min(...seriesData.map(point => Array.isArray(point) ? point[0] : point.x));
-                                    // const maxX = Math.max(...seriesData.map(point => Array.isArray(point) ? point[0] : point.x));
-
-                                    // const zoomRange = (maxX - minX) * (zoomPercentage / 100);
-
-                                    // return {
-                                    // xaxis: {
-                                    //     min: xaxis.min,
-                                    //     max: xaxis.min + zoomRange,
-                                    // },
-                                    // };
-                                    const zoomPercentage = 30; // Desired zoom percentage
-                                    const seriesData = chartContext.w.config.series[0].data;
-
-                                    // Calculate the original data range
-                                    const minX = Math.min(...seriesData.map(point => Array.isArray(point) ? point[0] : point.x));
-                                    const maxX = Math.max(...seriesData.map(point => Array.isArray(point) ? point[0] : point.x));
-
-                                    // Current visible range
-                                    const currentMin = xaxis.min;
-                                    const currentMax = xaxis.max;
-                                    const currentRange = currentMax - currentMin;
-
-                                    // Increase the range by zoomPercentage for zoom-out
-                                    const zoomOutRange = currentRange * (1 + zoomPercentage / 100);
-
-                                    // Adjust new range ensuring it doesn't exceed original bounds
-                                    const newMin = Math.max(minX, currentMin - (zoomOutRange - currentRange) / 2);
-                                    const newMax = Math.min(maxX, currentMax + (zoomOutRange - currentRange) / 2);
-
-                                    return {
-                                        xaxis: {
-                                            min: newMin,
-                                            max: newMax,
-                                        },
-                                    };
+                                   
                                 },
 
                                 beforeResetZoom: function(chartContext, { xaxis, yaxis }) {
@@ -505,6 +465,35 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                 offsetX: 0,
                                 offsetY: 0,
                             },
+                            crosshairs: {
+                                show: false,
+                                width: 0,
+                                position: 'back',
+                                opacity: 0.9,        
+                                stroke: {
+                                    color: '#b6b6b6',
+                                    width: 0,
+                                    dashArray: 1,
+                                },
+                                fill: {
+                                    type: 'solid',
+                                    color: '#B1B9C4',
+                                    gradient: {
+                                        colorFrom: '#D8E3F0',
+                                        colorTo: '#BED1E6',
+                                        stops: [0, 100],
+                                        opacityFrom: 0.4,
+                                        opacityTo: 0.5,
+                                    },
+                                },
+                                dropShadow: {
+                                    enabled: false,
+                                    top: 0,
+                                    left: 0,
+                                    blur: 0,
+                                    opacity: 0.4,
+                                },
+                            },
                         },
                         yaxis: {
                             title: { 
@@ -553,8 +542,12 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                         },
                         tooltip: {
                             enabled: true,
-                            shared: true,
+                            shared: false,
                             intersect: false,
+                            hideEmptySeries: true,
+                            fillSeriesColor: false,
+                            offsetX: 10,
+                            offsetY: 10,
                             onDatasetHover: {
                                 highlightDataSeries: true,
                             },
@@ -575,6 +568,15 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                     timeZone: "Europe/Berlin",
                                     });
                                 },
+                            },
+                            marker: {
+                                show: true,
+                            },
+                            fixed: {
+                                enabled: false,
+                                position: 'topRight',
+                                offsetX: 0,
+                                offsetY: 0,
                             },
                         },
                         fill: {
@@ -855,9 +857,9 @@ export let WebviewLineHtmlContent = `   <!DOCTYPE html>
                                                     formatOptions ={
                                                         day: "2-digit",
                                                         month: "short",
-                                                        year: "2-digit",
-                                                        hour: "2-digit",
-                                                        minute: "2-digit",
+                                                        year: "numeric",
+                                                        // hour: "2-digit",
+                                                        // minute: "2-digit",
                                                         timeZone: "Europe/Berlin",
                                                     };
                                                 } else {
@@ -1227,7 +1229,7 @@ export let iFrameLineHtmlcontent = `
                                 class: 'custom-icon-class custom-icon',
                                 click: function () {
                                     const currentSize = chart.w.config.markers.size;
-                                    const newSize = currentSize === 0 ? 5 : 0;
+                                    const newSize = currentSize === 0 ? 4 : 0;
                                     chart.updateOptions({
                                         markers: {
                                             size: newSize
@@ -1252,7 +1254,7 @@ export let iFrameLineHtmlcontent = `
             dataLabels: {
                 enabled: false
             },
-            stroke: { curve: "straight", width: 1 },
+            stroke: { curve: "straight", width: 1.5 },
             noData: {
                 text: "",
                 align: "center",
@@ -1299,7 +1301,7 @@ export let iFrameLineHtmlcontent = `
                 size: 0,
                 colors: "#e31837",
                 strokeColors: "black",
-                strokeWidth: 1,
+                strokeWidth: 0.7,
                 strokeOpacity: 0.2,
                 strokeDashArray: 0,
                 fillOpacity: 2,
@@ -1373,6 +1375,35 @@ export let iFrameLineHtmlcontent = `
                     offsetX: 0,
                     offsetY: 0,
                 },
+                crosshairs: {
+                    show: false,
+                    width: 0,
+                    position: 'back',
+                    opacity: 0.9,        
+                    stroke: {
+                        color: '#b6b6b6',
+                        width: 0,
+                        dashArray: 1,
+                    },
+                    fill: {
+                        type: 'solid',
+                        color: '#B1B9C4',
+                        gradient: {
+                            colorFrom: '#D8E3F0',
+                            colorTo: '#BED1E6',
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5,
+                        },
+                    },
+                    dropShadow: {
+                        enabled: false,
+                        top: 0,
+                        left: 0,
+                        blur: 0,
+                        opacity: 0.4,
+                    },
+                },
             },
             yaxis: {
                 title: {
@@ -1407,6 +1438,8 @@ export let iFrameLineHtmlcontent = `
                     offsetX: 0,
                     offsetY: 0,
                 },
+                
+
             },
             tooltip: {
                 enabled: true,
@@ -1476,13 +1509,12 @@ export let iFrameLineHtmlcontent = `
                                 autoSelected: "zoom",
                                 tools: {
                                     download: true,
-                                    reset: true,
+                                    selection: true,
+                                    zoom: true,
                                     zoomin: true,
                                     zoomout: true,
-                                    zoom: true,
                                     pan: true,
-                                    selection: true,
-                                },
+                                  },
                             },
                         },
                     },
@@ -1492,7 +1524,7 @@ export let iFrameLineHtmlcontent = `
                     breakpoint: 600, // For mobile phones
                     options: {
                         chart: {
-                            // height: 520,
+                            height: "88%",
                             background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
                             toolbar: {
                                 show: true, // Hide toolbar on small screens for better UI
@@ -1500,14 +1532,13 @@ export let iFrameLineHtmlcontent = `
                                 offsetY: 0,
                                 autoSelected: "zoom",
                                 tools: {
-                                    download: true, 
-                                    reset: true, 
+                                    download: true,
+                                    selection: false,
+                                    zoom: false,
                                     zoomin: true,
                                     zoomout: true,
-                                    zoom: true,
-                                    pan: true,
-                                    selection: true,
-                                },
+                                    pan: false,
+                                  },
                             },
                         },
                     },
@@ -1520,12 +1551,12 @@ export let iFrameLineHtmlcontent = `
         chart.render();
 
         window.updateChart = function(filteredData,updatedOptions) {    
-            chart.updateSeries([{ data: filteredData }]);
+            chart.updateSeries([{  name: "Energy Use",data: filteredData }]);
             chart.updateOptions(updatedOptions);
         };
 
         window.updateChartSeries = function(filteredData) {    
-            chart.updateSeries([{ data: filteredData }]);
+            chart.updateSeries([{  name: "Energy Use",data: filteredData }]);
         };
 
         window.updateChartOptions = function(updatedOptions) {
@@ -1628,9 +1659,9 @@ export let iFrameLineHtmlcontent = `
                                                 formatOptions ={
                                                     day: "2-digit",
                                                     month: "short",
-                                                    year: "2-digit",
-                                                    hour: "2-digit",
-                                                    minute: "2-digit",
+                                                    year: "numeric",
+                                                    // hour: "2-digit",
+                                                    // minute: "2-digit",
                                                     timeZone: "Europe/Berlin",
                                                 };
                                             } else {
@@ -1684,6 +1715,7 @@ export const iFreameDonutChartHtml = `
               overflow:hidden;
               height:"100%";
               width:"100%";
+              
             }
     </style>
 </head>
@@ -1696,7 +1728,7 @@ export const iFreameDonutChartHtml = `
             labels: ["Open", "Closed"],
             chart: {
                 type: 'donut',
-                 height: '120%',
+                 height: '70%',
                  width: '100%',
                 background: "none",
                 animations: { enabled: true },
@@ -1753,7 +1785,7 @@ export const iFreameDonutChartHtml = `
             tooltip: {
                 enabled: true,
                 style: {
-                    fontSize: "12px",
+                    fontSize: "8px",
                     fontFamily: "Arial, sans-serif",
                     color: "#ffffff",
                 },
@@ -1783,8 +1815,8 @@ export const iFreameDonutChartHtml = `
             responsive: [{
                 breakpoint: 480,
                 options: {
-                    chart: { width: '100%',height:"120%" },
-                    legend: { position: 'bottom' },
+                    chart: { width: '100%',height:"95%" },
+                   
                 },
             }],
         };
@@ -1931,7 +1963,7 @@ export const webviewDonutChartHtml = `
               tooltip: {
                   enabled: true,
                   style: {
-                      fontSize: "12px",
+                      fontSize: "8px",
                       fontFamily: "Arial, sans-serif",
                       color: "#ffffff",
                   },
@@ -2571,7 +2603,7 @@ export const iframeAreahtlcontent = ` <!DOCTYPE html>
         ],
         colors: ["#cecece", "#e4e4e4","#b5b5b5","#c32442"],
         chart: {
-            height: "95%",
+            height: "90%",
             type: "area",
             zoom: {
               enabled: true,
@@ -2639,6 +2671,38 @@ export const iframeAreahtlcontent = ` <!DOCTYPE html>
             format: 'dd/MM/yy HH:mm'
           },
         },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    height: "90%",
+                    type: "area",
+                    zoom: {
+                      enabled: true,
+                      type:"x"
+                    },
+                    background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+                    toolbar: {
+                      show: true,
+                      offsetX: 0,
+                      offsetY: 0,
+                      tools: {
+                        download: true,
+                        selection: false,
+                        zoom: false,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: false,
+                      },
+                    },
+                    
+                },
+                
+                },
+            
+            
+
+        }],
       };
       
       function updateChart(filteredData, updatedOptions) {

@@ -56,7 +56,7 @@ const AccordionFlatlist = ({
                     android: baseValue, // Android-specific value
                     default: baseValue + 35, // Default for other platforms or if no platform-specific values
                 }),
-                duration: 200,
+                duration: 100,
                 useNativeDriver: false,
             }).start(() => setExpanded(id));
         }

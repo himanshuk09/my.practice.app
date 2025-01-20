@@ -253,14 +253,12 @@ const ToggleChartComponent = ({
             setLoading(true);
         }
         // if (message.action === "Chart updated") {
-        //     setTimeout(() => {
-        //         setLoading(false);
-        //     }, 1000);
+        //     setLoading(false);
         // }
         if (message.action === "animationEnd") {
             setTimeout(() => {
                 setLoading(false);
-            }, 500);
+            }, 100);
         }
         if (message.action === "updateLocale") {
             console.log(message?.action, message?.value);
@@ -268,12 +266,14 @@ const ToggleChartComponent = ({
         // Handle loader actions on tooltip toggle
         if (
             message.action === "startLoader" ||
-            message.action === "Zoom Start"
+            ((activeTab === "Year" || activeTab === "Year_3") &&
+                message.action === "Zoom Start")
         ) {
             setLoading(true);
         } else if (
             message.action === "stopLoader" ||
-            message.action === "Zoomed"
+            ((activeTab === "Year" || activeTab === "Year_3") &&
+                message.action === "Zoomed")
         ) {
             setTimeout(() => {
                 setLoading(false);

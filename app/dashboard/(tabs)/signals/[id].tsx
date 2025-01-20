@@ -7,6 +7,7 @@ import {
     Easing,
     ScrollView,
     FlatList,
+    Platform,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -20,10 +21,14 @@ import { i18n } from "@/languageKeys/i18nConfig";
 import { RootState } from "@/store/store";
 import { StatusBar } from "react-native";
 import { fetchDataByToggle } from "@/services/auth.services";
+import { st } from "@/utils/Styles";
 
 const Card = ({ title, data }: any) => {
     return (
-        <View className="bg-[#ebebeb] rounded-lg p-3 my-1 shadow-md shadow-black">
+        <View
+            className="bg-[#ebebeb] rounded-lg p-3 my-1 "
+            style={st.boxShadow}
+        >
             <Text className="text-sm text-gray-800 font-normal mb-2">
                 {title}
             </Text>
@@ -153,7 +158,11 @@ const PricesDetails = () => {
                 showHideTransition={"slide"}
                 networkActivityIndicatorVisible
             />
-            <View className="flex-1  bg-transparent">
+            <View
+                className={`flex-1 ${
+                    isChartVisible ? "bg-white" : " bg-transparent"
+                }`}
+            >
                 {/* Header Section */}
                 {!isLandscape && (
                     <View className="flex justify-between bg-white flex-row  m-1  h-20 px-3 pl-5 shadow-2xl shadow-black ">
@@ -187,7 +196,9 @@ const PricesDetails = () => {
                                     },
                                 ],
                             },
-                            { height: "100%" },
+                            {
+                                height: isChartVisible ? "100%" : undefined,
+                            },
                         ]}
                         onLayout={onLayout}
                         className={`${
@@ -215,6 +226,7 @@ const PricesDetails = () => {
                                             }),
                                         },
                                     ],
+                                    flex: 1,
                                 },
                             ]}
                         >
@@ -226,7 +238,10 @@ const PricesDetails = () => {
                 </View>
                 {!isLandscape && (
                     <TouchableOpacity
-                        className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
+                        className={`bg-[#e31836]  bottom-0  h-12 py-3 mx-5 rounded-sm my-2 ${
+                            !isChartVisible &&
+                            "absolute bg-[#e31836]  bottom-0 left-0 right-0  "
+                        }`}
                         onPress={toggleView}
                     >
                         <Text className="text-white text-center text-base font-medium uppercase">

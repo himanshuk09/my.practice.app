@@ -32,7 +32,7 @@ type ChartComponentProps = {
     showToggleOrientation?: boolean;
     showToolbar?: boolean;
     showToggle?: boolean;
-    iFrameHeight?: string | number | undefined;
+    iFrameWidth?: string | number | undefined;
 };
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
@@ -46,7 +46,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     showToggleOrientation = true,
     showToolbar = true,
     showToggle,
-    iFrameHeight = "100%",
+    iFrameWidth = "100%",
 }) => {
     const dispatch = useDispatch();
     const viewShotRef = useRef<any>(null);
@@ -250,12 +250,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                     ref={iFrameRef}
                     srcDoc={iFramehtmlContent}
                     style={{
-                        width: iFrameHeight,
+                        width: iFrameWidth,
                         height: "100%",
                         border: "none",
                         overflow: "hidden",
                         pointerEvents: "auto",
-                        margin: 1,
+                        // margin: 1,
                     }}
                 />
             )}
