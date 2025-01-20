@@ -1195,14 +1195,14 @@ export let iFrameLineHtmlcontent = `
                 animations: {
                     enabled: true,
                     easing: "linear",
-                    speed: 1000,
+                    speed: 500,
                     dynamicAnimation: {
                         enabled: true,
-                        speed: 2000,
+                        speed: 1000,
                     },
                     animategradually: {
                         enabled: true,
-                        delay: 2000
+                        delay: 1000
                     },
                 },  
                 selection: {
@@ -1294,7 +1294,7 @@ export let iFrameLineHtmlcontent = `
                     top: -45,
                     right: 15,
                     bottom: 0,
-                    left: 15,
+                    left: 13,
                 },
             },
             markers: {
@@ -1328,6 +1328,7 @@ export let iFrameLineHtmlcontent = `
             },
             xaxis: {
                 type: 'datetime',
+                tickAmount: 5,
                 title: {
                     text: "Date / Time",
                     style: {
@@ -1438,8 +1439,6 @@ export let iFrameLineHtmlcontent = `
                     offsetX: 0,
                     offsetY: 0,
                 },
-                
-
             },
             tooltip: {
                 enabled: true,
@@ -1527,7 +1526,7 @@ export let iFrameLineHtmlcontent = `
                             height: "88%",
                             background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
                             toolbar: {
-                                show: true, // Hide toolbar on small screens for better UI
+                                show: true, 
                                 offsetX: 2,
                                 offsetY: 0,
                                 autoSelected: "zoom",
@@ -1539,6 +1538,83 @@ export let iFrameLineHtmlcontent = `
                                     zoomout: true,
                                     pan: false,
                                   },
+                            },
+                        },
+                        xaxis: {
+                            type: 'datetime',
+                            labels: {
+                                show: true,
+                                rotate: -45,
+                                rotateAlways: true,
+                                position: "top",
+                                textAnchor: "end",
+                                hideOverlappingLabels: true,
+                                showDuplicates: false,
+                                trim: false,
+                                maxHeight: 120,
+                                style: {
+                                    fontSize: "8px",
+                                    fontFamily: "Helvetica, Arial, sans-serif",
+                                },
+                                formatter: (value) => {
+                                    const date = new Date(value);
+                                    return date.toLocaleString("en-US", {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "2-digit",
+                                        timeZone: "Europe/Berlin",
+                                    });
+                                },
+                            },
+                        },
+                        yaxis: {
+                            title: {
+                                text: "unit",
+                            },
+                            labels: {
+                                show: true,
+                                minWidth: 0,
+                                maxWidth: 160,
+                                style: {
+                                    fontSize: "8px",
+                                    fontFamily: "Helvetica, Arial, sans-serif",
+                                    fontWeight: 400,
+                                },
+                                offsetX: 0,
+                                offsetY: 0,
+                                formatter: (val) => {
+                                    return val.toLocaleString("en-IN");
+                                },
+                            },
+                        },
+                        grid: {
+                            show: true,
+                            borderColor: "#ccc",
+                            strokeDashArray: 0,
+                            position: "back",
+                            row: {
+                                colors: ["#e5e5e5", "transparent"],
+                                opacity: 0.2,
+                            },
+                            column: {
+                                colors: ["#f8f8f8", "transparent"],
+                                opacity: 0.2,
+                            },
+                            xaxis: {
+                                lines: {
+                                    show: true,
+                                },
+                            },
+                            yaxis: {
+                                lines: {
+                                    show: true,
+                                },
+                            },
+                            padding: {
+                                top: -25,
+                                right: 15,
+                                bottom: 0,
+                                left: 10,
                             },
                         },
                     },
@@ -2479,7 +2555,9 @@ export const webviewAreaHtmlcontent = `
               });
               updateLocale()
           };
-      
+        
+       
+        
           window.zoomOut = function () {
               window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoomed' }));
               const currentMin = chart.w.globals.minX;

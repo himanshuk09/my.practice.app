@@ -1,4 +1,5 @@
 import { i18n } from "@/languageKeys/i18nConfig";
+import { st } from "@/utils/Styles";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Text, View } from "react-native";
 
@@ -12,16 +13,17 @@ const TabToggleButtons: React.FC<any> = React.memo(
         const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
         const tabs = visibleTabs || allTabs;
         return (
-            <View className="flex-row justify-between border-t bg-gray-100 border-slate-200 w-full">
+            <View className="flex-row justify-between  w-full">
                 {tabs.map((tab: any) => (
                     <TouchableOpacity
                         key={tab}
                         onPress={() => setActiveTab(tab)}
                         className={`flex-1 py-3 text-center rounded-sm h-14 ${
                             activeTab === tab
-                                ? "border-b-4 border-primary bg-white shadow-sm shadow-slate-200"
-                                : "bg-gray-100 shadow-lg border-b-0"
+                                ? "border-b-4 border-primary bg-white "
+                                : "bg-gray-100  "
                         }`}
+                        style={st.tabShadow}
                     >
                         <Text
                             className={`text-lg text-center font-semibold ${

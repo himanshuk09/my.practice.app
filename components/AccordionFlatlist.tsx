@@ -48,14 +48,22 @@ const AccordionFlatlist = ({
                     }).start();
                 }
             });
-            const baseValue = detailsLength > 0 ? detailsLength * 78 : 40;
+            const baseValue =
+                detailsLength > 0
+                    ? Platform.OS === "web"
+                        ? detailsLength * 88
+                        : detailsLength * 78
+                    : Platform.OS === "web"
+                    ? 30
+                    : 35;
             // Expand the clicked accordion
             Animated.timing(animation, {
-                toValue: Platform.select({
-                    ios: baseValue + 20, // iOS-specific value
-                    android: baseValue, // Android-specific value
-                    default: baseValue + 35, // Default for other platforms or if no platform-specific values
-                }),
+                toValue:
+                    Platform.select({
+                        ios: baseValue + 20, // iOS-specific value
+                        android: baseValue, // Android-specific value
+                        // default: baseValue + 40, // Default for other platforms or if no platform-specific values
+                    }) ?? (Platform.OS === "web" ? baseValue : baseValue + 40),
                 duration: 100,
                 useNativeDriver: false,
             }).start(() => setExpanded(id));

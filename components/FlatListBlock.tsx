@@ -28,7 +28,7 @@ const FlatListBlock1 = ({
     const router = useRouter();
     const flatListRef = useRef<any>(null);
     const currentYear = new Date().getFullYear();
-    const ITEM_HEIGHT = Platform.OS === "web" ? 75 : scrollHeight;
+    const ITEM_HEIGHT = Platform.OS === "web" ? 73.5 : scrollHeight;
     const isFocused = useIsFocused();
     const [isRefreshing, setIsRefreshing] = useState(false);
     const ListItem = memo(({ item, router }: any) => (
@@ -99,7 +99,7 @@ const FlatListBlock1 = ({
                     } catch (error) {
                         console.warn("Scroll Error:", error);
                     }
-                }, 1000);
+                }, 500);
             }
         }
     }, [items, enableAutoScroll, currentYear, isFocused]);
@@ -130,7 +130,7 @@ const FlatListBlock1 = ({
                     offset: ITEM_HEIGHT * index,
                     index,
                 })}
-                initialNumToRender={10}
+                initialNumToRender={20}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
                 refreshControl={

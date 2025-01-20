@@ -40,7 +40,7 @@ const Portfolio: React.FC = () => {
             <FlatListBlock
                 title="Gas"
                 items={gasData}
-                height={Platform.OS === "web" ? 380 : "50%"}
+                height={Platform.OS === "web" ? 343 : "50%"}
                 scrollHeight={64}
             />
             <FlatListBlock
