@@ -155,6 +155,7 @@ const TabNavigatorLayout = () => {
         /^\/dashboard\/signals\/\d+$/.test(pathname) ||
         /^\/dashboard\/prices\/\d+$/.test(pathname) ||
         /^\/dashboard\/pfc\/\d+$/.test(pathname) ||
+        /^\/dashboard\/portfolio\/\d+$/.test(pathname) ||
         /^\/dashboard\/portfolio\/portfolio-overview$/.test(pathname) ||
         /^\/dashboard\/prices\/settings$/.test(pathname);
     const notificationCounts = {

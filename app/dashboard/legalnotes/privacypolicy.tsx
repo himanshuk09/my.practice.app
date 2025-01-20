@@ -1,5 +1,6 @@
 import { i18n } from "@/languageKeys/i18nConfig";
 import { inActiveLoading } from "@/store/navigationSlice";
+import { RootState } from "@/store/store";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 const PrivacyAndPolicy = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
-    const locale = useSelector((state: any) => state.language.locale);
+    const locale = useSelector((state: RootState) => state.language.locale);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const onRefresh = async () => {

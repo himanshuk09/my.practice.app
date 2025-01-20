@@ -21,8 +21,8 @@ import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 import ViewShot from "react-native-view-shot";
 
 type ChartComponentProps = {
-    webViewRef: React.RefObject<any>;
-    iFrameRef?: React.RefObject<any>;
+    webViewRef: React.RefObject<WebView | any>;
+    iFrameRef?: React.RefObject<HTMLIFrameElement | any>;
     onMessage?: (event: any) => void;
     id?: number;
     refereshkey?: number;

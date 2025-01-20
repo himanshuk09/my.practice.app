@@ -23,6 +23,7 @@ const FlatListBlock1 = ({
     enableAutoScroll = true,
     height = "100%",
     scrollHeight,
+    NavigateTo,
 }: any) => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -38,9 +39,11 @@ const FlatListBlock1 = ({
             style={st.boxShadow}
             onPress={() => {
                 dispatch(activeLoading());
+
                 setTimeout(() => {
-                    router.push(item.route as Href);
+                    router.push(`${NavigateTo}/${item.id}` as Href);
                 });
+                console.log("id", item.id, `${NavigateTo}/${item.id}`);
             }}
         >
             {item?.notificationCount && (

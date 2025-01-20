@@ -3,14 +3,21 @@ import { View, PanResponder, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import { usePathname } from "expo-router";
-
-const SwipeDetectionWrapper = ({ children }: any) => {
+import { RootState } from "@/store/store";
+type SwipeDetectionWrapperProps = {
+    children: React.ReactNode;
+};
+const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
+    children,
+}) => {
     const dispatch = useDispatch();
     const pathname = usePathname();
     const isLoginRoute =
         pathname === "/login" || pathname === "/login/forgotpassword";
-    let debounceTimeout: any = null;
-    const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
+    let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+    const isDrawerOpen = useSelector(
+        (state: RootState) => state.drawer.isDrawerOpen
+    );
 
     const debounceAction = (action: () => void) => {
         if (debounceTimeout) {
@@ -53,7 +60,6 @@ const SwipeDetectionWrapper = ({ children }: any) => {
     return (
         <View
             style={styles.container}
-            // {...panResponder.panHandlers}
             {...(!isLoginRoute ? panResponder.panHandlers : {})}
             className="font-sans"
         >

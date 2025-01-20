@@ -15,7 +15,7 @@ const PFC = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
     const [isRefreshing, setIsRefreshing] = useState(false);
-
+    let NavigateTo = "dashboard/pfc";
     const combinedData = [
         { type: "header", title: "Gas", data: PFCGas },
         { type: "header", title: "Strom", data: PFCStrom },
@@ -28,6 +28,7 @@ const PFC = () => {
                     items={item.data}
                     enableAutoScroll={false}
                     height={"auto"}
+                    NavigateTo={NavigateTo}
                 />
             );
         }
@@ -63,7 +64,7 @@ const PFC = () => {
                     <RefreshControl
                         refreshing={isRefreshing}
                         onRefresh={onRefresh}
-                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                        colors={["#e31837"]}
                     />
                 }
             />

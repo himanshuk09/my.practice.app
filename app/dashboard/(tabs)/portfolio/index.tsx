@@ -12,7 +12,7 @@ const Portfolio: React.FC = () => {
     const [powerData, setPowerData] = useState<any>([]);
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
-
+    let NavigateTo = "dashboard/portfolio";
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -42,12 +42,14 @@ const Portfolio: React.FC = () => {
                 items={gasData}
                 height={Platform.OS === "web" ? 343 : "50%"}
                 scrollHeight={64}
+                NavigateTo={NavigateTo}
             />
             <FlatListBlock
                 title="Power"
                 items={powerData}
                 height={Platform.OS === "web" ? 380 : "50%"}
                 scrollHeight={63}
+                NavigateTo={NavigateTo}
             />
         </SafeAreaView>
     );

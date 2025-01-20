@@ -18,7 +18,7 @@ const AccordionFlatlist = ({
     scrollToIndex,
     index,
 }: any) => {
-    const [expanded, setExpanded] = useState(null);
+    const [expanded, setExpanded] = useState<number | null>(null);
     const animations = useRef<any>({}).current;
     const router = useRouter();
     data?.forEach((item: any) => {
@@ -27,7 +27,7 @@ const AccordionFlatlist = ({
         }
     });
 
-    const toggleExpand = (id: any, detailsLength: any) => {
+    const toggleExpand = (id: number, detailsLength: number) => {
         const animation = animations[id];
 
         if (expanded === id) {
@@ -101,7 +101,7 @@ const AccordionFlatlist = ({
                     }}
                 >
                     {item?.details.length > 0 ? (
-                        item?.details.map((detail: any, index: any) => (
+                        item?.details.map((detail: any, index: number) => (
                             <TouchableOpacity
                                 key={index}
                                 className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3  items-center justify-center  rounded-sm text-center border-y-4 border-y-white h-20"

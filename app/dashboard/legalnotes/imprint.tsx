@@ -64,7 +64,7 @@ const Imprint = () => {
                     <RefreshControl
                         refreshing={isRefreshing}
                         onRefresh={onRefresh}
-                        colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+                        colors={["#e31837"]}
                     />
                 }
             >

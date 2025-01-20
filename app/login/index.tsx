@@ -15,7 +15,6 @@ import { setUser } from "@/store/authSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
 import Logo from "@/components/SVG/Logo";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import { loginUser } from "@/services/auth.services";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 

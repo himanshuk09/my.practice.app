@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import ChartComponent from "@/components/Chart/ChartComponent";
 import { i18n } from "@/languageKeys/i18nConfig";
-import { cockpitChartData } from "@/constants/cockpitchart";
 import { ChartLoaderPNG } from "@/components/Loader";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -20,13 +19,7 @@ import {
     WebviewLineHtmlContent,
     iFrameLineHtmlcontent,
 } from "./Chart/charthtmlcontent";
-import {
-    filterByCurrentQuarterUTC,
-    filterByMonthYearUTC,
-    filterCurrentDayDataUTC,
-    filterCurrentWeekDataUTC,
-    filterDataByDateRange,
-} from "./Chart/filterFunction";
+import { filterDataByDateRange } from "./Chart/filterFunction";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -67,6 +60,8 @@ const ToggleChartComponent = ({
     const reloadWebView = () => {
         setKey((prevKey: any) => prevKey + 1);
     };
+    let title = i18n.t("Energy_Use");
+    console.log(title);
 
     const isLandscape = useSelector(
         (state: RootState) => state.orientation.isLandscape
@@ -77,7 +72,7 @@ const ToggleChartComponent = ({
             if (iframe && iframe.contentWindow) {
                 switch (type) {
                     case "series":
-                        iframe.contentWindow.updateChartSeries?.(data);
+                        iframe.contentWindow.updateChartSeries?.(title, data);
                         break;
                     case "options":
                         iframe.contentWindow.updateChartOptions?.(data);
@@ -96,7 +91,9 @@ const ToggleChartComponent = ({
             let jsCommand = "";
             switch (type) {
                 case "series":
-                    jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
+                    jsCommand = `updateChartSeries(${JSON.stringify(
+                        title
+                    )},${JSON.stringify(data)});`;
                     break;
                 case "options":
                     jsCommand = `updateChartOptions(${JSON.stringify(data)});`;
@@ -282,7 +279,7 @@ const ToggleChartComponent = ({
         if (message.action === "chartZoomed") {
             setIschartZoomed(message.isZoomed);
         }
-        // console.log("message.action", message.action, message?.values);
+        console.log("message.action", message.action, message?.values);
     };
 
     // useEffect(() => {

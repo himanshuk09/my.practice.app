@@ -40,7 +40,7 @@ const LoadData = () => {
     }, [isFocused]);
     const mainFlatListRef = useRef<FlatList>(null);
 
-    const scrollToIndex = (index: any) => {
+    const scrollToIndex = (index: number) => {
         mainFlatListRef.current?.scrollToIndex({
             index,
             animated: true,

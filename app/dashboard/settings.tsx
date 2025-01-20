@@ -4,7 +4,6 @@ import {
     SafeAreaView,
     TouchableOpacity,
     StatusBar,
-    StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -12,7 +11,7 @@ import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLocale } from "@/store/languageSlice";
 import { i18n } from "@/languageKeys/i18nConfig";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import CustomSwitch from "@/components/CustomSwitch";
@@ -120,7 +119,7 @@ const Settings = () => {
                     className="items-center p-5  w-[50%] bg-[#e31837]"
                     onPress={() => {
                         dispatch(updateLocale(selectedLanguage));
-                        router.back();
+                        router.replace("/dashboard" as Href);
                     }}
                 >
                     <Text className="text-center text-white uppercase font-normal">

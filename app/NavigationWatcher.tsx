@@ -7,6 +7,7 @@ import { setInitialState } from "@/store/authSlice";
 import { updateLocale } from "@/store/languageSlice";
 import { closeDrawer } from "@/store/drawerSlice";
 import { activeLoading } from "@/store/navigationSlice";
+import { RootState } from "@/store/store";
 
 type NavigationWatcherProps = {
     children: React.ReactNode;
@@ -15,12 +16,10 @@ type NavigationWatcherProps = {
 const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const history = useSelector((state: any) => state.navigation.history);
+    const history = useSelector((state: RootState) => state.navigation.history);
     const segments = useSegments();
     const [shouldExitApp, setShouldExitApp] = useState(false);
-
     const currentPath = "/" + segments.join("/");
-
     const store = useStore();
 
     // Fetch user login status and initialize app

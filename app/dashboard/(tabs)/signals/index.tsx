@@ -11,7 +11,7 @@ const Signals = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
     const [isRefreshing, setIsRefreshing] = useState(false);
-
+    let NavigateTo = "dashboard/signals";
     const onRefresh = async () => {
         setIsRefreshing(true);
         // Simulate a network request or refresh data logic
@@ -31,6 +31,7 @@ const Signals = () => {
                     items={item.data}
                     enableAutoScroll={false}
                     height={"auto"}
+                    NavigateTo={NavigateTo}
                 />
             );
         }

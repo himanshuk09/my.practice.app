@@ -1,20 +1,11 @@
-import {
-    View,
-    FlatList,
-    SafeAreaView,
-    Platform,
-    Button,
-    PanResponder,
-    StatusBar,
-} from "react-native";
+import { View, FlatList, SafeAreaView, StatusBar } from "react-native";
 import "nativewind";
 import MenuCard from "@/components/MenuCard";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { DashboardCardsEng } from "@/constants/constantData";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
-import { Href } from "expo-router";
 interface MenuItem {
     id: number;
     title: string;
