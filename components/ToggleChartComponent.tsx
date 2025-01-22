@@ -61,7 +61,6 @@ const ToggleChartComponent = ({
         setKey((prevKey: any) => prevKey + 1);
     };
     let title = i18n.t("Energy_Use");
-    console.log(title);
 
     const isLandscape = useSelector(
         (state: RootState) => state.orientation.isLandscape
@@ -112,6 +111,8 @@ const ToggleChartComponent = ({
         }
     };
     const updateChartData = (filteredData: any) => {
+        console.log("filteredData", filteredData?.length);
+
         if (filteredData?.length === 0) {
             updateChart("options", {
                 noData: { text: "Data not available" },
@@ -144,13 +145,21 @@ const ToggleChartComponent = ({
                 },
             });
             updateChart("series", filteredData);
-            updateChart("options", {
-                chart: {
-                    animations: {
-                        enabled: true,
-                    },
-                },
-            });
+            // updateChart("options", {
+            //     chart: {
+            //         animations: {
+            //             enabled: true,
+            //         },
+            //     },
+            // });
+
+            if (
+                iFrameRef?.current &&
+                iFrameRef?.current?.contentWindow &&
+                iFrameRef?.current?.contentWindow?.isChartZoomed()
+            ) {
+                iFrameRef?.current?.contentWindow?.resetZoom();
+            }
         } else {
             if (isChartZoomed) {
                 webViewRef?.current.injectJavaScript(
@@ -166,11 +175,18 @@ const ToggleChartComponent = ({
                 },
             });
             updateChart("series", filteredData);
+            if (
+                iFrameRef?.current &&
+                iFrameRef?.current?.contentWindow &&
+                iFrameRef?.current?.contentWindow.isChartZoomed()
+            ) {
+                iFrameRef?.current?.contentWindow?.resetZoom();
+            }
         }
         if (Platform.OS === "web") {
             setTimeout(() => {
                 setLoading(false);
-            }, 500);
+            }, 1000);
         }
     };
     const handleRangeDataFilter = () => {
@@ -191,7 +207,6 @@ const ToggleChartComponent = ({
                 title: { text: i18n.t("datetime") },
             },
         };
-        console.log(localOption.xaxis.title.text);
 
         if (Platform.OS === "web") {
             const iframe = iFrameRef.current;
@@ -203,8 +218,7 @@ const ToggleChartComponent = ({
         } else {
             if (webViewRef?.current) {
                 const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
-                console.log("updateLocaleScript");
-                console.log("locale", locale);
+
                 webViewRef.current.injectJavaScript(updateLocaleScript);
             }
         }
@@ -221,7 +235,6 @@ const ToggleChartComponent = ({
                 .replace(/:/g, "-")
                 .replace(/T/, "_")
                 .replace(/\..+/, "")}.png`;
-            console.log("fileName", fileName);
 
             try {
                 // Save Base64 as a file
@@ -247,19 +260,33 @@ const ToggleChartComponent = ({
             setLoading(true);
         }
         if (message.action === "updateChartSeries") {
+            console.log("start loader");
             setLoading(true);
         }
-        // if (message.action === "Chart updated") {
-        //     setLoading(false);
-        // }
+        if (message.action === "Chart updated") {
+            setTimeout(
+                () => {
+                    console.log("stop loader");
+                    setLoading(false);
+                },
+                activeTab === "Year" ||
+                    activeTab === "Year_3" ||
+                    previousTab === "Year" ||
+                    previousTab === "Year_3"
+                    ? 3000
+                    : 1000
+            );
+        }
         if (message.action === "animationEnd") {
             setTimeout(() => {
+                console.log("stop loader anime");
                 setLoading(false);
             }, 100);
         }
-        if (message.action === "updateLocale") {
-            console.log(message?.action, message?.value);
-        }
+        // if (message.action === "updateLocale") {
+        //     console.log(message?.action, message?.value);
+        // }
+
         // Handle loader actions on tooltip toggle
         if (
             message.action === "startLoader" ||
@@ -279,7 +306,7 @@ const ToggleChartComponent = ({
         if (message.action === "chartZoomed") {
             setIschartZoomed(message.isZoomed);
         }
-        console.log("message.action", message.action, message?.values);
+        // console.log("message.action", message.action, message?.values);
     };
 
     // useEffect(() => {
@@ -319,6 +346,9 @@ const ToggleChartComponent = ({
     const fetchData = async () => {
         if (fetchChartData) {
             try {
+                if (Platform.OS === "web") {
+                    setLoading(true);
+                }
                 const data = await fetchChartData(activeTab);
                 UpdateXaxisFormate();
                 updateChartData(data);
@@ -336,11 +366,9 @@ const ToggleChartComponent = ({
                     updateLocale();
                     isFirstRender.current = false;
                     dispatch(inActiveLoading());
-                    console.log("called 1");
                 }, 500);
             } else {
                 fetchData();
-                console.log("called 2");
             }
         };
         executeAfterRender();

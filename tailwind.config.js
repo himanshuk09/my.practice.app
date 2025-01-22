@@ -64,7 +64,7 @@ module.exports = {
                 cardTextHeader: "#948988", // Card text header color
                 cardText: "#9E9B9B",
                 cardShadow: "#e0e0e0", // Card shadow
-
+                disableCard: "#CACACA",
                 // Start button (CTA)
                 startBtn: "#f5504e", // Start button background
 
