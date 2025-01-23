@@ -8,13 +8,15 @@ import {
     StatusBar,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Href, useRouter } from "expo-router";
+import { Href, Redirect, useRouter } from "expo-router";
 import Logo from "@/components/SVG/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
 import { i18n } from "@/languageKeys/i18nConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Forgotpassword = () => {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [email, setEmail] = useState<string>("");
+    const [isAuth, setIsAuth] = useState<boolean>();
     const router = useRouter();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const validateEmail = (text: string) => {
@@ -32,7 +34,17 @@ const Forgotpassword = () => {
             return () => clearInterval(interval);
         }
     }, [email]);
-    return (
+    useEffect(() => {
+        const checkAuth = async () => {
+            const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+            setIsAuth(isLoggedIn === "true");
+        };
+        checkAuth();
+    }, []);
+
+    return isAuth ? (
+        <Redirect href={"/dashboard"} />
+    ) : (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar
                 barStyle="dark-content"

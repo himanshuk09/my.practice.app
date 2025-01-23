@@ -94,7 +94,7 @@ const SignalSettings = ({ cards }: any) => {
             )}
             keyExtractor={(item: any, index) => index.toString()}
             scrollEnabled={true}
-            className="bg-gray-100 overflow-scroll  p-2"
+            className="bg-slate-50 overflow-scroll  p-2"
             contentContainerStyle={{ paddingTop: 4 }}
         />
     );

@@ -1,11 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./api";
 import { cockpitChartData } from "@/constants/cockpitchart";
-import { dbChartData } from "@/constants/DbchartData";
 import {
     filterByCurrentQuarterUTC,
     filterByMonthYearUTC,
-    filterCurrentDateData,
     filterCurrentDayDataUTC,
     filterCurrentWeekDataUTC,
 } from "@/components/Chart/filterFunction";
@@ -65,7 +63,7 @@ const fetchDataByToggle = async (tab: any) => {
         return filterByCurrentQuarterUTC();
     }
     if (tab === "Year_3") {
-        return dbChartData;
+        return cockpitChartData;
     }
     return response;
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     TextInput,
@@ -8,7 +8,7 @@ import {
     Pressable,
     StatusBar,
 } from "react-native";
-import { Href, useRouter } from "expo-router";
+import { Href, Redirect, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
@@ -17,6 +17,7 @@ import Logo from "@/components/SVG/Logo";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignIn: React.FC = () => {
     const [userName, setUserName] = useState<string>("");
@@ -25,6 +26,8 @@ const SignIn: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const router = useRouter();
     const dispatch = useDispatch();
+    const [isAuth, setIsAuth] = useState<boolean>();
+
     const validateInput = (userName: string, password: string): string => {
         if (userName.trim() === "" && password.trim() === "") {
             return "Please_enter_your_username_and_password";
@@ -104,8 +107,17 @@ const SignIn: React.FC = () => {
             dispatch(inActiveLoading());
         }
     };
+    useEffect(() => {
+        const checkAuth = async () => {
+            const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+            setIsAuth(isLoggedIn === "true");
+        };
+        checkAuth();
+    }, []);
 
-    return (
+    return isAuth ? (
+        <Redirect href={"/dashboard"} />
+    ) : (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar
                 barStyle="dark-content"

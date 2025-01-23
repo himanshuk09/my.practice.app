@@ -3,7 +3,6 @@ import {
     ActivityIndicator,
     Animated,
     Platform,
-    StyleSheet,
     Easing,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
@@ -13,8 +12,8 @@ import Svg, {
     Polyline,
     RadialGradient,
     Stop,
-    Image as SvgImage,
 } from "react-native-svg";
+import { EvilIcons } from "@expo/vector-icons";
 const AnimatedPolyline = Animated.createAnimatedComponent(Polyline);
 const CircularLoaderSVGWeb = () => {
     const rotation = useRef(new Animated.Value(0)).current;
@@ -275,7 +274,7 @@ const LoaderPNG = () => {
             Animated.loop(
                 Animated.timing(rotation, {
                     toValue: 1,
-                    duration: 1500, // 1.5 seconds for a full rotation
+                    duration: 1300, // 1.3 seconds for a full rotation
                     useNativeDriver: Platform.OS !== "web",
                     easing: Easing.linear,
                 })
@@ -308,7 +307,7 @@ export const ChartLoaderPNG = () => {
             Animated.loop(
                 Animated.timing(rotation, {
                     toValue: 1,
-                    duration: 2000, // 1.5 seconds for a full rotation
+                    duration: 1500, // 1.5 seconds for a full rotation
                     useNativeDriver: Platform.OS !== "web",
                     easing: Easing.linear,
                 })

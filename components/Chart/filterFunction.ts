@@ -2,7 +2,6 @@ import { cockpitChartData } from "@/constants/cockpitchart";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { dbChartData } from "@/constants/DbchartData";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 export function filterCurrentDayDataUTC() {
@@ -213,8 +212,6 @@ export function filterCurrentDateData(data: any[]) {
         return itemDate >= startOfDay && itemDate <= endOfDay;
     });
 }
-
-console.log("filterData", filterCurrentDateData(dbChartData));
 
 function filterCurrentWeekData(data: any[]) {
     // Get current date in UTC

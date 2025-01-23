@@ -280,14 +280,48 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										);
 									},
 
-									beforeZoom: function(chartContext, { xaxis, yaxis }) {
-										window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoom Start' }));
+									beforeZoom: function (chartContext, { xaxis, yaxis }) {
+										// Access the chart's series data
+										const seriesMin = chartContext.w.globals.seriesX[0][0]; // Minimum x-value in the dataset
+										const seriesMax = chartContext.w.globals.seriesX[0][chartContext.w.globals.seriesX[0].length - 1]; // Maximum x-value in the dataset
+									
+										const minDistanceBetweenPoints =
+											chartContext.w.globals.seriesX[0][1] - chartContext.w.globals.seriesX[0][0]; // Distance between two consecutive points
+									
+										// Ensure at least one point is visible in the zoomed range
+										const newMinX = Math.max(xaxis.min, seriesMin);
+										const newMaxX = Math.min(xaxis.max, seriesMax);
+									
+										if (newMaxX - newMinX < minDistanceBetweenPoints) {
+											// Prevent zooming if no point would be visible
+											window.ReactNativeWebView.postMessage(
+												JSON.stringify({ action: 'Zoom Prevented', reason: 'No data points visible' })
+											);
+											return {
+												xaxis: {
+													min: chartContext.w.globals.minX,
+													max: chartContext.w.globals.maxX,
+												},
+												yaxis,
+											};
+										}
+									
+										// Post zoom start event
 										window.ReactNativeWebView.postMessage(
-											JSON.stringify({ action: 'beforeZoom' })
+											JSON.stringify({ action: 'Zoom Start', newRange: { min: newMinX, max: newMaxX } })
 										);
-									   
+									
+										// Allow zooming with validated values
+										return {
+											xaxis: {
+												min: newMinX,
+												max: newMaxX,
+											},
+											yaxis,
+										};
 									},
 
+									
 									beforeResetZoom: function(chartContext, { xaxis, yaxis }) {
 										window.ReactNativeWebView.postMessage(
 											JSON.stringify({ action: 'beforeResetZoom' })
@@ -892,53 +926,103 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 							},
 						})
 					}
-
 					window.zoomIn = function () {
-						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoom Start' }));
-					   
-						const currentMin = chart.w.globals.minX;
-						const currentMax = chart.w.globals.maxX;
-						const zoomAmount = (currentMax - currentMin) * 0.1;
-						chart.updateOptions({
-							xaxis: {
-								min: currentMin + zoomAmount,
-								max: currentMax - zoomAmount,
-							},
-						});
+						if (chart?.w?.globals) {
+							window.ReactNativeWebView.postMessage(
+								JSON.stringify({ action: 'Zoom Start' })
+							);
+					
+							const currentMin = chart.w.globals.minX;
+							const currentMax = chart.w.globals.maxX;
+							const zoomAmount = (currentMax - currentMin) * 0.1;
+					
+							// Ensure the new zoomed range stays within the series bounds
+							const newMinX = Math.max(
+								currentMin + zoomAmount,
+								chart.w.globals.seriesX[0][0] // Series minimum
+							);
+							const newMaxX = Math.min(
+								currentMax - zoomAmount,
+								chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+							);
+					
+							// Update chart options
+							chart.updateOptions({
+								xaxis: {
+									min: newMinX,
+									max: newMaxX,
+								},
+							});
+						} else {
+							console.warn('Zoom In action skipped: chart or required properties not available.');
+						}
 					};
 					
 					window.zoomOut = function () {
-						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoomed' }));
-					   
-						const currentMin = chart.w.globals.minX;
-						const currentMax = chart.w.globals.maxX;
-						const zoomAmount = (currentMax - currentMin) * 0.1;
-						chart.updateOptions({
-							xaxis: {
-								min: currentMin - zoomAmount,
-								max: currentMax + zoomAmount,
-							},
-						});
+						if (chart?.w?.globals) {
+							window.ReactNativeWebView.postMessage(
+								JSON.stringify({ action: 'Zoomed' })
+							);
+					
+							const currentMin = chart.w.globals.minX;
+							const currentMax = chart.w.globals.maxX;
+							const zoomAmount = (currentMax - currentMin) * 0.1;
+					
+							// Ensure the new zoomed range stays within the series bounds
+							const newMinX = Math.max(
+								currentMin - zoomAmount,
+								chart.w.globals.seriesX[0][0] // Series minimum
+							);
+							const newMaxX = Math.min(
+								currentMax + zoomAmount,
+								chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+							);
+					
+							// Update chart options
+							chart.updateOptions({
+								xaxis: {
+									min: newMinX,
+									max: newMaxX,
+								},
+							});
+						} else {
+							console.warn('Zoom Out action skipped: chart or required properties not available.');
+						}
 					};
-					window.customPanRight = function () {
+					
+				
+					window.customPanLeft = function () {
+						const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
+					  
+						// Calculate the new min and max X values for the pan
+						const newMinX = Math.max(chart.w.globals.minX - moveFactor, chart.w.globals.seriesX[0][0]); // Prevent going past the series minimum
+						const newMaxX = Math.max(chart.w.globals.maxX - moveFactor, chart.w.globals.seriesX[0][0] + (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series minimum
+					  
+						// Update chart options to apply the pan
+						chart.updateOptions({
+						  xaxis: {
+							min: newMinX,
+							max: newMaxX
+						  }
+						}); // false, false to not animate the chart and not update the series
+					  };
+					  window.customPanRight = function () {
+						const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
+					  
+						// Calculate the new min and max X values for the pan
+						const newMinX = Math.min(chart.w.globals.minX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] - (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series maximum
+						const newMaxX = Math.min(chart.w.globals.maxX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1]); // Prevent going past the series maximum
+					  
+						// Update chart options to apply the pan
+						chart.updateOptions({
+						  xaxis: {
+							min: newMinX,
+							max: newMaxX
+						  }
+						}); // false, false to not animate the chart and not update the series
+					  };
 						
-						const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
-					  
-						const newMinX = chart.w.globals.minX + moveFactor;
-						const newMaxX = chart.w.globals.maxX + moveFactor;
-					  
-						chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
-					  };
-
-					  window.customPanLeft = function () {
-					   
-						const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
-					  
-						const newMinX = chart.w.globals.minX - moveFactor;
-						const newMaxX = chart.w.globals.maxX - moveFactor;
-					  
-						chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
-					  };
+					
 					window.resetZoom = function () {
 						// Dynamically access the series and x-axis data from the chart instance
 						const seriesData = chart.w.config.series[0].data;
@@ -1415,7 +1499,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 						},
 						yaxis: {
 							title: {
-								text: "unit",
+								text: "kWh",
 							},
 							labels: {
 								show: true,
@@ -1576,7 +1660,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 									},
 									yaxis: {
 										title: {
-											text: "unit",
+											text: "kWh",
 										},
 										labels: {
 											show: true,
@@ -2811,35 +2895,71 @@ export const webviewAreaHtmlcontent = `
 			  window.exportChart = exportChart;
 
 			  window.zoomIn = function () {
-				  
-				  window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoom Start' }));
-				  const currentMin = chart.w.globals.minX;
-				  const currentMax = chart.w.globals.maxX;
-				  const zoomAmount = (currentMax - currentMin) * 0.1;
-				  chart.updateOptions({
-					  xaxis: {
-						  min: currentMin + zoomAmount,
-						  max: currentMax - zoomAmount,
-					  },
-				  });
-				  updateLocale()
-			  };
+				if (chart?.w?.globals) {
+					window.ReactNativeWebView.postMessage(
+						JSON.stringify({ action: 'Zoom Start' })
+					);
 			
-		   
+					const currentMin = chart.w.globals.minX;
+					const currentMax = chart.w.globals.maxX;
+					const zoomAmount = (currentMax - currentMin) * 0.1;
 			
-			  window.zoomOut = function () {
-				  window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoomed' }));
-				  const currentMin = chart.w.globals.minX;
-				  const currentMax = chart.w.globals.maxX;
-				  const zoomAmount = (currentMax - currentMin) * 0.1;
-				  chart.updateOptions({
-					  xaxis: {
-						  min: currentMin - zoomAmount,
-						  max: currentMax + zoomAmount,
-					  },
-				  });
-				  updateLocale()
-			  };
+					// Ensure the new zoomed range stays within the series bounds
+					const newMinX = Math.max(
+						currentMin + zoomAmount,
+						chart.w.globals.seriesX[0][0] // Series minimum
+					);
+					const newMaxX = Math.min(
+						currentMax - zoomAmount,
+						chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+					);
+			
+					// Update chart options
+					chart.updateOptions({
+						xaxis: {
+							min: newMinX,
+							max: newMaxX,
+						},
+					});
+					updateLocale()
+				} else {
+					console.warn('Zoom In action skipped: chart or required properties not available.');
+				}
+			};
+			
+			window.zoomOut = function () {
+				if (chart?.w?.globals) {
+					window.ReactNativeWebView.postMessage(
+						JSON.stringify({ action: 'Zoomed' })
+					);
+			
+					const currentMin = chart.w.globals.minX;
+					const currentMax = chart.w.globals.maxX;
+					const zoomAmount = (currentMax - currentMin) * 0.1;
+			
+					// Ensure the new zoomed range stays within the series bounds
+					const newMinX = Math.max(
+						currentMin - zoomAmount,
+						chart.w.globals.seriesX[0][0] // Series minimum
+					);
+					const newMaxX = Math.min(
+						currentMax + zoomAmount,
+						chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+					);
+			
+					// Update chart options
+					chart.updateOptions({
+						xaxis: {
+							min: newMinX,
+							max: newMaxX,
+						},
+					});
+					updateLocale()
+				} else {
+					console.warn('Zoom Out action skipped: chart or required properties not available.');
+				}
+			};
+			
 		  
 			  window.resetZoom = function () {
 				  // Dynamically access the series and x-axis data from the chart instance
@@ -2859,25 +2979,57 @@ export const webviewAreaHtmlcontent = `
 					  console.error("Series data is empty, unable to reset zoom.");
 				  }
 			  };
-			  window.customPanRight = function () {
+			//   window.customPanRight = function () {
 						
-				const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+			// 	const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
 			  
-				const newMinX = chart.w.globals.minX + moveFactor;
-				const newMaxX = chart.w.globals.maxX + moveFactor;
+			// 	const newMinX = chart.w.globals.minX + moveFactor;
+			// 	const newMaxX = chart.w.globals.maxX + moveFactor;
 			  
-				chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+			// 	chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+			// 	updateLocale()
+			//   };
+
+			//   window.customPanLeft = function () {
+			   
+			// 	const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+			  
+			// 	const newMinX = chart.w.globals.minX - moveFactor;
+			// 	const newMaxX = chart.w.globals.maxX - moveFactor;
+			  
+			// 	chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+			// 	updateLocale()
+			//   };
+			window.customPanLeft = function () {
+				const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.5;
+			  
+				// Calculate the new min and max X values for the pan
+				const newMinX = Math.max(chart.w.globals.minX - moveFactor, chart.w.globals.seriesX[0][0]); // Prevent going past the series minimum
+				const newMaxX = Math.max(chart.w.globals.maxX - moveFactor, chart.w.globals.seriesX[0][0] + (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series minimum
+			  
+				// Update chart options to apply the pan
+				chart.updateOptions({
+				  xaxis: {
+					min: newMinX,
+					max: newMaxX
+				  }
+				}); // false, false to not animate the chart and not update the series
 				updateLocale()
 			  };
-
-			  window.customPanLeft = function () {
-			   
-				const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+			  window.customPanRight = function () {
+				const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.5;
 			  
-				const newMinX = chart.w.globals.minX - moveFactor;
-				const newMaxX = chart.w.globals.maxX - moveFactor;
+				// Calculate the new min and max X values for the pan
+				const newMinX = Math.min(chart.w.globals.minX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] - (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series maximum
+				const newMaxX = Math.min(chart.w.globals.maxX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1]); // Prevent going past the series maximum
 			  
-				chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+				// Update chart options to apply the pan
+				chart.updateOptions({
+				  xaxis: {
+					min: newMinX,
+					max: newMaxX
+				  }
+				}); // false, false to not animate the chart and not update the series
 				updateLocale()
 			  };
 			  window.toggleZoomAndSelection=()=> {
@@ -3082,3 +3234,50 @@ export const iframeAreahtlcontent = ` <!DOCTYPE html>
   </body>
   </html>
 `;
+
+// window.zoomIn = function () {
+// 	window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoom Start' }));
+
+// 	const currentMin = chart.w.globals.minX;
+// 	const currentMax = chart.w.globals.maxX;
+// 	const zoomAmount = (currentMax - currentMin) * 0.1;
+// 	chart.updateOptions({
+// 		xaxis: {
+// 			min: currentMin + zoomAmount,
+// 			max: currentMax - zoomAmount,
+// 		},
+// 	});
+// };
+
+// window.zoomOut = function () {
+// 	window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoomed' }));
+
+// 	const currentMin = chart.w.globals.minX;
+// 	const currentMax = chart.w.globals.maxX;
+// 	const zoomAmount = (currentMax - currentMin) * 0.1;
+// 	chart.updateOptions({
+// 		xaxis: {
+// 			min: currentMin - zoomAmount,
+// 			max: currentMax + zoomAmount,
+// 		},
+// 	});
+// };
+// window.customPanRight = function () {
+
+// 	const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+
+// 	const newMinX = chart.w.globals.minX + moveFactor;
+// 	const newMaxX = chart.w.globals.maxX + moveFactor;
+
+// 	chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+//   };
+
+//   window.customPanLeft = function () {
+
+// 	const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
+
+// 	const newMinX = chart.w.globals.minX - moveFactor;
+// 	const newMaxX = chart.w.globals.maxX - moveFactor;
+
+// 	chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
+//   };

@@ -76,7 +76,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
         <>
             <View
                 {...panResponder.panHandlers}
-                style={StyleSheet.absoluteFill}
+                style={[StyleSheet.absoluteFill]}
                 className="font-sans "
             />
             {/* Drawer Content */}
@@ -96,24 +96,6 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
                     <View style={styles.overlay} />
                 </TouchableWithoutFeedback>
             )}
-            {/* {isDrawerOpen && (
-                <TouchableWithoutFeedback onPress={handleCloseDrawer}>
-                    <View style={styles.overlayContainer}>
-                        {Platform.OS !== "web" && (
-                            <View style={styles.iconContainer}>
-                                <Entypo
-                                    name="menu"
-                                    size={45}
-                                    color="#fff"
-                                    className="m-2"
-                                />
-                            </View>
-                        )}
-
-                        <View style={styles.overlay} />
-                    </View>
-                </TouchableWithoutFeedback>
-            )} */}
         </>
     );
 };

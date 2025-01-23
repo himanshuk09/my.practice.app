@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     View,
     Text,
@@ -7,6 +7,9 @@ import {
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
+    Keyboard,
+    Animated,
+    Easing,
 } from "react-native";
 import DateTimePickerComponents from "./DateTimePickerComponents";
 import dayjs from "dayjs";
@@ -26,6 +29,7 @@ const PickerModel = ({
     setEndDate,
     handleRangeDataFilter,
 }: any) => {
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [openStartDate, setOpenStartDate] = useState(false);
     const [openEndDate, setOpenEndDate] = useState(false);
     const [openRangeDataPicker, setOpenRangeDatePicker] = useState(false);
@@ -45,6 +49,35 @@ const PickerModel = ({
     const handleBackgroundPress = () => {
         setModalVisible(false);
     };
+
+    const animationHeight = useRef(new Animated.Value(0)).current;
+
+    // Monitor keyboard visibility
+    useEffect(() => {
+        const keyboardShowListener = Keyboard.addListener(
+            "keyboardDidShow",
+            () => setKeyboardVisible(true)
+        );
+        const keyboardHideListener = Keyboard.addListener(
+            "keyboardDidHide",
+            () => setKeyboardVisible(false)
+        );
+
+        return () => {
+            keyboardShowListener.remove();
+            keyboardHideListener.remove();
+        };
+    }, []);
+
+    // Animate height based on keyboard visibility
+    useEffect(() => {
+        Animated.timing(animationHeight, {
+            toValue: isKeyboardVisible ? 0 : 200, // Collapse on keyboard open, expand otherwise
+            duration: 200,
+            easing: Easing.inOut(Easing.cubic),
+            useNativeDriver: false, // Native driver doesn't support height animation
+        }).start();
+    }, [isKeyboardVisible]);
     return (
         <Modal
             animationType="fade"
@@ -134,7 +167,10 @@ const PickerModel = ({
                                             </Pressable>
                                         </View>
                                         <View className="flex-1 ml-2">
-                                            <Text className="text-gray-400 mb-1"></Text>
+                                            <Text className="text-gray-400 mb-1">
+                                                {" "}
+                                                {""}
+                                            </Text>
                                             <Pressable
                                                 className=" bg-disableCard  px-2 py-3 flex-row justify-between"
                                                 // onPress={() => setOpenStartDate(!openStartDate)}
@@ -199,7 +235,8 @@ const PickerModel = ({
                                         </View>
                                         <View className="flex-1 ml-2 ">
                                             <Text className="text-gray-400 mb-1">
-                                                00:00
+                                                {" "}
+                                                {""}
                                             </Text>
                                             <Pressable
                                                 className="bg-disableCard  px-2 py-3 flex-row justify-between"
@@ -244,138 +281,167 @@ const PickerModel = ({
                                             />
                                         </TouchableOpacity>
                                     </View>
+                                    <Animated.View
+                                        style={{
+                                            overflow: "hidden",
+                                            height: animationHeight, // Controlled by animation
+                                        }}
+                                    >
+                                        <View className="flex-row justify-between items-center m-4">
+                                            <View className="flex-1 mr-2">
+                                                <Text className=" text-chartText  mb-1 font-semibold">
+                                                    From
+                                                </Text>
+                                                <Pressable
+                                                    className=" bg-cardBg  p-3 flex-row justify-between"
+                                                    onPress={() =>
+                                                        setOpenStartDate(
+                                                            !openStartDate
+                                                        )
+                                                    }
+                                                >
+                                                    <Text className="text-slate-700">
+                                                        {start
+                                                            ? dayjs(start)
+                                                                  .locale(
+                                                                      locale
+                                                                  )
+                                                                  .format(
+                                                                      locale ===
+                                                                          "en"
+                                                                          ? "DD/MM/YYYY"
+                                                                          : "DD.MM.YYYY"
+                                                                  )
+                                                            : dayjs()
+                                                                  .locale(
+                                                                      locale
+                                                                  )
+                                                                  .format(
+                                                                      locale ===
+                                                                          "en"
+                                                                          ? "DD/MM/YYYY"
+                                                                          : "DD.MM.YYYY"
+                                                                  )}
+                                                    </Text>
+                                                    <FontAwesome
+                                                        name="calendar"
+                                                        size={18}
+                                                        color="#808080"
+                                                    />
+                                                </Pressable>
+                                            </View>
+                                            <View className="flex-1 ml-2">
+                                                <Text className="text-gray-400 mb-1">
+                                                    {" "}
+                                                    {""}
+                                                </Text>
+                                                <Pressable
+                                                    className="bg-cardBg  p-3 flex-row justify-between"
+                                                    onPress={() =>
+                                                        setOpenStartDate(
+                                                            !openStartDate
+                                                        )
+                                                    }
+                                                >
+                                                    <Text className="text-slate-700">
+                                                        {start
+                                                            ? dayjs(start)
+                                                                  .locale("en")
+                                                                  .format(
+                                                                      "HH:mm"
+                                                                  )
+                                                            : dayjs()
+                                                                  .locale("en")
+                                                                  .format(
+                                                                      "HH:mm"
+                                                                  )}
+                                                    </Text>
+                                                    <Ionicons
+                                                        name="alarm"
+                                                        size={20}
+                                                        color="#808080"
+                                                    />
+                                                </Pressable>
+                                            </View>
+                                        </View>
+                                        <View className="flex-row justify-between items-center m-4">
+                                            <View className="flex-1 mr-2">
+                                                <Text className=" text-chartText  mb-1 font-semibold">
+                                                    To
+                                                </Text>
+                                                <Pressable
+                                                    className="bg-cardBg  p-3 flex-row justify-between"
+                                                    onPress={() =>
+                                                        setOpenEndDate(
+                                                            !openEndDate
+                                                        )
+                                                    }
+                                                >
+                                                    <Text className="text-slate-700">
+                                                        {end
+                                                            ? dayjs(end)
+                                                                  .locale(
+                                                                      locale
+                                                                  )
+                                                                  .format(
+                                                                      locale ===
+                                                                          "en"
+                                                                          ? "DD/MM/YYYY"
+                                                                          : "DD.MM.YYYY"
+                                                                  )
+                                                            : dayjs()
+                                                                  .locale(
+                                                                      locale
+                                                                  )
+                                                                  .format(
+                                                                      locale ===
+                                                                          "en"
+                                                                          ? "DD/MM/YYYY"
+                                                                          : "DD.MM.YYYY"
+                                                                  )}
+                                                    </Text>
+                                                    <FontAwesome
+                                                        name="calendar"
+                                                        size={18}
+                                                        color="#808080"
+                                                    />
+                                                </Pressable>
+                                            </View>
+                                            <View className="flex-1 ml-2">
+                                                <Text className="text-gray-400 mb-1">
+                                                    {""}
+                                                </Text>
+                                                <Pressable
+                                                    className="bg-cardBg  p-3 flex-row justify-between"
+                                                    onPress={() =>
+                                                        setOpenStartDate(
+                                                            !openStartDate
+                                                        )
+                                                    }
+                                                >
+                                                    <Text className="text-slate-700">
+                                                        {end
+                                                            ? dayjs(end)
+                                                                  .locale("en")
+                                                                  .format(
+                                                                      "HH:mm"
+                                                                  )
+                                                            : dayjs()
+                                                                  .locale("en")
+                                                                  .format(
+                                                                      "HH:mm"
+                                                                  )}
+                                                    </Text>
 
-                                    <View className="flex-row justify-between items-center m-4">
-                                        <View className="flex-1 mr-2">
-                                            <Text className=" text-chartText  mb-1 font-semibold">
-                                                From
-                                            </Text>
-                                            <Pressable
-                                                className=" bg-cardBg   px-2 py-3 flex-row justify-between"
-                                                onPress={() =>
-                                                    setOpenStartDate(
-                                                        !openStartDate
-                                                    )
-                                                }
-                                            >
-                                                <Text className="text-slate-700">
-                                                    {start
-                                                        ? dayjs(start)
-                                                              .locale(locale)
-                                                              .format(
-                                                                  locale ===
-                                                                      "en"
-                                                                      ? "DD/MM/YYYY"
-                                                                      : "DD.MM.YYYY"
-                                                              )
-                                                        : dayjs()
-                                                              .locale(locale)
-                                                              .format(
-                                                                  locale ===
-                                                                      "en"
-                                                                      ? "DD/MM/YYYY"
-                                                                      : "DD.MM.YYYY"
-                                                              )}
-                                                </Text>
-                                                <FontAwesome
-                                                    name="calendar"
-                                                    size={18}
-                                                    color="#808080"
-                                                />
-                                            </Pressable>
+                                                    <Ionicons
+                                                        name="alarm"
+                                                        size={20}
+                                                        color="#808080"
+                                                    />
+                                                </Pressable>
+                                            </View>
                                         </View>
-                                        <View className="flex-1 ml-2">
-                                            <Text className="text-gray-400 mb-1"></Text>
-                                            <Pressable
-                                                className="bg-cardBg  px-2 py-3 flex-row justify-between"
-                                                onPress={() =>
-                                                    setOpenStartDate(
-                                                        !openStartDate
-                                                    )
-                                                }
-                                            >
-                                                <Text className="text-slate-700">
-                                                    {start
-                                                        ? dayjs(start)
-                                                              .locale("en")
-                                                              .format("HH:mm")
-                                                        : dayjs()
-                                                              .locale("en")
-                                                              .format("HH:mm")}
-                                                </Text>
-                                                <Ionicons
-                                                    name="alarm-outline"
-                                                    size={20}
-                                                    color="#808080"
-                                                />
-                                            </Pressable>
-                                        </View>
-                                    </View>
-
-                                    <View className="flex-row justify-between items-center m-4">
-                                        <View className="flex-1 mr-2">
-                                            <Text className=" text-chartText  mb-1 font-semibold">
-                                                To
-                                            </Text>
-                                            <Pressable
-                                                className="bg-cardBg  px-2 py-3 flex-row justify-between"
-                                                onPress={() =>
-                                                    setOpenEndDate(!openEndDate)
-                                                }
-                                            >
-                                                <Text className="text-slate-700">
-                                                    {end
-                                                        ? dayjs(end)
-                                                              .locale(locale)
-                                                              .format(
-                                                                  locale ===
-                                                                      "en"
-                                                                      ? "DD/MM/YYYY"
-                                                                      : "DD.MM.YYYY"
-                                                              )
-                                                        : dayjs()
-                                                              .locale(locale)
-                                                              .format(
-                                                                  locale ===
-                                                                      "en"
-                                                                      ? "DD/MM/YYYY"
-                                                                      : "DD.MM.YYYY"
-                                                              )}
-                                                </Text>
-                                                <FontAwesome
-                                                    name="calendar"
-                                                    size={18}
-                                                    color="#808080"
-                                                />
-                                            </Pressable>
-                                        </View>
-                                        <View className="flex-1 ml-2">
-                                            <Text className="text-gray-400 mb-1"></Text>
-                                            <Pressable
-                                                className="bg-cardBg  px-2 py-3 flex-row justify-between"
-                                                onPress={() =>
-                                                    setOpenStartDate(
-                                                        !openStartDate
-                                                    )
-                                                }
-                                            >
-                                                <Text className="text-slate-700">
-                                                    {end
-                                                        ? dayjs(end)
-                                                              .locale("en")
-                                                              .format("HH:mm")
-                                                        : dayjs()
-                                                              .locale("en")
-                                                              .format("HH:mm")}
-                                                </Text>
-                                                <Ionicons
-                                                    name="alarm-outline"
-                                                    size={20}
-                                                    color="#808080"
-                                                />
-                                            </Pressable>
-                                        </View>
-                                    </View>
+                                    </Animated.View>
                                 </>
                             )}
 
@@ -393,7 +459,7 @@ const PickerModel = ({
 
                                             <View>
                                                 <TextInput
-                                                    className=" bg-cardBg text-slate-700 px-2 py-3"
+                                                    className=" bg-cardBg text-slate-700 p-3"
                                                     placeholder=""
                                                     value={value}
                                                     onChangeText={(text) => {
@@ -413,7 +479,7 @@ const PickerModel = ({
                                             </Text>
                                             <View>
                                                 <TextInput
-                                                    className=" bg-cardBg text-slate-700 px-2 py-3"
+                                                    className=" bg-cardBg text-slate-700 p-3"
                                                     placeholder=""
                                                     value={value}
                                                     onChangeText={(text) => {
@@ -476,7 +542,7 @@ const PickerModel = ({
                                 </View>
                             )}
                             {openRangeDataPicker && (
-                                <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
+                                <View className="absolute z-50 inset-0  flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
                                     <DateTimePickerComponents
                                         title="Select Date Range"
                                         pickerMode="range"
