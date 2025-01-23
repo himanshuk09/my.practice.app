@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StatusBar } from "react-native";
+import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
@@ -9,6 +9,11 @@ import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
 import { fetchDataByToggle } from "@/services/auth.services";
+import {
+    saveCSVToFileWeb,
+    saveCSVToFile,
+} from "@/components/ConstantFunctions/saveCSVFile";
+import { cockpitChartData } from "@/constants/cockpitchart";
 
 const PFCDetails = () => {
     const { id } = useLocalSearchParams();
@@ -78,7 +83,13 @@ const PFCDetails = () => {
                                 name="file-download"
                                 size={30}
                                 color="#e11935"
-                                onPress={() => {}}
+                                onPress={() => {
+                                    if (Platform.OS === "web") {
+                                        saveCSVToFileWeb(cockpitChartData);
+                                    } else {
+                                        saveCSVToFile(cockpitChartData);
+                                    }
+                                }}
                             />
                         </View>
                     </View>

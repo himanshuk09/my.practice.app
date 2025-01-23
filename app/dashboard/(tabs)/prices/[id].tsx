@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StatusBar } from "react-native";
+import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { PricesItem } from "@/constants/constantData";
@@ -10,6 +10,11 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
 import { fetchDataByToggle } from "@/services/auth.services";
 import { st } from "@/utils/Styles";
+import {
+    saveCSVToFileWeb,
+    saveCSVToFile,
+} from "@/components/ConstantFunctions/saveCSVFile";
+import { cockpitChartData } from "@/constants/cockpitchart";
 
 const PricesDetails = () => {
     const { id } = useLocalSearchParams();
@@ -91,7 +96,13 @@ const PricesDetails = () => {
                                 name="file-download"
                                 size={30}
                                 color="#e31837"
-                                onPress={() => {}}
+                                onPress={() => {
+                                    if (Platform.OS === "web") {
+                                        saveCSVToFileWeb(cockpitChartData);
+                                    } else {
+                                        saveCSVToFile(cockpitChartData);
+                                    }
+                                }}
                             />
                         </View>
                     </View>

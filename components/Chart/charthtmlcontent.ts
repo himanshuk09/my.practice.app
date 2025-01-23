@@ -1261,7 +1261,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 						}
 					};
 					var options = {
-						series: [],
+						series: [{name:"",data:[]}],
 						chart: {
 							height: "90%",
 							type: "line",

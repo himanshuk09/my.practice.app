@@ -30,6 +30,11 @@ import { st } from "@/utils/Styles";
 import { useLocalSearchParams } from "expo-router";
 import { RootState } from "@/store/store";
 import WebView from "react-native-webview";
+import {
+    saveCSVToFileWeb,
+    saveCSVToFile,
+} from "@/components/ConstantFunctions/saveCSVFile";
+import { cockpitChartData } from "@/constants/cockpitchart";
 type ChartUpdateType = "series" | "options" | "chart";
 
 const InfoItem = ({
@@ -145,7 +150,13 @@ const Transactions = ({ cards }: any) => {
                         name="file-download"
                         size={30}
                         color="#ef4444"
-                        onPress={() => {}}
+                        onPress={() => {
+                            if (Platform.OS === "web") {
+                                saveCSVToFileWeb(cockpitChartData);
+                            } else {
+                                saveCSVToFile(cockpitChartData);
+                            }
+                        }}
                     />
                 </View>
             </View>

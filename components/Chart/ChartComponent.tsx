@@ -6,9 +6,11 @@ import {
     View,
     Text,
     Alert,
+    ToastAndroid,
 } from "react-native";
 import React, { useCallback, useEffect, useRef } from "react";
 import WebView from "react-native-webview";
+import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -114,39 +116,61 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             );
         };
     }, [isLandscape, dispatch]);
+
     const captureWebView = useCallback(async () => {
         try {
-            const uri = await viewShotRef?.current?.capture(); // Capture the WebView
+            // Request permission to access the media library (for saving to gallery)
+            const { status } = await MediaLibrary.requestPermissionsAsync();
+            if (status !== "granted") {
+                Alert.alert(
+                    "Permission Denied",
+                    "Permission to access the media library is required."
+                );
+                return;
+            }
+
+            // Capture the WebView content
+            const uri = await viewShotRef?.current?.capture();
             console.log("Captured URI:", uri);
 
-            // Save the file locally
-            const fileUri = `${FileSystem.documentDirectory}webview_capture.png`;
+            // Generate a file name based on the current date/time
             const fileName = `${
                 FileSystem.documentDirectory
-            }cockpi_chart_${new Date()
+            }cockpit_chart_${new Date()
                 .toISOString()
                 .replace(/:/g, "-")
                 .replace(/T/, "_")
                 .replace(/\..+/, "")}.png`;
+
+            // Move the captured URI to the local file system
             await FileSystem.moveAsync({
                 from: uri,
                 to: fileName,
             });
 
-            // Alert.alert("Success", "Screenshot saved to your device!");
+            // Save the captured file to the media library (gallery)
+            const asset = await MediaLibrary.createAssetAsync(fileName);
+            await MediaLibrary.createAlbumAsync("cockpit", asset, false); // 'false' means not to create a new album
 
-            // Share the file
-            if (await Sharing.isAvailableAsync()) {
-                await Sharing.shareAsync(fileName);
-            } else {
-                Alert.alert(
-                    "Sharing not available",
-                    "The image is saved to your device."
-                );
-            }
+            // Alert the user that the file has been saved
+
+            ToastAndroid.show(
+                "Chart saved to your gallery!",
+                ToastAndroid.SHORT
+            );
+            // Check if sharing is available and then share the file
+            // if (await Sharing.isAvailableAsync()) {
+            //     await Sharing.shareAsync(fileName);
+            // } else {
+            //     Alert.alert(
+            //         "Sharing not available",
+            //         "The image is saved to your device."
+            //     );
+            // }
         } catch (error) {
             // console.error("Error capturing WebView:", error);
-            Alert.alert("Error", "Failed to capture WebView.");
+            Alert.alert("Error", "Failed to capture Chart.");
+            ToastAndroid.show("Failed to Save Chart.", ToastAndroid.LONG);
         }
     }, []);
 
@@ -285,3 +309,40 @@ export default ChartComponent;
 //     subscription.remove();
 //   };
 // }, [dispatch]);
+
+// const captureWebView = useCallback(async () => {
+//     try {
+//         const uri = await viewShotRef?.current?.capture(); // Capture the WebView
+//         console.log("Captured URI:", uri);
+
+//         // Save the file locally
+//         const fileUri = `${FileSystem.documentDirectory}webview_capture.png`;
+//         const fileName = `${
+//             FileSystem.documentDirectory
+//         }cockpi_chart_${new Date()
+//             .toISOString()
+//             .replace(/:/g, "-")
+//             .replace(/T/, "_")
+//             .replace(/\..+/, "")}.png`;
+//         await FileSystem.moveAsync({
+//             from: uri,
+//             to: fileName,
+//         });
+
+//         // Alert.alert("Success", "Screenshot saved to your device!");
+
+//         // Share the file
+//         if (await Sharing.isAvailableAsync()) {
+//             await Sharing.shareAsync(fileName);
+//         } else {
+//             Alert.alert(
+//                 "Sharing not available",
+//                 "The image is saved to your device."
+//             );
+//         }
+//     } catch (error) {
+//         // console.error("Error capturing WebView:", error);
+//         Alert.alert("Error", "Failed to capture WebView.");
+//     }
+// }, []);
+// Assuming WebView is in use
