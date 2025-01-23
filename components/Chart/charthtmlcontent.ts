@@ -121,7 +121,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 							series: [{ name: "Energy Use", data: []}],
 							chart: {
 								type: "line",
-								height: '100%',
+								height: '270',
 								background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
 								stacked: false,
 								locales: [locales.en, locales.de],
@@ -398,12 +398,12 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								},
 								xaxis: {
 									lines: {
-									show: true,
+										show: true,
 									},
 								},
 								yaxis: {
 									lines: {
-									show: true,
+										show: true,
 									},
 								},
 								padding: {
@@ -446,19 +446,23 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								labels: {
 									show: true,
 									rotate: 0,
-									rotateAlways: false,
+									rotateAlways: false,	
 									position: "top",
 									textAnchor: "end",
 									hideOverlappingLabels: true,
 									showDuplicates: false,
 									trim: false,
 									maxHeight: 120,
+									offsetX: 0,
+									offsetY: -2, 
 									style: 
 									{
 										fontSize: "8px",
 										fontFamily: "Helvetica, Arial, sans-serif",
 										fontWeight: 300,
+										cssClass: 'apexcharts-xaxis-label',
 									},
+									datetimeUTC: true,
 									formatter: (value) => {
 										const date = new Date(value);
 										return date.toLocaleString("en-IN", {
@@ -483,7 +487,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									color: "#78909C",
 									height: 6,
 									offsetX: 0,
-									offsetY: 0,
+									offsetY: -2,
 								},
 								crosshairs: {
 									show: false,
@@ -519,13 +523,13 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								title: { 
 									text: "kWh",
 									rotate: -90,
-									offsetX: 5,
+									offsetX: 0,
 									offsetY: 0,
 									style: {
 										color: "undefined",
 										fontSize: '12px',
 										fontFamily: 'Helvetica, Arial, sans-serif',
-										fontWeight: 700,
+										fontWeight: 600,
 										cssClass: 'apexcharts-yaxis-title',
 									  },
 								},
@@ -538,7 +542,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										fontFamily: "Helvetica, Arial, sans-serif",
 										fontWeight: 300,
 									},
-									offsetX: -4,
+									offsetX: -5,//y axis labels 
 									offsetY: 0,
 									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 10 }).format(value),
 								},
@@ -552,8 +556,8 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									show: true,
 									borderType: "solid",
 									color: "#78909C",
-									width: 1,
-									offsetX: -5,
+									width: 6,
+									offsetX: 0,
 									offsetY: 0,
 								},
 							},
@@ -634,10 +638,10 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										type: "datetime",
 										tickAmount: 5,
 										title: { 
-										text: "Date / Time",
+											text: "Date / Time",
 											style: {
-											fontSize: "12px",
-											fontFamily: "Helvetica, Arial, sans-serif",
+												fontSize: "12px",
+												fontFamily: "Helvetica, Arial, sans-serif",
 											}, 
 										},
 										labels: {
@@ -2654,6 +2658,8 @@ export const webviewAreaHtmlcontent = `
 							showDuplicates: false,
 							trim: false,
 							maxHeight: 120,
+							offsetX: 0,
+							offsetY: 0, 
 							style: 
 							{
 								fontSize: "9px",

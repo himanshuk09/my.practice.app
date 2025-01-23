@@ -19,10 +19,13 @@ import {
 import { Href, usePathname, useRouter, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { i18n } from "@/languageKeys/i18nConfig";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout, setInitialState } from "@/store/authSlice";
 import * as Linking from "expo-linking";
 import { closeDrawer } from "@/store/drawerSlice";
+import { RootState } from "@/store/store";
+import * as ScreenOrientation from "expo-screen-orientation";
+import { setOrientation } from "@/store/chartSlice";
 // Helper Components
 const Submenu = memo(
     ({
@@ -76,6 +79,9 @@ const CustomDrawer = memo((props: any) => {
     const toggleSubmenu = (key: string) => {
         setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
     };
+    const isLandscape = useSelector(
+        (state: RootState) => state.orientation.isLandscape
+    );
     const getTextAndIconStyle = useMemo(
         () => (routeName: string) => ({
             color:
@@ -231,6 +237,12 @@ const CustomDrawer = memo((props: any) => {
         }
     };
     const navigationToRoute = (item: any) => {
+        if (isLandscape) {
+            ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.PORTRAIT
+            ); // Switch to portrait mode
+            dispatch(setOrientation(false)); // Update the state to reflect the change
+        }
         dispatch(closeDrawer());
         if (item?.route && !item?.route.startsWith("http")) {
             setActiveSubmenu(null);

@@ -111,8 +111,6 @@ const ToggleChartComponent = ({
         }
     };
     const updateChartData = (filteredData: any) => {
-        console.log("filteredData", filteredData?.length);
-
         if (filteredData?.length === 0) {
             updateChart("options", {
                 noData: { text: "Data not available" },
@@ -260,13 +258,11 @@ const ToggleChartComponent = ({
             setLoading(true);
         }
         if (message.action === "updateChartSeries") {
-            console.log("start loader");
             setLoading(true);
         }
         if (message.action === "Chart updated") {
             setTimeout(
                 () => {
-                    console.log("stop loader");
                     setLoading(false);
                 },
                 activeTab === "Year" ||
@@ -279,7 +275,6 @@ const ToggleChartComponent = ({
         }
         if (message.action === "animationEnd") {
             setTimeout(() => {
-                console.log("stop loader anime");
                 setLoading(false);
             }, 100);
         }

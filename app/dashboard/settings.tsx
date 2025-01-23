@@ -23,7 +23,7 @@ const Settings = () => {
     const router = useRouter();
     const dispatch: AppDispatch = useDispatch();
     const isFocused = useIsFocused();
-    const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
+    const [isNotificationEnabled, setIsNotificationEnabled] = useState(true);
     const [isSignalsEnabled, setIsSignalsEnabled] = useState(true);
 
     useEffect(() => {
@@ -102,7 +102,7 @@ const Settings = () => {
                     </View>
                 </View>
             </View>
-            <View className="bottom-0 w-full right-0 left-0 absolute flex flex-row justify-evenly border-y-2 border-[#e31837]">
+            <View className="bottom-0 bg-white w-full right-0 left-0 absolute flex flex-row justify-evenly border-y-2 border-[#e31837]">
                 <TouchableOpacity
                     className="items-center p-5 w-[50%]"
                     onPress={() => {
@@ -110,7 +110,7 @@ const Settings = () => {
                         setSelectedLanguage(locale);
                     }}
                 >
-                    <Text className="text-center text-[#e31837] font-normal uppercase bg-white">
+                    <Text className="text-center text-[#e31837] font-normal uppercase ">
                         {i18n.t("cancel")}
                     </Text>
                 </TouchableOpacity>
