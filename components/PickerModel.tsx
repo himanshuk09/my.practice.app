@@ -46,9 +46,6 @@ const PickerModel = ({
         setEndDate(range?.endDate);
         setEnd(range?.endDate);
     }, [range]);
-    const handleBackgroundPress = () => {
-        setModalVisible(false);
-    };
 
     const animationHeight = useRef(new Animated.Value(0)).current;
 
@@ -85,7 +82,7 @@ const PickerModel = ({
             visible={modalVisible}
             onRequestClose={() => setModalVisible(!modalVisible)}
         >
-            <TouchableWithoutFeedback onPress={handleBackgroundPress}>
+            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                 <View className="flex-1 justify-start pt-20 bg-[#0a0a0aa8] bg-opacity-50">
                     <TouchableWithoutFeedback
                         onPress={() => {
@@ -264,7 +261,13 @@ const PickerModel = ({
                             ) : (
                                 <>
                                     <View className="flex-row justify-between p-3 bg-[#ebebeb]">
-                                        <Text className="text-chartText font-bold text-lg ">
+                                        <Text
+                                            className="text-chartText font-bold text-lg "
+                                            onPress={() => {
+                                                setKeyboardVisible(false);
+                                                Keyboard.dismiss();
+                                            }}
+                                        >
                                             Period of Time
                                         </Text>
                                         <TouchableOpacity

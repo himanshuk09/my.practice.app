@@ -54,12 +54,14 @@ const fetchDataByToggle = async (tab: any) => {
         return filterByMonthYearUTC();
     }
     if (tab === "Day") {
+        // return [];
         return filterCurrentDayDataUTC();
     }
     if (tab === "Week") {
         return filterCurrentWeekDataUTC();
     }
     if (tab === "Quarter") {
+        return [];
         return filterByCurrentQuarterUTC();
     }
     if (tab === "Year_3") {

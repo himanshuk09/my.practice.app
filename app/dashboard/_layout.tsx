@@ -35,17 +35,6 @@ const DashboardLayout = () => {
                     }}
                 />
                 <Stack.Screen
-                    name="(top-tabs)"
-                    options={{
-                        headerShown: true,
-                        animation: "fade",
-                        animationDuration: 500,
-                        header: ({ navigation }) => (
-                            <Header navigation={navigation} />
-                        ),
-                    }}
-                />
-                <Stack.Screen
                     name="settings"
                     options={{
                         headerShown: true,

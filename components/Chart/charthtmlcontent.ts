@@ -17,7 +17,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					}
 					#chart {
 						position: absolute;
-						width: 99%;
+						width: 100%;
 						touch-action: none;
 					}
 					.apexcharts-element-hidden {
@@ -161,7 +161,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								},
 								toolbar: {
 									show: false,
-									offsetX:-5,
+									offsetX:0,
 									offsetY: 0,
 									autoSelected: "zoom",
 									tools: {
@@ -247,20 +247,50 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										);
 									},
 
+									// selection: function(chartContext, { xaxis, yaxis }) {
+									// 	window.ReactNativeWebView.postMessage(
+									// 		JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
+									// 	);
+									// 	const currentMin = chart.w.globals.minX;
+									// 	const currentMax = chart.w.globals.maxX;
+									// 	const zoomAmount = (currentMax - currentMin) * 0.3;
+									// 	chart.updateOptions({
+									// 		xaxis: {
+									// 			min: currentMin - zoomAmount,
+									// 			max: currentMax + zoomAmount,
+									// 		},
+									// 	});
+									// },
+
 									selection: function(chartContext, { xaxis, yaxis }) {
 										window.ReactNativeWebView.postMessage(
-											JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
+											JSON.stringify({ action: 'selection', values: [xaxis, yaxis] })
 										);
+									
 										const currentMin = chart.w.globals.minX;
 										const currentMax = chart.w.globals.maxX;
+									
 										const zoomAmount = (currentMax - currentMin) * 0.3;
+									
+										// Ensure the new zoomed range stays within the series bounds
+										const newMinX = Math.max(
+											currentMin - zoomAmount,
+											chart.w.globals.seriesX[0][0] // Series minimum
+										);
+										const newMaxX = Math.min(
+											currentMax + zoomAmount,
+											chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+										);
+									
+										// Update chart options
 										chart.updateOptions({
 											xaxis: {
-												min: currentMin - zoomAmount,
-												max: currentMax + zoomAmount,
+												min: newMinX,
+												max: newMaxX,
 											},
 										});
 									},
+									
 
 									dataPointMouseEnter: function(chartContext, { xaxis, yaxis }) {
 										window.ReactNativeWebView.postMessage(
@@ -369,14 +399,14 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								width: 1.5 //['straight', 'smooth', 'monotoneCubic', 'stepline']
 							},
 							noData: {
-								text: "",
+								text: "Data not available",
 								align: "center",
 								verticalAlign: "middle",
 								offsetX: 0,
 								offsetY: -50,
 								style: {
 									color: "#e31837",
-									fontSize: "25px",
+									fontSize: "15px",
 									fontFamily: "Helvetica, Arial, sans-serif",
 								},
 							},
@@ -408,7 +438,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								},
 								padding: {
 									top: -20,
-									right:0,
+									right:10,
 									bottom: -5,
 									left:0,
 								},
@@ -439,22 +469,22 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								title: { 
 									text: "Date / Time",
 									style: {
-									fontSize: "12px",
-									fontFamily: "Helvetica, Arial, sans-serif",
+										fontSize: "12px",
+										fontFamily: "Helvetica, Arial, sans-serif",
 									}, 
 								},
 								labels: {
-									show: true,
-									rotate: 0,
-									rotateAlways: false,	
+									show: true, 
+									rotate: 0, 
+									rotateAlways: true,	
 									position: "top",
 									textAnchor: "end",
-									hideOverlappingLabels: true,
+									hideOverlappingLabels: false,
 									showDuplicates: false,
 									trim: false,
 									maxHeight: 120,
-									offsetX: 0,
-									offsetY: -2, 
+									offsetX: -1,
+									offsetY: -3, 
 									style: 
 									{
 										fontSize: "8px",
@@ -462,7 +492,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										fontWeight: 300,
 										cssClass: 'apexcharts-xaxis-label',
 									},
-									datetimeUTC: true,
+									
 									formatter: (value) => {
 										const date = new Date(value);
 										return date.toLocaleString("en-IN", {
@@ -546,10 +576,13 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									offsetY: 0,
 									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 10 }).format(value),
 								},
+								
 								axisBorder: {
-									show: false,
+									show: true,
 									color: "#78909C",
-									offsetX: 0,
+									height: "100%",
+									width: 1,
+									offsetX: -7.6,
 									offsetY: 0,
 								},
 								axisTicks: {
@@ -557,7 +590,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									borderType: "solid",
 									color: "#78909C",
 									width: 6,
-									offsetX: 0,
+									offsetX: 11,
 									offsetY: 0,
 								},
 							},
@@ -631,7 +664,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								chart: { 
 									//width: '95%' , 
 									height:'90%',
-									background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center",
+									background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center",
 								}, 
 								xaxis: 
 									{   
@@ -710,15 +743,11 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					}
 
 					function updateLocale(newLocale) {
-						const localeOptions = newLocale === 'de' ? locales.de : locales.en;
+						
 						const xaxisTitle= newLocale === 'de'? "Datum / Uhrzeit":"Date / Time";
 						const selectedLocale = locales[newLocale];
 						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateLocale',value:[newLocale,xaxisTitle] }));
 						chart.updateOptions({
-							chart: {
-								// locales: [locales.de],
-								// defaultLocale: "de",
-							},
 							tooltip: {
 								y: {
 									formatter: (value) => {
@@ -748,51 +777,25 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								title: { 
 									text: newLocale === 'de'? "Datum / Uhrzeit":"Date / Time",
 									style: {
-									fontSize: "12px",
-									fontFamily: "Helvetica, Arial, sans-serif",
+										fontSize: "12px",
+										fontFamily: "Helvetica, Arial, sans-serif",
 									}, 
 								},
 								labels: {
 									show: true,
-									rotate: 0,
-									rotateAlways: false,
-									position: "top",
-									textAnchor: "end",
-									hideOverlappingLabels: true,
-									showDuplicates: false,
-									trim: false,
-									maxHeight: 120,
-									style: {
-									fontSize: "8px",
-									fontFamily: "Helvetica, Arial, sans-serif",
-									fontWeight: 300,
+									formatter: (value) => {
+										const date = new Date(value);
+										return date.toLocaleString(newLocale === 'de' ? 'de-DE' : 'en-IN', {
+											year: "numeric",
+											month: "short",
+											day: "2-digit",
+											timeZone: "Europe/Berlin",
+										});
+									},
+									offsetX: -1,
+									offsetY: -2, 
 								},
-								formatter: (value) => {
-									const date = new Date(value);
-									return date.toLocaleString(newLocale === 'de' ? 'de-DE' : 'en-IN', {
-										year: "numeric",
-										month: "short",
-										day: "2-digit",
-										timeZone: "Europe/Berlin",
-									});
-								},
-								},
-								axisBorder: {
-								show: true,
-								color: "#78909C",
-								height: 1,
-								width: "100%",
-								offsetX: 0,
-								offsetY: 0,
-								},
-							axisTicks: {
-								show: true,
-								borderType: "solid",
-								color: "#78909C",
-								height: 6,
-								offsetX: 0,
-								offsetY: 0,
-								},
+								
 							},
 							yaxis: {
 								title: { 
@@ -821,29 +824,15 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									offsetY: 0,
 									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 0 }).format(value),
 								},
-								axisBorder: {
-									show: false,
-									color: "#78909C",
-									offsetX: 0,
-									offsetY: 0,
-								},
-								axisTicks: {
-									show: true,
-									borderType: "solid",
-									color: "#78909C",
-									width: 1,
-									offsetX: -5,
-									offsetY: 0,
-								},
+								
 							},
 							responsive: [{
 								breakpoint: 480,
 								options: {
 								chart: { 
 									width: '100%' , 
-									 height:'91%',
-									 background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center ",
-								   
+									height:'91%',
+									background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat cover ",
 								}, 
 								xaxis: 
 									{   
@@ -1289,9 +1278,13 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 									enabled: true,
 									delay: 1000
 								},
+								initialAnimation: {
+									enabled: false,           // Enable initial animation if desired
+									speed: 1000,             // Adjust the speed for initial loading animation
+								},
 							},  
 							selection: {
-								enabled: true,
+								enabled: false,
 							}, 
 							events:{
 								updated: function (chartContext) {
@@ -1301,6 +1294,39 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 									
 									highlightMinAndMax(chartContext);
 
+								},
+								beforeZoom: function (chartContext, { xaxis, yaxis }) {
+									// Access the chart's series data
+									const seriesMin = chartContext.w.globals.seriesX[0][0]; // Minimum x-value in the dataset
+									const seriesMax = chartContext.w.globals.seriesX[0][chartContext.w.globals.seriesX[0].length - 1]; // Maximum x-value in the dataset
+								
+									const minDistanceBetweenPoints =
+										chartContext.w.globals.seriesX[0][1] - chartContext.w.globals.seriesX[0][0]; // Distance between two consecutive points
+								
+									// Ensure at least one point is visible in the zoomed range
+									const newMinX = Math.max(xaxis.min, seriesMin);
+									const newMaxX = Math.min(xaxis.max, seriesMax);
+								
+									if (newMaxX - newMinX < minDistanceBetweenPoints) {
+										// Prevent zooming if no point would be visible
+										
+										return {
+											xaxis: {
+												min: chartContext.w.globals.minX,
+												max: chartContext.w.globals.maxX,
+											},
+											yaxis,
+										};
+									}
+								
+									// Allow zooming with validated values
+									return {
+										xaxis: {
+											min: newMinX,
+											max: newMaxX,
+										},
+										yaxis,
+									};
 								},
 							},       
 							toolbar: {
@@ -2577,22 +2603,50 @@ export const webviewAreaHtmlcontent = `
 							initialAnimation: {enabled: true}
 						},
 						events:{
+							// selection: function(chartContext, { xaxis, yaxis }) {
+							// 	window.ReactNativeWebView.postMessage(
+							// 		JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
+							// 	);
+							// 	const currentMin = chart.w.globals.minX;
+							// 	const currentMax = chart.w.globals.maxX;
+							// 	const zoomAmount = (currentMax - currentMin) * 0.1;
+							// 	chart.updateOptions({
+							// 		xaxis: {
+							// 			min: currentMin - zoomAmount,
+							// 			max: currentMax + zoomAmount,
+							// 		},
+							// 	});
+							// 	updateLocale();
+							// },
 							selection: function(chartContext, { xaxis, yaxis }) {
 								window.ReactNativeWebView.postMessage(
-									JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
+									JSON.stringify({ action: 'selection', values: [xaxis, yaxis] })
 								);
+							
 								const currentMin = chart.w.globals.minX;
 								const currentMax = chart.w.globals.maxX;
-								const zoomAmount = (currentMax - currentMin) * 0.1;
+							
+								const zoomAmount = (currentMax - currentMin) * 0.3;
+							
+								// Ensure the new zoomed range stays within the series bounds
+								const newMinX = Math.max(
+									currentMin - zoomAmount,
+									chart.w.globals.seriesX[0][0] // Series minimum
+								);
+								const newMaxX = Math.min(
+									currentMax + zoomAmount,
+									chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+								);
+							
+								// Update chart options
 								chart.updateOptions({
 									xaxis: {
-										min: currentMin - zoomAmount,
-										max: currentMax + zoomAmount,
+										min: newMinX,
+										max: newMaxX,
 									},
 								});
 								updateLocale();
 							},
-							
 						}
 				  },
 				  title: {

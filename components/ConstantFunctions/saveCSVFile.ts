@@ -1,8 +1,7 @@
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as MediaLibrary from "expo-media-library";
-import { Alert, Platform, ToastAndroid } from "react-native";
-import { StorageAccessFramework } from "expo-file-system";
+import { Alert, Linking, Platform, ToastAndroid } from "react-native";
 
 const splitTimestamp = (timestamp: number) => {
     const date = new Date(timestamp); // Convert timestamp to Date object
@@ -65,25 +64,50 @@ export const saveCSVToFile = async (jsonData: any[]) => {
     try {
         // Request storage permissions
         const permissions =
-            await StorageAccessFramework.requestDirectoryPermissionsAsync();
+            await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
         if (!permissions.granted) {
             console.log("Permissions not granted!");
             return;
         }
 
         // Create the file in the selected directory
-        const uri = await StorageAccessFramework.createFileAsync(
-            permissions.directoryUri,
-            fileName,
-            "application/csv"
-        );
+        const uri: any =
+            await FileSystem.StorageAccessFramework.createFileAsync(
+                permissions.directoryUri,
+                fileName,
+                "application/csv"
+            );
 
         // Write the CSV content as a string to the created file
         await FileSystem.writeAsStringAsync(uri, csvContent, {
             encoding: FileSystem.EncodingType.UTF8,
         });
+        console.log(uri);
 
-        ToastAndroid.show("CSV file saved successfully!", ToastAndroid.SHORT);
+        // Show an alert with an "Open" button
+        // Show an alert with an "Open" button
+
+        // Alert.alert(
+        //     "CSV Saved Successfully",
+        //     `The CSV file has been saved. You can open it now.`,
+        //     [
+        //         {
+        //             text: "Open",
+        //             onPress: () => {
+        //                 // Open the file using the default file viewer app
+        //                 Linking.openURL(uri).catch((err) =>
+        //                     console.error("Failed to open file:", err)
+        //                 );
+        //             },
+        //         },
+        //         {
+        //             text: "Cancel",
+        //             style: "cancel",
+        //         },
+        //     ]
+        // );
+        ToastAndroid.show("Download", ToastAndroid.SHORT);
     } catch (error) {
         console.log("Error saving CSV file:", error);
         ToastAndroid.show("Error saving CSV file", ToastAndroid.LONG);

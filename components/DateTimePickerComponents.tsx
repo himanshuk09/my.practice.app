@@ -34,7 +34,6 @@ const DateTimePickerComponents = ({
         endDate: DateType;
     }>({ startDate: undefined, endDate: undefined });
     const [dates, setDates] = useState<DateType[] | undefined>();
-
     const [locale, setLocale] = useState("de");
     const onChangeMode = useCallback(
         (value: ModeType) => {

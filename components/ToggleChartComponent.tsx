@@ -111,9 +111,15 @@ const ToggleChartComponent = ({
         }
     };
     const updateChartData = (filteredData: any) => {
+        if (Platform.OS === "web") {
+            setLoading(true);
+        }
         if (filteredData?.length === 0) {
             updateChart("options", {
                 noData: { text: "Data not available" },
+                grid: {
+                    show: false,
+                },
             });
             updateChart("series", []);
             setTimeout(() => {
@@ -141,15 +147,11 @@ const ToggleChartComponent = ({
                         enabled: false,
                     },
                 },
+                grid: {
+                    show: true,
+                },
             });
             updateChart("series", filteredData);
-            // updateChart("options", {
-            //     chart: {
-            //         animations: {
-            //             enabled: true,
-            //         },
-            //     },
-            // });
 
             if (
                 iFrameRef?.current &&
@@ -171,6 +173,9 @@ const ToggleChartComponent = ({
                         enabled: true,
                     },
                 },
+                grid: {
+                    show: true,
+                },
             });
             updateChart("series", filteredData);
             if (
@@ -181,10 +186,17 @@ const ToggleChartComponent = ({
                 iFrameRef?.current?.contentWindow?.resetZoom();
             }
         }
-        if (Platform.OS === "web") {
-            setTimeout(() => {
-                setLoading(false);
-            }, 1000);
+        if (
+            Platform.OS === "web" ||
+            activeTab === "Year" ||
+            activeTab === "Year_3"
+        ) {
+            setTimeout(
+                () => {
+                    setLoading(false);
+                },
+                activeTab === "Year" || activeTab === "Year_3" ? 2000 : 5000
+            );
         }
     };
     const handleRangeDataFilter = () => {
@@ -396,6 +408,8 @@ const ToggleChartComponent = ({
                     webViewhtmlContent={WebviewLineHtmlContent}
                     iFramehtmlContent={iFrameLineHtmlcontent}
                     showToggle={false}
+                    UpdateXaxisFormate={UpdateXaxisFormate}
+                    setLoading={setLoading}
                 />
             </View>
 

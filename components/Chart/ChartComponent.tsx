@@ -35,6 +35,8 @@ type ChartComponentProps = {
     showToolbar?: boolean;
     showToggle?: boolean;
     iFrameWidth?: string | number | undefined;
+    UpdateXaxisFormate?: any;
+    setLoading?: any;
 };
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
@@ -49,6 +51,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     showToolbar = true,
     showToggle,
     iFrameWidth = "100%",
+    UpdateXaxisFormate,
+    setLoading,
 }) => {
     const dispatch = useDispatch();
     const viewShotRef = useRef<any>(null);
@@ -72,13 +76,26 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             // webViewRef?.current?.reload();
             (webViewRef?.current as any)?.injectJavaScript(
                 `updateChartOptions(${JSON.stringify({
-                    chart: {
-                        height: 270,
-                    },
+                    // chart: {
+                    //     height: 270,
+                    // },
                     xaxis: {
+                        // labels: {
+                        //     rotate: 0,
+                        //     rotateAlways: false,
+                        // },
                         labels: {
+                            show: true,
                             rotate: 0,
-                            rotateAlways: false,
+                            rotateAlways: true,
+                            position: "top",
+                            textAnchor: "end",
+                            hideOverlappingLabels: false,
+                            showDuplicates: false,
+                            trim: false,
+                            maxHeight: 120,
+                            offsetX: -1,
+                            offsetY: -2,
                         },
                     },
                 })});`
@@ -86,9 +103,16 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         }, 500);
         setTimeout(
             () => {
+                // UpdateXaxisFormate();
                 dispatch(inActiveLoading());
             },
-            activeTab === "Year" ? 5000 : 2000
+            activeTab === "Year" || activeTab === "Year_3" ? 5000 : 3000
+        );
+        setTimeout(
+            () => {
+                setLoading(false);
+            },
+            activeTab === "Year" || activeTab === "Year_3" ? 6000 : 4000
         );
         dispatch(setOrientation(!isLandscape));
     };

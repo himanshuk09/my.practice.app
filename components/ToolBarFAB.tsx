@@ -66,13 +66,7 @@ export default function FloatingActionMenu({
             color: "#848484",
             label: "Zoom Out",
         },
-        {
-            icon: "home",
-            action: "resetZoom()",
-            size: 15,
-            color: "#848484",
-            label: "Reset Zoom",
-        },
+
         {
             icon: "hand-point-left",
             action: "customPanLeft()",
@@ -87,7 +81,13 @@ export default function FloatingActionMenu({
             color: "#848484",
             label: "Pan Right",
         },
-
+        {
+            icon: "home",
+            action: "resetZoom()",
+            size: 15,
+            color: "#848484",
+            label: "Reset Zoom",
+        },
         {
             icon: "git-commit",
             action: `toggleMarkers()`,
