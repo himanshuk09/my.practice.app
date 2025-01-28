@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import { Href, Redirect, useRouter } from "expo-router";
 import Logo from "@/components/SVG/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const Forgotpassword = () => {
     const [errorMessage, setErrorMessage] = useState<string>("");

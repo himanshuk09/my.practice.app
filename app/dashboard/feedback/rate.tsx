@@ -15,7 +15,7 @@ import {
 
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";

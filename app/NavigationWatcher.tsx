@@ -68,7 +68,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
                 }
                 return true; // Prevent default back behavior
             }
-
+            dispatch(activeLoading());
             if (
                 [
                     "/dashboard/(tabs)/prices",
@@ -78,14 +78,11 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
                     "/dashboard/(tabs)/portfolio",
                 ].includes(currentPath)
             ) {
-                dispatch(activeLoading());
                 setTimeout(() => router.replace("/dashboard"));
                 return true;
             }
-            dispatch(activeLoading());
-            setTimeout(() => {
-                return false;
-            });
+            setTimeout(() => router.back());
+            return true;
         };
         fetchUserLoginStatus();
         const backHandler = BackHandler.addEventListener(

@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons"; // For icons
 import { useState } from "react";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 
 export default function FloatingActionMenu({
     activeTab,

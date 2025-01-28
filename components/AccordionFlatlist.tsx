@@ -10,6 +10,7 @@ import React, { useRef, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Href, useRouter } from "expo-router";
 import { st } from "@/utils/Styles";
+import { ShimmerAccordion } from "./ShimmerEffect";
 
 const AccordionFlatlist = ({
     data,
@@ -54,8 +55,8 @@ const AccordionFlatlist = ({
                         ? detailsLength * 88
                         : detailsLength * 78
                     : Platform.OS === "web"
-                    ? 30
-                    : 35;
+                      ? 30
+                      : 35;
             // Expand the clicked accordion
             Animated.timing(animation, {
                 toValue:
@@ -134,7 +135,9 @@ const AccordionFlatlist = ({
         );
     };
 
-    return (
+    return data?.length <= 0 ? (
+        <ShimmerAccordion />
+    ) : (
         <>
             <View className="w-full  p-3 bg-[#e31837] ">
                 <Text className="flex justify-start font-normal  py-2 p-3  items-center mb-4  h-14 text-xl rounded-sm text-white">

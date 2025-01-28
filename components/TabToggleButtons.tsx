@@ -1,4 +1,4 @@
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { st } from "@/utils/Styles";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Text, View } from "react-native";

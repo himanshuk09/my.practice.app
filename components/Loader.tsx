@@ -4,6 +4,7 @@ import {
     Animated,
     Platform,
     Easing,
+    StyleSheet,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import Svg, {

@@ -6,9 +6,11 @@ import Prices from "@/components/SVG/Prices";
 import PFC from "@/components/SVG/PFC";
 import Load from "@/components/SVG/Load";
 import Settings from "@/components/SVG/Settings";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { Href, router } from "expo-router";
 import Signals from "./SVG/Signals";
+import { activeLoading } from "@/store/navigationSlice";
+import { useDispatch } from "react-redux";
 interface MenuCardProps {
     item: {
         id: number;
@@ -62,10 +64,11 @@ const NotificationIcon = ({ count }: { count: number }) => (
 );
 
 const MenuCard = memo(({ item, index, startLoader }: MenuCardProps) => {
+    const dispatch = useDispatch();
     return (
         <Pressable
             className=" m-1 items-center"
-            onPressIn={() => {
+            onPressIn={async () => {
                 startLoader();
                 setTimeout(() => router.push(item.route));
             }}

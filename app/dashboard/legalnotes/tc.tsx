@@ -1,4 +1,4 @@
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { RootState } from "@/store/store";
 import { useIsFocused } from "@react-navigation/native";

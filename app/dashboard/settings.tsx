@@ -10,7 +10,7 @@ import { Picker } from "@react-native-picker/picker";
 import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLocale } from "@/store/languageSlice";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { Href, useRouter } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";

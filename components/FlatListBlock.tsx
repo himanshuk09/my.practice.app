@@ -9,13 +9,15 @@ import {
     Easing,
     RefreshControl,
 } from "react-native";
-import { Href, useRouter } from "expo-router";
-import Loader from "./Loader";
+import { Href, usePathname, useRouter } from "expo-router";
+
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { st } from "@/utils/Styles";
+import { ShimmerFlatListBlock } from "./ShimmerEffect";
+import { useSegments } from "expo-router";
 
 const FlatListBlock1 = ({
     title,
@@ -32,6 +34,16 @@ const FlatListBlock1 = ({
     const ITEM_HEIGHT = Platform.OS === "web" ? 73.5 : scrollHeight;
     const isFocused = useIsFocused();
     const [isRefreshing, setIsRefreshing] = useState(false);
+    // Get the current route
+    const currentRoute = usePathname(); // Provides the current route path
+
+    // Ref to store the previous route
+    const previousRouteRef = useRef<string | null>(null);
+
+    // Store the previous route on route change
+
+    const previousRoute: any = previousRouteRef.current; // Retrieve the previous route
+
     const ListItem = memo(({ item, router }: any) => (
         <TouchableOpacity
             key={item.id}
@@ -70,6 +82,10 @@ const FlatListBlock1 = ({
     );
 
     useEffect(() => {
+        previousRouteRef.current = currentRoute;
+    }, [currentRoute]);
+    useEffect(() => {
+        if (/^\/dashboard\/portfolio\/\d+$/.test(previousRoute)) return;
         if (enableAutoScroll && flatListRef.current && isFocused) {
             // Find the first index that matches the current year
             const targetIndex = items.findIndex(
@@ -87,7 +103,7 @@ const FlatListBlock1 = ({
                         // Animate the scrolling smoothly
                         Animated.timing(scrollValue, {
                             toValue: offset, // Scroll target offset
-                            duration: 800, // Duration in milliseconds
+                            duration: 700, // Duration in milliseconds
                             easing: Easing.inOut(Easing.quad), // Smooth easing function
                             useNativeDriver: false, // Disable for scrolling animations
                         }).start();
@@ -105,13 +121,11 @@ const FlatListBlock1 = ({
                 }, 500);
             }
         }
-    }, [items, enableAutoScroll, currentYear, isFocused]);
+    }, [items, enableAutoScroll, currentYear, isFocused, items?.length <= 0]);
 
-    if (items.length === 0) {
-        return <Loader />;
-    }
-
-    return (
+    return items?.length <= 0 ? (
+        <ShimmerFlatListBlock />
+    ) : (
         <View
             style={{
                 height: height,

@@ -8,9 +8,11 @@ import { useIsFocused } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 
 const Signals = () => {
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [signalsGas, setSignalsGas] = useState<any>();
+    const [signalsStrom, setSignalsStrom] = useState<any>();
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
-    const [isRefreshing, setIsRefreshing] = useState(false);
     let NavigateTo = "dashboard/signals";
     const onRefresh = async () => {
         setIsRefreshing(true);
@@ -20,15 +22,15 @@ const Signals = () => {
         }, 2000);
     };
     const combinedData = [
-        { type: "header", title: "Gas", data: SignalsGas },
-        { type: "header", title: "Strom", data: SignalsStrom },
+        { type: "header", title: "Gas", data: signalsGas },
+        { type: "header", title: "Strom", data: signalsStrom },
     ];
     const renderItem = ({ item }: any) => {
         if (item.type === "header") {
             return (
                 <FlatListBlock
                     title={item.title}
-                    items={item.data}
+                    items={item.data === undefined ? [] : item.data}
                     enableAutoScroll={false}
                     height={"auto"}
                     NavigateTo={NavigateTo}
@@ -39,7 +41,11 @@ const Signals = () => {
     };
 
     useEffect(() => {
-        setTimeout(() => dispatch(inActiveLoading()), 100);
+        dispatch(inActiveLoading());
+        setTimeout(() => {
+            setSignalsGas(SignalsGas);
+            setSignalsStrom(SignalsStrom);
+        }, 1000);
     }, [isFocused]);
     return (
         <SafeAreaView className="flex-1 bg-white">

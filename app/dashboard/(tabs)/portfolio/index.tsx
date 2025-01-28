@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { gasItems, powerItems } from "@/constants/constantData";
 import FlatListBlock from "@/components/FlatListBlock";
-
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
@@ -16,15 +15,17 @@ const Portfolio: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                setGasData(gasItems);
-                setPowerData(powerItems);
-                dispatch(inActiveLoading());
+                setTimeout(() => {
+                    setGasData(gasItems);
+                    setPowerData(powerItems);
+                }, 1000);
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
                 console.log("finally");
             }
         };
+        dispatch(inActiveLoading());
         fetchData();
     }, [isFocused]);
 

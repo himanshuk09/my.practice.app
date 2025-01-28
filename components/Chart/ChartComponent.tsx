@@ -35,7 +35,6 @@ type ChartComponentProps = {
     showToolbar?: boolean;
     showToggle?: boolean;
     iFrameWidth?: string | number | undefined;
-    UpdateXaxisFormate?: any;
     setLoading?: any;
 };
 
@@ -51,7 +50,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     showToolbar = true,
     showToggle,
     iFrameWidth = "100%",
-    UpdateXaxisFormate,
     setLoading,
 }) => {
     const dispatch = useDispatch();
@@ -76,14 +74,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             // webViewRef?.current?.reload();
             (webViewRef?.current as any)?.injectJavaScript(
                 `updateChartOptions(${JSON.stringify({
-                    // chart: {
-                    //     height: 270,
-                    // },
+                    chart: {
+                        height: 285,
+                    },
                     xaxis: {
-                        // labels: {
-                        //     rotate: 0,
-                        //     rotateAlways: false,
-                        // },
                         labels: {
                             show: true,
                             rotate: 0,
@@ -94,8 +88,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                             showDuplicates: false,
                             trim: false,
                             maxHeight: 120,
-                            offsetX: -1,
-                            offsetY: -2,
+                            // offsetX: -1,
+                            // offsetY: -2,
                         },
                     },
                 })});`
@@ -103,16 +97,19 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         }, 500);
         setTimeout(
             () => {
-                // UpdateXaxisFormate();
                 dispatch(inActiveLoading());
             },
-            activeTab === "Year" || activeTab === "Year_3" ? 5000 : 3000
+            activeTab === "Year" || activeTab === "Year_3" || activeTab === ""
+                ? 5000
+                : 3000
         );
         setTimeout(
             () => {
                 setLoading(false);
             },
-            activeTab === "Year" || activeTab === "Year_3" ? 6000 : 4000
+            activeTab === "Year" || activeTab === "Year_3" || activeTab === ""
+                ? 6000
+                : 4000
         );
         dispatch(setOrientation(!isLandscape));
     };

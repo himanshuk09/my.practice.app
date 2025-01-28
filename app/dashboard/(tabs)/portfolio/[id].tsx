@@ -24,7 +24,7 @@ import {
     webviewAreaHtmlcontent,
     webviewDonutChartHtml,
 } from "@/components/Chart/charthtmlcontent";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { portfolioCards } from "@/constants/constantData";
 import { st } from "@/utils/Styles";
 import { useLocalSearchParams } from "expo-router";
@@ -35,6 +35,8 @@ import {
     saveCSVToFile,
 } from "@/components/ConstantFunctions/saveCSVFile";
 import { cockpitChartData } from "@/constants/cockpitchart";
+import { PortFolioChartShimmer } from "@/components/ChartShimmer";
+
 type ChartUpdateType = "series" | "options" | "chart";
 
 const InfoItem = ({
@@ -175,6 +177,7 @@ const Transactions = ({ cards }: any) => {
                     keyExtractor={(item: any, index) => index.toString()}
                     nestedScrollEnabled={true}
                     scrollEnabled={true}
+                    initialNumToRender={3}
                     style={{ padding: 8, flex: 1 }}
                     className="bg-slate-50 overflow-scroll  p-2"
                 />
@@ -185,6 +188,7 @@ const Transactions = ({ cards }: any) => {
 const PortfolioOverView = () => {
     const [isChartVisible, setIsChartVisible] = useState(true);
     const [blockWidth, setBlockWidth] = useState(0);
+    const [testToggleShimmer, setTestToggleShimmer] = useState(true);
     const { height: screenHeight } = Dimensions.get("window");
     const locale = useSelector((state: RootState) => state.language.locale);
     const slideAnim = useRef(new Animated.Value(0)).current;
@@ -362,7 +366,7 @@ const PortfolioOverView = () => {
             }
         }
     };
-    const updateArea = () => {
+    const update = () => {
         const filteredData = [45, 45];
         const newOptions = {
             colors: ["#4CAF50", "#FFC107"],
@@ -394,13 +398,14 @@ const PortfolioOverView = () => {
         }, 100);
         setTimeout(() => {
             updateLocale();
-        }, 2000);
+            setTestToggleShimmer(false);
+        }, 1000);
     }, [isFocused]);
     //.....
     const toggleView = () => {
         Animated.timing(slideAnim, {
             toValue: isChartVisible ? 1 : 0,
-            duration: 200,
+            duration: 0,
             easing: Easing.inOut(Easing.ease),
             useNativeDriver: true,
         }).start();
@@ -421,219 +426,174 @@ const PortfolioOverView = () => {
                 showHideTransition={"slide"}
                 networkActivityIndicatorVisible
             />
-            <View style={{ flex: 1 }}>
-                <Animated.View
-                    style={[
-                        {
-                            transform: [
+            {testToggleShimmer ? (
+                <View className="flex-1  bg-white">
+                    <PortFolioChartShimmer />
+                </View>
+            ) : (
+                <>
+                    <View style={{ flex: 1 }}>
+                        <Animated.View
+                            style={[
                                 {
-                                    translateX: slideAnim.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: [0, -blockWidth],
-                                    }),
+                                    transform: [
+                                        {
+                                            translateX: slideAnim.interpolate({
+                                                inputRange: [0, 1],
+                                                outputRange: [0, -blockWidth],
+                                            }),
+                                        },
+                                    ],
                                 },
-                            ],
-                        },
-                        { height: isChartVisible ? "100%" : undefined },
-                    ]}
-                    onLayout={onLayout}
-                >
-                    {isChartVisible && (
-                        <View className="flex-1 bg-white">
-                            <View
-                                className={`flex flex-row justify-between`}
-                                style={{
-                                    height:
-                                        Platform.OS === "web"
-                                            ? screenHeight * 0.25
-                                            : screenHeight * 0.23, // Dynamically set 30% height in style
-                                }}
-                            >
-                                <ChartComponent
-                                    webViewRef={donutwebViewRef}
-                                    iFrameRef={donutIFrameRef}
-                                    onMessage={onMessage}
-                                    webViewhtmlContent={webviewDonutChartHtml}
-                                    iFramehtmlContent={iFreameDonutChartHtml}
-                                    showToggleOrientation={false}
-                                    showToolbar={false}
-                                    iFrameWidth="50%"
-                                />
+                                { height: isChartVisible ? "100%" : undefined },
+                            ]}
+                            onLayout={onLayout}
+                        >
+                            {isChartVisible && (
+                                <View className="flex-1 bg-white">
+                                    <View
+                                        className={`flex flex-row justify-between`}
+                                        style={{
+                                            height:
+                                                Platform.OS === "web"
+                                                    ? screenHeight * 0.25
+                                                    : screenHeight * 0.23, // Dynamically set 30% height in style
+                                        }}
+                                    >
+                                        <ChartComponent
+                                            webViewRef={donutwebViewRef}
+                                            iFrameRef={donutIFrameRef}
+                                            onMessage={onMessage}
+                                            webViewhtmlContent={
+                                                webviewDonutChartHtml
+                                            }
+                                            iFramehtmlContent={
+                                                iFreameDonutChartHtml
+                                            }
+                                            showToggleOrientation={false}
+                                            showToolbar={false}
+                                            iFrameWidth="50%"
+                                        />
 
-                                <View className="flex flex-col justify-start   items-start my-1">
-                                    <View className="my-2">
-                                        <Text className="text-sm text-[#e31837] font-semibold">
-                                            Closed
-                                        </Text>
-                                        {closedData.map((item, index) => (
-                                            <InfoItem
-                                                key={index}
-                                                value={item.value}
-                                                unit={item.unit}
-                                                width={
-                                                    ["w-28", "w-34", "w-28"][
-                                                        index
-                                                    ]
-                                                }
+                                        <View className="flex flex-col justify-start   items-start my-1">
+                                            <View className="my-2">
+                                                <Text className="text-sm text-[#e31837] font-semibold">
+                                                    Closed
+                                                </Text>
+                                                {closedData.map(
+                                                    (item, index) => (
+                                                        <InfoItem
+                                                            key={index}
+                                                            value={item.value}
+                                                            unit={item.unit}
+                                                            width={
+                                                                [
+                                                                    "w-28",
+                                                                    "w-34",
+                                                                    "w-28",
+                                                                ][index]
+                                                            }
+                                                        />
+                                                    )
+                                                )}
+                                            </View>
+                                            <View>
+                                                <Text className="text-sm text-[#7f7f7f] font-semibold">
+                                                    Open
+                                                </Text>
+                                                {openData.map((item, index) => (
+                                                    <InfoItem
+                                                        key={index}
+                                                        value={item.value}
+                                                        unit={item.unit}
+                                                        width={
+                                                            [
+                                                                "w-28",
+                                                                "w-34",
+                                                                "w-28",
+                                                            ][index]
+                                                        }
+                                                    />
+                                                ))}
+                                            </View>
+                                        </View>
+                                        <View className="mr-10 ml-7 mt-3">
+                                            <FontAwesome5
+                                                name="file-download"
+                                                size={35}
+                                                color="#ef4444"
+                                                onPress={() => {}}
                                             />
-                                        ))}
+                                        </View>
                                     </View>
-                                    <View>
-                                        <Text className="text-sm text-[#7f7f7f] font-semibold">
-                                            Open
-                                        </Text>
-                                        {openData.map((item, index) => (
-                                            <InfoItem
-                                                key={index}
-                                                value={item.value}
-                                                unit={item.unit}
-                                                width={
-                                                    ["w-28", "w-34", "w-28"][
-                                                        index
-                                                    ]
-                                                }
-                                            />
-                                        ))}
+                                    <View className="h-1 bg-[#DEDEDE] mt-1" />
+                                    <View
+                                        className=""
+                                        style={{
+                                            height:
+                                                Platform.OS === "web"
+                                                    ? screenHeight * 0.58
+                                                    : screenHeight * 0.58,
+                                            paddingTop:
+                                                Platform.OS !== "web"
+                                                    ? 15
+                                                    : undefined,
+                                        }}
+                                    >
+                                        <ChartComponent
+                                            webViewRef={areaWebViewRef}
+                                            iFrameRef={areaIFrameRef}
+                                            onMessage={onMessage}
+                                            webViewhtmlContent={
+                                                webviewAreaHtmlcontent
+                                            }
+                                            iFramehtmlContent={
+                                                iframeAreahtlcontent
+                                            }
+                                            showToggleOrientation={false}
+                                            showToggle={false}
+                                        />
                                     </View>
                                 </View>
-                                <View className="mr-10 ml-7 mt-3">
-                                    <FontAwesome5
-                                        name="file-download"
-                                        size={35}
-                                        color="#ef4444"
-                                        onPress={() => {}}
-                                    />
-                                </View>
-                            </View>
-                            <View className="h-1 bg-[#DEDEDE] mt-1" />
-                            <View
-                                className=""
-                                style={{
-                                    height:
-                                        Platform.OS === "web"
-                                            ? screenHeight * 0.58
-                                            : screenHeight * 0.58,
-                                    paddingTop:
-                                        Platform.OS !== "web" ? 15 : undefined,
-                                }}
-                            >
-                                <ChartComponent
-                                    webViewRef={areaWebViewRef}
-                                    iFrameRef={areaIFrameRef}
-                                    onMessage={onMessage}
-                                    webViewhtmlContent={webviewAreaHtmlcontent}
-                                    iFramehtmlContent={iframeAreahtlcontent}
-                                    showToggleOrientation={false}
-                                    showToggle={false}
-                                />
-                            </View>
-                        </View>
-                    )}
-                </Animated.View>
+                            )}
+                        </Animated.View>
 
-                <Animated.View
-                    style={[
-                        {
-                            transform: [
+                        <Animated.View
+                            style={[
                                 {
-                                    translateX: slideAnim.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: [blockWidth, 0],
-                                    }),
+                                    transform: [
+                                        {
+                                            translateX: slideAnim.interpolate({
+                                                inputRange: [0, 1],
+                                                outputRange: [blockWidth, 0],
+                                            }),
+                                        },
+                                    ],
+                                    flex: 1,
                                 },
-                            ],
-                            flex: 1,
-                        },
-                    ]}
-                    className={`${"h-full w-full absolute"} `}
-                >
-                    {!isChartVisible && <Transactions cards={portfolioCards} />}
-                </Animated.View>
-            </View>
-            <TouchableOpacity
-                className={`bg-[#e31836]  bottom-0  h-12 py-3 mx-5 rounded-sm my-2 ${
-                    !isChartVisible &&
-                    "absolute bg-[#e31836]  bottom-0 left-0 right-0  "
-                }`}
-                onPress={toggleView}
-            >
-                <Text className="text-white text-center text-base font-medium uppercase">
-                    {i18n.t(isChartVisible ? "View_Deals" : "View_Portfolio")}
-                </Text>
-            </TouchableOpacity>
-        </SafeAreaView>
-    );
-    return (
-        <SafeAreaView className="flex-1">
-            <View className="flex-1 bg-white">
-                <View className="flex flex-row justify-between h-[28%] md:h-[27%]">
-                    <ChartComponent
-                        webViewRef={donutwebViewRef}
-                        iFrameRef={donutIFrameRef}
-                        onMessage={onMessage}
-                        webViewhtmlContent={webviewDonutChartHtml}
-                        iFramehtmlContent={iFreameDonutChartHtml}
-                        showToggleOrientation={false}
-                        showToolbar={false}
-                    />
-
-                    <View className="flex flex-col justify-start   items-start my-1">
-                        <View className="my-2">
-                            <Text className="text-sm text-[#e31837] font-semibold">
-                                Closed
-                            </Text>
-                            {closedData.map((item, index) => (
-                                <InfoItem
-                                    key={index}
-                                    value={item.value}
-                                    unit={item.unit}
-                                    width={["w-28", "w-34", "w-28"][index]}
-                                />
-                            ))}
-                        </View>
-                        <View>
-                            <Text className="text-sm text-[#7f7f7f] font-semibold">
-                                Open
-                            </Text>
-                            {openData.map((item, index) => (
-                                <InfoItem
-                                    key={index}
-                                    value={item.value}
-                                    unit={item.unit}
-                                    width={["w-28", "w-34", "w-28"][index]}
-                                />
-                            ))}
-                        </View>
+                            ]}
+                            className={`${"h-full w-full absolute"} `}
+                        >
+                            {!isChartVisible && (
+                                <Transactions cards={portfolioCards} />
+                            )}
+                        </Animated.View>
                     </View>
-                    <View className="mr-10 ml-7 mt-3">
-                        <FontAwesome5
-                            name="file-download"
-                            size={35}
-                            color="#ef4444"
-                            onPress={() => {}}
-                        />
-                    </View>
-                </View>
-                <View className="h-1 bg-slate-300 my-1" />
-                <View className="h-[63%] pt-5">
-                    <ChartComponent
-                        webViewRef={areaWebViewRef}
-                        iFrameRef={areaIFrameRef}
-                        onMessage={onMessage}
-                        webViewhtmlContent={webviewAreaHtmlcontent}
-                        iFramehtmlContent={iframeAreahtlcontent}
-                        showToggleOrientation={false}
-                        showToggle={false}
-                    />
-                </View>
-                <TouchableOpacity
-                    className="h-12  items-center bg-[#e31837] m-2 justify-center"
-                    onPress={updateArea}
-                >
-                    <Text className="text-white font-bold">VIEW DETAILS</Text>
-                </TouchableOpacity>
-            </View>
-            <View className="p-1"></View>
+                    <TouchableOpacity
+                        className={`bg-[#e31836]  bottom-0  h-12 py-3 mx-5 rounded-sm my-2 ${
+                            !isChartVisible &&
+                            "absolute bg-[#e31836]  bottom-0 left-0 right-0  "
+                        }`}
+                        onPress={toggleView}
+                    >
+                        <Text className="text-white text-center text-base font-medium uppercase">
+                            {i18n.t(
+                                isChartVisible ? "View_Deals" : "View_Portfolio"
+                            )}
+                        </Text>
+                    </TouchableOpacity>
+                </>
+            )}
         </SafeAreaView>
     );
 };

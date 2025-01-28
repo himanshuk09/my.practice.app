@@ -1,6 +1,6 @@
 import { I18n } from "i18n-js";
 import * as Localization from "expo-localization";
-import { TranslationKeys } from "@/languageKeys/languagekey";
+import { TranslationKeys } from "@/localization/languagekey";
 
 const englishIN = "en-IN";
 const germany = "de-DE";

@@ -8,7 +8,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 				<style>
 					* {
 						margin: 0;
-						padding: 1;
+						padding: 0;
 						box-sizing: border-box;
 					}
 					body {
@@ -17,7 +17,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					}
 					#chart {
 						position: absolute;
-						width: 100%;
+						width: 99%;
 						touch-action: none;
 					}
 					.apexcharts-element-hidden {
@@ -78,6 +78,10 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					};
 					
 					function toggleMarkers() {
+						if (!chart || !chart.w || !chart.w.globals || !chart.w.globals.series || chart.w.globals.series.length === 0 || chart.w.globals.series.every(s => s.length === 0)) {
+							console.warn("Chart has no data, skipping marker toggle.");
+							return;
+						}
 						// Start loader
 						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'startLoader' }));
 						const currentSize = chart.w.config.markers.size;
@@ -121,7 +125,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 							series: [{ name: "Energy Use", data: []}],
 							chart: {
 								type: "line",
-								height: '270',
+								height: '285',
 								background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
 								stacked: false,
 								locales: [locales.en, locales.de],
@@ -131,32 +135,32 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									type: "x", enabled: true, 
 									autoScaleYaxis: true,
 									zoomedArea: {
-										opacity: 0.2,      // Optional: change opacity of the zoomed area
-										strokeColor: '#fff', // Optional: change stroke color of zoom area
+										opacity: 0.1,        		// Optional: change opacity of the zoomed area
+										strokeColor: '#fff', 		// Optional: change stroke color of zoom area
 									},
 								},
 								pan: {
 									enabled: true,
-									type: 'xy', // Allows both vertical and horizontal panning
-									threshold: 1 // Set threshold to control the panning speed
+									type: 'xy',
+									threshold: 0 
 								  },
 								offsetX: 0,
-								offsetY: 30,
+								offsetY: 20,
 								animations: {
-									enabled: false,               // Ensure animation is enabled
-									easing: "easeOutQuad",       // Smooth easing for mobile (or use "easeInOutCubic" for even smoother)
-									speed: 800,                  // Increased speed to make the animation smoother
+									enabled: false,               	// Ensure animation is enabled
+									easing: "easeOutQuad",       	// Smooth easing for mobile (or use "easeInOutCubic" for even smoother)
+									speed: 800,                  	// Increased speed to make the animation smoother
 									dynamicAnimation: {
-										enabled: true,           // Enable dynamic animations for smooth transitions
-										speed: 600,              // Adjust the dynamic speed for better experience
+										enabled: true,           	// Enable dynamic animations for smooth transitions
+										speed: 600,              	// Adjust the dynamic speed for better experience
 									},
 									animategradually: {
-										enabled: true,           // Gradual animation when needed
-										delay: 1000,             // Reduced delay for smoother gradual transitions
+										enabled: true,           	// Gradual animation when needed
+										delay: 1000,             	// Reduced delay for smoother gradual transitions
 									},
 									initialAnimation: {
-										enabled: true,           // Enable initial animation if desired
-										speed: 1000,             // Adjust the speed for initial loading animation
+										enabled: true,           	// Enable initial animation if desired
+										speed: 1000,             	// Adjust the speed for initial loading animation
 									},
 								},
 								toolbar: {
@@ -247,26 +251,8 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										);
 									},
 
-									// selection: function(chartContext, { xaxis, yaxis }) {
-									// 	window.ReactNativeWebView.postMessage(
-									// 		JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
-									// 	);
-									// 	const currentMin = chart.w.globals.minX;
-									// 	const currentMax = chart.w.globals.maxX;
-									// 	const zoomAmount = (currentMax - currentMin) * 0.3;
-									// 	chart.updateOptions({
-									// 		xaxis: {
-									// 			min: currentMin - zoomAmount,
-									// 			max: currentMax + zoomAmount,
-									// 		},
-									// 	});
-									// },
-
 									selection: function(chartContext, { xaxis, yaxis }) {
-										window.ReactNativeWebView.postMessage(
-											JSON.stringify({ action: 'selection', values: [xaxis, yaxis] })
-										);
-									
+										
 										const currentMin = chart.w.globals.minX;
 										const currentMax = chart.w.globals.maxX;
 									
@@ -413,36 +399,36 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 							dataLabels: {
 								enabled: false,
 							},
-							grid: {
-								show: true,
-								borderColor: "#ccc",
-								strokeDashArray: 0,
-								position: "back",
-								row: {
-									colors: ["#e5e5e5", "transparent"],
-									opacity: 0.2,
-								},
-								column: {
-									colors: ["#f8f8f8", "transparent"],
-									opacity: 0.2,
-								},
-								xaxis: {
-									lines: {
-										show: true,
-									},
-								},
-								yaxis: {
-									lines: {
-										show: true,
-									},
-								},
-								padding: {
-									top: -20,
-									right:10,
-									bottom: -5,
-									left:0,
-								},
-							},
+							// grid: {
+							// 	show: true,
+							// 	borderColor: "#ccc",
+							// 	strokeDashArray: 0,
+							// 	position: "back",
+							// 	row: {
+							// 		colors: ["#e5e5e5", "transparent"],
+							// 		opacity: 0.2,
+							// 	},
+							// 	column: {
+							// 		colors: ["#f8f8f8", "transparent"],
+							// 		opacity: 0.2,
+							// 	},
+							// 	xaxis: {
+							// 		lines: {
+							// 			show: true,
+							// 		},
+							// 	},
+							// 	yaxis: {
+							// 		lines: {
+							// 			show: true,
+							// 		},
+							// 	},
+							// 	padding: {
+							// 		// top: -20,
+							// 		// right:10,
+							// 		// bottom: -5,
+							// 		// left:0,
+							// 	},
+							// },
 							markers: {
 								size: 0,
 								colors: "#e31837",
@@ -477,20 +463,19 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									show: true, 
 									rotate: 0, 
 									rotateAlways: true,	
-									position: "top",
-									textAnchor: "end",
+									textAnchor: "start",
 									hideOverlappingLabels: false,
 									showDuplicates: false,
 									trim: false,
 									maxHeight: 120,
-									offsetX: -1,
-									offsetY: -3, 
+									offsetX: 5,
+									offsetY: 10, 
 									style: 
 									{
 										fontSize: "8px",
 										fontFamily: "Helvetica, Arial, sans-serif",
 										fontWeight: 300,
-										cssClass: 'apexcharts-xaxis-label',
+										// cssClass: 'apexcharts-xaxis-label',
 									},
 									
 									formatter: (value) => {
@@ -503,21 +488,21 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										});
 									},
 								},
-								axisBorder: {
-									show: true,
-									color: "#78909C",
-									height: 1,
-									width: "100%",
-									offsetX: 0,
-									offsetY: 0,
-								},
+								// axisBorder: {
+								// 	show: true,
+								// 	color: "#78909C",
+								// 	height: 1,
+								// 	width: "100%",
+								// 	offsetX: 0,
+								// 	offsetY: 0,
+								// },
 								axisTicks: {
 									show: true,
 									borderType: "solid",
-									color: "#78909C",
+									color: "#e5e5e5",
 									height: 6,
 									offsetX: 0,
-									offsetY: -2,
+									 offsetY: 0,
 								},
 								crosshairs: {
 									show: false,
@@ -572,25 +557,25 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										fontFamily: "Helvetica, Arial, sans-serif",
 										fontWeight: 300,
 									},
-									offsetX: -5,//y axis labels 
+									offsetX: 0,//y axis labels 
 									offsetY: 0,
 									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 10 }).format(value),
 								},
 								
-								axisBorder: {
-									show: true,
-									color: "#78909C",
-									height: "100%",
-									width: 1,
-									offsetX: -7.6,
-									offsetY: 0,
-								},
+								// axisBorder: {
+								// 	show: true,
+								// 	color: "#78909C",
+								// 	height: "100%",
+								// 	width:1,
+								// 	offsetX: -1,
+								// 	offsetY: 0,
+								// },
 								axisTicks: {
 									show: true,
 									borderType: "solid",
-									color: "#78909C",
-									width: 6,
-									offsetX: 11,
+									color: "#e5e5e5",
+									width: 3,
+									offsetX: 0,
 									offsetY: 0,
 								},
 							},
@@ -662,30 +647,27 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								breakpoint: 480,
 								options: {
 								chart: { 
-									//width: '95%' , 
-									height:'90%',
+									height:'95%',
 									background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center",
 								}, 
-								xaxis: 
-									{   
-										type: "datetime",
-										tickAmount: 5,
-										title: { 
-											text: "Date / Time",
-											style: {
-												fontSize: "12px",
-												fontFamily: "Helvetica, Arial, sans-serif",
-											}, 
-										},
-										labels: {
-											rotate: -45,
-											rotateAlways: true,
-											position: "top"  
-										},
-									},
+								// xaxis: 
+								// 	{   
+								// 		type: "datetime",
+								// 		tickAmount: 5,
+								// 		title: { 
+								// 			text: "Date / Time",
+								// 			style: {
+								// 				fontSize: "12px",
+								// 				fontFamily: "Helvetica, Arial, sans-serif",
+								// 			}, 
+								// 		},
+										// labels: {
+										// 	rotate: -45,
+										// 	rotateAlways: true,
+										// 	position: "top"  
+										// },
+								// 	},
 								},
-								
-
 							}],
 						};
 						
@@ -742,7 +724,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 						chart.appendData(data)
 					}
 
-					function updateLocale(newLocale) {
+					function updateLocale(newLocale,yAxisTitle) {
 						
 						const xaxisTitle= newLocale === 'de'? "Datum / Uhrzeit":"Date / Time";
 						const selectedLocale = locales[newLocale];
@@ -751,8 +733,8 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 							tooltip: {
 								y: {
 									formatter: (value) => {
-										const formatter = new Intl.NumberFormat(newLocale === 'de' ? 'de-DE' : 'en-IN', { maximumFractionDigits: 3 });
-										return formatter.format(value) + " kWh";
+										const formatter = new Intl.NumberFormat(newLocale === 'de' ? 'de-DE' : 'en-IN', { maximumFractionDigits: 2 });
+										return formatter.format(value) +" " + yAxisTitle;
 									},
 								},
 								x: {
@@ -792,16 +774,15 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 											timeZone: "Europe/Berlin",
 										});
 									},
-									offsetX: -1,
-									offsetY: -2, 
+									 
 								},
 								
 							},
 							yaxis: {
 								title: { 
-									text: "kWh",
+									text: yAxisTitle,
 									rotate: -90,
-									offsetX: 5,
+									offsetX: 0,
 									offsetY: 0,
 									style: {
 										color: "undefined",
@@ -820,8 +801,6 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										fontFamily: "Helvetica, Arial, sans-serif",
 										fontWeight: 300,
 									},
-									offsetX: -4,
-									offsetY: 0,
 									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 0 }).format(value),
 								},
 								
@@ -830,34 +809,34 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								breakpoint: 480,
 								options: {
 								chart: { 
-									width: '100%' , 
+									// width: '100%' , 
 									height:'91%',
 									background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat cover ",
 								}, 
-								xaxis: 
-									{   
-										type: "datetime",
-										tickAmount: 5,
-										title: { 
-											text: newLocale === 'de'? "Datum / Uhrzeit":"Date / Time" ,
-											style: {
-											fontSize: "12px",
-											fontFamily: "Helvetica, Arial, sans-serif",
-											}, 
-										},
-										labels: {
-											rotate: -45,
-											rotateAlways: true,
-											position: "top"  
-										},
-									},
+								// xaxis: 
+								// 	{   
+								// 		type: "datetime",
+								// 		tickAmount: 5,
+								// 		title: { 
+								// 			text: newLocale === 'de'? "Datum / Uhrzeit":"Date / Time" ,
+								// 			style: {
+								// 			fontSize: "12px",
+								// 			fontFamily: "Helvetica, Arial, sans-serif",
+								// 			}, 
+								// 		},
+								// 		labels: {
+								// 			rotate: -45,
+								// 			rotateAlways: true,
+								// 			position: "top"  
+								// 		},
+								// 	},
 								}
 							}],
 						});
 					}
 
 					function updateFormate(type,locale) {
-						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateFormate',values: [type,locale]}));
+					
 						let newLocale=locale==="de"?"de-DE":"en-EN";
 
 						chart.updateOptions({
@@ -870,19 +849,11 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										let formatOptions = {};
 										switch (type) {
 											case 'Day':
-													// formatOptions = {
-													//     year: "numeric",
-													//     month: "short",
-													//     day: "2-digit",
-													//     hour: "2-digit",
-													//     minute: "2-digit",
-													//     timeZone: "Europe/Berlin",
-													// };
 													if (index === 0) {
 														formatOptions ={
 															day: "2-digit",
 															month: "short",
-															year: "numeric",
+															year: "2-digit",
 															// hour: "2-digit",
 															// minute: "2-digit",
 															timeZone: "Europe/Berlin",
@@ -988,8 +959,8 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 						const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
 					  
 						// Calculate the new min and max X values for the pan
-						const newMinX = Math.max(chart.w.globals.minX - moveFactor, chart.w.globals.seriesX[0][0]); // Prevent going past the series minimum
-						const newMaxX = Math.max(chart.w.globals.maxX - moveFactor, chart.w.globals.seriesX[0][0] + (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series minimum
+						const newMinX = Math.max(chart.w.globals.minX - moveFactor, chart.w.globals.seriesX[0][0]); 		// Prevent going past the series minimum
+						const newMaxX = Math.max(chart.w.globals.maxX - moveFactor, chart.w.globals.seriesX[0][0] + (chart.w.globals.maxX - chart.w.globals.minX)); 	// Prevent going past the series minimum
 					  
 						// Update chart options to apply the pan
 						chart.updateOptions({
@@ -999,12 +970,13 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 						  }
 						}); // false, false to not animate the chart and not update the series
 					  };
+
 					  window.customPanRight = function () {
 						const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
 					  
 						// Calculate the new min and max X values for the pan
-						const newMinX = Math.min(chart.w.globals.minX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] - (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series maximum
-						const newMaxX = Math.min(chart.w.globals.maxX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1]); // Prevent going past the series maximum
+						const newMinX = Math.min(chart.w.globals.minX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] - (chart.w.globals.maxX - chart.w.globals.minX)); 		// Prevent going past the series maximum
+						const newMaxX = Math.min(chart.w.globals.maxX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1]); 	// Prevent going past the series maximum
 					  
 						// Update chart options to apply the pan
 						chart.updateOptions({
@@ -1055,9 +1027,6 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								return point[1] > max[1] ? point : max;
 							}, [-Infinity, -Infinity]);
 
-							window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'here1' }));
-							
-						
 							// Add annotations to the chart
 							chartInstance.clearAnnotations();
 							chartInstance.addPointAnnotation({
@@ -1107,7 +1076,6 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								return point.y > max.y ? point : max;
 							}, { x: -Infinity, y: -Infinity });
 
-							window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Highlighted min,max' ,values:[minPoint,maxPoint]}));
 							// Add annotations to the chart
 							chartInstance.clearAnnotations();
 							chartInstance.addPointAnnotation({
@@ -1193,8 +1161,6 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 						}
 					  }
 					  
-				  
-					
 					document.addEventListener("DOMContentLoaded", () => {
 						renderChart();
 					});
@@ -1381,7 +1347,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 							align: "center",
 							verticalAlign: "middle",
 							offsetX: 0,
-							offsetY: 0,
+							offsetY: -50,
 							style: {
 								color: "#e31837",
 								fontSize: "25px",
@@ -1459,8 +1425,10 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 							},
 							labels: {
 								show: true,
-								rotate: -45,
+								rotate: -15,
 								rotateAlways: true,
+								offsetX: 0,
+								offsetY: 3, 
 								position: "top",
 								textAnchor: "end",
 								hideOverlappingLabels: true,
@@ -1665,8 +1633,8 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 										type: 'datetime',
 										labels: {
 											show: true,
-											rotate: -45,
-											rotateAlways: true,
+											// rotate: -45,
+											// rotateAlways: true,
 											position: "top",
 											textAnchor: "end",
 											hideOverlappingLabels: true,
@@ -1791,43 +1759,43 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 								},
 							},
 							xaxis: {
-							labels:{
-								formatter: (value) => {
-								const date = new Date(value);
-								return date.toLocaleString(newLocale === 'de' ? 'de-DE' : 'en-IN', {
-									year: "numeric",
-									month: "short",
-									day: "2-digit",
-									// timeZone: "Europe/Berlin",
-								});
+								labels:{
+									formatter: (value) => {
+									const date = new Date(value);
+									return date.toLocaleString(newLocale === 'de' ? 'de-DE' : 'en-IN', {
+										year: "numeric",
+										month: "short",
+										day: "2-digit",
+										// timeZone: "Europe/Berlin",
+									});
+									},
 								},
 							},
-							},
 							yaxis: {
-							labels: {
-								show: true,
-								formatter: (value) => {
-									const locale = newLocale === 'de' ? 'de-DE' : 'en-IN';
-									return value.toLocaleString(locale, { maximumFractionDigits:0});
-								}
-							},
-							axisBorder: {
-								show: true,
-								color: "#78909C",
-								offsetX: 0,
-								offsetY: 0,
-							},
-							axisTicks: {
-								show: true,
-								borderType: "solid",
-								color: "#78909C",
-								width: 6,
-								offsetX: 0,
-								offsetY: 0,
-							},
-							title: {
-								text: "kWh",
-							},
+								labels: {
+									show: true,
+									formatter: (value) => {
+										const locale = newLocale === 'de' ? 'de-DE' : 'en-IN';
+										return value.toLocaleString(locale, { maximumFractionDigits:0});
+									}
+								},
+								axisBorder: {
+									show: true,
+									color: "#78909C",
+									offsetX: 0,
+									offsetY: 0,
+								},
+								axisTicks: {
+									show: true,
+									borderType: "solid",
+									color: "#78909C",
+									width: 6,
+									offsetX: 0,
+									offsetY: 0,
+								},
+								title: {
+									text: "kWh",
+								},
 							},
 						})}
 					   //..........
@@ -2357,7 +2325,7 @@ export const webviewDonutChartHtml = `
 							  customScale: 1.1,
 							  dataLabels: {
 								  offset: 0,
-								  minAngleToShowLabel: 1,
+								  minAngleToShowLabel: 0,
 							  },
 							  donut: {
 								  size: '65%',
@@ -2392,22 +2360,45 @@ export const webviewDonutChartHtml = `
 							  },
 						  },
 					  },  
-					  tooltip: {
-						  enabled: true,
-						  style: {
-							  fontSize: "8px",
-							  fontFamily: "Arial, sans-serif",
-							  color: "#ffffff",
-						  },
-						  onDatasetHover: {
-							  highlightDataSeries: false,  
-							},
-						  y: {
-							  formatter: function(val) {
-								  return val + "%";
-							  },
-						  },
-					  },
+					//   tooltip: {
+					// 	  enabled: true,
+					// 	//   style: {
+					// 	// 	  fontSize: "8px",
+					// 	// 	  fontFamily: "Arial, sans-serif",
+					// 	// 	  color: "#ffffff",
+					// 	//   },
+					// 	//   onDatasetHover: {
+					// 	// 	  highlightDataSeries: false,  
+					// 	// 	},
+					// 	//   y: {
+					// 	// 	  formatter: function(val) {
+					// 	// 		  return val + "%";
+					// 	// 	  },
+					// 	//   },
+					//   },
+					tooltip: {
+						enabled: true,
+						enabledOnSeries: undefined,
+						shared: true,
+						followCursor: false,
+						intersect: false,
+						inverseOrder: false,
+						custom: undefined,
+						hideEmptySeries: true,
+						fillSeriesColor: true,
+						theme: false,
+						style: {
+						  fontSize: '12px',
+						  fontFamily: undefined,
+						  backgroundColor: "#ffffff",
+						},
+						onDatasetHover: {
+							highlightDataSeries: false,
+						},
+						
+						
+						
+					},
 					  dataLabels: { enabled: false },
 					  legend: {
 						  show: false,
@@ -2704,8 +2695,8 @@ export const webviewAreaHtmlcontent = `
 						categories,
 						labels: {
 							show: true,
-							rotate: -45,
-							rotateAlways: false,
+							// rotate: -45,
+							// rotateAlways: false,
 							position: "top",
 							textAnchor: "start",
 							hideOverlappingLabels: true,
@@ -3294,50 +3285,3 @@ export const iframeAreahtlcontent = ` <!DOCTYPE html>
   </body>
   </html>
 `;
-
-// window.zoomIn = function () {
-// 	window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoom Start' }));
-
-// 	const currentMin = chart.w.globals.minX;
-// 	const currentMax = chart.w.globals.maxX;
-// 	const zoomAmount = (currentMax - currentMin) * 0.1;
-// 	chart.updateOptions({
-// 		xaxis: {
-// 			min: currentMin + zoomAmount,
-// 			max: currentMax - zoomAmount,
-// 		},
-// 	});
-// };
-
-// window.zoomOut = function () {
-// 	window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'Zoomed' }));
-
-// 	const currentMin = chart.w.globals.minX;
-// 	const currentMax = chart.w.globals.maxX;
-// 	const zoomAmount = (currentMax - currentMin) * 0.1;
-// 	chart.updateOptions({
-// 		xaxis: {
-// 			min: currentMin - zoomAmount,
-// 			max: currentMax + zoomAmount,
-// 		},
-// 	});
-// };
-// window.customPanRight = function () {
-
-// 	const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
-
-// 	const newMinX = chart.w.globals.minX + moveFactor;
-// 	const newMaxX = chart.w.globals.maxX + moveFactor;
-
-// 	chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
-//   };
-
-//   window.customPanLeft = function () {
-
-// 	const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.2;
-
-// 	const newMinX = chart.w.globals.minX - moveFactor;
-// 	const newMaxX = chart.w.globals.maxX - moveFactor;
-
-// 	chart.updateOptions({ xaxis: { min: newMinX, max: newMaxX } });
-//   };

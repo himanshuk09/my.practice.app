@@ -15,12 +15,13 @@ import {
     saveCSVToFile,
 } from "@/components/ConstantFunctions/saveCSVFile";
 import { cockpitChartData } from "@/constants/cockpitchart";
+import { ChartShimmer } from "@/components/ChartShimmer";
 
 const PricesDetails = () => {
     const { id } = useLocalSearchParams();
-    const [pricesDetail, setPricesDetails] = useState<any>();
-    const router = useRouter();
-
+    const [pricesDetail, setPricesDetails] = useState<any>([]);
+    const dispatch = useDispatch();
+    const isFocused = useIsFocused();
     const isLandscape = useSelector(
         (state: RootState) => state.orientation.isLandscape
     );
@@ -29,11 +30,12 @@ const PricesDetails = () => {
         const filteredItem = PricesItem.filter(
             (item: any) => item.id === Number(id)
         );
-        setPricesDetails(filteredItem[0]);
+        setTimeout(() => {
+            setPricesDetails(filteredItem[0]);
+        }, 1000);
         console.log(filteredItem[0]);
     }, [id]);
 
-    const [activeTab, setActiveTab] = useState("Year");
     const getCurrentUTCDateTime = () => {
         const now = new Date();
         // Extract UTC components
@@ -46,11 +48,7 @@ const PricesDetails = () => {
         // Format as DD/MM/YYYY HH:mm
         return `${day}/${month}/${year} ${hours}:${minutes}`;
     };
-    const dispatch = useDispatch();
-    const isFocused = useIsFocused();
-    useEffect(() => {
-        setTimeout(() => dispatch(inActiveLoading()), 100);
-    }, [isFocused]);
+
     const fetchChartData = async (tab: string) => {
         try {
             return fetchDataByToggle(tab);
@@ -59,6 +57,9 @@ const PricesDetails = () => {
             return null;
         }
     };
+    useEffect(() => {
+        dispatch(inActiveLoading());
+    }, [isFocused]);
     return (
         <SafeAreaView className="flex-1 ">
             <StatusBar
@@ -68,52 +69,57 @@ const PricesDetails = () => {
                 showHideTransition={"slide"}
                 networkActivityIndicatorVisible
             />
-            <View className="flex-1  bg-white">
-                {/* Header Section */}
+            {pricesDetail <= 0 ? (
+                <View className="flex-1  bg-white">
+                    <ChartShimmer />
+                </View>
+            ) : (
+                <View className="flex-1  bg-white">
+                    {/* Header Section */}
+                    {!isLandscape && (
+                        <View
+                            className="flex justify-between bg-white flex-row  m-1  h-24 px-3  pt-3 pl-5"
+                            style={[st.headerShadow, st.bottomShadow]}
+                        >
+                            <View className="flex-col">
+                                <Text className="text-xl break-words font-bold text-mainCardHeaderText">
+                                    {pricesDetail?.title}
+                                </Text>
+                                <View className="flex-row justify-between w-[90%]">
+                                    <Text className=" text-md text-mainCardHeaderText ">
+                                        {getCurrentUTCDateTime()}
+                                    </Text>
+                                    <Text className="text-mainCardHeaderText  text-sm font-normal">
+                                        {pricesDetail?.unit} €/MWh
+                                    </Text>
+                                </View>
+                            </View>
 
-                {!isLandscape && (
-                    <View
-                        className="flex justify-between bg-white flex-row  m-1  h-24 px-3  pt-3 pl-5"
-                        style={[st.headerShadow, st.bottomShadow]}
-                    >
-                        <View className="flex-col">
-                            <Text className="text-xl break-words font-bold text-mainCardHeaderText">
-                                {pricesDetail?.title}
-                            </Text>
-                            <View className="flex-row justify-between w-[90%]">
-                                <Text className=" text-md text-mainCardHeaderText ">
-                                    {getCurrentUTCDateTime()}
-                                </Text>
-                                <Text className="text-mainCardHeaderText  text-sm font-normal">
-                                    {pricesDetail?.unit} €/MWh
-                                </Text>
+                            <View className="px-2 justify-start ">
+                                <FontAwesome5
+                                    classname="mr-2"
+                                    name="file-download"
+                                    size={30}
+                                    color="#e31837"
+                                    onPress={() => {
+                                        if (Platform.OS === "web") {
+                                            saveCSVToFileWeb(cockpitChartData);
+                                        } else {
+                                            saveCSVToFile(cockpitChartData);
+                                        }
+                                    }}
+                                />
                             </View>
                         </View>
-
-                        <View className="px-2 justify-start ">
-                            <FontAwesome5
-                                classname="mr-2"
-                                name="file-download"
-                                size={30}
-                                color="#e31837"
-                                onPress={() => {
-                                    if (Platform.OS === "web") {
-                                        saveCSVToFileWeb(cockpitChartData);
-                                    } else {
-                                        saveCSVToFile(cockpitChartData);
-                                    }
-                                }}
-                            />
-                        </View>
-                    </View>
-                )}
-                <ToggleChartComponent
-                    showRangePicker={true}
-                    showPeriodOfTime={true}
-                    showValueRange={false}
-                    fetchChartData={fetchChartData}
-                />
-            </View>
+                    )}
+                    <ToggleChartComponent
+                        showRangePicker={true}
+                        showPeriodOfTime={true}
+                        showValueRange={false}
+                        fetchChartData={fetchChartData}
+                    />
+                </View>
+            )}
         </SafeAreaView>
     );
 };

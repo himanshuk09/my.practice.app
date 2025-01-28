@@ -24,7 +24,7 @@ import {
     webviewAreaHtmlcontent,
     webviewDonutChartHtml,
 } from "@/components/Chart/charthtmlcontent";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { portfolioCards } from "@/constants/constantData";
 import { st } from "@/utils/Styles";
 type ChartUpdateType = "series" | "options" | "chart";

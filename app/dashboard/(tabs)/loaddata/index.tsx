@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const LoadData = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
+    const [loadDataMeters, setLoadDataMeters] = useState<any>([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const onRefresh = async () => {
@@ -20,15 +21,15 @@ const LoadData = () => {
         }, 2000);
     };
     const data = [
-        { id: "1", data: AccordionData, title: "Gas" },
-        { id: "2", data: AccordionData, title: "Power" },
+        { id: "1", data: loadDataMeters, title: "Gas" },
+        { id: "2", data: loadDataMeters, title: "Power" },
     ];
     const startLoader = () => {
         dispatch(activeLoading());
     };
     const renderItem = ({ item, index }: any) => (
         <AccordionFlatlist
-            data={AccordionData}
+            data={item?.data}
             title={item?.title}
             startLoader={startLoader}
             scrollToIndex={scrollToIndex}
@@ -36,7 +37,10 @@ const LoadData = () => {
         />
     );
     useEffect(() => {
-        setTimeout(() => dispatch(inActiveLoading()), 100);
+        dispatch(inActiveLoading());
+        setTimeout(() => {
+            setLoadDataMeters(AccordionData);
+        }, 1000);
     }, [isFocused]);
     const mainFlatListRef = useRef<FlatList>(null);
 

@@ -5,7 +5,7 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import ChartComponent from "@/components/Chart/ChartComponent";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { ChartLoaderPNG } from "@/components/Loader";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -33,6 +33,7 @@ type ToggleChartComponentProps = {
     showValueRange?: boolean;
     visibleTabs?: any;
     fetchChartData?: any;
+    yaxisunit?: string;
 };
 const ToggleChartComponent = ({
     isSignaleScreen = false,
@@ -42,6 +43,7 @@ const ToggleChartComponent = ({
     showValueRange,
     visibleTabs,
     fetchChartData,
+    yaxisunit = "€/MWh",
 }: ToggleChartComponentProps) => {
     const [isLoading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<tabsType>("Week");
@@ -227,8 +229,7 @@ const ToggleChartComponent = ({
             updateChart("options", localOption);
         } else {
             if (webViewRef?.current) {
-                const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
-
+                const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}','${yaxisunit}');}`;
                 webViewRef.current.injectJavaScript(updateLocaleScript);
             }
         }
@@ -266,9 +267,9 @@ const ToggleChartComponent = ({
 
         //for loader on marker
         const message = JSON.parse(event.nativeEvent.data);
-        if (message.action === "updateFormate") {
-            setLoading(true);
-        }
+        // if (message.action === "updateFormate") {
+        //     setLoading(true);
+        // }
         if (message.action === "updateChartSeries") {
             setLoading(true);
         }
@@ -340,7 +341,7 @@ const ToggleChartComponent = ({
     //         updateLocale();
     //     }, 1000);
     // }, [locale]);
-    const UpdateXaxisFormate = () => {
+    const UpdateAxisFormate = () => {
         if (webViewRef?.current) {
             const updateLocaleScript = `if (typeof updateFormate === 'function') {updateFormate('${activeTab}','${locale}');}`;
             webViewRef.current.injectJavaScript(updateLocaleScript);
@@ -357,7 +358,7 @@ const ToggleChartComponent = ({
                     setLoading(true);
                 }
                 const data = await fetchChartData(activeTab);
-                UpdateXaxisFormate();
+                UpdateAxisFormate();
                 updateChartData(data);
                 setPreviousTab(activeTab);
             } catch (error) {
@@ -372,8 +373,8 @@ const ToggleChartComponent = ({
                     fetchData();
                     updateLocale();
                     isFirstRender.current = false;
-                    dispatch(inActiveLoading());
                 }, 500);
+                dispatch(inActiveLoading());
             } else {
                 fetchData();
             }
@@ -408,7 +409,6 @@ const ToggleChartComponent = ({
                     webViewhtmlContent={WebviewLineHtmlContent}
                     iFramehtmlContent={iFrameLineHtmlcontent}
                     showToggle={false}
-                    UpdateXaxisFormate={UpdateXaxisFormate}
                     setLoading={setLoading}
                 />
             </View>

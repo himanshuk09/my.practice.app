@@ -12,20 +12,22 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 
 const PFC = () => {
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [pfcGas, setpfcGas] = useState<any>();
+    const [pfcStrom, setpfcStrom] = useState<any>();
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
-    const [isRefreshing, setIsRefreshing] = useState(false);
     let NavigateTo = "dashboard/pfc";
     const combinedData = [
-        { type: "header", title: "Gas", data: PFCGas },
-        { type: "header", title: "Strom", data: PFCStrom },
+        { type: "header", title: "Gas", data: pfcGas },
+        { type: "header", title: "Strom", data: pfcStrom },
     ];
     const renderItem = ({ item }: any) => {
         if (item.type === "header") {
             return (
                 <FlatListBlock
                     title={item.title}
-                    items={item.data}
+                    items={item.data === undefined ? [] : item.data}
                     enableAutoScroll={false}
                     height={"auto"}
                     NavigateTo={NavigateTo}
@@ -43,7 +45,11 @@ const PFC = () => {
         }, 2000);
     };
     useEffect(() => {
-        setTimeout(() => dispatch(inActiveLoading()), 100);
+        dispatch(inActiveLoading());
+        setTimeout(() => {
+            setpfcGas(PFCGas);
+            setpfcStrom(PFCStrom);
+        }, 1000);
     }, [isFocused]);
     return (
         <SafeAreaView className="flex-1 bg-white">

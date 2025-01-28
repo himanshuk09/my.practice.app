@@ -18,7 +18,7 @@ import {
 } from "@expo/vector-icons";
 import { Href, usePathname, useRouter, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setInitialState } from "@/store/authSlice";
 import * as Linking from "expo-linking";

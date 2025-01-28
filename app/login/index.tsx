@@ -12,7 +12,7 @@ import { Href, Redirect, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import Logo from "@/components/SVG/Logo";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { SafeAreaView } from "react-native-safe-area-context";

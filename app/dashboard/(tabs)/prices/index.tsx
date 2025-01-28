@@ -16,10 +16,11 @@ import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { st } from "@/utils/Styles";
+import { ShimmerPrices, ShimmerPricesHeader } from "@/components/ShimmerEffect";
 
 const Prices = () => {
     const [isRefreshing, setIsRefreshing] = useState(false);
-
+    const [prices, setPrices] = useState<any>([]);
     const router = useRouter();
     const isFocused = useIsFocused();
     const dispatch = useDispatch();
@@ -50,16 +51,16 @@ const Prices = () => {
                     item.indicator === "up"
                         ? "long-arrow-alt-up"
                         : item.indicator === "down"
-                        ? "long-arrow-alt-down"
-                        : "long-arrow-alt-right"
+                          ? "long-arrow-alt-down"
+                          : "long-arrow-alt-right"
                 }
                 size={24}
                 color={
                     item.indicator === "up"
                         ? "#71D500"
                         : item.indicator === "down"
-                        ? "red"
-                        : "gray"
+                          ? "red"
+                          : "gray"
                 }
                 style={{
                     margin: 1,
@@ -72,18 +73,18 @@ const Prices = () => {
             />
         </TouchableOpacity>
     ));
-    const renderItem = ({ item }: any) => <ListItem item={item} />;
-
+    const renderItem = ({ item }: any) =>
+        prices.length <= 0 ? <ShimmerPrices /> : <ListItem item={item} />;
     const onRefresh = async () => {
-        setIsRefreshing(true);
-        // Simulate a network request or refresh data logic
-
         setTimeout(() => {
             setIsRefreshing(false);
         }, 2000);
     };
     useEffect(() => {
-        setTimeout(() => dispatch(inActiveLoading()), 100);
+        setTimeout(() => {
+            setPrices(PricesItem);
+        }, 1000);
+        dispatch(inActiveLoading());
     }, [isFocused]);
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -95,34 +96,48 @@ const Prices = () => {
                 networkActivityIndicatorVisible
             />
 
-            <View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-[#e31837] ">
-                <View className="flex flex-col justify-evenly w-[60%]">
-                    <Text className="flex justify-start font-normal mb-2  items-center   text-xl  text-white">
-                        EEX Power Auction
-                    </Text>
-                    <Text className="flex justify-start font-normal items-center  text-sm  text-white">
-                        24/07/5468
-                    </Text>
-                </View>
+            {prices.length <= 0 ? (
+                <ShimmerPricesHeader />
+            ) : (
+                <View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-primary ">
+                    <View className="flex flex-col justify-evenly w-[60%]">
+                        <Text className="flex justify-start font-normal mb-2  items-center   text-xl  text-white">
+                            EEX Power Auction
+                        </Text>
+                        <Text className="flex justify-start font-normal items-center  text-sm  text-white">
+                            24/07/5468
+                        </Text>
+                    </View>
 
-                <View className="flex justify-center items-center w-[10%] mb-4">
-                    <Ionicons
-                        name="settings-sharp"
-                        size={30}
-                        color="white"
-                        onPress={() => {
-                            dispatch(activeLoading());
+                    <View className="flex justify-center items-center w-[10%] mb-4">
+                        <Ionicons
+                            name="settings-sharp"
+                            size={30}
+                            color="white"
+                            onPress={() => {
+                                dispatch(activeLoading());
 
-                            setTimeout(() =>
-                                router.push("/dashboard/prices/settings")
-                            );
-                        }}
-                    />
+                                setTimeout(() =>
+                                    router.push("/dashboard/prices/settings")
+                                );
+                            }}
+                        />
+                    </View>
                 </View>
-            </View>
+            )}
 
             <FlatList
-                data={PricesItem}
+                data={
+                    prices.length <= 0
+                        ? [...Array(10).keys()].map((index) => ({
+                              id: index,
+                              title: `Shimmer ${index}`,
+                              unit: 0,
+                              indicator: "Loading",
+                              route: "",
+                          }))
+                        : prices
+                }
                 renderItem={renderItem}
                 keyExtractor={(item: any, index) => index.toString()}
                 contentContainerStyle={{ paddingTop: 4 }}

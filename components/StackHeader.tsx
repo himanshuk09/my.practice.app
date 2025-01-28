@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Platform } from "react-native";
 import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { i18n } from "@/languageKeys/i18nConfig";
+import { i18n } from "@/localization/localConfig";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 
