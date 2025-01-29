@@ -179,7 +179,6 @@ const ToggleChartComponent = ({
                 iFrameRef?.current?.contentWindow?.resetZoom();
             }
         }
-        setLoading(false);
     };
     const updateLocale = () => {
         let localOption = {
@@ -212,6 +211,16 @@ const ToggleChartComponent = ({
             });
             updateChart("series", []);
         } else {
+            updateChart("options", {
+                chart: {
+                    animations: {
+                        enabled: false,
+                    },
+                },
+                grid: {
+                    show: true,
+                },
+            });
             updateChart("series", rangeFilterData);
         }
         setActiveTab("");
@@ -274,7 +283,7 @@ const ToggleChartComponent = ({
             if (isFirstRender.current) {
                 setTimeout(() => {
                     fetchData();
-                    // updateLocale();
+                    updateLocale();
                     isFirstRender.current = false;
                 }, 500);
                 dispatch(inActiveLoading());

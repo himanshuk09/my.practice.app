@@ -490,7 +490,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 											year: "numeric",
 											month: "short",
 											day: "2-digit",
-											timeZone: "Europe/Berlin",
+											// timeZone: "Europe/Berlin",
 										});
 									},
 								},
@@ -628,7 +628,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										hour: "2-digit",
 										minute: "2-digit",
 										hour12: false,
-										timeZone: "Europe/Berlin",
+										// timeZone: "Europe/Berlin",
 										});
 									},
 								},
@@ -757,7 +757,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										hour: "2-digit",
 										minute: "2-digit",
 										hour12: false,
-										timeZone: "Europe/Berlin",
+										// timeZone: "Europe/Berlin",
 										});
 									},
 								},
@@ -868,13 +868,13 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 															year: "2-digit",
 															// hour: "2-digit",
 															// minute: "2-digit",
-															timeZone: "Europe/Berlin",
+															// timeZone: "Europe/Berlin",
 														};
 													} else {
 														formatOptions = {
 															hour: "2-digit",
 															minute: "2-digit",
-															timeZone: "Europe/Berlin",
+															// timeZone: "Europe/Berlin",
 														};
 													}
 												break;
@@ -884,14 +884,14 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 													year: "numeric",
 													month: "short",
 													day: "2-digit",
-													timeZone: "Europe/Berlin",
+													// timeZone: "Europe/Berlin",
 												};
 												break;
 											default:
 												formatOptions = {
 													year: "numeric",
 													month: "short",
-													timeZone: "Europe/Berlin",
+													// timeZone: "Europe/Berlin",
 												};
 												break;
 										}
@@ -1477,7 +1477,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 										year: "numeric",
 										month: "short",
 										day: "2-digit",
-										timeZone: "Europe/Berlin",
+										// timeZone: "Europe/Berlin",
 									});
 								},
 							},
@@ -1684,7 +1684,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 													year: "numeric",
 													month: "short",
 													day: "2-digit",
-													timeZone: "Europe/Berlin",
+													// timeZone: "Europe/Berlin",
 												});
 											},
 										},
@@ -1789,7 +1789,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 									hour: "2-digit",
 									minute: "2-digit",
 									hour12: false,
-									timeZone: "Europe/Berlin",
+									// timeZone: "Europe/Berlin",
 									});
 								},
 								},
@@ -1938,13 +1938,13 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 																year: "numeric",
 																// hour: "2-digit",
 																// minute: "2-digit",
-																timeZone: "Europe/Berlin",
+																// timeZone: "Europe/Berlin",
 															};
 														} else {
 															formatOptions = {
 																hour: "2-digit",
 																minute: "2-digit",
-																timeZone: "Europe/Berlin",
+																// timeZone: "Europe/Berlin",
 															};
 														}
 													break;
@@ -1954,7 +1954,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 														year: "numeric",
 														month: "short",
 														day: "2-digit",
-														timeZone: "Europe/Berlin",
+														// timeZone: "Europe/Berlin",
 													};
 													break;
 												default:
