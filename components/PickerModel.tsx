@@ -128,16 +128,16 @@ const PickerModel = ({
                                             >
                                                 <Text className="text-slate-600">
                                                     {/* {start
-                                                        ? dayjs(start)
-                                                              .locale("en")
-                                                              .format(
-                                                                  "MMM DD YYYY"
-                                                              )
-                                                        : dayjs()
-                                                              .locale("en")
-                                                              .format(
-                                                                  "MMM DD YYYY"
-                                                              )} */}
+														? dayjs(start)
+															  .locale("en")
+															  .format(
+																  "MMM DD YYYY"
+															  )
+														: dayjs()
+															  .locale("en")
+															  .format(
+																  "MMM DD YYYY"
+															  )} */}
                                                     {start
                                                         ? dayjs(start)
                                                               .locale(locale)
@@ -174,12 +174,12 @@ const PickerModel = ({
                                             >
                                                 <Text className="text-[#616161]">
                                                     {/* {start
-                                                        ? dayjs(start)
-                                                              .locale("en")
-                                                              .format("HH:mm")
-                                                        : dayjs()
-                                                              .locale("en")
-                                                              .format("HH:mm")} */}
+														? dayjs(start)
+															  .locale("en")
+															  .format("HH:mm")
+														: dayjs()
+															  .locale("en")
+															  .format("HH:mm")} */}
                                                     00:00
                                                 </Text>
                                                 <Ionicons
@@ -241,12 +241,12 @@ const PickerModel = ({
                                             >
                                                 <Text className="text-[#616161]">
                                                     {/* {end
-                                                        ? dayjs(end)
-                                                              .locale("en")
-                                                              .format("HH:mm")
-                                                        : dayjs()
-                                                              .locale("en")
-                                                              .format("HH:mm")} */}
+														? dayjs(end)
+															  .locale("en")
+															  .format("HH:mm")
+														: dayjs()
+															  .locale("en")
+															  .format("HH:mm")} */}
                                                     00:00
                                                 </Text>
                                                 <Ionicons

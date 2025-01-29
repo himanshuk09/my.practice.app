@@ -27,7 +27,6 @@ type ChartComponentProps = {
     iFrameRef?: React.RefObject<HTMLIFrameElement | any>;
     onMessage?: (event: any) => void;
     id?: number;
-    refereshkey?: number;
     activeTab?: string;
     webViewhtmlContent?: any;
     iFramehtmlContent?: any;
@@ -42,7 +41,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     webViewRef,
     iFrameRef,
     onMessage,
-    refereshkey,
     activeTab,
     webViewhtmlContent,
     iFramehtmlContent,
@@ -57,61 +55,47 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     const isLandscape = useSelector(
         (state: RootState) => state.orientation.isLandscape
     );
-
+    const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const toggleOrientation = async () => {
-        dispatch(activeLoading());
-        if (isLandscape) {
-            await ScreenOrientation.lockAsync(
-                ScreenOrientation.OrientationLock.PORTRAIT
-            );
-        } else {
-            await ScreenOrientation.lockAsync(
-                ScreenOrientation.OrientationLock.LANDSCAPE
-            );
-        }
+        if (Platform.OS != "web") {
+            dispatch(activeLoading());
+            if (isLandscape) {
+                await ScreenOrientation.lockAsync(
+                    ScreenOrientation.OrientationLock.PORTRAIT
+                );
+            } else {
+                await ScreenOrientation.lockAsync(
+                    ScreenOrientation.OrientationLock.LANDSCAPE
+                );
+            }
 
-        setTimeout(() => {
-            // webViewRef?.current?.reload();
-            (webViewRef?.current as any)?.injectJavaScript(
-                `updateChartOptions(${JSON.stringify({
-                    chart: {
-                        height: 285,
-                    },
-                    xaxis: {
-                        labels: {
-                            show: true,
-                            rotate: 0,
-                            rotateAlways: true,
-                            position: "top",
-                            textAnchor: "end",
-                            hideOverlappingLabels: false,
-                            showDuplicates: false,
-                            trim: false,
-                            maxHeight: 120,
-                            // offsetX: -1,
-                            // offsetY: -2,
+            setTimeout(() => {
+                (webViewRef?.current as any)?.injectJavaScript(
+                    `updateChartOptions(${JSON.stringify({
+                        chart: {
+                            height: 285,
                         },
-                    },
-                })});`
-            );
-        }, 500);
-        setTimeout(
-            () => {
+                        xaxis: {
+                            labels: {
+                                show: true,
+                                rotate: 0,
+                                rotateAlways: true,
+                                position: "top",
+                                textAnchor: "end",
+                                hideOverlappingLabels: false,
+                                showDuplicates: false,
+                                trim: false,
+                                maxHeight: 120,
+                            },
+                        },
+                    })});`
+                );
+            }, 500);
+            setTimeout(() => {
                 dispatch(inActiveLoading());
-            },
-            activeTab === "Year" || activeTab === "Year_3" || activeTab === ""
-                ? 5000
-                : 3000
-        );
-        setTimeout(
-            () => {
-                setLoading(false);
-            },
-            activeTab === "Year" || activeTab === "Year_3" || activeTab === ""
-                ? 6000
-                : 4000
-        );
-        dispatch(setOrientation(!isLandscape));
+            }, 2000);
+            dispatch(setOrientation(!isLandscape));
+        }
     };
 
     useEffect(() => {
@@ -194,7 +178,52 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             ToastAndroid.show("Failed to Save Chart.", ToastAndroid.LONG);
         }
     }, []);
+    useEffect(() => {
+        if (Platform.OS === "web") {
+            const receiveMessage = (event: MessageEvent) => {
+                if (event.data?.source === "react-devtools-bridge") {
+                    return; // Ignore DevTools messages
+                }
+                console.log("Message from iframe:", event.data);
+                // alert("Received from iframe: " + event.data);
+                if (
+                    event.data === "updateChartSeries" ||
+                    event.data === "updateChartOptions"
+                ) {
+                    setLoading(true);
+                }
+                if (event.data === "Chart updated") {
+                    if (LoaderTimeoutRef.current) {
+                        clearTimeout(LoaderTimeoutRef.current);
+                    }
+                    // Assign new timeout without optional chaining
+                    LoaderTimeoutRef.current = setTimeout(() => {
+                        setLoading(false);
+                    }, 1000);
+                }
 
+                // Handle loader actions on tooltip toggle
+                if (
+                    event.data === "startLoader" ||
+                    ((activeTab === "Year" || activeTab === "Year_3") &&
+                        event.data === "Zoom Start")
+                ) {
+                    setLoading(true);
+                } else if (
+                    event.data === "stopLoader" ||
+                    ((activeTab === "Year" || activeTab === "Year_3") &&
+                        event.data === "Zoomed")
+                ) {
+                    setTimeout(() => {
+                        setLoading(false);
+                    }, 2000);
+                }
+            };
+
+            window.addEventListener("message", receiveMessage);
+            return () => window.removeEventListener("message", receiveMessage);
+        }
+    }, []);
     return (
         <>
             {Platform.OS !== "web" ? (
@@ -215,7 +244,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                         style={{ flex: 1, padding: 1 }}
                     >
                         <WebView
-                            key={refereshkey}
                             className="z-50 "
                             ref={webViewRef}
                             originWhitelist={["*"]}
@@ -267,7 +295,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                             bounces={false}
                             zoomEnabled={false}
                             nestedScrollEnabled={true}
-                            // startInLoadingState
+                            startInLoadingState
                         />
                     </ViewShot>
                     {showToggleOrientation && (
@@ -366,4 +394,3 @@ export default ChartComponent;
 //         Alert.alert("Error", "Failed to capture WebView.");
 //     }
 // }, []);
-// Assuming WebView is in use

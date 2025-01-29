@@ -31,7 +31,6 @@ const Prices = () => {
             style={st.boxShadow}
             onPress={() => {
                 dispatch(activeLoading());
-
                 setTimeout(() =>
                     router.push(`dashboard/prices/${item.id}` as Href)
                 );

@@ -13,6 +13,7 @@ export default function FloatingActionMenu({
     activeTab,
     setActiveTab,
     visibleTabs,
+    setLoading,
 }: any) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [animation] = useState(new Animated.Value(0));
@@ -38,13 +39,7 @@ export default function FloatingActionMenu({
         inputRange: [0, 1],
         outputRange: [-100, 0], // Slide menu items into view
     });
-    const allTabs1 = [
-        { name: "D", icon: "edit", tab: "Day" },
-        { name: "W", icon: "edit", tab: "Week" },
-        { name: "M", icon: "edit", tab: "Month" },
-        { name: "Q", icon: "edit", tab: "Quarter" },
-        { name: "Y", icon: "edit", tab: "Year" },
-    ];
+
     const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
     const tabs = visibleTabs || allTabs;
     const formatTabLabel = (tab: string) => {
@@ -82,7 +77,10 @@ export default function FloatingActionMenu({
                                         ? styles.activeMenuItem
                                         : styles.inactiveMenuItem,
                                 ]}
-                                onPress={() => setActiveTab(tab)}
+                                onPress={() => {
+                                    setActiveTab(tab);
+                                    setLoading(true);
+                                }}
                             >
                                 <Text
                                     style={[

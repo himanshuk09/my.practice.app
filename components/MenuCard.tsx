@@ -9,8 +9,7 @@ import Settings from "@/components/SVG/Settings";
 import { i18n } from "@/localization/localConfig";
 import { Href, router } from "expo-router";
 import Signals from "./SVG/Signals";
-import { activeLoading } from "@/store/navigationSlice";
-import { useDispatch } from "react-redux";
+
 interface MenuCardProps {
     item: {
         id: number;
@@ -63,8 +62,7 @@ const NotificationIcon = ({ count }: { count: number }) => (
     </Svg>
 );
 
-const MenuCard = memo(({ item, index, startLoader }: MenuCardProps) => {
-    const dispatch = useDispatch();
+const MenuCard = memo(({ item, startLoader }: MenuCardProps) => {
     return (
         <Pressable
             className=" m-1 items-center"

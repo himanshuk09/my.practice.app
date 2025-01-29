@@ -1,12 +1,7 @@
-import {
-    View,
-    Text,
-    Pressable,
-    TouchableOpacity,
-    StyleSheet,
-} from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import React, { useCallback, useState } from "react";
 import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
 import "dayjs/locale/de";
@@ -14,8 +9,6 @@ import "dayjs/locale/es";
 import "dayjs/locale/fr";
 import "dayjs/locale/tr";
 import "dayjs/locale/en-in";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { FontAwesome } from "@expo/vector-icons";
 
 const DateTimePickerComponents = ({
     title = "Select",

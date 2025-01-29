@@ -114,7 +114,7 @@
 
 import { st } from "@/utils/Styles";
 import React, { useEffect, useRef } from "react";
-import { View, Animated, StyleSheet, Dimensions } from "react-native";
+import { View, Animated, StyleSheet, Dimensions, Platform } from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -202,10 +202,18 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         marginBottom: 20,
     },
-    tab: { width: 60, height: 40, borderRadius: 1 },
-    graph: { width: width - 32, height: 400, borderRadius: 8 },
+    tab: {
+        width: Platform.OS !== "web" ? 60 : 80,
+        height: 40,
+        borderRadius: 1,
+    },
+    graph: {
+        width: Platform.OS !== "web" ? width - 32 : "98%",
+        height: Platform.OS !== "web" ? 400 : 500,
+        borderRadius: 8,
+    },
     button: {
-        width: width - 32,
+        width: Platform.OS !== "web" ? width - 32 : "98%",
         height: 50,
         borderRadius: 8,
         marginTop: 20,

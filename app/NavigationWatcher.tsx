@@ -28,9 +28,9 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
             const value = await AsyncStorage.getItem("isLoggedIn");
             const language = await AsyncStorage.getItem("languagePreference");
             setShouldExitApp(value === "true");
+            dispatch(updateLocale(language || "en"));
             if (value === "true") {
                 dispatch(setInitialState(true));
-                dispatch(updateLocale(language || "en"));
             } else {
                 dispatch(setInitialState(false));
             }

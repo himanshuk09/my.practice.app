@@ -10,14 +10,12 @@ import {
     RefreshControl,
 } from "react-native";
 import { Href, usePathname, useRouter } from "expo-router";
-
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
-import { Entypo, FontAwesome } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { st } from "@/utils/Styles";
 import { ShimmerFlatListBlock } from "./ShimmerEffect";
-import { useSegments } from "expo-router";
 
 const FlatListBlock1 = ({
     title,

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RootLayout from "./RootLayout";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
@@ -11,6 +11,8 @@ import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
 import toastConfig from "@/components/ToastConfig";
 import Toast from "react-native-toast-message";
 import { Platform } from "react-native";
+import { Href, usePathname, useRouter, useSegments } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,6 +22,10 @@ SplashScreen.setOptions({
 });
 
 const Layout = () => {
+    const segment = useSegments();
+    const router = useRouter();
+    const pathname = usePathname();
+
     useEffect(() => {
         let timer = setTimeout(() => {
             SplashScreen.hideAsync();
@@ -28,6 +34,7 @@ const Layout = () => {
             clearTimeout(timer);
         };
     }, []);
+
     useEffect(() => {
         if (Platform.OS !== "web") {
             // Lock orientation to portrait for mobile platforms
@@ -35,7 +42,6 @@ const Layout = () => {
                 ScreenOrientation.OrientationLock.PORTRAIT_UP
             );
         }
-
         return () => {
             if (Platform.OS !== "web") {
                 // Unlock orientation when leaving the screen (optional)
@@ -43,6 +49,22 @@ const Layout = () => {
             }
         };
     }, []);
+    useEffect(() => {
+        const checkAuth = async () => {
+            const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+            if (isLoggedIn !== "true") {
+                router.replace("/" as Href);
+            }
+        };
+
+        if (
+            pathname !== "/" &&
+            pathname !== "/login" &&
+            pathname !== "/forgotpassword"
+        ) {
+            checkAuth();
+        }
+    }, [pathname]);
     return (
         <Provider store={store}>
             <Drawer drawerWidth={290} />

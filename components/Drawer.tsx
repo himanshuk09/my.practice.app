@@ -19,7 +19,6 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
     const dispatch = useDispatch();
     const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
     const translateX = React.useRef(new Animated.Value(-drawerWidth)).current;
-
     React.useEffect(() => {
         Animated.timing(translateX, {
             toValue: isDrawerOpen ? 0 : -drawerWidth,

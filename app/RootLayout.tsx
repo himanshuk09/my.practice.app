@@ -1,11 +1,13 @@
-import { Stack, useRouter } from "expo-router";
+import { Redirect, Stack, useRouter } from "expo-router";
 import "react-native-reanimated";
 import "../global.css";
 import { AppState } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RootLayout = () => {
+    const [isAuth, setIsAuth] = useState<boolean>();
     const [appState, setAppState] = useState(AppState.currentState);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -31,6 +33,14 @@ const RootLayout = () => {
     //         subscription.remove();
     //     };
     // }, [appState]);
+    useEffect(() => {
+        const checkAuth = async () => {
+            const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+            setIsAuth(isLoggedIn === "true");
+        };
+        checkAuth();
+    }, []);
+
     return (
         <Stack
             screenOptions={{

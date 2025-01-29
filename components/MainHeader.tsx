@@ -36,9 +36,7 @@ const Header = React.memo(({ navigation }: any) => {
                 >
                     <Entypo name="menu" size={30} color="#9a9b9f" />
                 </TouchableOpacity>
-                {/* <Link href={"/dashboard"}>
-                    <Logo />
-                </Link> */}
+
                 <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => {

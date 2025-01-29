@@ -7,6 +7,7 @@ import {
     filterCurrentDayDataUTC,
     filterCurrentWeekDataUTC,
 } from "@/components/Chart/filterFunction";
+import { stringChartData } from "@/constants/stringChartData";
 
 const loginUser = async (payload: any) => {
     try {
@@ -61,7 +62,7 @@ const fetchDataByToggle = async (tab: any) => {
         return filterCurrentWeekDataUTC();
     }
     if (tab === "Quarter") {
-        return [];
+        return stringChartData;
         return filterByCurrentQuarterUTC();
     }
     if (tab === "Year_3") {

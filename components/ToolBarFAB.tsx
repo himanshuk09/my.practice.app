@@ -48,7 +48,6 @@ export default function FloatingActionMenu({
             icon: isZoomIn ? "search-plus" : "search-minus",
             action: "toggleZoomAndSelection()",
             size: 15,
-            // color: !isZoomIn ? "blue" : "#848484",
             color: "#e31837",
             label: "Zoom",
         },
@@ -283,7 +282,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 1,
     },
     menuIcon: {
-        // backgroundColor: "#f3f4f6",
         width: 30,
         height: 30,
         borderRadius: 25,
