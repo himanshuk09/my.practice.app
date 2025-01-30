@@ -79,9 +79,9 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 
 					function toggleMarkers() {
 
-						// if (!chart || !chart.w || !chart.w.globals || !chart.w.globals.series || chart.w.globals.series.length === 0 || chart.w.globals.series.every(s => s.length === 0)) {
-						// 	console.warn("Chart has no data, skipping marker toggle.");
-						// 	return;
+						// if (!chart || !chart.w || !chart.w.globals || !chart.w.globals.series || chart.w.globals.series.length === 0 || chart.w.globals.series.every(s => s.length === 0)) 							{
+							// 	console.warn("Chart has no data, skipping marker toggle.");
+							// 	return;
 						// }
 
 						// Start loader
@@ -125,6 +125,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					}
 
 					function renderChart() {
+						
 						const options = {
 							series: [{ name: "Energy Use", data: []}],
 							chart: {
@@ -166,6 +167,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										enabled: true,           	// Enable initial animation if desired
 										speed: 1000,             	// Adjust the speed for initial loading animation
 									},
+									
 								},
 								toolbar: {
 									show: false,
@@ -388,14 +390,15 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								width: 1.5 //['straight', 'smooth', 'monotoneCubic', 'stepline']
 							},
 							noData: {
-								text: "Data not available",
+								text: "",
 								align: "center",
 								verticalAlign: "middle",
 								offsetX: 0,
-								offsetY: -50,
+								offsetY: -40,
 								style: {
-									color: "#e31837",
-									fontSize: "15px",
+									color: "#898a8c",
+									fontSize: "18px",
+									fontWeight: "900",
 									fontFamily: "Helvetica, Arial, sans-serif",
 								},
 							},
@@ -655,27 +658,10 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 							responsive: [{
 								breakpoint: 480,
 								options: {
-								chart: {
-									height:'95%',
-									background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center",
-								},
-								// xaxis:
-								// 	{
-								// 		type: "datetime",
-								// 		tickAmount: 5,
-								// 		title: {
-								// 			text: "Date / Time",
-								// 			style: {
-								// 				fontSize: "12px",
-								// 				fontFamily: "Helvetica, Arial, sans-serif",
-								// 			},
-								// 		},
-										// labels: {
-										// 	rotate: -45,
-										// 	rotateAlways: true,
-										// 	position: "top"
-										// },
-								// 	},
+									chart: {
+										height:'95%',
+										background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
+									},
 								},
 							}],
 						};
@@ -687,8 +673,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 							console.error('Chart failed to render:', error);
 						  });
 					}
-					//..........
-
+					
 					// Export the chart as a PNG image
 					async function exportChart() {
 						try {
@@ -702,7 +687,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					// Bind the button to trigger export
 					window.exportChart = exportChart;
 
-					//....
+
 					function updateChart(filteredData, updatedOptions) {
 						chart.updateSeries([{ data: filteredData }]);
 						chart.updateOptions(updatedOptions);
@@ -719,7 +704,6 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					function updateChartOptions( updatedOptions) {
 						chart.updateOptions(updatedOptions);
 						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartOptions' }));
-
 					}
 
 					function resetChartSeries(){
@@ -739,6 +723,9 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateLocale',value:[newLocale,xaxisTitle] }));
 
 						chart.updateOptions({
+							chart:{
+								background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",		
+							},
 							tooltip: {
 								y: {
 									formatter: (value) => {
@@ -785,7 +772,9 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									},
 
 								},
-
+								axisTicks: {
+									show: true,
+								},
 							},
 							yaxis: {
 								title: {
@@ -817,28 +806,10 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 							responsive: [{
 								breakpoint: 480,
 								options: {
-								chart: {
-									// width: '100%' ,
-									height:'95%',
-									background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat cover ",
-								},
-								// xaxis:
-								// 	{
-								// 		type: "datetime",
-								// 		tickAmount: 5,
-								// 		title: {
-								// 			text: newLocale === 'de'? "Datum / Uhrzeit":"Date / Time" ,
-								// 			style: {
-								// 			fontSize: "12px",
-								// 			fontFamily: "Helvetica, Arial, sans-serif",
-								// 			},
-								// 		},
-								// 		labels: {
-								// 			rotate: -45,
-								// 			rotateAlways: true,
-								// 			position: "top"
-								// 		},
-								// 	},
+									chart: {
+										height:'95%',
+										background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
+									},
 								}
 							}],
 						});
@@ -984,6 +955,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					  };
 
 					  window.customPanRight = function () {
+
 						const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
 
 						// Calculate the new min and max X values for the pan
@@ -1003,6 +975,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					  };
 
 					window.resetZoom = function () {
+
 						// Dynamically access the series and x-axis data from the chart instance
 						const seriesData = chart.w.config.series[0].data;
 
@@ -1022,6 +995,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					};
 
 					function highlightMinAndMax(chartInstance) {
+
 						const seriesData = chartInstance.w.config.series[0].data;
 
 						// Check if seriesData is an array and has valid data
@@ -1187,7 +1161,34 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					  
 						// Zoom the chart to the specified date range
 						chart.zoomX(startDate, endDate);
-					  }
+					}
+					function ZoomMonthData(){
+						chart.zoomX(
+							new Date('01 Jan 2023').getTime(),
+							new Date('31 Jan 2023').getTime()
+						  )	
+					}
+					function ZoomWeekData(){
+						chart.zoomX(
+							new Date('01 Jan 2023').getTime(),
+							new Date('07 Jan 2023').getTime()
+						  )	
+					}
+					function ZoomDayData(){
+						chart.zoomX(
+							new Date('01 Jan 2023').getTime(),
+							new Date('02 Jan 2023').getTime()
+						  )	
+					}
+					function ZoomQuarterData(){
+						chart.zoomX(
+							new Date('01 Jan 2023').getTime(),
+							new Date('30 May 2023').getTime()
+						  )	
+					}
+					function ResetData() {
+						chart.resetSeries();
+					}
 
 					document.addEventListener("DOMContentLoaded", () => {
 						renderChart();
@@ -1204,7 +1205,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 			<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 			</head>
 			<body style="margin:0; padding:0; display:flex; justify-content:center; align-items:center; height:100vh;">
-			<div id="chart" style="width:100%; height:100%; overflow:hidden"></div>
+			<div id="chart" style="width:95%; height:100%; overflow:hidden"></div>
 			<script>
 					function sendMessageToReactNative(message) {
 						if (window.ReactNativeWebView) {
@@ -1264,7 +1265,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 							height: "90%",
 							type: "line",
 							offsetX: 0,
-							offsetY: 43,
+							offsetY: 30,
 							background: "url('https://i.ibb.co/ryQkmKq/new.png') no-repeat center center",
 							backgroundSize: "cover",
 							stacked: false,
@@ -1272,7 +1273,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 							defaultLocale: "en",
 							zoom: { type: "x", enabled: true, autoScaleYaxis: true },
 							animations: {
-								enabled: true,
+								enabled: false,
 								easing: "linear",
 								speed: 500,
 								dynamicAnimation: {
@@ -1340,7 +1341,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 							toolbar: {
 								show: true,
 								offsetX: 2,
-								offsetY: 0,
+								offsetY: 10,
 								autoSelected: "zoom",
 								tools: {
 									download: true,
@@ -1386,7 +1387,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 							enabled: false
 						},
 
-						stroke: { curve: "smooth", width: 1.5 },
+						stroke: { curve: "monotoneCubic", width: 2 },//['straight', 'smooth', 'monotoneCubic', 'stepline']
 						noData: {
 							text: "",
 							align: "center",
@@ -1462,7 +1463,6 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 						},
 						xaxis: {
 							type: 'datetime',
-							tickAmount: 5,
 							title: {
 								text: "Date / Time",
 								style: {
@@ -1472,16 +1472,15 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 							},
 							labels: {
 								show: true,
-								rotate: -15,
+								rotate: 0,
 								rotateAlways: true,
-								offsetX: 0,
-								 offsetY: 3,
-								position: "top",
-								textAnchor: "end",
-								hideOverlappingLabels: true,
+								textAnchor: "start",
+								hideOverlappingLabels: false,
 								showDuplicates: false,
 								trim: false,
 								maxHeight: 120,
+								offsetX: 5,
+								offsetY: 15,	
 								style: {
 									fontSize: "12px",
 									fontFamily: "Helvetica, Arial, sans-serif",
@@ -1612,7 +1611,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 								options: {
 									chart: {
 										// height: 550,
-										 background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
+										background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
 										toolbar: {
 											show: true,
 											offsetX: 2,
@@ -2103,7 +2102,33 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 
 							}
 						}
-
+						function ZoomMonthData(){
+							chart.zoomX(
+								new Date('01 Jan 2023').getTime(),
+								new Date('31 Jan 2023').getTime()
+							  )	
+						}
+						function ZoomWeekData(){
+							chart.zoomX(
+								new Date('01 Jan 2023').getTime(),
+								new Date('07 Jan 2023').getTime()
+							  )	
+						}
+						function ZoomDayData(){
+							chart.zoomX(
+								new Date('01 Jan 2023').getTime(),
+								new Date('02 Jan 2023').getTime()
+							  )	
+						}
+						function ZoomQuarterData(){
+							chart.zoomX(
+								new Date('01 Jan 2023').getTime(),
+								new Date('30 May 2023').getTime()
+							  )	
+						}
+						function ResetData() {
+							chart.resetSeries();
+						}
 			</script>
 			</body>
 			</html>
@@ -2133,8 +2158,8 @@ export const iFreameDonutChartHtml = `<!DOCTYPE html>
 					labels: ["Open", "Closed"],
 					chart: {
 						type: 'donut',
-						 height: '120%',
-						 width: '100%',
+						height: '120%',
+						width: '100%',
 						background: "none",
 						animations: { enabled: true },
 						toolbar: { show: false },

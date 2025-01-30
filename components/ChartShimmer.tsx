@@ -209,13 +209,13 @@ const styles = StyleSheet.create({
     },
     graph: {
         width: Platform.OS !== "web" ? width - 32 : "98%",
-        height: Platform.OS !== "web" ? 400 : 500,
+        height: Platform.OS !== "web" ? 410 : 600,
         borderRadius: 8,
     },
     button: {
         width: Platform.OS !== "web" ? width - 32 : "98%",
-        height: 50,
-        borderRadius: 8,
+        height: 40,
+        borderRadius: 1,
         marginTop: 20,
         backgroundColor: "#e31837",
     },

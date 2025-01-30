@@ -523,42 +523,42 @@ const PickerModel = ({
                                     </Text>
                                 </Pressable>
                             </View>
-                            {openStartDate && (
-                                <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8]">
-                                    <DateTimePickerComponents
-                                        title="Select Start Date"
-                                        open={openStartDate}
-                                        timePicker={true}
-                                        setOpen={setOpenStartDate}
-                                        setSingleDate={setStart}
-                                    />
-                                </View>
-                            )}
-                            {openEndDate && (
-                                <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
-                                    <DateTimePickerComponents
-                                        title="Select End Date"
-                                        open={openEndDate}
-                                        timePicker={true}
-                                        setOpen={setOpenEndDate}
-                                        setSingleDate={setEnd}
-                                    />
-                                </View>
-                            )}
-                            {openRangeDataPicker && (
-                                <View className="absolute z-50 inset-0  flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
-                                    <DateTimePickerComponents
-                                        title="Select Date Range"
-                                        pickerMode="range"
-                                        open={openRangeDataPicker}
-                                        timePicker={false}
-                                        setOpen={setOpenRangeDatePicker}
-                                        setRangeDate={setRangeDate}
-                                    />
-                                </View>
-                            )}
                         </View>
                     </TouchableWithoutFeedback>
+                    {openStartDate && (
+                        <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8]">
+                            <DateTimePickerComponents
+                                title="Select Start Date"
+                                open={openStartDate}
+                                timePicker={true}
+                                setOpen={setOpenStartDate}
+                                setSingleDate={setStart}
+                            />
+                        </View>
+                    )}
+                    {openEndDate && (
+                        <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
+                            <DateTimePickerComponents
+                                title="Select End Date"
+                                open={openEndDate}
+                                timePicker={true}
+                                setOpen={setOpenEndDate}
+                                setSingleDate={setEnd}
+                            />
+                        </View>
+                    )}
+                    {openRangeDataPicker && (
+                        <View className="absolute z-50 inset-0  flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
+                            <DateTimePickerComponents
+                                title="Select Date Range"
+                                pickerMode="range"
+                                open={openRangeDataPicker}
+                                timePicker={false}
+                                setOpen={setOpenRangeDatePicker}
+                                setRangeDate={setRangeDate}
+                            />
+                        </View>
+                    )}
                 </View>
             </TouchableWithoutFeedback>
         </Modal>

@@ -19,6 +19,7 @@ import {
 } from "./Chart/charthtmlcontent";
 import { filterDataByDateRange } from "./Chart/filterFunction";
 import WebView from "react-native-webview";
+import { cockpitChartData } from "@/constants/cockpitchart";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
@@ -45,13 +46,14 @@ const ToggleChartComponent = ({
     yaxisunit = "€/MWh",
 }: ToggleChartComponentProps) => {
     const [isLoading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<tabsType>("Week");
-    const [previousTab, setPreviousTab] = useState<tabsType>("Week");
+    const [activeTab, setActiveTab] = useState<tabsType>("Year");
+    const [previousTab, setPreviousTab] = useState<tabsType>("Year");
     const [startDate, setStartDate] = useState<any>();
     const [endDate, setEndDate] = useState<any>();
     const [modalVisible, setModalVisible] = useState(false);
     const [isChartZoomed, setIschartZoomed] = useState(false);
     const [isTooltipEnabled, setIsTooltipEnabled] = useState(false);
+    const [isChartEmpty, setIsChartEmpty] = useState(false);
     const locale = useSelector((state: any) => state.language.locale);
     const dispatch = useDispatch();
     const webViewRef = useRef<WebView | any>(null);
@@ -110,12 +112,50 @@ const ToggleChartComponent = ({
     const updateChartData = (filteredData: any) => {
         if (filteredData?.length === 0) {
             updateChart("options", {
+                chart: {},
                 noData: { text: i18n.t("Data_not_available") },
                 grid: {
                     show: false,
                 },
+                xaxis: {
+                    tickAmount: 0,
+                    labels: {
+                        show: false,
+                    },
+                    title: {
+                        text: "",
+                        style: {
+                            fontSize: "0",
+                        },
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    labels: {
+                        show: false,
+                    },
+                    title: {
+                        text: "",
+                        style: {
+                            fontSize: "0",
+                        },
+                    },
+                },
+                title: {
+                    text: "",
+                    align: "center",
+                    style: {
+                        fontSize: "0",
+                    },
+                },
             });
             updateChart("series", []);
+            setIsChartEmpty(true);
             setTimeout(() => {
                 setLoading(false);
             }, 500);
@@ -189,6 +229,7 @@ const ToggleChartComponent = ({
                 iFrameRef?.current?.contentWindow?.resetZoom();
             }
         }
+        setIsChartEmpty(false);
     };
     const updateLocale = () => {
         let localOption = {
@@ -283,18 +324,72 @@ const ToggleChartComponent = ({
             try {
                 const data = await fetchChartData(activeTab);
                 updateLocale();
-
                 updateChartData(data);
+                // filterData(activeTab);
                 setPreviousTab(activeTab);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
     };
+    const filterData = (activetab: any) => {
+        if (Platform.OS === "web") {
+            const iframe = iFrameRef.current;
+            if (iframe && iframe.contentWindow) {
+                switch (activetab) {
+                    case "Day":
+                        iframe.contentWindow.ZoomDayData();
+                        break;
+                    case "Week":
+                        iframe.contentWindow.ZoomWeekData();
+                        break;
+                    case "Month":
+                        iframe.contentWindow.ZoomMonthData();
+                        break;
+                    case "Quarter":
+                        iframe.contentWindow.ZoomQuarterData();
+                        break;
+                    case "Year":
+                        iframe.contentWindow.ResetData();
+                        break;
+                    default:
+                        iframe.contentWindow.ResetData();
+                        break;
+                }
+            } else {
+                console.error("Iframe contentWindow is not accessible.");
+            }
+        } else {
+            let jsCommand = "";
+            switch (activetab) {
+                case "Day":
+                    jsCommand = `ZoomDayData()`;
+                    break;
+                case "Week":
+                    jsCommand = `ZoomWeekData()`;
+                    break;
+                case "Month":
+                    jsCommand = `ZoomMonthData()`;
+                    break;
+                case "Quarter":
+                    jsCommand = `ZoomQuarterData()`;
+                    break;
+                case "Year":
+                    jsCommand = `ResetData()`;
+                    break;
+                default:
+                    jsCommand = `ResetData()`;
+                    break;
+            }
+
+            (webViewRef.current as any)?.injectJavaScript(jsCommand);
+        }
+    };
     useEffect(() => {
         const executeAfterRender = async () => {
             if (isFirstRender.current) {
                 setTimeout(() => {
+                    // updateChartData(cockpitChartData);
                     fetchData();
                     updateLocale();
                     isFirstRender.current = false;
@@ -330,6 +425,7 @@ const ToggleChartComponent = ({
             <View className="flex-1  border-gray-300">
                 {isLoading && <ChartLoaderPNG />}
                 <ChartComponent
+                    isChartEmpty={isChartEmpty}
                     webViewRef={webViewRef}
                     iFrameRef={iFrameRef}
                     onMessage={onMessage}

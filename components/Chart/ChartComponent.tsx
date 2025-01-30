@@ -36,6 +36,7 @@ type ChartComponentProps = {
     iFrameWidth?: string | number | undefined;
     setLoading?: any;
     isTooltipEnabled?: boolean;
+    isChartEmpty?: boolean;
 };
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
@@ -51,6 +52,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     iFrameWidth = "100%",
     setLoading,
     isTooltipEnabled,
+    isChartEmpty,
 }) => {
     const dispatch = useDispatch();
     const viewShotRef = useRef<any>(null);
@@ -187,7 +189,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                     return; // Ignore DevTools messages
                 }
                 console.log("Message from iframe:", event.data);
-                // alert("Received from iframe: " + event.data);
+
                 if (
                     event.data === "updateChartSeries" ||
                     event.data === "updateChartOptions"
@@ -230,14 +232,14 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         <>
             {Platform.OS !== "web" ? (
                 <>
-                    {showToolbar && (
+                    {showToolbar && !isChartEmpty ? (
                         <ToolBarFloatingActionMenu
                             webViewRef={webViewRef}
                             showToggle={showToggle}
                             captureWebView={captureWebView}
                             isTooltipEnabled={isTooltipEnabled}
                         />
-                    )}
+                    ) : null}
                     <ViewShot
                         ref={viewShotRef}
                         options={{

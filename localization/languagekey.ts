@@ -125,6 +125,8 @@ export const TranslationKeys: Translations | any = {
         Value_Range: "Value Range",
         Cancel: "Cancel",
         OK: "OK",
+        select: "Select",
+        today: "Today",
         Data_not_available: "Data not available",
         imprints: {
             company: "enexion GmbH",
@@ -386,8 +388,9 @@ export const TranslationKeys: Translations | any = {
         Value_Range: "Wertebereich",
         Cancel: "ABBRECHEN",
         OK: "OK",
-        Data_not_available:
-            "Daten n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.icht verfugbar",
+        Data_not_available: "Daten nicht verfugbar",
+        select: "wählen",
+        today: "Heute",
         imprints: {
             company: "enexion GmbH",
             address1: "Am Kronberger Hang 2A, ",
