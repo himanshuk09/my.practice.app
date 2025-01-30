@@ -247,10 +247,10 @@ const CustomDrawer = memo((props: any) => {
         if (item?.route && !item?.route.startsWith("http")) {
             setActiveSubmenu(null);
             if (pathname !== item?.route.replace(/\/\([^)]*\)\//g, "/")) {
-                startLoader();
-                setTimeout(() => {
-                    router.replace(item?.route as Href);
-                });
+                // startLoader();
+                // setTimeout(() => {
+                router.replace(item?.route as Href);
+                // });
             }
         } else if (item?.route?.startsWith("http")) {
             if (Platform.OS === "web") {
@@ -265,94 +265,9 @@ const CustomDrawer = memo((props: any) => {
             className="flex-1 bg-[#fff] mt-5"
             showsVerticalScrollIndicator={false}
         >
-            {/* {menuItems.map((item, index) => (
-                <View key={index} className="mt-3">
-                    <TouchableOpacity
-                        key={index}
-                        activeOpacity={0.7}
-                        className={`flex-row items-center   p-5   ${
-                            item.route.replace(/\/\([^)]*\)\//g, "/") ===
-                            pathnames
-                                ? "bg-primary"
-                                : "bg-transparent"
-                        }`}
-                        onPress={() => navigationToRoute(item)}
-                    >
-                        {React.cloneElement(
-                            item.icon,
-                            getTextAndIconStyle(item.route)
-                        )}
-                        <Text
-                            className={`text-lg font-semibold ml-4 capitalize text-chartText`}
-                            style={getTextAndIconStyle(item.route)}
-                        >
-                            {i18n.t(item.label)}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            ))}  
-            {submenus.map((submenu, index) => {
-                return (
-                    <View key={index}>
-                        <TouchableOpacity
-                            activeOpacity={0.6}
-                            className={`flex-row items-center  p-5   break-words  `}
-                            onPress={() => toggleSubmenu(submenu.key)}
-                        >
-                            {submenu.icon}
-                            <Text
-                                className="text-lg font-semibold ml-4 text-chartText capitalize flex-1 break-words"
-                                onPress={() => toggleSubmenu(submenu.key)}
-                            >
-                                {i18n.t(submenu.label)}
-                            </Text>
-                            <Feather
-                                className="mr-10"
-                                name={
-                                    activeSubmenu === submenu.key
-                                        ? "chevron-up"
-                                        : "chevron-down"
-                                }
-                                size={22}
-                                color="#9a9b9f"
-                                onPress={() => toggleSubmenu(submenu.key)}
-                            />
-                        </TouchableOpacity>
-
-                        <Submenu
-                            isVisible={activeSubmenu === submenu.key}
-                            height={submenu?.height}
-                        >
-                            {submenu.items.map((item, subIndex) => (
-                                <TouchableOpacity
-                                    activeOpacity={0.6}
-                                    key={subIndex}
-                                    className={` pl-16  py-3   ${
-                                        item.route.replace(
-                                            /\/\([^)]*\)\//g,
-                                            "/"
-                                        ) === pathnames
-                                            ? "bg-primary"
-                                            : "bg-transparent"
-                                    }`}
-                                    onPress={() => navigationToRoute(item)}
-                                >
-                                    <Text
-                                        className="text-lg  font-normal text-chartText"
-                                        style={getTextAndIconStyle(item.route)}
-                                    >
-                                        {i18n.t(item.label)}
-                                    </Text>
-                                </TouchableOpacity>
-                            ))}
-                        </Submenu>
-                    </View>
-                );
-            })} */}
             {submenus.map((submenu: any, index) => {
                 // Check if there are items in the submenu
                 const hasItems = submenu.items.length > 0;
-
                 return (
                     <View key={index}>
                         {/* Render simple View if no submenu items */}

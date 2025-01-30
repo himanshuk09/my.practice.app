@@ -7,18 +7,25 @@ import {
     MaterialIcons,
     Octicons,
 } from "@expo/vector-icons"; // For icons
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text } from "react-native";
-
+import WebView from "react-native-webview";
+type FloatingActionMenuProps = {
+    webViewRef: React.RefObject<WebView | any>;
+    showToggle?: boolean;
+    captureWebView?: any;
+    isTooltipEnabled?: boolean;
+};
 export default function FloatingActionMenu({
     webViewRef,
     showToggle = false,
     captureWebView,
-}: any) {
+    isTooltipEnabled,
+}: FloatingActionMenuProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isZoomIn, setIsZoomIn] = useState(true);
     const [animation] = useState(new Animated.Value(0));
-    const [tooltip, setTooltip] = useState(false);
+    const [tooltip, setTooltip] = useState<boolean | any>(false);
     const [tooltipLabel, setTooltipLabel] = useState<any>(null);
     const [pressedItem, setPressedItem] = useState<any>(null);
     const toggleMenu = () => {
@@ -103,6 +110,9 @@ export default function FloatingActionMenu({
             label: "Download",
         },
     ];
+    useEffect(() => {
+        setTooltip(isTooltipEnabled);
+    }, [isTooltipEnabled]);
     return showToggle ? (
         <View style={styles.container}>
             {/* Floating Action Button */}

@@ -18,6 +18,7 @@ import {
     iFrameLineHtmlcontent,
 } from "./Chart/charthtmlcontent";
 import { filterDataByDateRange } from "./Chart/filterFunction";
+import WebView from "react-native-webview";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
@@ -50,10 +51,11 @@ const ToggleChartComponent = ({
     const [endDate, setEndDate] = useState<any>();
     const [modalVisible, setModalVisible] = useState(false);
     const [isChartZoomed, setIschartZoomed] = useState(false);
+    const [isTooltipEnabled, setIsTooltipEnabled] = useState(false);
     const locale = useSelector((state: any) => state.language.locale);
     const dispatch = useDispatch();
-    const webViewRef = useRef<any>(null);
-    const iFrameRef = useRef<any>(null);
+    const webViewRef = useRef<WebView | any>(null);
+    const iFrameRef = useRef<HTMLIFrameElement | any>(null);
     const isFirstRender = useRef(true);
     let title = i18n.t("Energy_Use");
     const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -108,7 +110,7 @@ const ToggleChartComponent = ({
     const updateChartData = (filteredData: any) => {
         if (filteredData?.length === 0) {
             updateChart("options", {
-                noData: { text: "Data not available" },
+                noData: { text: i18n.t("Data_not_available") },
                 grid: {
                     show: false,
                 },
@@ -118,6 +120,14 @@ const ToggleChartComponent = ({
                 setLoading(false);
             }, 500);
             return;
+        }
+        if (isTooltipEnabled) {
+            updateChart("options", {
+                markers: {
+                    size: 0,
+                },
+            });
+            setIsTooltipEnabled(false);
         }
         if (
             activeTab === "Year" ||
@@ -263,7 +273,10 @@ const ToggleChartComponent = ({
         if (message.action === "chartZoomed") {
             setIschartZoomed(message.isZoomed);
         }
-        // console.log("message.action", message.action, message?.values);
+        if (message.action === "tooltip") {
+            setIsTooltipEnabled(message?.values);
+        }
+        console.log("message.action", message.action, message?.values);
     };
     const fetchData = async () => {
         if (fetchChartData) {
@@ -293,7 +306,9 @@ const ToggleChartComponent = ({
         };
         executeAfterRender();
     }, [activeTab, fetchChartData, locale]);
-
+    const ZoomData = () => {
+        (webViewRef.current as any)?.injectJavaScript(`ZoomData()`);
+    };
     return (
         <View className="flex-1  bg-white">
             {!isLandscape ? (
@@ -323,6 +338,7 @@ const ToggleChartComponent = ({
                     iFramehtmlContent={iFrameLineHtmlcontent}
                     showToggle={false}
                     setLoading={setLoading}
+                    isTooltipEnabled={isTooltipEnabled}
                 />
             </View>
 
@@ -332,6 +348,7 @@ const ToggleChartComponent = ({
                     <TouchableOpacity
                         className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
                         onPress={() => setModalVisible(!modalVisible)}
+                        // onPress={ZoomData}
                     >
                         <Text className="text-white text-center text-base font-normal uppercase">
                             {i18n.t(bottonTitle)}

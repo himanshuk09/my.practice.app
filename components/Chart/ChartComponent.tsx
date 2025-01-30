@@ -35,6 +35,7 @@ type ChartComponentProps = {
     showToggle?: boolean;
     iFrameWidth?: string | number | undefined;
     setLoading?: any;
+    isTooltipEnabled?: boolean;
 };
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
@@ -49,6 +50,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     showToggle,
     iFrameWidth = "100%",
     setLoading,
+    isTooltipEnabled,
 }) => {
     const dispatch = useDispatch();
     const viewShotRef = useRef<any>(null);
@@ -233,6 +235,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                             webViewRef={webViewRef}
                             showToggle={showToggle}
                             captureWebView={captureWebView}
+                            isTooltipEnabled={isTooltipEnabled}
                         />
                     )}
                     <ViewShot

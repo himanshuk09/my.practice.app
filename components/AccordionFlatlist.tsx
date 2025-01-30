@@ -105,10 +105,10 @@ const AccordionFlatlist = ({
                         item?.details.map((detail: any, index: number) => (
                             <TouchableOpacity
                                 key={index}
-                                className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3  items-center justify-center  rounded-sm text-center border-y-4 border-y-white h-20"
+                                className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3 pl-4 items-start justify-center  rounded-sm text-center border-y-4 border-y-white h-20"
                                 onPress={() => {
                                     startLoader();
-                                    // setTimeout(() => router.push(detail.route as Href));
+
                                     setTimeout(() =>
                                         router.push(
                                             `/dashboard/loaddata/${item?.id}/${detail?.id}` as Href

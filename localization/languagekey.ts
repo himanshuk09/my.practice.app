@@ -119,6 +119,13 @@ export const TranslationKeys: Translations | any = {
         Trader: "Trader",
         Date: "Date",
         State: "State",
+        Period_of_Time: "Period of Time",
+        From: "From",
+        To: "To",
+        Value_Range: "Value Range",
+        Cancel: "Cancel",
+        OK: "OK",
+        Data_not_available: "Data not available",
         imprints: {
             company: "enexion GmbH",
             address1: "Am Kronberger Hang 2A,",
@@ -373,6 +380,14 @@ export const TranslationKeys: Translations | any = {
         Trader: "Handler",
         Date: "Datum",
         State: "Status",
+        Period_of_Time: "Zeitraum",
+        From: "Von",
+        To: "Bis",
+        Value_Range: "Wertebereich",
+        Cancel: "ABBRECHEN",
+        OK: "OK",
+        Data_not_available:
+            "Daten n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.icht verfugbar",
         imprints: {
             company: "enexion GmbH",
             address1: "Am Kronberger Hang 2A, ",

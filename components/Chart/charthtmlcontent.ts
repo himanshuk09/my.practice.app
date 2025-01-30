@@ -88,7 +88,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'startLoader' }));
 						const currentSize = chart.w.config.markers.size;
 						const newSize = currentSize === 0 ? 2 : 0;
-
+						window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'tooltip',values:currentSize === 0 ? true : false }));
 						// Update chart options
 						chart.updateOptions({
 							markers: {
@@ -819,7 +819,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								options: {
 								chart: {
 									// width: '100%' ,
-									height:'91%',
+									height:'95%',
 									background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat cover ",
 								},
 								// xaxis:
@@ -1172,6 +1172,21 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 						  chart.w.globals.zoomEnabled = true;
 						  chart.w.globals.selectionEnabled = false;
 						}
+					}
+
+					// function ZoomData(){
+					// 	chart.zoomX(
+					// 		new Date('01 Jan 2021').getTime(),
+					// 		new Date('27 Feb 2021').getTime()
+					// 	  )
+					// }
+					function ZoomData() {
+						// Parse the dates correctly
+						const startDate = new Date('01/01/2021 00:00').getTime();
+						const endDate = new Date('01/13/2021 23:00').getTime();
+					  
+						// Zoom the chart to the specified date range
+						chart.zoomX(startDate, endDate);
 					  }
 
 					document.addEventListener("DOMContentLoaded", () => {
@@ -2336,7 +2351,14 @@ export const webviewDonutChartHtml = `
 								height: '95%',
 								width: '95%',
 								background: "none",
-								animations: { enabled: true },
+								animations: { 
+									enabled: true,
+									easing: "linear",
+									speed: 1000,
+									dynamicAnimation: { enabled: true, speed: 1000 },
+									animategradually: { enabled: true, delay: 2000 },
+									initialAnimation: {enabled: true} 
+								},
 								toolbar: { show: false },
 						    },
 							noData: {
@@ -2361,75 +2383,72 @@ export const webviewDonutChartHtml = `
 									offsetY: 0,
 									customScale: 1.1,
 									dataLabels: {
-									offset: 0,
-									minAngleToShowLabel: 0,
-								},
-								donut:
-									{
-									  	size: '65%',
-									  	background: 'transparent',
-									  	labels: {
-										  	show: true,
-										  	name: {
-											  	show: false,
-										  	},
-											value: {
+										offset: 0,
+										minAngleToShowLabel: 0,
+									},
+									donut:{
+											size: '65%',
+											background: 'transparent',
+											labels: {
 												show: true,
-												fontSize: '19px',
-												fontFamily: 'Helvetica, Arial, sans-serif',
-												fontWeight: 400,
-												color: "red",
-												offsetY: 5,
-												offsetX: 1,
-												formatter: function (val) {
-													  return val + '%';
+												name: {
+													show: true,
+													fontSize: '15px',
+													fontFamily: 'Helvetica, Arial, sans-serif',
+													fontWeight: 600,
+													color: undefined,
+													offsetY: -10,
+													formatter: function (val) {
+													  return val
+													}
 												},
-											},
-										    total:
-											{
-												show: false,
-												showAlways: false,
-												label: "Total",
-												formatter: function (w) {
-													return w.globals.seriesTotals.reduce((a, b) => a + b,0);
-												},
-										    },
-									    },
+											    value: {
+												    show: true,
+												    fontSize: '15px',
+												    fontFamily: 'Helvetica, Arial, sans-serif',
+												    fontWeight: 500,
+												    color: undefined,
+												    offsetY: -5,
+												    offsetX: -5,
+												    formatter: function (val) {
+														return val + '%';
+												    },
+											    },
+											    total:
+											    {
+												  	show: false,
+												  	showAlways: false,
+												  	label: "Total",
+												  	formatter: function (w) {
+													  	return w.globals.seriesTotals.reduce((a, b) => a + b,0);
+												   	},
+											    },
+									       },	
+								        },
 								    },
-							    },
-						    },
-							//   tooltip: {
-							// 	  enabled: true,
-							// 	//   style: {
-							// 	// 	  fontSize: "8px",
-							// 	// 	  fontFamily: "Arial, sans-serif",
-							// 	// 	  color: "#ffffff",
-							// 	//   },
-							// 	//   onDatasetHover: {
-							// 	// 	  highlightDataSeries: false,
-							// 	// 	},
-							// 	//   y: {
-							// 	// 	  formatter: function(val) {
-							// 	// 		  return val + "%";
-							// 	// 	  },
-							// 	//   },
-							//   },
-
+						    	},
 							tooltip: {
 								enabled: true,
 								enabledOnSeries: undefined,
 								shared: true,
-								followCursor: false,
+								followCursor: true,
 								intersect: false,
 								inverseOrder: false,
 								custom: undefined,
-								hideEmptySeries: true,
+								hideEmptySeries: false,
 								fillSeriesColor: true,
 								theme: false,
+								x: {
+									show: true,
+									
+									formatter: function (val) {
+										return val + '%';
+									},
+								},
 								style: {
-								  fontSize: '12px',
-								  fontFamily: undefined,
-								  backgroundColor: "#ffffff",
+								  	fontSize: '12px',
+								  	fontFamily: undefined,
+								  	backgroundColor: undefined,
 								},
 								onDatasetHover: {
 									highlightDataSeries: false,
@@ -2438,7 +2457,6 @@ export const webviewDonutChartHtml = `
 						  	dataLabels: { enabled: false },
 						  	legend: {
 							  	show: false,
-							  	position: 'bottom',
 						  	},
 						  	title: {
 							  	text: "Strom 2024",
@@ -2453,7 +2471,6 @@ export const webviewDonutChartHtml = `
 							  	breakpoint: 480,
 							  	options: {
 								  	chart: { width: '100%' },
-								  	legend: { position: 'bottom' },
 							  	},
 						  	}],
 					  	};
@@ -2463,7 +2480,7 @@ export const webviewDonutChartHtml = `
 
 						  //...........
 						    function updateChart(filteredData, updatedOptions) {
-							    chart.updateSeries([{ data: filteredData }]);
+							    chart.updateSeries([{ data: filteredData }],true);
 							    chart.updateOptions(updatedOptions);
 							    window.ReactNativeWebView.postMessage(
 								   JSON.stringify({ action: 'updateChart' })

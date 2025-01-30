@@ -18,6 +18,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { i18n } from "@/localization/localConfig";
 
 const PickerModel = ({
     showRangePicker = true,
@@ -94,9 +95,9 @@ const PickerModel = ({
                             {/* Period of Time */}
                             {showPeriodOfTime && showRangePicker ? (
                                 <>
-                                    <View className="flex-row justify-between p-3 bg-[#ebebeb]">
+                                    <View className="flex-row justify-between pl-5 p-3 bg-[#ebebeb]">
                                         <Text className="text-chartText font-bold text-lg ">
-                                            Period of Time
+                                            {i18n.t("Period_of_Time")}
                                         </Text>
                                         <TouchableOpacity
                                             className="m-1"
@@ -113,10 +114,10 @@ const PickerModel = ({
                                         </TouchableOpacity>
                                     </View>
 
-                                    <View className="flex-row justify-between items-center m-4">
+                                    <View className="flex-row justify-between items-center m-5 ">
                                         <View className="flex-1 mr-2">
                                             <Text className=" text-chartText  mb-1 font-semibold">
-                                                From
+                                                {i18n.t("From")}
                                             </Text>
                                             <Pressable
                                                 className=" bg-cardBg   px-2 py-3 flex-row justify-between"
@@ -191,10 +192,10 @@ const PickerModel = ({
                                         </View>
                                     </View>
 
-                                    <View className="flex-row justify-between items-center m-4">
+                                    <View className="flex-row justify-between items-center m-5">
                                         <View className="flex-1 mr-2">
                                             <Text className="text-chartText mb-1">
-                                                To
+                                                {i18n.t("To")}
                                             </Text>
                                             <Pressable
                                                 className=" bg-cardBg  px-2 py-3 flex-row justify-between"
@@ -260,7 +261,7 @@ const PickerModel = ({
                                 </>
                             ) : (
                                 <>
-                                    <View className="flex-row justify-between p-3 bg-[#ebebeb]">
+                                    <View className="flex-row justify-between p-3 bg-[#ebebeb] pl-5">
                                         <Text
                                             className="text-chartText font-bold text-lg "
                                             onPress={() => {
@@ -268,7 +269,7 @@ const PickerModel = ({
                                                 Keyboard.dismiss();
                                             }}
                                         >
-                                            Period of Time
+                                            {i18n.t("Period_of_Time")}
                                         </Text>
                                         <TouchableOpacity
                                             className="m-1"
@@ -290,10 +291,10 @@ const PickerModel = ({
                                             height: animationHeight, // Controlled by animation
                                         }}
                                     >
-                                        <View className="flex-row justify-between items-center m-4">
+                                        <View className="flex-row justify-between items-center m-5">
                                             <View className="flex-1 mr-2">
                                                 <Text className=" text-chartText  mb-1 font-semibold">
-                                                    From
+                                                    {i18n.t("From")}
                                                 </Text>
                                                 <Pressable
                                                     className=" bg-cardBg  p-3 flex-row justify-between"
@@ -367,10 +368,10 @@ const PickerModel = ({
                                                 </Pressable>
                                             </View>
                                         </View>
-                                        <View className="flex-row justify-between items-center m-4">
+                                        <View className="flex-row justify-between items-center m-5">
                                             <View className="flex-1 mr-2">
                                                 <Text className=" text-chartText  mb-1 font-semibold">
-                                                    To
+                                                    {i18n.t("To")}
                                                 </Text>
                                                 <Pressable
                                                     className="bg-cardBg  p-3 flex-row justify-between"
@@ -450,14 +451,14 @@ const PickerModel = ({
 
                             {/* Value Range */}
                             {showValueRange && (
-                                <>
-                                    <Text className="text-chartText font-bold text-lg p-3 bg-[#ebebeb]">
-                                        Value Range
+                                <View>
+                                    <Text className="text-chartText font-bold text-lg p-3 pl-5 bg-[#ebebeb]">
+                                        {i18n.t("Value_Range")}
                                     </Text>
                                     <View className="flex-col  m-4">
-                                        <View className="mr-2 mb-2 w-[50%]">
-                                            <Text className=" text-chartText  mb-1 font-semibold">
-                                                From
+                                        <View className="mx-2 mb-2 w-[50%] ">
+                                            <Text className=" text-chartText   mb-1 font-semibold">
+                                                {i18n.t("From")}
                                             </Text>
 
                                             <View>
@@ -476,9 +477,9 @@ const PickerModel = ({
                                                 </Text>
                                             </View>
                                         </View>
-                                        <View className="mr-2 mb-2 w-[50%]">
+                                        <View className="mx-2 mb-2 w-[50%]">
                                             <Text className=" text-chartText  mb-1 font-semibold">
-                                                To
+                                                {i18n.t("To")}
                                             </Text>
                                             <View>
                                                 <TextInput
@@ -497,19 +498,19 @@ const PickerModel = ({
                                             </View>
                                         </View>
                                     </View>
-                                </>
+                                </View>
                             )}
                             <View className="flex-row justify-end my-3">
                                 <Pressable
                                     className="px-4 py-2"
                                     onPress={() => setModalVisible(false)}
                                 >
-                                    <Text className="text-chartText  font-bold">
-                                        Cancle
+                                    <Text className="text-chartText  font-medium text-base">
+                                        {i18n.t("Cancel")}
                                     </Text>
                                 </Pressable>
                                 <Pressable
-                                    className="px-4 py-2"
+                                    className="px-4 py-2 mr-4"
                                     onPress={() => {
                                         handleRangeDataFilter();
                                         setTimeout(() => {
@@ -517,8 +518,8 @@ const PickerModel = ({
                                         }, 100);
                                     }}
                                 >
-                                    <Text className="text-red-600 font-extrabold">
-                                        OK
+                                    <Text className="text-red-600 font-medium text-base ">
+                                        {i18n.t("OK")}
                                     </Text>
                                 </Pressable>
                             </View>
