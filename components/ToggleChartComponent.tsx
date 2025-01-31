@@ -391,7 +391,7 @@ const ToggleChartComponent = ({
                     // updateChartData(cockpitChartData);
                     fetchData();
                     isFirstRender.current = false;
-                }, 500);
+                }, 1000);
                 dispatch(inActiveLoading());
             } else {
                 fetchData();
