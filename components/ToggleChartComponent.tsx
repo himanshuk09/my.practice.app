@@ -19,7 +19,7 @@ import {
 } from "./Chart/charthtmlcontent";
 import { filterDataByDateRange } from "./Chart/filterFunction";
 import WebView from "react-native-webview";
-import { cockpitChartData } from "@/constants/cockpitchart";
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 type ChartUpdateType = "series" | "options" | "chart";
@@ -48,8 +48,12 @@ const ToggleChartComponent = ({
     const [isLoading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<tabsType>("Year");
     const [previousTab, setPreviousTab] = useState<tabsType>("Year");
-    const [startDate, setStartDate] = useState<any>();
-    const [endDate, setEndDate] = useState<any>();
+    // const [startDate, setStartDate] = useState<any>();
+    // const [endDate, setEndDate] = useState<any>();
+    const [selectedStartDate, setSelectedStartDate] = useState<any>(dayjs());
+    const [selectedEndDate, setSelectedEndDate] = useState<any>(
+        dayjs().add(7, "day")
+    );
     const [modalVisible, setModalVisible] = useState(false);
     const [isChartZoomed, setIschartZoomed] = useState(false);
     const [isTooltipEnabled, setIsTooltipEnabled] = useState(false);
@@ -255,7 +259,10 @@ const ToggleChartComponent = ({
         }
     };
     const handleRangeDataFilter = () => {
-        let rangeFilterData = filterDataByDateRange(startDate, endDate);
+        let rangeFilterData = filterDataByDateRange(
+            selectedStartDate,
+            selectedEndDate
+        );
         if (rangeFilterData?.length === 0) {
             updateChart("options", {
                 noData: { text: "Data not available" },
@@ -292,21 +299,13 @@ const ToggleChartComponent = ({
             // Assign new timeout without optional chaining
             LoaderTimeoutRef.current = setTimeout(() => {
                 setLoading(false);
-            }, 1000);
+            }, 500);
         }
 
         // Handle loader actions on tooltip toggle
-        if (
-            message.action === "startLoader" ||
-            ((activeTab === "Year" || activeTab === "Year_3") &&
-                message.action === "Zoom Start")
-        ) {
+        if (message.action === "startLoader") {
             setLoading(true);
-        } else if (
-            message.action === "stopLoader" ||
-            ((activeTab === "Year" || activeTab === "Year_3") &&
-                message.action === "Zoomed")
-        ) {
+        } else if (message.action === "stopLoader") {
             setTimeout(() => {
                 setLoading(false);
             }, 2000);
@@ -391,7 +390,6 @@ const ToggleChartComponent = ({
                 setTimeout(() => {
                     // updateChartData(cockpitChartData);
                     fetchData();
-                    updateLocale();
                     isFirstRender.current = false;
                 }, 500);
                 dispatch(inActiveLoading());
@@ -457,10 +455,10 @@ const ToggleChartComponent = ({
                         modalVisible={modalVisible}
                         setModalVisible={setModalVisible}
                         timePicker={true}
-                        startDate={startDate}
-                        endDate={endDate}
-                        setStartDate={setStartDate}
-                        setEndDate={setEndDate}
+                        selectedStartDate={selectedStartDate}
+                        setSelectedStartDate={setSelectedStartDate}
+                        selectedEndDate={selectedEndDate}
+                        setSelectedEndDate={setSelectedEndDate}
                         handleRangeDataFilter={handleRangeDataFilter}
                     />
                 </>

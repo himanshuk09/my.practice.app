@@ -26,7 +26,7 @@ const CircularLoaderSVGWeb = () => {
             Animated.timing(rotation, {
                 toValue: rotationValue.current,
                 duration: 0,
-                useNativeDriver: true,
+                useNativeDriver: Platform.OS !== "web" ? true : false,
             }).start();
         }, 16);
 
@@ -132,7 +132,7 @@ const CircularLoaderSVGAndroid = () => {
             Animated.timing(rotation, {
                 toValue: 1,
                 duration: 2000, // Rotate fully in 2 seconds
-                useNativeDriver: true, // Use native driver for smooth animations
+                useNativeDriver: Platform.OS !== "web" ? true : false, // Use native driver for smooth animations
             })
         );
 
@@ -232,7 +232,7 @@ const LoadingAnimation = () => {
             Animated.timing(dashOffset, {
                 toValue: 0,
                 duration: 1400,
-                useNativeDriver: true,
+                useNativeDriver: Platform.OS !== "web" ? true : false,
             })
         ).start();
     }, []);

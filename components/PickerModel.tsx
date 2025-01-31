@@ -10,6 +10,8 @@ import {
     Keyboard,
     Animated,
     Easing,
+    Platform,
+    StyleSheet,
 } from "react-native";
 import DateTimePickerComponents from "./DateTimePickerComponents";
 import dayjs from "dayjs";
@@ -19,6 +21,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/localConfig";
+import { DateType } from "react-native-ui-datepicker";
 
 const PickerModel = ({
     showRangePicker = true,
@@ -26,28 +29,22 @@ const PickerModel = ({
     showValueRange = true,
     modalVisible,
     setModalVisible,
-    setStartDate,
-    setEndDate,
+    selectedStartDate,
+    setSelectedStartDate,
+    selectedEndDate,
+    setSelectedEndDate,
     handleRangeDataFilter,
 }: any) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [openStartDate, setOpenStartDate] = useState(false);
     const [openEndDate, setOpenEndDate] = useState(false);
     const [openRangeDataPicker, setOpenRangeDatePicker] = useState(false);
-    const [start, setStart] = useState<any>();
-    const [end, setEnd] = useState<any>();
-    const [range, setRangeDate] = useState<any>();
+    const [range, setRangeDate] = React.useState<{
+        startDate: DateType;
+        endDate: DateType;
+    }>({ startDate: dayjs().subtract(7, "day"), endDate: dayjs() });
     const { locale } = useSelector((state: RootState) => state.language);
-    const [value, setValue] = useState<any>("145");
-    useEffect(() => setStartDate(start), [start]);
-    useEffect(() => setEndDate(end), [end]);
-    useEffect(() => {
-        setStartDate(range?.startDate);
-        setStart(range?.startDate);
-        setEndDate(range?.endDate);
-        setEnd(range?.endDate);
-    }, [range]);
-
+    const [value, setValue] = useState<any>("0,000");
     const animationHeight = useRef(new Animated.Value(0)).current;
 
     // Monitor keyboard visibility
@@ -70,12 +67,23 @@ const PickerModel = ({
     // Animate height based on keyboard visibility
     useEffect(() => {
         Animated.timing(animationHeight, {
-            toValue: isKeyboardVisible ? 0 : 200, // Collapse on keyboard open, expand otherwise
+            toValue: isKeyboardVisible ? 0 : Platform.OS === "web" ? 210 : 200, // Collapse on keyboard open, expand otherwise
             duration: 200,
             easing: Easing.inOut(Easing.cubic),
             useNativeDriver: false, // Native driver doesn't support height animation
         }).start();
     }, [isKeyboardVisible]);
+    useEffect(
+        () => setSelectedStartDate(selectedStartDate),
+        [selectedStartDate]
+    );
+    useEffect(() => setSelectedEndDate(selectedEndDate), [selectedEndDate]);
+    useEffect(() => {
+        if (showRangePicker) {
+            setSelectedStartDate(range?.startDate);
+            setSelectedEndDate(range?.endDate);
+        }
+    }, [range]);
     return (
         <Modal
             animationType="fade"
@@ -83,15 +91,26 @@ const PickerModel = ({
             visible={modalVisible}
             onRequestClose={() => setModalVisible(!modalVisible)}
         >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-                <View className="flex-1 justify-start pt-20 bg-[#0a0a0aa8] bg-opacity-50">
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    setModalVisible(false);
+                    setOpenStartDate(false);
+                    setOpenEndDate(false);
+                    setOpenRangeDatePicker(false);
+                }}
+            >
+                <View
+                    className={`flex-1  pt-20 bg-[#0a0a0aa8] bg-opacity-50 ${Platform.OS === "web" && "justify-center items-center"}`}
+                >
                     <TouchableWithoutFeedback
-                        onPress={() => {
-                            setOpenStartDate(false);
-                            setOpenEndDate(false);
-                        }}
+                    // onPress={() => {
+                    //     setOpenStartDate(false);
+                    //     setOpenEndDate(false);
+                    // }}
                     >
-                        <View className="bg-white mx-2 ">
+                        <View
+                            className={`bg-white mx-2 ${Platform.OS === "web" && "w-96"}`}
+                        >
                             {/* Period of Time */}
                             {showPeriodOfTime && showRangePicker ? (
                                 <>
@@ -128,8 +147,8 @@ const PickerModel = ({
                                                 }
                                             >
                                                 <Text className="text-slate-600">
-                                                    {/* {start
-														? dayjs(start)
+                                                    {/* {selectedStartDate
+														? dayjs(selectedStartDate)
 															  .locale("en")
 															  .format(
 																  "MMM DD YYYY"
@@ -139,8 +158,8 @@ const PickerModel = ({
 															  .format(
 																  "MMM DD YYYY"
 															  )} */}
-                                                    {start
-                                                        ? dayjs(start)
+                                                    {range.startDate
+                                                        ? dayjs(range.startDate)
                                                               .locale(locale)
                                                               .format(
                                                                   locale ===
@@ -169,18 +188,8 @@ const PickerModel = ({
                                                 {" "}
                                                 {""}
                                             </Text>
-                                            <Pressable
-                                                className=" bg-disableCard  px-2 py-3 flex-row justify-between"
-                                                // onPress={() => setOpenStartDate(!openStartDate)}
-                                            >
+                                            <Pressable className=" bg-disableCard  px-2 py-3 flex-row justify-between">
                                                 <Text className="text-[#616161]">
-                                                    {/* {start
-														? dayjs(start)
-															  .locale("en")
-															  .format("HH:mm")
-														: dayjs()
-															  .locale("en")
-															  .format("HH:mm")} */}
                                                     00:00
                                                 </Text>
                                                 <Ionicons
@@ -206,8 +215,8 @@ const PickerModel = ({
                                                 }
                                             >
                                                 <Text className="text-slate-600">
-                                                    {end
-                                                        ? dayjs(end)
+                                                    {range.endDate
+                                                        ? dayjs(range.endDate)
                                                               .locale(locale)
                                                               .format(
                                                                   locale ===
@@ -236,18 +245,8 @@ const PickerModel = ({
                                                 {" "}
                                                 {""}
                                             </Text>
-                                            <Pressable
-                                                className="bg-disableCard  px-2 py-3 flex-row justify-between"
-                                                // onPress={() => setOpenStartDate(!openStartDate)}
-                                            >
+                                            <Pressable className="bg-disableCard  px-2 py-3 flex-row justify-between">
                                                 <Text className="text-[#616161]">
-                                                    {/* {end
-														? dayjs(end)
-															  .locale("en")
-															  .format("HH:mm")
-														: dayjs()
-															  .locale("en")
-															  .format("HH:mm")} */}
                                                     00:00
                                                 </Text>
                                                 <Ionicons
@@ -289,6 +288,7 @@ const PickerModel = ({
                                         style={{
                                             overflow: "hidden",
                                             height: animationHeight, // Controlled by animation
+                                            // marginBottom: 5,
                                         }}
                                     >
                                         <View className="flex-row justify-between items-center m-5">
@@ -305,8 +305,10 @@ const PickerModel = ({
                                                     }
                                                 >
                                                     <Text className="text-slate-700">
-                                                        {start
-                                                            ? dayjs(start)
+                                                        {selectedStartDate
+                                                            ? dayjs(
+                                                                  selectedStartDate
+                                                              )
                                                                   .locale(
                                                                       locale
                                                                   )
@@ -348,8 +350,10 @@ const PickerModel = ({
                                                     }
                                                 >
                                                     <Text className="text-slate-700">
-                                                        {start
-                                                            ? dayjs(start)
+                                                        {selectedStartDate
+                                                            ? dayjs(
+                                                                  selectedStartDate
+                                                              )
                                                                   .locale("en")
                                                                   .format(
                                                                       "HH:mm"
@@ -382,8 +386,10 @@ const PickerModel = ({
                                                     }
                                                 >
                                                     <Text className="text-slate-700">
-                                                        {end
-                                                            ? dayjs(end)
+                                                        {selectedEndDate
+                                                            ? dayjs(
+                                                                  selectedEndDate
+                                                              )
                                                                   .locale(
                                                                       locale
                                                                   )
@@ -413,7 +419,7 @@ const PickerModel = ({
                                             </View>
                                             <View className="flex-1 ml-2">
                                                 <Text className="text-gray-400 mb-1">
-                                                    {""}
+                                                    {""}{" "}
                                                 </Text>
                                                 <Pressable
                                                     className="bg-cardBg  p-3 flex-row justify-between"
@@ -424,8 +430,10 @@ const PickerModel = ({
                                                     }
                                                 >
                                                     <Text className="text-slate-700">
-                                                        {end
-                                                            ? dayjs(end)
+                                                        {selectedEndDate
+                                                            ? dayjs(
+                                                                  selectedEndDate
+                                                              )
                                                                   .locale("en")
                                                                   .format(
                                                                       "HH:mm"
@@ -525,43 +533,81 @@ const PickerModel = ({
                             </View>
                         </View>
                     </TouchableWithoutFeedback>
-                    {openStartDate && (
-                        <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8]">
-                            <DateTimePickerComponents
-                                title="Select Start Date"
-                                open={openStartDate}
-                                timePicker={true}
-                                setOpen={setOpenStartDate}
-                                setSingleDate={setStart}
-                            />
-                        </View>
-                    )}
-                    {openEndDate && (
-                        <View className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
-                            <DateTimePickerComponents
-                                title="Select End Date"
-                                open={openEndDate}
-                                timePicker={true}
-                                setOpen={setOpenEndDate}
-                                setSingleDate={setEnd}
-                            />
-                        </View>
-                    )}
-                    {openRangeDataPicker && (
-                        <View className="absolute z-50 inset-0  flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] ">
-                            <DateTimePickerComponents
-                                title="Select Date Range"
-                                pickerMode="range"
-                                open={openRangeDataPicker}
-                                timePicker={false}
-                                setOpen={setOpenRangeDatePicker}
-                                setRangeDate={setRangeDate}
-                            />
-                        </View>
-                    )}
                 </View>
             </TouchableWithoutFeedback>
+            {openStartDate && (
+                <Pressable
+                    className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] "
+                    onPress={() => setOpenStartDate(false)}
+                >
+                    <DateTimePickerComponents
+                        title="Select Start Date"
+                        open={openStartDate}
+                        timePicker={true}
+                        setOpen={setOpenStartDate}
+                        setSingleDate={setSelectedStartDate}
+                        defaultDate={selectedStartDate}
+                    />
+                </Pressable>
+            )}
+            {openEndDate && (
+                <Pressable
+                    className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] "
+                    onPress={() => setOpenEndDate(false)}
+                >
+                    <DateTimePickerComponents
+                        title="Select End Date"
+                        open={openEndDate}
+                        timePicker={true}
+                        setOpen={setOpenEndDate}
+                        setSingleDate={setSelectedEndDate}
+                        defaultDate={selectedEndDate}
+                    />
+                </Pressable>
+            )}
+            {openRangeDataPicker && (
+                <Pressable
+                    className="absolute z-50 inset-0 top-30 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8]"
+                    onPress={() => setOpenRangeDatePicker(false)}
+                >
+                    <DateTimePickerComponents
+                        title="Select Date Range"
+                        pickerMode="range"
+                        open={openRangeDataPicker}
+                        timePicker={false}
+                        setOpen={setOpenRangeDatePicker}
+                        rangeDate={range}
+                        setRangeDate={setRangeDate}
+                    />
+                </Pressable>
+            )}
         </Modal>
     );
 };
 export default PickerModel;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    mainContent: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    overlay: {
+        position: "absolute",
+        zIndex: 50,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "#0a0a0aa8", // Semi-transparent black background
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    pickerContainer: {
+        backgroundColor: "white", // Background color for the picker
+        borderRadius: 10, // Optional: Add border radius for a rounded look
+        padding: 20, // Optional: Add padding around the picker
+    },
+});

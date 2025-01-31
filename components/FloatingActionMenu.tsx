@@ -4,6 +4,7 @@ import {
     TouchableOpacity,
     Animated,
     Text,
+    Platform,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons"; // For icons
 import { useState } from "react";
@@ -24,7 +25,7 @@ export default function FloatingActionMenu({
         Animated.timing(animation, {
             toValue,
             duration: 100,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web" ? true : false,
         }).start();
 
         setIsMenuOpen(!isMenuOpen);
@@ -178,7 +179,11 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         justifyContent: "center",
         alignItems: "center",
-        elevation: 5,
+        ...Platform.select({
+            android: {
+                elevation: 5,
+            },
+        }),
     },
     menuItemsContainer: {
         position: "absolute",

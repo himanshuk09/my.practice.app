@@ -17,7 +17,7 @@ const StackHeader = ({ navigation, title }: any) => {
                     // dispatch(activeLoading());
                     // navigation.goBack();
                     if (Platform.OS === "web") {
-                        window.history.back();
+                        window.history.forward();
                     }
                 }}
                 className="w-7 ml-3"

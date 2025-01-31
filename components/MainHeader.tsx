@@ -2,7 +2,7 @@ import { toggleDrawer } from "@/store/drawerSlice";
 import { Entypo } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import React from "react";
-import { SafeAreaView, View, TouchableOpacity } from "react-native";
+import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
 import { useDispatch } from "react-redux";
 import Logo from "./SVG/Logo";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
@@ -19,11 +19,20 @@ const Header = React.memo(({ navigation }: any) => {
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "center",
-                    elevation: 0,
-                    shadowColor: "transparent",
-                    shadowOpacity: 0,
-                    shadowOffset: { width: 0, height: 0 },
                     borderBottomWidth: 0,
+                    // Platform-specific shadow removal
+                    ...Platform.select({
+                        android: { elevation: 0 },
+                        ios: {
+                            shadowColor: "transparent",
+                            shadowOpacity: 0,
+                            shadowOffset: { width: 0, height: 0 },
+                        },
+                        default: {
+                            // Web
+                            boxShadow: "none",
+                        },
+                    }),
                 }}
             >
                 <TouchableOpacity

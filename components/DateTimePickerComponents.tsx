@@ -21,13 +21,15 @@ const DateTimePickerComponents = ({
     setOpen,
     setSingleDate,
     setRangeDate,
+    rangeDate,
+    defaultDate,
 }: any) => {
     const [mode, setMode] = useState<ModeType>(pickerMode);
-    const [date, setDate] = useState<DateType | undefined>(dayjs());
+    const [date, setDate] = useState<DateType | undefined>(defaultDate);
     const [range, setRange] = React.useState<{
         startDate: DateType;
         endDate: DateType;
-    }>({ startDate: undefined, endDate: undefined });
+    }>(rangeDate);
     const [dates, setDates] = useState<DateType[] | undefined>();
     const locale = useSelector((state: any) => state.language.locale);
     const onChangeMode = useCallback(
@@ -63,55 +65,54 @@ const DateTimePickerComponents = ({
     // }, [range.endDate]);
     if (!open) return null;
     return (
-        <SafeAreaView>
-            <View
-                className={`w-80 -z-0 bg-[#fff] p-1 rounded-md  md:mt-9 md:ml-5  shadow-lg`}
-            >
-                <View className="flex flex-row items-start justify-between">
-                    <Text className="text-slate-90000 font-bold my-1 ml-1">
-                        {title}
-                    </Text>
-                    <TouchableOpacity
-                        className="m-1"
-                        onPress={() => setOpen(!open)}
-                    >
-                        <AntDesign name="close" size={15} color="#E63757" />
-                    </TouchableOpacity>
-                </View>
-                <DateTimePicker
-                    mode={mode}
-                    date={date}
-                    locale={locale}
-                    startDate={range.startDate}
-                    endDate={range.endDate}
-                    dates={dates}
-                    // minDate={dayjs().startOf('day')}
-                    // maxDate={dayjs().add(3, 'day').endOf('day')}
-                    //disabledDates={[dayjs(), dayjs().add(1, 'day')]}
-                    // disabledDates={(date) => [0, 6].includes(dayjs(date).day())} // disable weekends
-                    //firstDayOfWeek={1}
-                    displayFullDays
-                    timePicker={timePicker}
-                    onChange={onChange}
-                    headerButtonColor="#E63757"
-                    selectedItemColor="#E63757"
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    selectedTextStyle={{
-                        fontWeight: "bold",
-                        color: "#fff",
-                    }}
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    todayContainerStyle={{
-                        borderWidth: 1,
-                    }}
-                />
+        <Pressable
+            className={`w-80 -z-0 bg-[#fff] p-1 rounded-md  md:mt-9 md:ml-5  shadow-lg`}
+        >
+            <View className="flex flex-row items-start justify-between">
+                <Text className="text-slate-90000 font-bold my-1 ml-1">
+                    {title}
+                </Text>
+                <TouchableOpacity
+                    className="m-1"
+                    onPress={() => setOpen(!open)}
+                >
+                    <AntDesign name="close" size={15} color="#E63757" />
+                </TouchableOpacity>
+            </View>
+            <DateTimePicker
+                mode={mode}
+                date={date}
+                locale={locale}
+                startDate={range?.startDate}
+                endDate={range?.endDate}
+                dates={dates}
+                // minDate={dayjs().startOf('day')}
+                // maxDate={dayjs().add(3, 'day').endOf('day')}
+                //disabledDates={[dayjs(), dayjs().add(1, 'day')]}
+                // disabledDates={(date) => [0, 6].includes(dayjs(date).day())} // disable weekends
+                //firstDayOfWeek={1}
+                displayFullDays
+                timePicker={timePicker}
+                onChange={onChange}
+                headerButtonColor="#E63757"
+                selectedItemColor="#E63757"
+                // eslint-disable-next-line react-native/no-inline-styles
+                selectedTextStyle={{
+                    fontWeight: "bold",
+                    color: "#fff",
+                }}
+                // eslint-disable-next-line react-native/no-inline-styles
+                todayContainerStyle={{
+                    borderWidth: 1,
+                }}
+            />
 
-                <View className="px-3 pb-2 relative">
-                    {mode === "single" ? (
-                        <View className=" flex-col items-start justify-between">
-                            <View className="w-full items-center">
-                                <Text className="mb-3 text-center">
-                                    {/* {date
+            <View className="px-3 pb-2 relative">
+                {mode === "single" ? (
+                    <View className=" flex-col items-start justify-between">
+                        <View className="w-full items-center">
+                            <Text className="mb-3 text-center">
+                                {/* {date
                                 ? dayjs(date)
                                       .locale(locale)
                                       .format(
@@ -120,118 +121,36 @@ const DateTimePickerComponents = ({
                                               : "MMM DD YYYY"
                                       )
                                 : "..."} */}
-                                    {date
-                                        ? dayjs(date)
-                                              .locale(locale)
-                                              .format(
-                                                  locale === "en"
-                                                      ? timePicker
-                                                          ? "DD/MM/YYYY HH:mm"
-                                                          : "DD/MM/YYYY"
-                                                      : timePicker
-                                                        ? "DD.MM.YYYY HH:mm"
-                                                        : "DD.MM.YYYY"
-                                              )
-                                        : "..."}
-                                </Text>
-                            </View>
-                            <View className="flex-row justify-between flex w-full">
-                                <Pressable
-                                    onPress={() => {
-                                        setDate(new Date());
-                                        setSingleDate(new Date());
-                                    }}
-                                    accessibilityRole="button"
-                                    accessibilityLabel="Today"
-                                >
-                                    <View className="bg-[#E63757] px-3 py-2  rounded-md items-center ">
-                                        <Text className="text-white font-medium">
-                                            {i18n.t("today")}
-                                        </Text>
-                                    </View>
-                                </Pressable>
-                                {date && (
-                                    <Pressable
-                                        onPress={() => {
-                                            setTimeout(
-                                                () => setOpen(false),
-                                                100
-                                            );
-                                        }}
-                                        accessibilityRole="button"
-                                        accessibilityLabel="select"
-                                    >
-                                        <View className="bg-[#E63757] px-4 py-2  rounded-md items-center ">
-                                            <Text className="text-white font-medium">
-                                                {i18n.t("select")}
-                                            </Text>
-                                        </View>
-                                    </Pressable>
-                                )}
-                            </View>
+                                {date
+                                    ? dayjs(date)
+                                          .locale(locale)
+                                          .format(
+                                              locale === "en"
+                                                  ? timePicker
+                                                      ? "DD/MM/YYYY HH:mm"
+                                                      : "DD/MM/YYYY"
+                                                  : timePicker
+                                                    ? "DD.MM.YYYY HH:mm"
+                                                    : "DD.MM.YYYY"
+                                          )
+                                    : "..."}
+                            </Text>
                         </View>
-                    ) : mode === "range" ? (
-                        <View style={{ gap: 3 }}>
-                            <View className="flex flex-row">
-                                <Text
-                                    style={{
-                                        marginRight: 5,
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    {i18n.t("From")} :
-                                </Text>
-                                {/* {range.startDate
-                                ? dayjs(range.startDate)
-                                      .locale(locale)
-                                      .format("MMM, DD, YYYY")
-                                : "..."} */}
-                                <Text className="mx-3">
-                                    {range.startDate
-                                        ? dayjs(range.startDate)
-                                              .locale(locale)
-                                              .format(
-                                                  locale === "en"
-                                                      ? timePicker
-                                                          ? "DD/MM/YYYY HH:mm"
-                                                          : "DD/MM/YYYY"
-                                                      : timePicker
-                                                        ? "DD.MM.YYYY HH:mm"
-                                                        : "DD.MM.YYYY"
-                                              )
-                                        : "..."}
-                                </Text>
-                            </View>
-                            <View className="flex flex-row">
-                                <Text
-                                    style={{
-                                        marginRight: 5,
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    {i18n.t("To")} :
-                                </Text>
-                                {/* {range.endDate
-                                ? dayjs(range.endDate)
-                                      .locale(locale)
-                                      .format("MMM, DD, YYYY")
-                                : "..."} */}
-                                <Text className="mx-3">
-                                    {range.endDate
-                                        ? dayjs(range.endDate)
-                                              .locale(locale)
-                                              .format(
-                                                  locale === "en"
-                                                      ? timePicker
-                                                          ? "DD/MM/YYYY HH:mm"
-                                                          : "DD/MM/YYYY"
-                                                      : timePicker
-                                                        ? "DD.MM.YYYY HH:mm"
-                                                        : "DD.MM.YYYY"
-                                              )
-                                        : "..."}
-                                </Text>
-                            </View>
+                        <View className="flex-row justify-between flex w-full">
+                            <Pressable
+                                onPress={() => {
+                                    setDate(new Date());
+                                    setSingleDate(new Date());
+                                }}
+                                accessibilityRole="button"
+                                accessibilityLabel="Today"
+                            >
+                                <View className="bg-[#E63757] px-3 py-2  rounded-md items-center ">
+                                    <Text className="text-white font-medium">
+                                        {i18n.t("today")}
+                                    </Text>
+                                </View>
+                            </Pressable>
                             {date && (
                                 <Pressable
                                     onPress={() => {
@@ -239,9 +158,8 @@ const DateTimePickerComponents = ({
                                     }}
                                     accessibilityRole="button"
                                     accessibilityLabel="select"
-                                    style={{ marginBottom: 2 }}
                                 >
-                                    <View className="bg-[#E63757] px-4 py-2 my-1 rounded-md items-center ">
+                                    <View className="bg-[#E63757] px-4 py-2  rounded-md items-center ">
                                         <Text className="text-white font-medium">
                                             {i18n.t("select")}
                                         </Text>
@@ -249,24 +167,103 @@ const DateTimePickerComponents = ({
                                 </Pressable>
                             )}
                         </View>
-                    ) : mode === "multiple" ? (
-                        <View style={{ gap: 3 }}>
-                            <Text style={{ fontWeight: "bold" }}>
-                                Selected Dates:
+                    </View>
+                ) : mode === "range" ? (
+                    <View style={{ gap: 3 }}>
+                        <View className="flex flex-row">
+                            <Text
+                                style={{
+                                    marginRight: 5,
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {i18n.t("From")} :
                             </Text>
-                            {dates &&
-                                dates.map((d, index) => (
-                                    <Text key={index}>
-                                        {dayjs(d)
-                                            .locale(locale)
-                                            .format("MMM, DD, YYYY")}
-                                    </Text>
-                                ))}
+                            {/* {range.startDate
+                                ? dayjs(range.startDate)
+                                      .locale(locale)
+                                      .format("MMM, DD, YYYY")
+                                : "..."} */}
+                            <Text className="mx-3">
+                                {range?.startDate
+                                    ? dayjs(range?.startDate)
+                                          .locale(locale)
+                                          .format(
+                                              locale === "en"
+                                                  ? timePicker
+                                                      ? "DD/MM/YYYY HH:mm"
+                                                      : "DD/MM/YYYY"
+                                                  : timePicker
+                                                    ? "DD.MM.YYYY HH:mm"
+                                                    : "DD.MM.YYYY"
+                                          )
+                                    : "..."}
+                            </Text>
                         </View>
-                    ) : null}
-                </View>
+                        <View className="flex flex-row">
+                            <Text
+                                style={{
+                                    marginRight: 5,
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {i18n.t("To")} :
+                            </Text>
+                            {/* {range.endDate
+                                ? dayjs(range.endDate)
+                                      .locale(locale)
+                                      .format("MMM, DD, YYYY")
+                                : "..."} */}
+                            <Text className="mx-3">
+                                {range.endDate
+                                    ? dayjs(range.endDate)
+                                          .locale(locale)
+                                          .format(
+                                              locale === "en"
+                                                  ? timePicker
+                                                      ? "DD/MM/YYYY HH:mm"
+                                                      : "DD/MM/YYYY"
+                                                  : timePicker
+                                                    ? "DD.MM.YYYY HH:mm"
+                                                    : "DD.MM.YYYY"
+                                          )
+                                    : "..."}
+                            </Text>
+                        </View>
+                        {range && (
+                            <Pressable
+                                onPress={() => {
+                                    setTimeout(() => setOpen(false), 100);
+                                }}
+                                accessibilityRole="button"
+                                accessibilityLabel="select"
+                                style={{ marginBottom: 2 }}
+                            >
+                                <View className="bg-[#E63757] px-4 py-2 my-1 rounded-md items-center ">
+                                    <Text className="text-white font-medium">
+                                        {i18n.t("select")}
+                                    </Text>
+                                </View>
+                            </Pressable>
+                        )}
+                    </View>
+                ) : mode === "multiple" ? (
+                    <View style={{ gap: 3 }}>
+                        <Text style={{ fontWeight: "bold" }}>
+                            Selected Dates:
+                        </Text>
+                        {dates &&
+                            dates.map((d, index) => (
+                                <Text key={index}>
+                                    {dayjs(d)
+                                        .locale(locale)
+                                        .format("MMM, DD, YYYY")}
+                                </Text>
+                            ))}
+                    </View>
+                ) : null}
             </View>
-        </SafeAreaView>
+        </Pressable>
     );
 };
 

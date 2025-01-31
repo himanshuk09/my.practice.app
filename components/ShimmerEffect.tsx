@@ -12,6 +12,7 @@ import { st } from "@/utils/Styles";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import { useRouter } from "expo-router";
+import { Platform } from "react-native";
 
 const ShimmerPrices = () => {
     const shimmerValue = useRef(new Animated.Value(-1)).current;
@@ -23,7 +24,7 @@ const ShimmerPrices = () => {
                 Animated.timing(shimmerValue, {
                     toValue: 2,
                     duration: 1500,
-                    useNativeDriver: true,
+                    useNativeDriver: Platform.OS !== "web",
                 })
             ).start();
         };
@@ -67,7 +68,7 @@ const ShimmerPricesHeader = () => {
                 Animated.timing(shimmerValue, {
                     toValue: 2,
                     duration: 1500,
-                    useNativeDriver: true,
+                    useNativeDriver: Platform.OS !== "web",
                 })
             ).start();
         };
@@ -126,7 +127,7 @@ const ShimmerHeader = () => {
                 Animated.timing(shimmerValue, {
                     toValue: 2,
                     duration: 1500,
-                    useNativeDriver: true,
+                    useNativeDriver: Platform.OS !== "web",
                 })
             ).start();
         };
@@ -167,7 +168,7 @@ const ShimmerAccordionListCard = () => {
                 Animated.timing(shimmerValue, {
                     toValue: 2,
                     duration: 1500,
-                    useNativeDriver: true,
+                    useNativeDriver: Platform.OS !== "web",
                 })
             ).start();
         };
@@ -228,7 +229,7 @@ const ShimmerListCard = () => {
                 Animated.timing(shimmerValue, {
                     toValue: 2,
                     duration: 1500,
-                    useNativeDriver: true,
+                    useNativeDriver: Platform.OS !== "web",
                 })
             ).start();
         };
@@ -286,7 +287,7 @@ const ShimmerScreenHeader = () => {
                 Animated.timing(shimmerValue, {
                     toValue: 2,
                     duration: 1500,
-                    useNativeDriver: true,
+                    useNativeDriver: Platform.OS !== "web",
                 })
             ).start();
         };

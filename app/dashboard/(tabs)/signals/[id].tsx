@@ -119,7 +119,7 @@ const SignalDetails = () => {
             toValue: isChartVisible ? 1 : 0,
             duration: 500,
             easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web" ? true : false,
         }).start();
         setIsChartVisible(!isChartVisible);
     };

@@ -367,7 +367,9 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 											JSON.stringify({ action: 'mounted' })
 										);
 										highlightMinAndMax(chartContext);
-
+										document
+										.querySelector(".apexcharts-canvas")
+										?.addEventListener("touchstart", (e) => {}, { passive: true });
 									},
 
 									dataPointSelection: function (event, chartContext, config) {
@@ -454,7 +456,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								showNullDataPoints: false,
 								hover: {
 									size: undefined,
-									sizeOffset: 5,
+									sizeOffset: 3,
 								},
 							},
 
@@ -569,7 +571,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									},
 									offsetX: 0,//y axis labels
 									offsetY: 0,
-									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 10 }).format(value),
+									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 3 }).format(value),
 								},
 
 								// axisBorder: {
@@ -608,11 +610,8 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 									background: '#333',
 									color: '#fff',
 									borderRadius: '10px',
-									padding: '10px',
+									padding: '1px',
 									boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-								},
-								onDatasetHover: {
-									highlightDataSeries: true,
 								},
 								onDatasetHover: {
 									highlightDataSeries: true,
@@ -637,6 +636,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								},
 								marker: {
 									show: true,
+									radius: 1 // Adjust this value to change the size of the hover circle
 								},
 								fixed: {
 									enabled: false,
@@ -799,7 +799,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 										fontFamily: "Helvetica, Arial, sans-serif",
 										fontWeight: 300,
 									},
-									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 0 }).format(value),
+									formatter: (value) => new Intl.NumberFormat("en-EN", { maximumFractionDigits: 3 }).format(value),
 								},
 
 							},
@@ -1000,7 +1000,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 
 						// Check if seriesData is an array and has valid data
 						if (!Array.isArray(seriesData) || seriesData.length === 0) {
-							console.log('Invalid or empty series data');
+							// console.log('Invalid or empty series data');
 							return;
 						}
 
@@ -1193,6 +1193,18 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 					document.addEventListener("DOMContentLoaded", () => {
 						renderChart();
 					});
+					(function() {
+						var originalAddEventListener = EventTarget.prototype.addEventListener;
+						EventTarget.prototype.addEventListener = function(type, listener, options) {
+						  if (type === "touchstart" || type === "touchmove") {
+							options = options || {};
+							if (typeof options === "object") {
+							  options.passive = true;
+							}
+						  }
+						  return originalAddEventListener.call(this, type, listener, options);
+						};
+					  })();
 				</script>
 		</body>
 	</html>
@@ -1300,6 +1312,9 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 
 								mounted: function (chartContext) {
 									highlightMinAndMax(chartContext);
+									document
+										.querySelector(".apexcharts-canvas")
+										?.addEventListener("touchstart", (e) => {}, { passive: true });
 								},
 
 								beforeZoom: function (chartContext, { xaxis, yaxis }) {
@@ -1994,7 +2009,7 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 
 							// Check if seriesData is an array and has valid data
 							if (!Array.isArray(seriesData) || seriesData.length === 0) {
-								console.warn('Invalid or empty series data');
+								// console.warn('Invalid or empty series data');
 								return;
 							}
 
@@ -2129,6 +2144,18 @@ export let iFrameLineHtmlcontent = `<!DOCTYPE html>
 						function ResetData() {
 							chart.resetSeries();
 						}
+						(function() {
+							var originalAddEventListener = EventTarget.prototype.addEventListener;
+							EventTarget.prototype.addEventListener = function(type, listener, options) {
+							  if (type === "touchstart" || type === "touchmove") {
+								options = options || {};
+								if (typeof options === "object") {
+								  options.passive = true;
+								}
+							  }
+							  return originalAddEventListener.call(this, type, listener, options);
+							};
+						  })();
 			</script>
 			</body>
 			</html>

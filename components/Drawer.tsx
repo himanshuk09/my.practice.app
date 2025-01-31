@@ -23,7 +23,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
         Animated.timing(translateX, {
             toValue: isDrawerOpen ? 0 : -drawerWidth,
             duration: 150,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web" ? true : false,
         }).start();
     }, [isDrawerOpen]);
 
@@ -105,12 +105,25 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         backgroundColor: "#fff",
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 10,
         zIndex: 100,
         height: "100%",
+
+        ...Platform.select({
+            ios: {
+                shadowColor: "#000",
+                shadowOpacity: 0.1,
+                shadowRadius: 5,
+                shadowOffset: { width: 0, height: 0 },
+            },
+            android: {
+                elevation: 10,
+            },
+            default: {
+                // Web
+                boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
+                transition: "box-shadow 0.3s ease", // Optional for smooth transitions
+            },
+        }),
     },
     overlay: {
         position: "absolute",

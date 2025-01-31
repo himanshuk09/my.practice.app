@@ -60,6 +60,8 @@ const Imprint = () => {
                 contentContainerStyle={{ flexGrow: 1 }}
                 nestedScrollEnabled={true}
                 scrollEnabled={true}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl
                         refreshing={isRefreshing}
@@ -84,3 +86,195 @@ const Imprint = () => {
 };
 
 export default Imprint;
+// import {
+//     View,
+//     Text,
+//     ActivityIndicator,
+//     Pressable,
+//     StyleSheet,
+// } from "react-native";
+// import React, {
+//     useCallback,
+//     useEffect,
+//     useMemo,
+//     useRef,
+//     useState,
+// } from "react";
+// import api from "@/services/api";
+// import { debounce } from "lodash";
+
+// const Imprint = () => {
+//     const [selectedPeriod, setSelectedPeriod] = useState("day");
+//     const [chartData, setChartData] = useState(null);
+//     const [isLoading, setIsLoading] = useState(false);
+//     const cache = useRef(new Map());
+//     const getDateRange = (period: any) => {
+//         const now = new Date();
+//         const start = new Date();
+
+//         switch (period) {
+//             case "day":
+//                 start.setHours(0, 0, 0, 0);
+//                 break;
+//             case "week":
+//                 start.setDate(start.getDate() - start.getDay());
+//                 break;
+//             case "month":
+//                 start.setDate(1);
+//                 break;
+//             case "year":
+//                 start.setMonth(0, 1);
+//                 break;
+//             case "3year":
+//                 start.setFullYear(start.getFullYear() - 3);
+//                 break;
+//         }
+
+//         console.log(
+//             "period",
+//             period,
+//             "start",
+//             start.toISOString().split("T")[0],
+//             "end",
+//             now.toISOString().split("T")[0]
+//         );
+
+//         return {
+//             start: start.toISOString().split("T")[0],
+//             end: now.toISOString().split("T")[0],
+//         };
+//     };
+//     const fetchData = useCallback(async (period: any) => {
+//         if (cache.current.has(period)) {
+//             setChartData(cache.current.get(period));
+//             return;
+//         }
+
+//         setIsLoading(true);
+//         try {
+//             const { start, end } = getDateRange(period);
+//             // const response = await api.get(`/data?start=${start}&end=${end}`);
+
+//             cache.current.set(period, 1);
+//             console.log(cache);
+
+//             // setChartData(response.data);
+//         } catch (error) {
+//             console.error("API Error:", error);
+//         } finally {
+//             setIsLoading(false);
+//         }
+//     }, []);
+
+//     // Debounced version of fetchData
+//     const debouncedFetch = useMemo(
+//         () => debounce(fetchData, 300, { leading: false, trailing: true }),
+//         [fetchData]
+//     );
+//     useEffect(() => {
+//         debouncedFetch(selectedPeriod);
+//         return () => debouncedFetch.cancel();
+//     }, [selectedPeriod, debouncedFetch]);
+//     const periods = ["day", "week", "month", "year", "3year"];
+
+//     const PeriodToggle = React.memo(({ period, current, onPress }: any) => (
+//         <Pressable
+//             onPress={onPress}
+//             style={[styles.toggle, current === period && styles.activeToggle]}
+//         >
+//             <Text
+//                 style={
+//                     current === period ? styles.activeText : styles.inactiveText
+//                 }
+//             >
+//                 {period.toUpperCase()}
+//             </Text>
+//         </Pressable>
+//     ));
+//     return (
+//         <View style={styles.container}>
+//             <View style={styles.toggleContainer}>
+//                 {periods.map((period) => (
+//                     <PeriodToggle
+//                         key={period}
+//                         period={period}
+//                         current={selectedPeriod}
+//                         onPress={() => setSelectedPeriod(period)}
+//                     />
+//                 ))}
+//             </View>
+
+//             {isLoading ? (
+//                 <ActivityIndicator size="large" />
+//             ) : chartData ? (
+//                 <Text> data available</Text>
+//             ) : (
+//                 <Text>No data available</Text>
+//             )}
+//         </View>
+//     );
+// };
+
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         padding: 16,
+//         backgroundColor: "#F5FCFF",
+//     },
+//     toggleContainer: {
+//         flexDirection: "row",
+//         justifyContent: "space-between",
+//         marginBottom: 20,
+//         flexWrap: "wrap",
+//         gap: 8,
+//     },
+//     toggle: {
+//         flex: 1,
+//         minWidth: 80,
+//         maxWidth: 100,
+//         paddingVertical: 12,
+//         paddingHorizontal: 16,
+//         borderRadius: 8,
+//         borderWidth: 1,
+//         borderColor: "#E0E0E0",
+//         alignItems: "center",
+//         justifyContent: "center",
+//         backgroundColor: "#FFFFFF",
+//     },
+//     activeToggle: {
+//         backgroundColor: "#2196F3",
+//         borderColor: "#1976D2",
+//     },
+//     activeText: {
+//         color: "#FFFFFF",
+//         fontWeight: "600",
+//         fontSize: 14,
+//     },
+//     inactiveText: {
+//         color: "#757575",
+//         fontWeight: "500",
+//         fontSize: 14,
+//     },
+//     chartContainer: {
+//         borderRadius: 12,
+//         padding: 16,
+//         backgroundColor: "#FFFFFF",
+//         elevation: 2,
+//         shadowColor: "#000",
+//         shadowOffset: { width: 0, height: 2 },
+//         shadowOpacity: 0.1,
+//         shadowRadius: 4,
+//     },
+//     loadingContainer: {
+//         flex: 1,
+//         justifyContent: "center",
+//         alignItems: "center",
+//     },
+//     errorText: {
+//         color: "#D32F2F",
+//         textAlign: "center",
+//         marginTop: 16,
+//     },
+// });
+
+// export default Imprint;

@@ -47,6 +47,7 @@ const TermsAndConditionsScreen = () => {
                 className="px-5"
                 contentContainerStyle={{ flexGrow: 1 }}
                 showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
                 nestedScrollEnabled={true}
                 scrollEnabled={true}
                 refreshControl={

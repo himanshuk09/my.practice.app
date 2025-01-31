@@ -126,7 +126,7 @@ const ShimmerPlaceholder = ({ style }: any) => {
             Animated.timing(shimmerAnim, {
                 toValue: 1,
                 duration: 1000,
-                useNativeDriver: true,
+                useNativeDriver: Platform.OS !== "web" ? true : false,
             })
         ).start();
     }, []);
@@ -150,9 +150,9 @@ const ShimmerPlaceholder = ({ style }: any) => {
 
 const ChartShimmer = () => {
     return (
-        <View style={[styles.container, st.boxShadow]}>
+        <View style={[styles.container]}>
             {/* Header */}
-            <View style={[styles.header, st.boxShadow]}>
+            <View style={[styles.header]}>
                 <View className="flex-col">
                     <ShimmerPlaceholder style={styles.title} />
                     <ShimmerPlaceholder style={styles.title} />
@@ -177,7 +177,7 @@ const ChartShimmer = () => {
 };
 const PortFolioChartShimmer = () => {
     return (
-        <View style={[styles.container, st.boxShadow]}>
+        <View style={[styles.container]}>
             <ShimmerPlaceholder
                 style={[styles.graph, { height: 150, marginBottom: 2 }]}
             />

@@ -386,7 +386,7 @@ const Portfolio_OverView = () => {
             toValue: isChartVisible ? 1 : 0,
             duration: 200,
             easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web" ? true : false,
         }).start();
         setIsChartVisible(!isChartVisible);
     };

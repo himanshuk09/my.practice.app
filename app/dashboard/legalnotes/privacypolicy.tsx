@@ -47,6 +47,8 @@ const PrivacyAndPolicy = () => {
                 className="flex-1 px-5 "
                 contentContainerStyle={{ flexGrow: 1 }}
                 nestedScrollEnabled={true}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
                 scrollEnabled={true}
                 refreshControl={
                     <RefreshControl

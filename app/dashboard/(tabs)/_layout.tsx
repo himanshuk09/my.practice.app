@@ -11,6 +11,7 @@ import {
     ScrollView,
     SafeAreaView,
     StatusBar,
+    Platform,
 } from "react-native";
 import { useDispatch } from "react-redux";
 interface CustomTabBarProps {
@@ -37,7 +38,7 @@ const CustomTabBar = ({
         Animated.timing(animatedValues[index], {
             toValue: isFocused ? 1.05 : 1,
             duration: 50,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web" ? true : false,
         }).start();
     };
 

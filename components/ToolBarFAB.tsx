@@ -1,4 +1,10 @@
-import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import {
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    Animated,
+    Platform,
+} from "react-native";
 import {
     FontAwesome,
     FontAwesome5,
@@ -34,7 +40,7 @@ export default function FloatingActionMenu({
         Animated.timing(animation, {
             toValue,
             duration: 100,
-            useNativeDriver: true,
+            useNativeDriver: Platform.OS !== "web",
         }).start();
 
         setIsMenuOpen(!isMenuOpen);
@@ -278,7 +284,11 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         justifyContent: "center",
         alignItems: "center",
-        elevation: 2,
+        ...Platform.select({
+            android: {
+                elevation: 2,
+            },
+        }),
     },
     menuItemsContainer: {
         position: "absolute",
