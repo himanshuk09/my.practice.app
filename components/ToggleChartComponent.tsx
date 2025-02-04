@@ -1,15 +1,15 @@
-import { View, Text, Platform, TouchableOpacity, Button } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import { inActiveLoading } from "@/store/navigationSlice";
+import { View, Text, Platform, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import WebView from "react-native-webview";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import { inActiveLoading } from "@/store/navigationSlice";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import ChartComponent from "@/components/Chart/ChartComponent";
 import { i18n } from "@/localization/localConfig";
 import { ChartLoaderPNG } from "@/components/Loader";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 import PickerModel from "@/components/PickerModel";
 import { RootState } from "@/store/store";
 import FloatingActionMenu from "./FloatingActionMenu";
@@ -18,7 +18,6 @@ import {
     iFrameLineHtmlcontent,
 } from "./Chart/charthtmlcontent";
 import { filterDataByDateRange } from "./Chart/filterFunction";
-import WebView from "react-native-webview";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -114,57 +113,7 @@ const ToggleChartComponent = ({
         }
     };
     const updateChartData = (filteredData: any) => {
-        if (filteredData?.length === 0) {
-            updateChart("options", {
-                chart: {},
-                noData: { text: i18n.t("Data_not_available") },
-                grid: {
-                    show: false,
-                },
-                xaxis: {
-                    tickAmount: 0,
-                    labels: {
-                        show: false,
-                    },
-                    title: {
-                        text: "",
-                        style: {
-                            fontSize: "0",
-                        },
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
-                    axisBorder: {
-                        show: false,
-                    },
-                },
-                yaxis: {
-                    labels: {
-                        show: false,
-                    },
-                    title: {
-                        text: "",
-                        style: {
-                            fontSize: "0",
-                        },
-                    },
-                },
-                title: {
-                    text: "",
-                    align: "center",
-                    style: {
-                        fontSize: "0",
-                    },
-                },
-            });
-            updateChart("series", []);
-            setIsChartEmpty(true);
-            setTimeout(() => {
-                setLoading(false);
-            }, 500);
-            return;
-        }
+        if (checkEmptyDataset(filteredData)) return;
         if (isTooltipEnabled) {
             updateChart("options", {
                 markers: {
@@ -258,17 +207,75 @@ const ToggleChartComponent = ({
             }
         }
     };
+    const checkEmptyDataset = (filterData: any) => {
+        if (filterData?.length === 0) {
+            updateChart("options", {
+                chart: {},
+                noData: { text: i18n.t("Data_not_available") },
+                grid: {
+                    show: false,
+                },
+                xaxis: {
+                    tickAmount: 0,
+                    labels: {
+                        show: false,
+                    },
+                    title: {
+                        text: "",
+                        style: {
+                            fontSize: "0",
+                        },
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    labels: {
+                        show: false,
+                    },
+                    title: {
+                        text: "",
+                        style: {
+                            fontSize: "0",
+                        },
+                    },
+                },
+                title: {
+                    text: "",
+                    align: "center",
+                    style: {
+                        fontSize: "0",
+                    },
+                },
+            });
+            updateChart("series", []);
+            setIsChartEmpty(true);
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
+            return true;
+        }
+        return false;
+    };
     const handleRangeDataFilter = () => {
         let rangeFilterData = filterDataByDateRange(
             selectedStartDate,
             selectedEndDate
         );
-        if (rangeFilterData?.length === 0) {
-            updateChart("options", {
-                noData: { text: "Data not available" },
-            });
-            updateChart("series", []);
+        if (checkEmptyDataset(rangeFilterData)) {
+            setActiveTab("");
+            return;
         } else {
+            if (isChartZoomed) {
+                webViewRef?.current.injectJavaScript(
+                    "window.resetZoom(); true;"
+                );
+                setIschartZoomed(false);
+            }
             updateChart("options", {
                 chart: {
                     animations: {
@@ -280,6 +287,16 @@ const ToggleChartComponent = ({
                 },
             });
             updateChart("series", rangeFilterData);
+            updateChart("options", {
+                chart: {
+                    animations: {
+                        enabled: false,
+                    },
+                },
+                grid: {
+                    show: true,
+                },
+            });
         }
         setActiveTab("");
     };
@@ -316,10 +333,10 @@ const ToggleChartComponent = ({
         if (message.action === "tooltip") {
             setIsTooltipEnabled(message?.values);
         }
-        console.log("message.action", message.action, message?.values);
+        // console.log("message.action", message.action, message?.values);
     };
     const fetchData = async () => {
-        if (fetchChartData) {
+        if (fetchChartData && activeTab !== "") {
             try {
                 const data = await fetchChartData(activeTab);
                 updateLocale();

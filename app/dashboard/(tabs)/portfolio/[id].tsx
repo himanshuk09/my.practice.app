@@ -32,10 +32,11 @@ import { RootState } from "@/store/store";
 import WebView from "react-native-webview";
 import {
     saveCSVToFileWeb,
-    saveCSVToFile,
+    saveCSVToFileString,
 } from "@/components/ConstantFunctions/saveCSVFile";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { PortFolioChartShimmer } from "@/components/ChartShimmer";
+import { stringChartData } from "@/constants/stringChartData";
 
 type ChartUpdateType = "series" | "options" | "chart";
 
@@ -156,7 +157,7 @@ const Transactions = ({ cards }: any) => {
                             if (Platform.OS === "web") {
                                 saveCSVToFileWeb(cockpitChartData);
                             } else {
-                                saveCSVToFile(cockpitChartData);
+                                saveCSVToFileString(stringChartData);
                             }
                         }}
                     />
@@ -177,7 +178,7 @@ const Transactions = ({ cards }: any) => {
                     keyExtractor={(item: any, index) => index.toString()}
                     nestedScrollEnabled={true}
                     scrollEnabled={true}
-                    initialNumToRender={3}
+                    initialNumToRender={5}
                     style={{ padding: 8, flex: 1 }}
                     className="bg-slate-50 overflow-scroll  p-2"
                 />
@@ -199,7 +200,6 @@ const PortfolioOverView = () => {
     const areaWebViewRef = useRef<WebView | null>(null);
     const areaIFrameRef = useRef<HTMLIFrameElement | any>(null);
     const { id } = useLocalSearchParams();
-    console.log(id);
 
     const onMessage = async (event: any) => {
         //for file share or save
@@ -213,7 +213,6 @@ const PortfolioOverView = () => {
                 .replace(/:/g, "-")
                 .replace(/T/, "_")
                 .replace(/\..+/, "")}.png`;
-            console.log("fileName", fileName);
 
             try {
                 // Save Base64 as a file
@@ -265,7 +264,6 @@ const PortfolioOverView = () => {
             let jsCommand = "";
             switch (type) {
                 case "series":
-                    console.log("series");
                     jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
                     break;
                 case "options":
@@ -313,7 +311,6 @@ const PortfolioOverView = () => {
             let jsCommand = "";
             switch (type) {
                 case "series":
-                    console.log("series");
                     jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
                     break;
                 case "options":
@@ -360,8 +357,7 @@ const PortfolioOverView = () => {
         } else {
             if (areaWebViewRef?.current) {
                 const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
-                console.log("updateLocaleScript");
-                console.log("locale", locale);
+
                 areaWebViewRef.current.injectJavaScript(updateLocaleScript);
             }
         }
@@ -533,11 +529,12 @@ const PortfolioOverView = () => {
                                             height:
                                                 Platform.OS === "web"
                                                     ? screenHeight * 0.58
-                                                    : screenHeight * 0.58,
+                                                    : screenHeight * 0.61,
                                             paddingTop:
                                                 Platform.OS !== "web"
                                                     ? 15
                                                     : undefined,
+                                            padding: 3,
                                         }}
                                     >
                                         <ChartComponent
@@ -580,7 +577,7 @@ const PortfolioOverView = () => {
                         </Animated.View>
                     </View>
                     <TouchableOpacity
-                        className={`bg-[#e31836]  bottom-0  h-12 py-3 mx-5 rounded-sm my-2 ${
+                        className={`bg-[#e31836]  bottom-0   py-2 mx-5 rounded-sm my-2 ${
                             !isChartVisible &&
                             "absolute bg-[#e31836]  bottom-0 left-0 right-0  "
                         }`}

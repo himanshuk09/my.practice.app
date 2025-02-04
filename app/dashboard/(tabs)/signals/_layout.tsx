@@ -2,13 +2,12 @@ import StackHeader from "@/components/StackHeader";
 import { RootState } from "@/store/store";
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const SignalsLayout = () => {
     const isLandscape = useSelector(
         (state: RootState) => state.orientation.isLandscape
     );
-    const dispatch = useDispatch();
 
     return (
         <Stack

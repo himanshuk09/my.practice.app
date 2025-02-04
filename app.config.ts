@@ -33,7 +33,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     slug: "eec",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/applogo.png",
+    icon: "./assets/images/newappicon.png",
     scheme: "enexion",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
@@ -42,11 +42,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     android: {
         adaptiveIcon: {
-            foregroundImage: "./assets/images/applogo.png",
+            foregroundImage: "./assets/images/newappicon.png",
             backgroundColor: "#cccccc",
         },
         package: getUniqueIdentifier(),
-        permissions: ["WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"],
+        permissions: [
+            "WRITE_EXTERNAL_STORAGE",
+            "READ_EXTERNAL_STORAGE",
+            "MANAGE_EXTERNAL_STORAGE",
+        ],
     },
     web: {
         bundler: "metro",
@@ -59,7 +63,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         [
             "expo-splash-screen",
             {
-                image: "./assets/images/appicon.png",
+                image: "./assets/images/newappicon.png",
                 resizeMode: "contain",
                 backgroundColor: "#ffffff",
                 imageWidth: 200,

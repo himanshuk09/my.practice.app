@@ -1,26 +1,17 @@
-import {
-    Platform,
-    TouchableOpacity,
-    BackHandler,
-    StyleSheet,
-    View,
-    Text,
-    Alert,
-    ToastAndroid,
-} from "react-native";
 import React, { useCallback, useEffect, useRef } from "react";
-import WebView from "react-native-webview";
-import * as MediaLibrary from "expo-media-library";
-import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
-import * as ScreenOrientation from "expo-screen-orientation";
+import { Platform, TouchableOpacity, BackHandler, Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setOrientation } from "@/store/chartSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
+import WebView from "react-native-webview";
 import ViewShot from "react-native-view-shot";
+import Toast from "react-native-toast-message";
+import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 type ChartComponentProps = {
     webViewRef: React.RefObject<WebView | any>;
@@ -128,60 +119,62 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
     const captureWebView = useCallback(async () => {
         try {
-            // Request permission to access the media library (for saving to gallery)
             const { status } = await MediaLibrary.requestPermissionsAsync();
             if (status !== "granted") {
-                Alert.alert(
-                    "Permission Denied",
-                    "Permission to access the media library is required."
-                );
+                Toast.show({
+                    type: "download",
+                    text1: "Permission Denied",
+                    text2: "Media library access required.",
+                    position: "bottom",
+                    bottomOffset: 0,
+                    visibilityTime: 3000,
+                });
                 return;
             }
 
-            // Capture the WebView content
+            // Capture WebView
             const uri = await viewShotRef?.current?.capture();
-            console.log("Captured URI:", uri);
 
-            // Generate a file name based on the current date/time
-            const fileName = `${
-                FileSystem.documentDirectory
-            }cockpit_chart_${new Date()
+            // Fix 1: Use cacheDirectory instead of documentDirectory
+            const fileName = `cockpit_chart_${new Date()
                 .toISOString()
-                .replace(/:/g, "-")
-                .replace(/T/, "_")
-                .replace(/\..+/, "")}.png`;
+                .replace(/[:.]/g, "-")}.png`;
 
-            // Move the captured URI to the local file system
-            await FileSystem.moveAsync({
+            // Fix 2: Generate correct file path
+            const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
+
+            // Fix 3: Use copyAsync instead of moveAsync (more reliable)
+            await FileSystem.copyAsync({
                 from: uri,
-                to: fileName,
+                to: fileUri,
             });
 
-            // Save the captured file to the media library (gallery)
-            const asset = await MediaLibrary.createAssetAsync(fileName);
-            await MediaLibrary.createAlbumAsync("cockpit", asset, false); // 'false' means not to create a new album
+            // Save to gallery
+            const asset = await MediaLibrary.createAssetAsync(fileUri);
+            await MediaLibrary.createAlbumAsync("cockpit", asset, false);
 
-            // Alert the user that the file has been saved
-
-            ToastAndroid.show(
-                "Chart saved to your gallery!",
-                ToastAndroid.SHORT
-            );
-            // Check if sharing is available and then share the file
-            // if (await Sharing.isAvailableAsync()) {
-            //     await Sharing.shareAsync(fileName);
-            // } else {
-            //     Alert.alert(
-            //         "Sharing not available",
-            //         "The image is saved to your device."
-            //     );
-            // }
+            // Show toast
+            Toast.show({
+                type: "download",
+                text1: "Chart saved!",
+                text2: "Tap to open",
+                position: "bottom",
+                bottomOffset: 0,
+                visibilityTime: 3000,
+                props: { fileUri: fileUri, fileName: fileUri, type: "png" }, // Pass the correct URI
+            });
         } catch (error) {
-            // console.error("Error capturing WebView:", error);
-            Alert.alert("Error", "Failed to capture Chart.");
-            ToastAndroid.show("Failed to Save Chart.", ToastAndroid.LONG);
+            Toast.show({
+                type: "download",
+                text1: "Permission Denied",
+                text2: "Failed to saved image.",
+                position: "bottom",
+                bottomOffset: 0,
+                visibilityTime: 3000,
+            });
         }
     }, []);
+
     useEffect(() => {
         if (Platform.OS === "web") {
             const receiveMessage = (event: MessageEvent) => {

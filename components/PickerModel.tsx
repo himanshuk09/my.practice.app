@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/localConfig";
 import { DateType } from "react-native-ui-datepicker";
-
+type initialViewProps = "day" | "month" | "year" | "time";
 const PickerModel = ({
     showRangePicker = true,
     showPeriodOfTime = true,
@@ -36,13 +36,15 @@ const PickerModel = ({
     handleRangeDataFilter,
 }: any) => {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    const [pickerInitialView, setPickerInitaialView] =
+        useState<initialViewProps>("day");
     const [openStartDate, setOpenStartDate] = useState(false);
     const [openEndDate, setOpenEndDate] = useState(false);
     const [openRangeDataPicker, setOpenRangeDatePicker] = useState(false);
     const [range, setRangeDate] = React.useState<{
         startDate: DateType;
         endDate: DateType;
-    }>({ startDate: dayjs().subtract(7, "day"), endDate: dayjs() });
+    }>({ startDate: dayjs().subtract(1, "month"), endDate: dayjs() });
     const { locale } = useSelector((state: RootState) => state.language);
     const [value, setValue] = useState<any>("0,000");
     const animationHeight = useRef(new Animated.Value(0)).current;
@@ -298,11 +300,14 @@ const PickerModel = ({
                                                 </Text>
                                                 <Pressable
                                                     className=" bg-cardBg  p-3 flex-row justify-between"
-                                                    onPress={() =>
+                                                    onPress={() => {
                                                         setOpenStartDate(
                                                             !openStartDate
-                                                        )
-                                                    }
+                                                        );
+                                                        setPickerInitaialView(
+                                                            "day"
+                                                        );
+                                                    }}
                                                 >
                                                     <Text className="text-slate-700">
                                                         {selectedStartDate
@@ -343,11 +348,14 @@ const PickerModel = ({
                                                 </Text>
                                                 <Pressable
                                                     className="bg-cardBg  p-3 flex-row justify-between"
-                                                    onPress={() =>
+                                                    onPress={() => {
                                                         setOpenStartDate(
                                                             !openStartDate
-                                                        )
-                                                    }
+                                                        );
+                                                        setPickerInitaialView(
+                                                            "time"
+                                                        );
+                                                    }}
                                                 >
                                                     <Text className="text-slate-700">
                                                         {selectedStartDate
@@ -379,11 +387,14 @@ const PickerModel = ({
                                                 </Text>
                                                 <Pressable
                                                     className="bg-cardBg  p-3 flex-row justify-between"
-                                                    onPress={() =>
+                                                    onPress={() => {
                                                         setOpenEndDate(
                                                             !openEndDate
-                                                        )
-                                                    }
+                                                        );
+                                                        setPickerInitaialView(
+                                                            "day"
+                                                        );
+                                                    }}
                                                 >
                                                     <Text className="text-slate-700">
                                                         {selectedEndDate
@@ -423,11 +434,14 @@ const PickerModel = ({
                                                 </Text>
                                                 <Pressable
                                                     className="bg-cardBg  p-3 flex-row justify-between"
-                                                    onPress={() =>
+                                                    onPress={() => {
                                                         setOpenStartDate(
                                                             !openStartDate
-                                                        )
-                                                    }
+                                                        );
+                                                        setPickerInitaialView(
+                                                            "time"
+                                                        );
+                                                    }}
                                                 >
                                                     <Text className="text-slate-700">
                                                         {selectedEndDate
@@ -541,12 +555,13 @@ const PickerModel = ({
                     onPress={() => setOpenStartDate(false)}
                 >
                     <DateTimePickerComponents
-                        title="Select Start Date"
+                        title="Select_Start_Date"
                         open={openStartDate}
                         timePicker={true}
                         setOpen={setOpenStartDate}
                         setSingleDate={setSelectedStartDate}
                         defaultDate={selectedStartDate}
+                        initialView={pickerInitialView}
                     />
                 </Pressable>
             )}
@@ -556,12 +571,13 @@ const PickerModel = ({
                     onPress={() => setOpenEndDate(false)}
                 >
                     <DateTimePickerComponents
-                        title="Select End Date"
+                        title="Select_End_Date"
                         open={openEndDate}
                         timePicker={true}
                         setOpen={setOpenEndDate}
                         setSingleDate={setSelectedEndDate}
                         defaultDate={selectedEndDate}
+                        initialView={pickerInitialView}
                     />
                 </Pressable>
             )}
@@ -571,7 +587,7 @@ const PickerModel = ({
                     onPress={() => setOpenRangeDatePicker(false)}
                 >
                     <DateTimePickerComponents
-                        title="Select Date Range"
+                        title="Select_Date_Range"
                         pickerMode="range"
                         open={openRangeDataPicker}
                         timePicker={false}

@@ -5,14 +5,7 @@ import {
     Animated,
     Platform,
 } from "react-native";
-import {
-    FontAwesome,
-    FontAwesome5,
-    Ionicons,
-    MaterialCommunityIcons,
-    MaterialIcons,
-    Octicons,
-} from "@expo/vector-icons"; // For icons
+import { FontAwesome5, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import WebView from "react-native-webview";

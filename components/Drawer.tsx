@@ -1,9 +1,8 @@
 // Drawer.js
-import { closeDrawer, openDrawer, toggleDrawer } from "@/store/drawerSlice";
-import React, { useRef } from "react";
+import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
+import React from "react";
 import {
     View,
-    Text,
     Animated,
     StyleSheet,
     TouchableWithoutFeedback,
@@ -13,7 +12,6 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import CustomDrawer from "./CustomDrawer";
-import { Entypo } from "@expo/vector-icons";
 
 const Drawer = ({ drawerWidth = 280 }: any) => {
     const dispatch = useDispatch();

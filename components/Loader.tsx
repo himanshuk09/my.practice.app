@@ -14,7 +14,6 @@ import Svg, {
     RadialGradient,
     Stop,
 } from "react-native-svg";
-import { EvilIcons } from "@expo/vector-icons";
 const AnimatedPolyline = Animated.createAnimatedComponent(Polyline);
 const CircularLoaderSVGWeb = () => {
     const rotation = useRef(new Animated.Value(0)).current;

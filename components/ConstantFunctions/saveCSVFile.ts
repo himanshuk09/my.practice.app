@@ -1,7 +1,5 @@
+import Toast from "react-native-toast-message";
 import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
-import * as MediaLibrary from "expo-media-library";
-import { Alert, Linking, Platform, ToastAndroid } from "react-native";
 
 const splitTimestamp = (timestamp: number) => {
     const date = new Date(timestamp); // Convert timestamp to Date object
@@ -10,7 +8,7 @@ const splitTimestamp = (timestamp: number) => {
     [0]; // Extract UTC time (HH:mm:ss)
     return { formattedDate, formattedTime };
 };
-
+// for  web
 export const saveCSVToFileWeb = (jsonData: any[]) => {
     const headers = ["Date", "Time", "[kwh]"];
     const rows = jsonData.map((item) => {
@@ -28,88 +26,127 @@ export const saveCSVToFileWeb = (jsonData: any[]) => {
     link.click();
     URL.revokeObjectURL(url);
 };
-export const saveCSVToFileMain = async (jsonData: any[]) => {
-    const headers = ["Date", "Time", "[kwh]"];
-    const rows = jsonData.map((item) => {
-        const { formattedDate, formattedTime } = splitTimestamp(item.x); // Split timestamp
-        return [formattedDate, formattedTime, item.y].join(","); // Combine into CSV row
-    });
-    // Combine headers and rows to form the final CSV content
-    const csvContent = [headers.join(","), ...rows].join("\n");
-    const fileName = `${FileSystem.documentDirectory}cockpit.csv`;
-    try {
-        // Write CSV content to file
-        await FileSystem.writeAsStringAsync(fileName, csvContent, {
-            encoding: FileSystem.EncodingType.UTF8,
-        });
-        console.log(`CSV file saved at: ${fileName}`);
-        if (await Sharing.isAvailableAsync()) {
-            await Sharing.shareAsync(fileName);
-        }
-    } catch (error) {
-        console.error("Error saving CSV file:", error);
-    }
-};
-
+//......for timestamp
 export const saveCSVToFile = async (jsonData: any[]) => {
     const headers = ["Date", "Time", "[kwh]"];
     const rows = jsonData.map((item) => {
-        const { formattedDate, formattedTime } = splitTimestamp(item.x); // Split timestamp
-        return [formattedDate, formattedTime, item.y].join(","); // Combine into CSV row
+        const { formattedDate, formattedTime } = splitTimestamp(item.x);
+        return [formattedDate, formattedTime, item.y].join(",");
     });
-    // Combine headers and rows to form the final CSV content
     const csvContent = [headers.join(","), ...rows].join("\n");
     const fileName = "cockpit.csv";
 
     try {
-        // Request storage permissions
         const permissions =
             await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-
         if (!permissions.granted) {
-            console.log("Permissions not granted!");
+            Toast.show({
+                type: "download",
+                text1: "Permission Denied",
+                text2: "Storage access not granted!",
+                position: "bottom",
+                bottomOffset: 0,
+                visibilityTime: 5000,
+            });
             return;
         }
 
-        // Create the file in the selected directory
-        const uri: any =
-            await FileSystem.StorageAccessFramework.createFileAsync(
-                permissions.directoryUri,
-                fileName,
-                "application/csv"
-            );
+        // Create the file
+        const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+            permissions.directoryUri,
+            fileName,
+            "text/csv" // Use text/csv instead of application/csv
+        );
 
-        // Write the CSV content as a string to the created file
-        await FileSystem.writeAsStringAsync(uri, csvContent, {
+        // Write the file
+        await FileSystem.writeAsStringAsync(fileUri, csvContent, {
             encoding: FileSystem.EncodingType.UTF8,
         });
-        console.log(uri);
 
-        // Show an alert with an "Open" button
-        // Show an alert with an "Open" button
-
-        // Alert.alert(
-        //     "CSV Saved Successfully",
-        //     `The CSV file has been saved. You can open it now.`,
-        //     [
-        //         {
-        //             text: "Open",
-        //             onPress: () => {
-        //                 // Open the file using the default file viewer app
-        //                 Linking.openURL(uri).catch((err) =>
-        //                     console.error("Failed to open file:", err)
-        //                 );
-        //             },
-        //         },
-        //         {
-        //             text: "Cancel",
-        //             style: "cancel",
-        //         },
-        //     ]
-        // );
-        ToastAndroid.show("Download", ToastAndroid.SHORT);
+        // Show success toast with "Open" and "Share" button
+        Toast.show({
+            type: "download",
+            text1: "File has been saved!",
+            text2: "Tap to open the file.",
+            position: "bottom",
+            bottomOffset: 0,
+            visibilityTime: 5000,
+            props: { fileUri: fileUri, fileName: fileName, type: "csv" },
+        });
     } catch (error) {
-        console.log("Error saving CSV file:", error);
-        ToastAndroid.show("Error saving CSV file", ToastAndroid.LONG);
+        Toast.show({
+            type: "download",
+            text1: "Failed to save file",
+            position: "bottom",
+            bottomOffset: 0,
+            visibilityTime: 3000,
+        });
+    }
+};
+
+//.........for string
+const splitTimeStrring = (timestampStr: string) => {
+    const [datePart, timePart] = timestampStr.split(" ");
+    const [day, month, year] = datePart.split("/");
+    const [hours, minutes] = timePart.split(":");
+
+    return {
+        formattedDate: `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`,
+        formattedTime: `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}:00`,
+    };
+};
+
+export const saveCSVToFileString = async (jsonData: any[]) => {
+    const headers = ["Date", "Time", "[kwh]"];
+    const rows = jsonData.map((item) => {
+        const { formattedDate, formattedTime } = splitTimeStrring(item.x);
+        return [formattedDate, formattedTime, item.y].join(",");
+    });
+
+    const csvContent = [headers.join(","), ...rows].join("\n");
+    const fileName = "cockpit.csv";
+
+    try {
+        const permissions =
+            await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+        if (!permissions.granted) {
+            Toast.show({
+                type: "download",
+                text1: "Permission Denied",
+                text2: "Storage access not granted!",
+                position: "bottom",
+                bottomOffset: 0,
+                visibilityTime: 5000,
+            });
+            return;
+        }
+
+        const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+            permissions.directoryUri,
+            fileName,
+            "text/csv"
+        );
+
+        await FileSystem.writeAsStringAsync(fileUri, csvContent, {
+            encoding: FileSystem.EncodingType.UTF8,
+        });
+
+        // Show success toast with "Open" button
+        Toast.show({
+            type: "download",
+            text1: "File has been saved!",
+            text2: "Tap to open the file.",
+            position: "bottom",
+            bottomOffset: 0,
+            visibilityTime: 5000,
+            props: { fileUri: fileUri, fileName: fileName, type: "csv" },
+        });
+    } catch (error) {
+        console.error("Error:", error);
+        Toast.show({
+            type: "download",
+            text1: "Failed to Save File",
+            text2: "An error occurred while saving.",
+        });
     }
 };

@@ -94,7 +94,6 @@ export default function FloatingActionMenu({
                                 >
                                     {/* {i18n.t(tab.name)} */}
                                     {i18n.t(formatTabLabel(tab))}
-                                    {console.log(formatTabLabel(tab))}
                                 </Text>
                             </TouchableOpacity>
                         </View>

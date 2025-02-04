@@ -5,7 +5,6 @@ import {
     TouchableOpacity,
     Animated,
     Easing,
-    ScrollView,
     FlatList,
     Platform,
 } from "react-native";
@@ -130,14 +129,12 @@ const SignalDetails = () => {
     };
 
     useEffect(() => {
-        console.log(typeof id);
         const filteredItem = PricesItem.filter(
             (item: any) => item.id === Number(id)
         );
         setTimeout(() => {
             setSignalDetails(filteredItem[0]);
         }, 1000);
-        console.log(filteredItem[0]);
     }, [id]);
 
     const fetchChartData = async (tab: string) => {

@@ -16,7 +16,7 @@ import {
     Feather,
     FontAwesome6,
 } from "@expo/vector-icons";
-import { Href, usePathname, useRouter, useSegments } from "expo-router";
+import { Href, usePathname, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { i18n } from "@/localization/localConfig";
 import { useDispatch, useSelector } from "react-redux";

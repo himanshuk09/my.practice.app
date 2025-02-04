@@ -12,10 +12,11 @@ import { fetchDataByToggle } from "@/services/auth.services";
 import { st } from "@/utils/Styles";
 import {
     saveCSVToFileWeb,
-    saveCSVToFile,
+    saveCSVToFileString,
 } from "@/components/ConstantFunctions/saveCSVFile";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { ChartShimmer } from "@/components/ChartShimmer";
+import { stringChartData } from "@/constants/stringChartData";
 
 const PricesDetails = () => {
     const { id } = useLocalSearchParams();
@@ -26,14 +27,12 @@ const PricesDetails = () => {
         (state: RootState) => state.orientation.isLandscape
     );
     useEffect(() => {
-        console.log(typeof id);
         const filteredItem = PricesItem.filter(
             (item: any) => item.id === Number(id)
         );
         setTimeout(() => {
             setPricesDetails(filteredItem[0]);
         }, 1000);
-        console.log(filteredItem[0]);
     }, [id]);
 
     const getCurrentUTCDateTime = () => {
@@ -105,7 +104,9 @@ const PricesDetails = () => {
                                         if (Platform.OS === "web") {
                                             saveCSVToFileWeb(cockpitChartData);
                                         } else {
-                                            saveCSVToFile(cockpitChartData);
+                                            saveCSVToFileString(
+                                                stringChartData
+                                            );
                                         }
                                     }}
                                 />

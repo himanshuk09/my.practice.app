@@ -399,8 +399,7 @@ export let WebviewLineHtmlContent = `<!DOCTYPE html>
 								offsetY: -40,
 								style: {
 									color: "#898a8c",
-									fontSize: "18px",
-									fontWeight: "900",
+									fontSize: "20px",
 									fontFamily: "Helvetica, Arial, sans-serif",
 								},
 							},
@@ -2188,8 +2187,27 @@ export const iFreameDonutChartHtml = `<!DOCTYPE html>
 						height: '120%',
 						width: '100%',
 						background: "none",
-						animations: { enabled: true },
+						animations: { 
+							enabled: true,
+							easing: "linear",
+							speed: 1000,
+							dynamicAnimation: { enabled: true, speed: 1000 },
+							animategradually: { enabled: true, delay: 2000 },
+							initialAnimation: {enabled: true} 
+						},
 						toolbar: { show: false },
+					},
+					noData: {
+						text: "N/A",
+						align: "center",
+						verticalAlign: "middle",
+						offsetX: 0,
+						offsetY: -10,
+						style: {
+							color: "#e31837",
+							fontSize: "25px",
+							fontFamily: "Helvetica, Arial, sans-serif",
+						},
 					},
 					colors: ["#7f7f7f", "#e31837"],
 					plotOptions: {
@@ -2210,18 +2228,26 @@ export const iFreameDonutChartHtml = `<!DOCTYPE html>
 								labels: {
 								show: true,
 								name: {
-									show: false,
+									show: true,
+									fontSize: '15px',
+									fontFamily: 'Helvetica, Arial, sans-serif',
+									fontWeight: 600,
+									color: undefined,
+									offsetY: -10,
+									formatter: function (val) {
+										  return val
+									}
 								},
 								value: {
 									show: true,
-									fontSize: '19px',
+									fontSize: '15px',
 									fontFamily: 'Helvetica, Arial, sans-serif',
-									fontWeight: 400,
-									color: "red",
-									offsetY: 5,
-									offsetX: 1,
+									fontWeight: 500,
+									color: undefined,
+									offsetY: -5,
+									offsetX: -5,
 									formatter: function (val) {
-									return val + '%';
+										return val + '%';
 									},
 								},
 								total: {
@@ -2241,25 +2267,37 @@ export const iFreameDonutChartHtml = `<!DOCTYPE html>
 					},
 					tooltip: {
 						enabled: true,
+						enabledOnSeries: undefined,
+						shared: true,
+						followCursor: true,
+						intersect: false,
+						inverseOrder: false,
+						custom: undefined,
+						hideEmptySeries: false,
+						fillSeriesColor: true,
+						theme: false,
+						x: {
+							show: true,
+							formatter: function (val) {
+								return val + '%';
+							},
+						},
 						style: {
-							fontSize: "8px",
-							fontFamily: "Arial, sans-serif",
-							color: "#ffffff",
+							  fontSize: '12px',
+							  fontFamily: undefined,
+							  backgroundColor: "#fff",
 						},
 						onDatasetHover: {
 							highlightDataSeries: false,
-						  },
-						y: {
-							formatter: function(val) {
-								return val + "%";
-							},
 						},
 					},
 					dataLabels: { enabled: false },
 					legend: {
 						show: false,
-						position: 'bottom',
 					},
+					fill: {
+						type:'gradient',
+					  },
 					title: {
 						text: "Strom 2024",
 						align: "center",
@@ -2438,45 +2476,45 @@ export const webviewDonutChartHtml = `
 										offset: 0,
 										minAngleToShowLabel: 0,
 									},
-									donut:{
-											size: '65%',
-											background: 'transparent',
-											labels: {
-												show: true,
-												name: {
+									donut:  {
+												size: '65%',
+												background: 'transparent',
+												labels: {
 													show: true,
-													fontSize: '15px',
-													fontFamily: 'Helvetica, Arial, sans-serif',
-													fontWeight: 600,
-													color: undefined,
-													offsetY: -10,
-													formatter: function (val) {
-													  return val
-													}
-												},
-											    value: {
-												    show: true,
-												    fontSize: '15px',
-												    fontFamily: 'Helvetica, Arial, sans-serif',
-												    fontWeight: 500,
-												    color: undefined,
-												    offsetY: -5,
-												    offsetX: -5,
-												    formatter: function (val) {
-														return val + '%';
-												    },
-											    },
-											    total:
-											    {
-												  	show: false,
-												  	showAlways: false,
-												  	label: "Total",
-												  	formatter: function (w) {
-													  	return w.globals.seriesTotals.reduce((a, b) => a + b,0);
-												   	},
-											    },
-									       },	
-								        },
+													name: {
+														show: true,
+														fontSize: '15px',
+														fontFamily: 'Helvetica, Arial, sans-serif',
+														fontWeight: 600,
+														color: undefined,
+														offsetY: -10,
+														formatter: function (val) {
+													  		return val
+														}
+													},
+											    	value: {
+												    	show: true,
+												    	fontSize: '15px',
+												    	fontFamily: 'Helvetica, Arial, sans-serif',
+												    	fontWeight: 500,
+												    	color: undefined,
+												    	offsetY: -5,
+												    	offsetX: -5,
+												    	formatter: function (val) {
+															return val + '%';
+												    	},
+											    	},
+											    	total:
+											    	{
+												  		show: false,
+												  		showAlways: false,
+												  		label: "Total",
+												  		formatter: function (w) {
+													  		return w.globals.seriesTotals.reduce((a, b) => a + b,0);
+												   		},
+											    	},
+									       		},	
+								        	},
 								    },
 						    	},
 							tooltip: {
@@ -2492,7 +2530,6 @@ export const webviewDonutChartHtml = `
 								theme: false,
 								x: {
 									show: true,
-									
 									formatter: function (val) {
 										return val + '%';
 									},
@@ -2510,6 +2547,9 @@ export const webviewDonutChartHtml = `
 						  	legend: {
 							  	show: false,
 						  	},
+							  fill: {
+								type:'gradient',
+							  },
 						  	title: {
 							  	text: "Strom 2024",
 							  	align: "center",
@@ -2625,43 +2665,29 @@ export const webviewAreaHtmlcontent = `
 					}
 					});
 			    }
-			 	let dummy=[ {
-					name: 'Forward',
-					data: [10, 25, 15, 30, 20, 35, 25, 40, 20, 15, 10, 30],
-					},
-					{
-					name: 'IbISwing',
-					data: [15, 20, 10, 35, 25, 30, 20, 25, 15, 20, 25, 15],
-					},
-					{
-					name: 'IbIspot',
-					data: [20, 10, 30, 25, 35, 20, 10, 15, 30, 25, 35, 20],
-					},
-					{
-					name: 'Closed',
-					data: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				},]
+			 	
 
 			  	var options = {
 					series: [
 						{
-							"name": "Forward",
-							"data": [10, 9, 8, 8, 7, 7, 7, 6, 6, 6, 6, 5]
-						  },
-						  {
-							"name": "lblSwing",
-							"data": [15, 14, 14, 14, 13, 12, 12, 11, 11, 10, 10, 9]
-						  },
-						  {
-							"name": "lblSpot",
-							"data": [20, 18, 17, 16, 15, 14, 14, 14, 13, 12, 12, 12]
-						  },
-						  {
-							"name": "Closed",
-							"data": [2,2,2,2,2,2,2,2,2,2,2,2]
-						  }
+							name: "Forward",
+							data: [25, 40, 20, 15, 10, 30, 10, 25, 15, 30, 20, 35],
+						},
+						{
+							name: "IbISwing",
+							data: [25, 15, 20, 25, 15, 15, 20, 10, 35, 25, 30, 20],
+						},
+						{
+							name: "IbIspot",
+							data: [35, 20, 10, 15, 30, 25, 20, 10, 30, 25, 35, 20],
+						},
+						{
+							name: "Closed",
+							data: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+						},
 					  ],
-				  	colors: ["#e4e4e4","#cecece", "#b5b5b5","#c32442"],
+				  	// colors: ["#e4e4e4","#cecece", "#b5b5b5","#c32442"],
+				  	colors: ["#a9a9a9","#8f8f8f", "#757575","#c32442"],
 				  	chart: {
 						height: '100%',
 						width:'102%',
@@ -2673,7 +2699,7 @@ export const webviewAreaHtmlcontent = `
 							type: 'x',
 							autoScaleYaxis: true,
 						},
-						background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+						background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
 						toolbar: {
 							show: false,
 							offsetX: 0,
@@ -2733,7 +2759,7 @@ export const webviewAreaHtmlcontent = `
 									chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
 								);
 
-								// Update chart options
+								// Update chart optionsata no
 								chart.updateOptions({
 									xaxis: {
 										min: newMinX,
@@ -2764,7 +2790,8 @@ export const webviewAreaHtmlcontent = `
 					  	offsetY: -50,
 					  	style: {
 						  	color: "#e31837",
-						  	fontSize: "25px",
+						  	fontSize: "12px",
+							  fontWeight: "900",
 						  	fontFamily: "Helvetica, Arial, sans-serif",
 					  	},
 				  	},

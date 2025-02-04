@@ -1,6 +1,6 @@
 import { toggleDrawer } from "@/store/drawerSlice";
 import { Entypo } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React from "react";
 import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
 import { useDispatch } from "react-redux";

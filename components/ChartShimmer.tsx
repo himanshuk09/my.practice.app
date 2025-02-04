@@ -1,122 +1,7 @@
-// import React, { useEffect, useRef } from "react";
-// import { View, Animated, StyleSheet, Dimensions, Easing } from "react-native";
-
-// const ChartShimmer = () => {
-//     const shimmerValue = useRef(new Animated.Value(-1)).current;
-//     const barHeights = useRef(
-//         Array.from({ length: 10 }).map(() => new Animated.Value(50))
-//     ).current; // Initial bar heights
-//     const screenWidth = Dimensions.get("window").width;
-
-//     useEffect(() => {
-//         // Animate the shimmer overlay
-//         const startShimmer = () => {
-//             Animated.loop(
-//                 Animated.timing(shimmerValue, {
-//                     toValue: 2,
-//                     duration: 1000, // Increased speed
-//                     useNativeDriver: true,
-//                 })
-//             ).start();
-//         };
-
-//         // Animate the bars' heights in sequential order
-//         const animateBarsSequentially = () => {
-//             barHeights.forEach((barHeight, index) => {
-//                 Animated.loop(
-//                     Animated.sequence([
-//                         Animated.delay(index * 150), // Stagger each bar's start by 150ms
-//                         Animated.timing(barHeight, {
-//                             toValue:
-//                                 Math.random() > 0.7
-//                                     ? 200
-//                                     : Math.random() * 150 + 50, // Occasionally touch the bottom
-//                             duration: 300, // Faster animation
-//                             useNativeDriver: false,
-//                         }),
-//                         Animated.timing(barHeight, {
-//                             toValue:
-//                                 Math.random() > 0.7
-//                                     ? 200
-//                                     : Math.random() * 150 + 50, // Reset or randomly adjust height
-//                             duration: 300, // Faster animation
-//                             useNativeDriver: false,
-//                         }),
-//                     ])
-//                 ).start();
-//             });
-//         };
-
-//         startShimmer();
-//         animateBarsSequentially();
-//     }, [shimmerValue, barHeights]);
-
-//     const translateX = shimmerValue.interpolate({
-//         inputRange: [-1, 2],
-//         outputRange: [-screenWidth, screenWidth],
-//     });
-
-//     return (
-//         <View style={styles.chartContainer}>
-//             {barHeights.map((barHeight, index) => (
-//                 <View key={index} style={styles.barWrapper}>
-//                     <Animated.View
-//                         style={[styles.bar, { height: barHeight }]}
-//                     />
-//                 </View>
-//             ))}
-
-//             {/* Shimmer Overlay */}
-//             <Animated.View
-//                 style={[styles.shimmerOverlay, { transform: [{ translateX }] }]}
-//             />
-//         </View>
-//     );
-// };
-
-// const styles = StyleSheet.create({
-//     chartContainer: {
-//         height: 300,
-//         width: "100%",
-//         backgroundColor: "#ffffff",
-//         borderRadius: 8,
-//         overflow: "hidden",
-//         flexDirection: "row",
-//         justifyContent: "space-between",
-//         alignItems: "flex-end",
-//         padding: 3,
-//         position: "relative",
-//     },
-//     barWrapper: {
-//         flex: 1,
-//         marginVertical: 30,
-//         alignItems: "center",
-//         justifyContent: "center",
-//     },
-//     bar: {
-//         width: "30%",
-//         backgroundColor: "#f0f0f0",
-//         borderRadius: 4,
-//     },
-//     shimmerOverlay: {
-//         position: "absolute",
-//         top: 0,
-//         left: 0,
-//         width: "100%",
-//         height: "100%",
-//         backgroundColor: "rgba(227, 227, 227, 0.6)",
-//         opacity: 0.5,
-//     },
-// });
-
-// export default ChartShimmer;
-//...........
-
-import { st } from "@/utils/Styles";
 import React, { useEffect, useRef } from "react";
 import { View, Animated, StyleSheet, Dimensions, Platform } from "react-native";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 const ShimmerPlaceholder = ({ style }: any) => {
     const shimmerAnim = useRef(new Animated.Value(-1)).current;
@@ -209,7 +94,7 @@ const styles = StyleSheet.create({
     },
     graph: {
         width: Platform.OS !== "web" ? width - 32 : "98%",
-        height: Platform.OS !== "web" ? 410 : 600,
+        height: Platform.OS !== "web" ? height * 0.6 : 600,
         borderRadius: 8,
     },
     button: {

@@ -128,6 +128,9 @@ export const TranslationKeys: Translations | any = {
         select: "Select",
         today: "Today",
         Data_not_available: "Data not available",
+        Select_Start_Date: "Select Start Date",
+        Select_End_Date: "Select End Date",
+        Select_Date_Range: "Select Date Range",
         imprints: {
             company: "enexion GmbH",
             address1: "Am Kronberger Hang 2A,",
@@ -391,6 +394,9 @@ export const TranslationKeys: Translations | any = {
         Data_not_available: "Daten nicht verfugbar",
         select: "wählen",
         today: "Heute",
+        Select_Start_Date: "Wählen Sie Startdatum",
+        Select_End_Date: "Wählen Sie Enddatum aus",
+        Select_Date_Range: "Wählen Sie Datumsbereich aus",
         imprints: {
             company: "enexion GmbH",
             address1: "Am Kronberger Hang 2A, ",

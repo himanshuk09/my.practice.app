@@ -9,6 +9,8 @@ import Settings from "@/components/SVG/Settings";
 import { i18n } from "@/localization/localConfig";
 import { Href, router } from "expo-router";
 import Signals from "./SVG/Signals";
+import { useDispatch } from "react-redux";
+import { activeLoading } from "@/store/navigationSlice";
 
 interface MenuCardProps {
     item: {
@@ -19,7 +21,6 @@ interface MenuCardProps {
         route: Href;
     };
     index: number;
-    startLoader: () => void; // Function to start the loader
 }
 const routeToComponent = (icon: string) => {
     switch (icon) {
@@ -62,12 +63,14 @@ const NotificationIcon = ({ count }: { count: number }) => (
     </Svg>
 );
 
-const MenuCard = memo(({ item, startLoader }: MenuCardProps) => {
+const MenuCard = memo(({ item }: MenuCardProps) => {
+    const dispatch = useDispatch();
+
     return (
         <Pressable
             className=" m-1 items-center"
             onPressIn={async () => {
-                startLoader();
+                dispatch(activeLoading());
                 setTimeout(() => router.push(item.route));
             }}
         >

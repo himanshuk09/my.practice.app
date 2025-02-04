@@ -11,7 +11,6 @@ import "dayjs/locale/tr";
 import "dayjs/locale/en-in";
 import { useSelector } from "react-redux";
 import { i18n } from "@/localization/localConfig";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const DateTimePickerComponents = ({
     title = "Select",
@@ -23,6 +22,7 @@ const DateTimePickerComponents = ({
     setRangeDate,
     rangeDate,
     defaultDate,
+    initialView = "day",
 }: any) => {
     const [mode, setMode] = useState<ModeType>(pickerMode);
     const [date, setDate] = useState<DateType | undefined>(defaultDate);
@@ -70,7 +70,7 @@ const DateTimePickerComponents = ({
         >
             <View className="flex flex-row items-start justify-between">
                 <Text className="text-slate-90000 font-bold my-1 ml-1">
-                    {title}
+                    {i18n.t(title)}
                 </Text>
                 <TouchableOpacity
                     className="m-1"
@@ -81,16 +81,18 @@ const DateTimePickerComponents = ({
             </View>
             <DateTimePicker
                 mode={mode}
-                date={date}
                 locale={locale}
-                startDate={range?.startDate}
-                endDate={range?.endDate}
-                dates={dates}
+                date={date} //single picker
+                startDate={range?.startDate} //range picker start date
+                endDate={range?.endDate} //range picker end date
+                dates={dates} //multiple date
+                initialView={initialView}
+                firstDayOfWeek={1}
+                height={300}
                 // minDate={dayjs().startOf('day')}
                 // maxDate={dayjs().add(3, 'day').endOf('day')}
                 //disabledDates={[dayjs(), dayjs().add(1, 'day')]}
-                // disabledDates={(date) => [0, 6].includes(dayjs(date).day())} // disable weekends
-                //firstDayOfWeek={1}
+                //disabledDates={(date) => [0, 6].includes(dayjs(date).day())} // disable weekends
                 displayFullDays
                 timePicker={timePicker}
                 onChange={onChange}
@@ -113,14 +115,14 @@ const DateTimePickerComponents = ({
                         <View className="w-full items-center">
                             <Text className="mb-3 text-center">
                                 {/* {date
-                                ? dayjs(date)
-                                      .locale(locale)
-                                      .format(
-                                          timePicker
-                                              ? "MMM DD YYYY   HH:mm"
-                                              : "MMM DD YYYY"
-                                      )
-                                : "..."} */}
+								? dayjs(date)
+									  .locale(locale)
+									  .format(
+										  timePicker
+											  ? "MMM DD YYYY   HH:mm"
+											  : "MMM DD YYYY"
+									  )
+								: "..."} */}
                                 {date
                                     ? dayjs(date)
                                           .locale(locale)
@@ -180,10 +182,10 @@ const DateTimePickerComponents = ({
                                 {i18n.t("From")} :
                             </Text>
                             {/* {range.startDate
-                                ? dayjs(range.startDate)
-                                      .locale(locale)
-                                      .format("MMM, DD, YYYY")
-                                : "..."} */}
+								? dayjs(range.startDate)
+									  .locale(locale)
+									  .format("MMM, DD, YYYY")
+								: "..."} */}
                             <Text className="mx-3">
                                 {range?.startDate
                                     ? dayjs(range?.startDate)
@@ -210,10 +212,10 @@ const DateTimePickerComponents = ({
                                 {i18n.t("To")} :
                             </Text>
                             {/* {range.endDate
-                                ? dayjs(range.endDate)
-                                      .locale(locale)
-                                      .format("MMM, DD, YYYY")
-                                : "..."} */}
+								? dayjs(range.endDate)
+									  .locale(locale)
+									  .format("MMM, DD, YYYY")
+								: "..."} */}
                             <Text className="mx-3">
                                 {range.endDate
                                     ? dayjs(range.endDate)

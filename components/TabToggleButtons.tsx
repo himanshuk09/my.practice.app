@@ -1,7 +1,7 @@
+import React from "react";
+import { TouchableOpacity, Text, View } from "react-native";
 import { i18n } from "@/localization/localConfig";
 import { st } from "@/utils/Styles";
-import React, { useEffect, useState } from "react";
-import { TouchableOpacity, Text, View } from "react-native";
 
 interface TabToggleButtonsProps {
     activeTab: string;

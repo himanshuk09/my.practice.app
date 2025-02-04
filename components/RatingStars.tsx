@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { i18n } from "@/localization/localConfig";
 
 const RatingStars = ({ maxStars = 5 }: any) => {
     const [rating, setRating] = useState(0);
@@ -94,13 +93,13 @@ const RatingStars = ({ maxStars = 5 }: any) => {
                     );
                 })}
             </View>
-            {rating > 0 && color && emoji && text && (
+            {/* {rating > 0 && color && emoji && text && (
                 <Text
                     className={`font-extrabold text-md ${color} text-center mb-1`}
                 >
                     {emoji} {i18n.t(text)}
                 </Text>
-            )}
+            )} */}
         </View>
     );
 };

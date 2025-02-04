@@ -21,8 +21,6 @@ const Portfolio: React.FC = () => {
                 }, 1000);
             } catch (error) {
                 console.error("Error fetching data:", error);
-            } finally {
-                console.log("finally");
             }
         };
         dispatch(inActiveLoading());

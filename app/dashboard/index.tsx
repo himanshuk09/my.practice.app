@@ -3,7 +3,7 @@ import "nativewind";
 import MenuCard from "@/components/MenuCard";
 import React, { useState, useEffect } from "react";
 import { DashboardCardsEng } from "@/constants/constantData";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 interface MenuItem {
@@ -17,9 +17,7 @@ const Dashboard: React.FC = () => {
     const [jsonData, setJsonData] = useState<MenuItem[]>(DashboardCardsEng);
     const isFocused = useIsFocused();
     const dispatch = useDispatch();
-    const startLoader = () => {
-        dispatch(activeLoading());
-    };
+
     useEffect(() => {
         setJsonData(DashboardCardsEng);
     }, DashboardCardsEng);
@@ -42,11 +40,7 @@ const Dashboard: React.FC = () => {
                     keyExtractor={(item) => item?.id?.toString()}
                     numColumns={2}
                     renderItem={({ item, index }) => (
-                        <MenuCard
-                            item={item}
-                            index={index}
-                            startLoader={startLoader}
-                        />
+                        <MenuCard item={item} index={index} />
                     )}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ flexGrow: 1 }}

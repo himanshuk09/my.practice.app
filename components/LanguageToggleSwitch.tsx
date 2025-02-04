@@ -1,12 +1,5 @@
-import React, { JSXElementConstructor, useEffect, useState } from "react";
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    StyleSheet,
-    Animated,
-} from "react-native";
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 
 interface PropsType {
     defaultState?: boolean;

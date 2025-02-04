@@ -9,10 +9,11 @@ import { RootState } from "@/store/store";
 import { fetchDataByToggle } from "@/services/auth.services";
 import {
     saveCSVToFileWeb,
-    saveCSVToFile,
+    saveCSVToFileString,
 } from "@/components/ConstantFunctions/saveCSVFile";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { ChartShimmer } from "@/components/ChartShimmer";
+import { stringChartData } from "@/constants/stringChartData";
 
 const PFCDetails = () => {
     const { id } = useLocalSearchParams();
@@ -86,7 +87,9 @@ const PFCDetails = () => {
                                         if (Platform.OS === "web") {
                                             saveCSVToFileWeb(cockpitChartData);
                                         } else {
-                                            saveCSVToFile(cockpitChartData);
+                                            saveCSVToFileString(
+                                                stringChartData
+                                            );
                                         }
                                     }}
                                 />

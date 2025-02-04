@@ -75,7 +75,6 @@ const SignIn: React.FC = () => {
                     Toast.show({
                         type: "success", // 'success', 'error', 'info', etc.
                         text1: "LoggedIn Successful",
-
                         position: "bottom",
                         bottomOffset: 25,
                         visibilityTime: 2000,
@@ -83,6 +82,13 @@ const SignIn: React.FC = () => {
                 }, 2000);
             } else {
                 setErrorMessage("Login failed. Please try again.");
+                Toast.show({
+                    type: "error",
+                    text1: "Login failed. Please try again.",
+                    position: "bottom",
+                    bottomOffset: 30,
+                    visibilityTime: 3000,
+                });
             }
         } catch (err: unknown) {
             if (err instanceof Error) {
@@ -91,10 +97,9 @@ const SignIn: React.FC = () => {
                 );
                 setTimeout(() => {
                     Toast.show({
-                        type: "error", // 'success', 'error', 'info', etc.
+                        type: "error",
                         text1:
-                            err?.message ||
-                            "An_error_occurred_Please_try_again",
+                            err?.message || "Login failed. Please try again.",
                         position: "bottom",
                         bottomOffset: 30,
                         visibilityTime: 1000,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, SafeAreaView, FlatList, RefreshControl } from "react-native";
+import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { useDispatch } from "react-redux";

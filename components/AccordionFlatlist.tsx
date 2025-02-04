@@ -114,8 +114,6 @@ const AccordionFlatlist = ({
                                             `/dashboard/loaddata/${item?.id}/${detail?.id}` as Href
                                         )
                                     );
-
-                                    console.log(item?.id);
                                 }}
                             >
                                 <Text className="text-md font-normal text-listText">

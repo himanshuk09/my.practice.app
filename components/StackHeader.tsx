@@ -1,9 +1,8 @@
-import { View, Text, TouchableOpacity, Platform } from "react-native";
 import React from "react";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { i18n } from "@/localization/localConfig";
 import { useDispatch } from "react-redux";
-import { activeLoading } from "@/store/navigationSlice";
 import { useRouter } from "expo-router";
 
 const StackHeader = ({ navigation, title }: any) => {
@@ -14,10 +13,8 @@ const StackHeader = ({ navigation, title }: any) => {
             <TouchableOpacity
                 onPress={() => {
                     router.back();
-                    // dispatch(activeLoading());
-                    // navigation.goBack();
                     if (Platform.OS === "web") {
-                        window.history.forward();
+                        window.history.back();
                     }
                 }}
                 className="w-7 ml-3"

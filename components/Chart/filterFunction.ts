@@ -115,8 +115,6 @@ export function filterDataByDateRange(startDate: string, endDate: string) {
     });
 }
 export function convertDatesToTimestamps1(arr: any) {
-    console.log(arr.length);
-
     return arr.map((item: any) => {
         // Check if the 'x' key exists in the object
         if (item.x) {
@@ -163,8 +161,6 @@ const convert = () => {
     const formattedDate = new Date(year, month - 1, day, hours, minutes);
 
     const timestamp = formattedDate.getTime();
-
-    console.log(timestamp);
 };
 /// for new formate
 // Helper function to parse a date string in "dd/MM/yyyy HH:mm" format

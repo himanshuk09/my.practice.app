@@ -9,11 +9,12 @@ import { cockpitChartData } from "@/constants/cockpitchart";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { RootState } from "@/store/store";
 import {
-    saveCSVToFile,
+    saveCSVToFileString,
     saveCSVToFileWeb,
 } from "@/components/ConstantFunctions/saveCSVFile";
 import { fetchDataByToggle } from "@/services/auth.services";
 import { ChartShimmer } from "@/components/ChartShimmer";
+import { stringChartData } from "@/constants/stringChartData";
 
 const LoadDataDetails = () => {
     const [loadDetail, setloadDetails] = useState<any>([]);
@@ -105,7 +106,9 @@ const LoadDataDetails = () => {
                                         if (Platform.OS === "web") {
                                             saveCSVToFileWeb(cockpitChartData);
                                         } else {
-                                            saveCSVToFile(cockpitChartData);
+                                            saveCSVToFileString(
+                                                stringChartData
+                                            );
                                         }
                                     }}
                                 />

@@ -1,4 +1,4 @@
-import { Redirect, Stack, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import "react-native-reanimated";
 import "../global.css";
 import { AppState } from "react-native";
