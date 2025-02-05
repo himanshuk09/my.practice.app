@@ -169,7 +169,10 @@ const SignalDetails = () => {
                 >
                     {/* Header Section */}
                     {!isLandscape && (
-                        <View className="flex justify-between bg-white flex-row  m-1  h-20 px-3 pl-5 shadow-2xl shadow-black ">
+                        <View
+                            className="flex justify-between bg-white flex-row  m-1  h-20 px-3 pl-5  "
+                            style={[st.headerShadow, st.bottomShadow]}
+                        >
                             <View className="justify-center items-center">
                                 <Text className="text-xl font-medium text-mainCardHeaderText">
                                     {signalDetail?.title}

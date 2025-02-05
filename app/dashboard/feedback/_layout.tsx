@@ -9,7 +9,6 @@ const LoaddataLayout = () => {
                 options={{
                     headerShown: true,
                     animation: "slide_from_right",
-                    animationDuration: 4000,
                     header: ({ navigation }) => (
                         <Header navigation={navigation} />
                     ),
@@ -20,7 +19,6 @@ const LoaddataLayout = () => {
                 options={{
                     headerShown: true,
                     animation: "slide_from_right",
-                    animationDuration: 4000,
                     header: ({ navigation }) => (
                         <Header navigation={navigation} />
                     ),

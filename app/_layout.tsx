@@ -60,7 +60,7 @@ const Layout = () => {
         if (
             pathname !== "/" &&
             pathname !== "/login" &&
-            pathname !== "/forgotpassword"
+            pathname !== "/login/forgotpassword"
         ) {
             checkAuth();
         }

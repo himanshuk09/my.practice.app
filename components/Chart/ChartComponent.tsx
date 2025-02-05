@@ -293,7 +293,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                             bounces={false}
                             zoomEnabled={false}
                             nestedScrollEnabled={true}
-                            startInLoadingState
+                            // startInLoadingState
                         />
                     </ViewShot>
                     {showToggleOrientation && (

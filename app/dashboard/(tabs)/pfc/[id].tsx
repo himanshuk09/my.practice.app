@@ -14,6 +14,7 @@ import {
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { ChartShimmer } from "@/components/ChartShimmer";
 import { stringChartData } from "@/constants/stringChartData";
+import { st } from "@/utils/Styles";
 
 const PFCDetails = () => {
     const { id } = useLocalSearchParams();
@@ -68,7 +69,10 @@ const PFCDetails = () => {
                 <View className="flex-1  bg-white">
                     {/* Header Section */}
                     {!isLandscape && (
-                        <View className="flex justify-between bg-white flex-row  m-1  h-24 px-3 pl-5 shadow-2xl shadow-black pt-3">
+                        <View
+                            className="flex justify-between bg-white flex-row  m-1  h-24 px-3 pl-5  pt-3"
+                            style={[st.headerShadow, st.bottomShadow]}
+                        >
                             <View className="flex-col w-60  ">
                                 <Text className="text-xl break-words font-bold text-mainCardHeaderText">
                                     {pfcDetails?.title}

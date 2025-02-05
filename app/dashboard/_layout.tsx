@@ -20,7 +20,7 @@ const DashboardLayout = () => {
                     options={{
                         headerShown: true,
                         animation: "slide_from_left",
-                        animationDuration: 4000,
+
                         header: ({ navigation }) => (
                             <Header navigation={navigation} />
                         ),
@@ -31,7 +31,6 @@ const DashboardLayout = () => {
                     options={{
                         headerShown: false,
                         animation: "slide_from_right",
-                        animationDuration: 5000,
                     }}
                 />
                 <Stack.Screen
@@ -39,7 +38,7 @@ const DashboardLayout = () => {
                     options={{
                         headerShown: true,
                         animation: "slide_from_right",
-                        animationDuration: 500,
+
                         header: ({ navigation }) => (
                             <Header navigation={navigation} />
                         ),

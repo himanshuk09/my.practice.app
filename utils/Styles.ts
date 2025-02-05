@@ -7,16 +7,16 @@ export const st = StyleSheet.create({
             ios: {
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.7,
-                shadowRadius: 5,
+                shadowOpacity: 0.5,
+                shadowRadius: 3,
             },
             android: {
-                elevation: 7,
+                elevation: 3,
             },
         }),
         // For web
         ...(Platform.OS === "web" && {
-            boxShadow: "0 0 5px rgba(0, 0, 0, 0.7)", // Standard CSS box-shadow
+            boxShadow: "0 0 3px rgba(0, 0, 0, 0.7)", // Standard CSS box-shadow
         }),
     },
     tabShadow: {
@@ -32,7 +32,7 @@ export const st = StyleSheet.create({
             },
             default: {
                 // Web
-                boxShadow: "0px 3px 7px rgba(0, 0, 0, 0.1)",
+                boxShadow: "0px 1px 7px rgba(0, 0, 0, 0.1)",
             },
         }),
     },
@@ -49,7 +49,7 @@ export const st = StyleSheet.create({
             },
             default: {
                 // Web
-                boxShadow: "0px -5px 10px rgba(0, 0, 0, 0.5)",
+                boxShadow: "0px -2px 2px rgba(0, 0, 0, 0.2)",
             },
         }),
     },
@@ -66,7 +66,7 @@ export const st = StyleSheet.create({
             },
             default: {
                 // Web
-                boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.5)",
+                boxShadow: "0px 5px 5px rgba(0, 0, 0, 0.3)",
             },
         }),
     },

@@ -15,6 +15,7 @@ import {
 import { fetchDataByToggle } from "@/services/auth.services";
 import { ChartShimmer } from "@/components/ChartShimmer";
 import { stringChartData } from "@/constants/stringChartData";
+import { st } from "@/utils/Styles";
 
 const LoadDataDetails = () => {
     const [loadDetail, setloadDetails] = useState<any>([]);
@@ -65,7 +66,10 @@ const LoadDataDetails = () => {
             ) : (
                 <View className="flex-1  bg-white">
                     {!isLandscape && (
-                        <View className="flex justify-between bg-white  flex-row px-3 pl-5 py-1 mb-1 h-28 shadow-2xl shadow-black ">
+                        <View
+                            className="flex justify-between bg-white  flex-row px-3 pl-5 py-1 mb-1 h-28 "
+                            style={[st.headerShadow, st.bottomShadow]}
+                        >
                             <View
                                 className="flex-col py-1"
                                 style={{

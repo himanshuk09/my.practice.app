@@ -16,7 +16,6 @@ const LoginLayout = () => {
                 options={{
                     headerShown: false,
                     animation: "slide_from_left",
-                    animationDuration: 5000,
                     animationTypeForReplace: "push",
                 }}
             />
@@ -25,7 +24,6 @@ const LoginLayout = () => {
                 options={{
                     headerShown: false,
                     animation: "slide_from_right",
-                    animationDuration: 5000,
                 }}
             />
         </Stack>

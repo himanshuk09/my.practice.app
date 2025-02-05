@@ -24,19 +24,6 @@ const PortfolioLayout = () => {
                     ),
                 }}
             />
-            <Stack.Screen
-                name="portfolio-overview"
-                options={{
-                    headerShown: true,
-                    animation: "slide_from_right",
-                    header: ({ navigation }) => (
-                        <StackHeader
-                            navigation={navigation}
-                            title={"portfolio_overview"}
-                        />
-                    ),
-                }}
-            />
         </Stack>
     );
 };

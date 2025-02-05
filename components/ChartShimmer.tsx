@@ -56,7 +56,7 @@ const ChartShimmer = () => {
             <ShimmerPlaceholder style={styles.graph} />
 
             {/* Button */}
-            <ShimmerPlaceholder style={styles.button} />
+            <ShimmerPlaceholder style={[styles.button]} />
         </View>
     );
 };
@@ -113,6 +113,12 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         backgroundColor: "rgba(255, 255, 255, 0.3)",
+        position: "absolute",
+    },
+    shimmerbuttonGradient: {
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(227, 24, 54, 0.6)",
         position: "absolute",
     },
 });

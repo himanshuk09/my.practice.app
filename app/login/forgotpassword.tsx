@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     Pressable,
     StatusBar,
+    Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Href, Redirect, useRouter } from "expo-router";
@@ -15,6 +16,7 @@ import { i18n } from "@/localization/localConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const Forgotpassword = () => {
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [isEmailFocused, setIsEmailFocused] = useState(false);
     const [email, setEmail] = useState<string>("");
     const [isAuth, setIsAuth] = useState<boolean>();
     const router = useRouter();
@@ -72,16 +74,61 @@ const Forgotpassword = () => {
                         ) : null}
                         <View className="relative">
                             <TextInput
-                                className={`bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none focus:border-blue-500 focus:shadow-sm focus:shadow-blue-500 mb-10 focus:ring-0 rounded-md  text-lg ${
-                                    errorMessage &&
-                                    "border-red-500 shadow-red-500 shadow-sm"
-                                }`}
+                                className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none  rounded-md  text-lg "} `}
+                                style={{
+                                    paddingLeft: 12,
+                                    paddingRight: 12,
+                                    paddingVertical: 10,
+                                    backgroundColor: "#E5E7EB",
+                                    borderColor: errorMessage
+                                        ? "#EF4444" // Red border for error
+                                        : isEmailFocused
+                                          ? "#3B82F6" // Blue border on focus
+                                          : "#D1D5DB", // Default gray border
+                                    borderWidth: 1,
+                                    borderRadius: 8,
+                                    fontSize: 16,
+                                    marginBottom: 15,
+                                    color: "#808080",
+                                    textDecorationLine: "none",
+
+                                    // Shadow Handling
+                                    ...(Platform.OS !== "web"
+                                        ? {
+                                              shadowColor: errorMessage
+                                                  ? "#FCA5A5" // Red shadow for error
+                                                  : isEmailFocused
+                                                    ? "#3B82F6" // Blue shadow on focus
+                                                    : "transparent",
+                                              shadowOffset: {
+                                                  width: 0,
+                                                  height: 1,
+                                              },
+                                              shadowOpacity:
+                                                  errorMessage || isEmailFocused
+                                                      ? 0.8
+                                                      : 0,
+                                              shadowRadius:
+                                                  errorMessage || isEmailFocused
+                                                      ? 100
+                                                      : 0,
+                                              elevation:
+                                                  errorMessage || isEmailFocused
+                                                      ? 9
+                                                      : 0, // Android shadow
+                                          }
+                                        : null),
+                                }}
+                                onFocus={() => setIsEmailFocused(true)}
+                                onBlur={() => setIsEmailFocused(false)}
                                 placeholder={i18n.t("email")}
                                 placeholderTextColor="#808080"
                                 textContentType="emailAddress"
                                 value={email}
                                 onChangeText={(text) => {
                                     setEmail(text);
+                                    if (errorMessage !== "")
+                                        setErrorMessage("");
                                 }}
                                 keyboardAppearance="default"
                                 autoCapitalize="none"
@@ -90,7 +137,7 @@ const Forgotpassword = () => {
                                 style={{
                                     position: "absolute",
                                     right: 13,
-                                    top: 14,
+                                    top: 11,
                                 }}
                                 name="mail"
                                 size={26}
