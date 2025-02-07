@@ -102,7 +102,7 @@ const FlatListBlock1 = ({
                             toValue: offset, // Scroll target offset
                             duration: 800, // Duration in milliseconds
                             easing: Easing.out(Easing.linear), // Smooth easing function
-                            // easing: Easing.in(Easing.linear),
+
                             useNativeDriver: false, // Disable for scrolling animations
                         }).start();
 
@@ -116,7 +116,7 @@ const FlatListBlock1 = ({
                     } catch (error) {
                         console.warn("Scroll Error:", error);
                     }
-                }, 500);
+                });
             }
         }
     }, [items, enableAutoScroll, currentYear, isFocused, items?.length <= 0]);

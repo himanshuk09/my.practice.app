@@ -33,17 +33,24 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     slug: "eec",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/newappicon.png",
+    icon: "./assets/icons/ios-light.png",
     scheme: "enexion",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     ios: {
         supportsTablet: true,
+        icon: {
+            dark: "./assets/icons/ios-dark.png",
+            light: "./assets/icons/ios-light.png",
+            tinted: "./assets/icons/ios-tinted.png",
+        },
     },
     android: {
         adaptiveIcon: {
-            foregroundImage: "./assets/images/newappicon.png",
-            backgroundColor: "#cccccc",
+            foregroundImage: "./assets/icons/adaptive-icon.png",
+            monochromeImage: "./assets/icons/adaptive-icon.png",
+            backgroundImage: "./assets/icons/adaptive-icon-bg.png",
+            // backgroundColor: "#ffffff",
         },
         package: getUniqueIdentifier(),
         permissions: [
@@ -63,10 +70,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         [
             "expo-splash-screen",
             {
-                image: "./assets/images/newappicon.png",
+                image: "./assets/icons/splash-icon-light.png",
                 resizeMode: "contain",
                 backgroundColor: "#ffffff",
                 imageWidth: 200,
+                dark: {
+                    image: "./assets/icons/splash-icon-dark.png",
+                    backgroundColor: "#ffffff",
+                },
             },
         ],
         [

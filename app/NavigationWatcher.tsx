@@ -68,6 +68,14 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
                 }
                 return true; // Prevent default back behavior
             }
+            if (currentPath === "/login/forgotpassword") {
+                router.replace("/login");
+                return true; // Prevent default back behavior
+            }
+            if (currentPath === "/login") {
+                BackHandler.exitApp();
+                return true; // Prevent default back behavior
+            }
             dispatch(activeLoading());
             if (
                 [

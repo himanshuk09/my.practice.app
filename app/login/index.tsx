@@ -141,7 +141,6 @@ const SignIn: React.FC = () => {
                         <Logo />
                     </View>
                     {/**Error Handler */}
-
                     <View className="mb-5">
                         {errorMessage ? (
                             <Text className="text-red-500 mb-2 font-semibold text-center">
@@ -156,7 +155,7 @@ const SignIn: React.FC = () => {
                         <View className="relative">
                             <TextInput
                                 key={"username_input"}
-                                className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none  rounded-md  text-lg "} `}
+                                className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 outline-none  rounded-md  text-lg "} `}
                                 style={{
                                     paddingLeft: 12,
                                     paddingRight: 12,
@@ -221,14 +220,15 @@ const SignIn: React.FC = () => {
                                 style={{
                                     position: "absolute",
                                     right: 13,
-                                    top: 11,
-                                    zIndex: 100,
+                                    top: 10,
                                 }}
+                                activeOpacity={0.8}
                             >
                                 <FontAwesome
                                     name="user"
                                     size={26}
                                     color="#6b7280"
+                                    style={{ zIndex: 100 }}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -237,7 +237,7 @@ const SignIn: React.FC = () => {
                         <View className="relative">
                             <TextInput
                                 key={"password_input"}
-                                className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none  rounded-md  text-lg "} `}
+                                className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 rounded-md outline-none text-lg "} `}
                                 style={{
                                     paddingLeft: 12,
                                     paddingRight: 12,
@@ -254,6 +254,7 @@ const SignIn: React.FC = () => {
                                     marginBottom: 15,
                                     color: "#808080",
                                     textDecorationLine: "none",
+                                    zIndex: 0,
 
                                     // Shadow Handling
                                     ...(Platform.OS !== "web"
@@ -301,10 +302,11 @@ const SignIn: React.FC = () => {
                             />
 
                             <TouchableOpacity
+                                activeOpacity={0.5}
                                 style={{
                                     position: "absolute",
                                     right: 13,
-                                    top: 11,
+                                    top: 10,
                                     zIndex: 100,
                                 }}
                                 onPress={() => setHidePassword(!hidePassword)}
