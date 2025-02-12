@@ -2455,7 +2455,7 @@ export const iFreameDonutChartHtml = `
 		document.addEventListener("DOMContentLoaded", function () {
 			var options =
 			{
-				series: [30, 70],
+				series: [],
 				labels: ["Open", "Closed"],
 				chart: {
 					type: 'donut',
@@ -2464,7 +2464,7 @@ export const iFreameDonutChartHtml = `
 					background: "none",
 					animations: {
 						enabled: true,
-						easing: "linear",
+						easing: "ease",
 						speed: 1000,
 						dynamicAnimation: { enabled: true, speed: 1000 },
 						animategradually: { enabled: true, delay: 2000 },
@@ -2473,7 +2473,7 @@ export const iFreameDonutChartHtml = `
 					toolbar: { show: false },
 				},
 				noData: {
-					text: "N/A",
+					text: "",
 					align: "center",
 					verticalAlign: "middle",
 					offsetX: 0,
@@ -2576,12 +2576,12 @@ export const iFreameDonutChartHtml = `
 					type: 'gradient',
 				},
 				title: {
-					text: "Strom 2024",
+					text: "",
 					align: "center",
 					style: {
 						fontSize: "14px",
-						fontWeight: "bold",
-						color: "#94a3b8",
+						fontWeight: "600",
+						color: "#7f7f7f",
 					},
 				},
 				responsive: [{
@@ -2652,7 +2652,7 @@ export const iFreameDonutChartHtml = `
 			}
 
 			function updateChartSeries(filteredData) {
-				chart.updateSeries([{ data: filteredData }], true)
+				chart.updateSeries([{ data: filteredData }])
 				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartSeries' }));
 			}
 
@@ -2711,7 +2711,7 @@ export const webviewDonutChartHtml = `
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			var options = {
-				series: [70, 30],
+				series: [],
 				labels: ["Open", "Closed"],
 				chart: {
 					type: 'donut',
@@ -2729,14 +2729,14 @@ export const webviewDonutChartHtml = `
 					toolbar: { show: false },
 				},
 				noData: {
-					text: "N/A",
+					text: "",
 					align: "center",
 					verticalAlign: "middle",
 					offsetX: 0,
 					offsetY: -10,
 					style: {
 						color: "#e31837",
-						fontSize: "25px",
+						fontSize: "20px",
 						fontFamily: "Helvetica, Arial, sans-serif",
 					},
 				},
@@ -2828,12 +2828,12 @@ export const webviewDonutChartHtml = `
 					type: 'gradient',
 				},
 				title: {
-					text: "Strom 2024",
+					text: "",
 					align: "center",
 					style: {
-						fontSize: "14px",
-						fontWeight: "bold",
-						color: "#94a3b8",
+						fontSize: "12px",
+						fontWeight: "700",
+                        color: "#7f7f7f",
 					},
 				},
 				responsive: [{
@@ -2915,7 +2915,7 @@ export const webviewAreaHtmlcontent = `
                 position: relative;
             }
             #chart {
-                width: 100%;
+                width: 99%;
                 position: absolute;
                 touch-action: none;
             }
@@ -2953,39 +2953,23 @@ export const webviewAreaHtmlcontent = `
 
             let categories = getLocalizedMonths("en-IN"); // Default locale
             // Function to update the chart's locale
-            function updateLocale(newLocale = "en-IN") {
+            function updateLocale(newLocale = "en-IN",newTitle) {
                 categories = getLocalizedMonths(newLocale);
                 chart.updateOptions({
                     xaxis: {
                         categories: categories,
                     },
+                    title: { text: newTitle }
                 });
             }
 
             var options = {
                 series: [
-                    {
-                        name: "Forward",
-                        data: [25, 40, 20, 15, 10, 30, 10, 25, 15, 30, 20, 35],
-                    },
-                    {
-                        name: "IbISwing",
-                        data: [25, 15, 20, 25, 15, 15, 20, 10, 35, 25, 30, 20],
-                    },
-                    {
-                        name: "IbIspot",
-                        data: [35, 20, 10, 15, 30, 25, 20, 10, 30, 25, 35, 20],
-                    },
-                    {
-                        name: "Closed",
-                        data: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-                    },
                 ],
-                // colors: ["#e4e4e4","#cecece", "#b5b5b5","#c32442"],
-                colors: ["#a9a9a9", "#8f8f8f", "#757575", "#c32442"],
+                colors: ["#C2C1C3", "#DFDFDF", "#A4A4A5", "#E31837"],
                 chart: {
                     height: "100%",
-                    width: "102%",
+                    width: "100%",
                     type: "area",
                     offsetX: -5,
                     offsetY: 0,
@@ -3020,21 +3004,6 @@ export const webviewAreaHtmlcontent = `
                         initialAnimation: { enabled: true },
                     },
                     events: {
-                        // selection: function(chartContext, { xaxis, yaxis }) {
-                        // 	window.ReactNativeWebView.postMessage(
-                        // 		JSON.stringify({ action: 'selection',values:[xaxis,yaxis] })
-                        // 	);
-                        // 	const currentMin = chart.w.globals.minX;
-                        // 	const currentMax = chart.w.globals.maxX;
-                        // 	const zoomAmount = (currentMax - currentMin) * 0.1;
-                        // 	chart.updateOptions({
-                        // 		xaxis: {
-                        // 			min: currentMin - zoomAmount,
-                        // 			max: currentMax + zoomAmount,
-                        // 		},
-                        // 	});
-                        // 	updateLocale();
-                        // },
                         selection: function (chartContext, { xaxis, yaxis }) {
                             window.ReactNativeWebView.postMessage(
                                 JSON.stringify({
@@ -3072,23 +3041,23 @@ export const webviewAreaHtmlcontent = `
                     },
                 },
                 title: {
-                    text: "Target 2024",
+                    text: "",
                     align: "center",
                     margin: 0,
                     offsetX: 0,
                     offsetY: 10,
                     style: {
                         fontSize: "13px",
-                        fontWeight: "500",
-                        color: "#474747",
+                        fontWeight: "600",
+                        color: "#7f7f7f",
                     },
                 },
                 noData: {
-                    text: "Data not available",
+                    text: "",
                     align: "center",
                     verticalAlign: "middle",
                     offsetX: 0,
-                    offsetY: -50,
+                    offsetY: -35,
                     style: {
                         color: "#e31837",
                         fontSize: "12px",
@@ -3100,8 +3069,8 @@ export const webviewAreaHtmlcontent = `
                     enabled: false,
                 },
                 stroke: {
-                    curve: "monotoneCubic",
-                    width: 0.5, //['straight', 'smooth', 'monotoneCubic', 'stepline']
+                    curve: "straight",
+                    width: 1, //['straight', 'smooth', 'monotoneCubic', 'stepline']
                 },
                 markers: {
                     size: 0,
@@ -3119,7 +3088,7 @@ export const webviewAreaHtmlcontent = `
                     onDblClick: undefined,
                     showNullDataPoints: true,
                     hover: {
-                        size: 2,
+                        size: 4,
                         sizeOffset: 5,
                     },
                 },
@@ -3128,8 +3097,6 @@ export const webviewAreaHtmlcontent = `
                     categories,
                     labels: {
                         show: true,
-                        // rotate: -45,
-                        // rotateAlways: false,
                         position: "top",
                         textAnchor: "start",
                         hideOverlappingLabels: true,
@@ -3250,6 +3217,11 @@ export const webviewAreaHtmlcontent = `
                         left: 5,
                     },
                 },
+                fill: {
+                    type: "solid",
+                    opacity: [0.9, 0.8, 0.5, 0.1] // Adjust per dataset
+                  },
+                
                 legend: {
                     show: true,
                     position: "bottom",
@@ -3518,7 +3490,7 @@ export const webviewAreaHtmlcontent = `
                         min: newMinX,
                         max: newMaxX,
                     },
-                }); // false, false to not animate the chart and not update the series
+                },true); // false, false to not animate the chart and not update the series
                 updateLocale();
             };
             window.customPanRight = function () {
@@ -3615,34 +3587,19 @@ export const iframeAreahtlcontent = `
 
         let categories = getLocalizedMonths('en-IN');  // Default locale
         // Function to update the chart's locale
-        function updateLocale(newLocale) {
+        function updateLocale(newLocale = "en-IN",newTitle) {
             categories = getLocalizedMonths(newLocale);
             chart.updateOptions({
                 xaxis: {
                     categories: categories,
-                }
+                },
+                title: { text: newTitle }
             });
         }
         var options = {
             series: [
-                {
-                    name: 'Forward',
-                    data: [10, 25, 15, 30, 20, 35, 25, 40, 20, 15, 10, 30],
-                },
-                {
-                    name: 'IbISwing',
-                    data: [15, 20, 10, 35, 25, 30, 20, 25, 15, 20, 25, 15],
-                },
-                {
-                    name: 'IbIspot',
-                    data: [20, 10, 30, 25, 35, 20, 10, 15, 30, 25, 35, 20],
-                },
-                {
-                    name: 'Closed',
-                    data: [5, 10, 7, 12, 8, 15, 10, 8, 12, 5, 7, 10],
-                },
             ],
-            colors: ["#cecece", "#e4e4e4", "#b5b5b5", "#c32442"],
+            colors: ["#C2C1C3", "#DFDFDF", "#A4A4A5", "#E31837"],
             chart: {
                 height: "100%",
                 type: "area",
@@ -3674,19 +3631,33 @@ export const iframeAreahtlcontent = `
                 },
             },
             title: {
-                text: "Target 2024",
+                text: "",
                 align: "center",
                 style: {
                     fontSize: "14px",
-                    fontWeight: "bold",
-                    color: "#94a3b8",
+                    fontWeight: "600",
+                    color: "#7f7f7f",
+                },
+            },
+            noData: {
+                text: "",
+                align: "center",
+                verticalAlign: "middle",
+                offsetX: 0,
+                offsetY: -35,
+                style: {
+                    color: "#e31837",
+                    fontSize: "12px",
+                    fontWeight: "900",
+                    fontFamily: "Helvetica, Arial, sans-serif",
                 },
             },
             dataLabels: {
                 enabled: false
             },
             stroke: {
-                curve: 'smooth'
+                curve: "straight",
+                width: 1, //['straight', 'smooth', 'monotoneCubic', 'stepline']
             },
             xaxis: {
                 type: "category",
@@ -3701,12 +3672,18 @@ export const iframeAreahtlcontent = `
                 show: true,
                 position: "bottom",
                 markers: {
-                    width: 40, // Makes the marker wide like a line
-                    height: 1, // Reduces the height to appear as a thin line
-                    radius: 0, // No rounded corners, to maintain a line shape
-                    offsetX: -5, // Adjust the position slightly
+                    shape: "line",
+                    size: 10,
+                    width: 40,
+                    height: 1,
+                    strokeWidth: 7,
+                    offsetX: 0, // Adjust the position slightly
                 },
             },
+            fill: {
+                type: "solid",
+                opacity: [0.9, 0.8, 0.5, 0.1] // Adjust per dataset
+              },
             tooltip: {
                 x: {
                     format: 'dd/MM/yy HH:mm'

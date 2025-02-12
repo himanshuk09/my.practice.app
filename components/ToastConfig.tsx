@@ -142,8 +142,8 @@ const sharePNGFile = async (fileName: string) => {
 };
 
 const toastConfig: any = {
-    success: ({ text1, text2, props }: any) => (
-        <View className="flex-row justify-center items-center py-3 px-5  bg-cardBg rounded-full">
+    success: ({ text1, text2 }: any) => (
+        <View className="flex-row justify-start items-start py-3 px-5 w-full bg-cardBg rounded-sm">
             <View>
                 <Text className="text-md justify-start items-center font-semibold text-listText">
                     {text1}
@@ -152,20 +152,10 @@ const toastConfig: any = {
                     <Text className="text-sm text-listText">{text2}</Text>
                 ) : null}
             </View>
-            {props?.fileUri && (
-                <TouchableOpacity
-                    className="mx-3  px-1 py-2 my-2 rounded-full"
-                    onPress={() => openCSVFile(props.fileUri)}
-                >
-                    <Text className="text-listText font-semibold underline uppercase">
-                        Open
-                    </Text>
-                </TouchableOpacity>
-            )}
         </View>
     ),
     error: ({ text1, text2, ...rest }: any) => (
-        <View className="flex-row justify-center items-center py-3 px-5 bg-red-100 rounded-full">
+        <View className="flex-row justify-start items-start py-3 px-5 w-full bg-red-100 rounded-sm">
             <AntDesign
                 name="closecircleo"
                 size={24}
@@ -173,7 +163,7 @@ const toastConfig: any = {
                 className="mr-2"
             />
             <View>
-                <Text className="text-lg justify-center items-center font-semibold text-red-500">
+                <Text className="text-lg justify-start items-center font-semibold text-red-500">
                     {text1}
                 </Text>
                 {text2 ? (

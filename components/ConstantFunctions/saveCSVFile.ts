@@ -1,5 +1,6 @@
 import Toast from "react-native-toast-message";
 import * as FileSystem from "expo-file-system";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const splitTimestamp = (timestamp: number) => {
     const date = new Date(timestamp); // Convert timestamp to Date object
@@ -96,7 +97,7 @@ const splitTimeStrring = (timestampStr: string) => {
     };
 };
 
-export const saveCSVToFileString = async (jsonData: any[]) => {
+export const saveCSVToFileString0 = async (jsonData: any[]) => {
     const headers = ["Date", "Time", "[kwh]"];
     const rows = jsonData.map((item) => {
         const { formattedDate, formattedTime } = splitTimeStrring(item.x);
@@ -147,6 +148,79 @@ export const saveCSVToFileString = async (jsonData: any[]) => {
             type: "download",
             text1: "Failed to Save File",
             text2: "An error occurred while saving.",
+            position: "bottom",
+            bottomOffset: 0,
+            visibilityTime: 5000,
+        });
+    }
+};
+const DIRECTORY_URI_KEY = "savedDirectoryUri"; // Key for AsyncStorage
+
+export const saveCSVToFileString = async (jsonData: any[]) => {
+    const headers = ["Date", "Time", "[kwh]"];
+    const rows = jsonData.map((item) => {
+        const { formattedDate, formattedTime } = splitTimeStrring(item.x);
+        return [formattedDate, formattedTime, item.y].join(",");
+    });
+
+    const csvContent = [headers.join(","), ...rows].join("\n");
+    const fileName = "cockpit.csv";
+
+    try {
+        // Retrieve saved directory URI from AsyncStorage
+        let savedDirectoryUri = await AsyncStorage.getItem(DIRECTORY_URI_KEY);
+        console.log(savedDirectoryUri);
+
+        // If no saved directory, ask for permission
+        if (!savedDirectoryUri) {
+            const permissions =
+                await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+            if (!permissions.granted) {
+                Toast.show({
+                    type: "download",
+                    text1: "Permission Denied",
+                    text2: "Storage access not granted!",
+                    position: "bottom",
+                    bottomOffset: 0,
+                    visibilityTime: 5000,
+                });
+                return;
+            }
+            savedDirectoryUri = permissions.directoryUri;
+            await AsyncStorage.setItem(DIRECTORY_URI_KEY, savedDirectoryUri); // Store for future use
+        }
+
+        // Create the file
+        const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+            savedDirectoryUri,
+            fileName,
+            "text/csv"
+        );
+
+        // Write the file
+        await FileSystem.writeAsStringAsync(fileUri, csvContent, {
+            encoding: FileSystem.EncodingType.UTF8,
+        });
+
+        // Show success toast
+        Toast.show({
+            type: "download",
+            text1: "File Saved",
+            text2: "Tap to open the file.",
+            position: "bottom",
+            bottomOffset: 0,
+            visibilityTime: 5000,
+            props: { fileUri, fileName, type: "csv" },
+        });
+    } catch (error) {
+        console.error("Error:", error);
+        Toast.show({
+            type: "download",
+            text1: "Failed to Save File",
+            text2: "An error occurred while saving.",
+            position: "bottom",
+            bottomOffset: 0,
+            visibilityTime: 5000,
         });
     }
 };
