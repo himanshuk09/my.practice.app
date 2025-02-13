@@ -5,34 +5,38 @@ import { Platform } from "react-native";
 import { useSelector } from "react-redux";
 
 const LoaddataLayout = () => {
-    const isLandscape = useSelector(
-        (state: RootState) => state.orientation.isLandscape
-    );
+	const isLandscape = useSelector(
+		(state: RootState) => state.orientation.isLandscape
+	);
 
-    return (
-        <Stack
-            screenOptions={{
-                headerShown: false,
-            }}
-        >
-            <Stack.Screen
-                name="index"
-                options={{ headerShown: false, animation: "slide_from_left" }}
-            />
-            <Stack.Screen
-                name="[meterid]/[id]"
-                options={{
-                    headerShown: Platform.OS === "web" ? true : !isLandscape,
-                    animation: "slide_from_right",
-                    header: ({ navigation }) => (
-                        <StackHeader
-                            navigation={navigation}
-                            title={"Load_Data_Details"}
-                        />
-                    ),
-                }}
-            />
-        </Stack>
-    );
+	return (
+		<Stack
+			screenOptions={{
+				headerShown: false,
+			}}
+		>
+			<Stack.Screen
+				name="index"
+				options={{
+					headerShown: false,
+					animation: "slide_from_left",
+				}}
+			/>
+			<Stack.Screen
+				name="[id]"
+				options={{
+					headerShown:
+						Platform.OS === "web" ? true : !isLandscape,
+					animation: "slide_from_right",
+					header: ({ navigation }) => (
+						<StackHeader
+							navigation={navigation}
+							title={"Load_Data_Details"}
+						/>
+					),
+				}}
+			/>
+		</Stack>
+	);
 };
 export default LoaddataLayout;

@@ -100,13 +100,13 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 				return true;
 			}
 
-			// Only go back if there is a valid previous screen
-			if (history.length > 1) {
-				router.back();
-			} else {
-				router.replace("/dashboard"); // Or navigate to a default screen if no history
-			}
-
+			// // Only go back if there is a valid previous screen
+			// if (history.length !== 0) {
+			// 	router.back();
+			// } else {
+			// 	router.replace("/dashboard"); // Or navigate to a default screen if no history
+			// }
+			router.back();
 			return true;
 		};
 

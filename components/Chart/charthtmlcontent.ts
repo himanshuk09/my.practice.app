@@ -1415,38 +1415,7 @@ export let WebviewLineHtmlContent = `
             // 		new Date('27 Feb 2021').getTime()
             // 	  )
             // }
-            function ZoomData() {
-                // Parse the dates correctly
-                const startDate = new Date("01/01/2021 00:00").getTime();
-                const endDate = new Date("01/13/2021 23:00").getTime();
-
-                // Zoom the chart to the specified date range
-                chart.zoomX(startDate, endDate);
-            }
-            function ZoomMonthData() {
-                chart.zoomX(
-                    new Date("01 Jan 2023").getTime(),
-                    new Date("31 Jan 2023").getTime()
-                );
-            }
-            function ZoomWeekData() {
-                chart.zoomX(
-                    new Date("01 Jan 2023").getTime(),
-                    new Date("07 Jan 2023").getTime()
-                );
-            }
-            function ZoomDayData() {
-                chart.zoomX(
-                    new Date("01 Jan 2023").getTime(),
-                    new Date("02 Jan 2023").getTime()
-                );
-            }
-            function ZoomQuarterData() {
-                chart.zoomX(
-                    new Date("01 Jan 2023").getTime(),
-                    new Date("30 May 2023").getTime()
-                );
-            }
+           
             function ResetData() {
                 chart.resetSeries();
             }
@@ -2479,8 +2448,9 @@ export const iFreameDonutChartHtml = `
 					offsetX: 0,
 					offsetY: -10,
 					style: {
-						color: "#e31837",
+						color: "#7f7f7f",
 						fontSize: "25px",
+                        fontWeight: "600",
 						fontFamily: "Helvetica, Arial, sans-serif",
 					},
 				},
@@ -2711,21 +2681,26 @@ export const webviewDonutChartHtml = `
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			var options = {
-				series: [],
+				series: [0,0],
 				labels: ["Open", "Closed"],
 				chart: {
 					type: 'donut',
 					height: '95%',
 					width: '95%',
 					background: "none",
-					animations: {
-						enabled: true,
-						easing: "linear",
-						speed: 1000,
-						dynamicAnimation: { enabled: true, speed: 1000 },
-						animategradually: { enabled: true, delay: 2000 },
-						initialAnimation: { enabled: true }
-					},
+                    animations: {
+                        enabled: true, 
+                        easing: "easeinout", 
+                        speed: 1200, 
+                        animateGradually: {
+                          enabled: true,
+                          delay: 300,
+                        },
+                        dynamicAnimation: {
+                          enabled: true,
+                          speed: 1200,
+                        },
+                      },
 					toolbar: { show: false },
 				},
 				noData: {
@@ -2735,8 +2710,9 @@ export const webviewDonutChartHtml = `
 					offsetX: 0,
 					offsetY: -10,
 					style: {
-						color: "#e31837",
+						color: "#7f7f7f",
 						fontSize: "20px",
+                        fontWeight: "600",
 						fontFamily: "Helvetica, Arial, sans-serif",
 					},
 				},
@@ -2750,8 +2726,8 @@ export const webviewDonutChartHtml = `
 						offsetY: 0,
 						customScale: 1.1,
 						dataLabels: {
-							offset: 0,
-							minAngleToShowLabel: 0,
+							offset: 5,
+							minAngleToShowLabel: 10,
 						},
 						donut: {
 							size: '65%',
@@ -2857,7 +2833,7 @@ export const webviewDonutChartHtml = `
 			}
 
 			function updateChartSeries(filteredData) {
-				chart.updateSeries([{ data: filteredData }], true)
+				chart.updateSeries([filteredData], true)
 				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartSeries' }));
 			}
 
@@ -3057,11 +3033,10 @@ export const webviewAreaHtmlcontent = `
                     align: "center",
                     verticalAlign: "middle",
                     offsetX: 0,
-                    offsetY: -35,
+                    offsetY: -40,
                     style: {
-                        color: "#e31837",
-                        fontSize: "12px",
-                        fontWeight: "900",
+                        color: "#898a8c",
+                        fontSize: "20px",
                         fontFamily: "Helvetica, Arial, sans-serif",
                     },
                 },
@@ -3071,6 +3046,7 @@ export const webviewAreaHtmlcontent = `
                 stroke: {
                     curve: "straight",
                     width: 1, //['straight', 'smooth', 'monotoneCubic', 'stepline']
+                    // colors: ['#FF4560'],
                 },
                 markers: {
                     size: 0,
@@ -3208,7 +3184,7 @@ export const webviewAreaHtmlcontent = `
                 grid: {
                     show: true,
                     borderColor: "#ccc",
-                    strokeDashArray: 1,
+                    strokeDashArray: 0,
                     position: "back",
                     padding: {
                         top: 0,
@@ -3219,9 +3195,16 @@ export const webviewAreaHtmlcontent = `
                 },
                 fill: {
                     type: "solid",
-                    opacity: [0.9, 0.8, 0.5, 0.1] // Adjust per dataset
+                    opacity: [0.9, 0.8, 0.5, 0.1] 
                   },
-                
+                // stroke: {
+                //     width: [0, 5, 0, 3],
+                //     curve: "straight",
+                // },
+                // fill: {
+                //     type: "solid",
+                //     opacity: [0.2, 1, 0.5, 0]
+                // },
                 legend: {
                     show: true,
                     position: "bottom",
@@ -3644,11 +3627,11 @@ export const iframeAreahtlcontent = `
                 align: "center",
                 verticalAlign: "middle",
                 offsetX: 0,
-                offsetY: -35,
+                offsetY: 0,
                 style: {
-                    color: "#e31837",
-                    fontSize: "12px",
-                    fontWeight: "900",
+                    color: "#7f7f7f",
+                    fontSize: "15px",
+                    fontWeight: "bold",
                     fontFamily: "Helvetica, Arial, sans-serif",
                 },
             },

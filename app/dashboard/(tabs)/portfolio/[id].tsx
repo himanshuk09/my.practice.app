@@ -1,6 +1,5 @@
 import ChartComponent from "@/components/Chart/ChartComponent";
 import { inActiveLoading } from "@/store/navigationSlice";
-import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import {
 	View,
@@ -21,43 +20,33 @@ import {
 	webviewDonutChartHtml,
 } from "@/components/Chart/charthtmlcontent";
 import { i18n } from "@/localization/localConfig";
-import { portfolioCards } from "@/constants/constantData";
 import { useLocalSearchParams } from "expo-router";
 import { RootState } from "@/store/store";
 import WebView from "react-native-webview";
 import { PortFolioChartShimmer } from "@/components/ChartShimmer";
-import { getPortfolioDetails } from "@/services/portfolio.service";
+import {
+	getPortfolioDeals,
+	getPortfolioDetails,
+	getPortfolioReportBase64PDF,
+} from "@/services/portfolio.service";
 import Transactions, { DataDisplay } from "@/components/TranscationCard";
 import { Modal } from "react-native";
 import {
 	updateApexChart,
 	updateEmptyChart,
 } from "@/components/Chart/chartUpdateFunctions";
+import {
+	shareBase64AsPDF,
+	saveBase64AsPDFWeb,
+} from "@/components/ConstantFunctions/saveCSVFile";
+import Toast from "react-native-toast-message";
 
 const PortfolioOverView = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
-	const [closedData, setClosedData] = useState<any>([
-		{
-			Price: 0,
-			Load: 0,
-			Value: 0,
-			PriceUnit: "€",
-			LoadUnit: "MWh",
-			unit: "€/MWh",
-		},
-	]);
 	const [portfolioDetails, setPortfolioDetails] = useState<any>([]);
-	const [openData, setOpenData] = useState<any>([
-		{
-			Price: 0,
-			Load: 0,
-			Value: 0,
-			PriceUnit: "€",
-			LoadUnit: "MWh",
-			unit: "€/MWh",
-		},
-	]);
+	const [portfolioDeals, setPortfolioDeals] = useState<any>([]);
+	const [portfolioReport, setPortfolioReport] = useState<string>("");
 	const { height: screenHeight } = Dimensions.get("window");
 	const locale = useSelector((state: RootState) => state.language.locale);
 	const dispatch = useDispatch();
@@ -67,6 +56,7 @@ const PortfolioOverView = () => {
 	const areaIFrameRef = useRef<HTMLIFrameElement | any>(null);
 	const { id }: any = useLocalSearchParams();
 	const paramsID = id ? JSON.parse(decodeURIComponent(id as string)) : {};
+
 	const onMessage = async (event: any) => {
 		const message = JSON.parse(event.nativeEvent.data);
 	};
@@ -74,45 +64,110 @@ const PortfolioOverView = () => {
 	const updateLocale = () => {
 		if (Platform.OS === "web") {
 			const iframe = areaIFrameRef.current;
-			if (iframe && iframe.contentWindow) {
+			if (iframe && iframe?.contentWindow) {
 				iframe.contentWindow.updateLocale?.(
 					locale,
-					`Target ${paramsID?.year}`
+					`Target ${new Date(paramsID?.PortfolioDate).getFullYear()}`
 				);
 			}
 		} else {
 			if (areaWebViewRef?.current) {
-				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}', 'Target ${paramsID?.year}');}`;
+				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}', 'Target ${new Date(paramsID?.PortfolioDate).getFullYear()}');}`;
 
 				areaWebViewRef.current.injectJavaScript(updateLocaleScript);
 			}
 		}
 		updateApexChart("options", donutwebViewRef, donutIFrameRef, {
 			title: {
-				text: paramsID?.name,
+				text: paramsID?.PortfolioName,
 			},
 		});
+	};
+	const calledPortfolioReport = async () => {
+		// Show initial toast indicating download is in progress
+		const toastId = Toast.show({
+			type: "download",
+			text1: "File Downloading....",
+			position: "bottom",
+			bottomOffset: 0,
+			autoHide: false, // Keeps the toast visible
+		});
+
+		try {
+			// Fetch the portfolio report
+			const responsePortfolioReport =
+				await getPortfolioReportBase64PDF(paramsID);
+
+			// Hide the previous toast
+			Toast.hide(toastId);
+			// Save or share the file based on platform
+			const fileName = paramsID.PortfolioName.replace(
+				/[&\/\\#,+()$~%.'":*?<>{}]/g,
+				""
+			);
+			console.log(fileName);
+
+			if (Platform.OS === "web") {
+				saveBase64AsPDFWeb(
+					responsePortfolioReport,
+					`${fileName}_details.pdf`
+				);
+			} else {
+				shareBase64AsPDF(
+					responsePortfolioReport,
+					`${fileName}_details.pdf`
+				);
+			}
+		} catch (error: any) {
+			// Hide previous toast if there's an error
+			Toast.hide(toastId);
+
+			// Show error toast
+			Toast.show({
+				type: "error",
+				text1: "Download Failed!",
+				text2: error.message || "Something went wrong.",
+				position: "bottom",
+				bottomOffset: 0,
+				visibilityTime: 3000,
+			});
+
+			console.error("Error downloading portfolio report:", error);
+		}
 	};
 
 	useEffect(() => {
 		const fetchDetails = async () => {
 			try {
-				const response: any = await getPortfolioDetails(
-					Number(paramsID?.PortfolioID)
-				);
-				setPortfolioDetails(response);
-				setClosedData(response?.closedData);
-				setOpenData(response?.openData);
+				const responsePortfolioDetails: any =
+					await getPortfolioDetails(paramsID);
+
+				setPortfolioDetails(responsePortfolioDetails);
 			} catch (error) {
 				console.log("Error fetching portfolio details:", error);
 			} finally {
-				dispatch(inActiveLoading()); // Ensure loading state updates after request
+				dispatch(inActiveLoading());
 			}
 		};
 
-		if (paramsID?.PortfolioID) fetchDetails();
-	}, [paramsID?.PortfolioID]);
-
+		if (paramsID?.PortfolioId) fetchDetails();
+	}, [paramsID?.PortfolioId]);
+	useEffect(() => {
+		const fetchDeals = async () => {
+			try {
+				const responsePortfolioDeals: any =
+					await getPortfolioDeals(paramsID);
+				if (portfolioDetails?.message != "no data") {
+					setPortfolioDeals(responsePortfolioDeals);
+				}
+			} catch (error) {
+				console.log("Error fetching portfolio deals:", error);
+			} finally {
+				dispatch(inActiveLoading());
+			}
+		};
+		fetchDeals();
+	}, [modalVisible]);
 	useEffect(() => {
 		if (portfolioDetails) {
 			if (portfolioDetails?.message === "no data") {
@@ -120,7 +175,6 @@ const PortfolioOverView = () => {
 				updateEmptyChart(areaWebViewRef, areaIFrameRef);
 				return;
 			}
-			updateLocale();
 
 			updateApexChart(
 				"series",
@@ -134,6 +188,7 @@ const PortfolioOverView = () => {
 				areaIFrameRef,
 				portfolioDetails?.areaChartData
 			);
+			updateLocale();
 		}
 	}, [portfolioDetails, isChartLoaded]);
 
@@ -194,11 +249,17 @@ const PortfolioOverView = () => {
 										className={`flex-col justify-start w-[35%] md:w-[10%]`}
 									>
 										<DataDisplay
-											data={closedData[0]}
+											data={
+												portfolioDetails
+													?.closedData[0]
+											}
 											title={"Closed"}
 										/>
 										<DataDisplay
-											data={openData[0]}
+											data={
+												portfolioDetails
+													?.openData[0]
+											}
 											title={"Open"}
 										/>
 									</View>
@@ -207,7 +268,9 @@ const PortfolioOverView = () => {
 											name="file-download"
 											size={35}
 											color="#ef4444"
-											onPress={() => {}}
+											onPress={
+												calledPortfolioReport
+											}
 										/>
 									</View>
 								</View>
@@ -250,7 +313,7 @@ const PortfolioOverView = () => {
 
 						<Modal
 							animationType="slide"
-							transparent={true}
+							transparent={false}
 							visible={modalVisible}
 							onRequestClose={() =>
 								setModalVisible(!modalVisible)
@@ -261,18 +324,19 @@ const PortfolioOverView = () => {
 								style={StyleSheet.absoluteFill}
 							>
 								<Transactions
-									cards={portfolioCards}
+									cards={portfolioDeals}
 									setModalVisible={setModalVisible}
 									modalVisible={modalVisible}
+									title={paramsID?.PortfolioName}
 								/>
 							</View>
 						</Modal>
 					</View>
 					<TouchableOpacity
 						className={`bg-primary mb-2 bottom-0   py-2 mx-5 rounded-sm my-2 
-						
-							absolute  left-0 right-0 
-						`}
+								
+									absolute  left-0 right-0 
+								`}
 						onPress={() => setModalVisible(!modalVisible)}
 					>
 						<Text className="text-white text-center text-base font-medium uppercase">

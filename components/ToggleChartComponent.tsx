@@ -18,6 +18,10 @@ import {
 	iFrameLineHtmlcontent,
 } from "./Chart/charthtmlcontent";
 import { filterDataByDateRange } from "./Chart/filterFunction";
+import {
+	updateApexChart,
+	updateEmptyChart,
+} from "./Chart/chartUpdateFunctions";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -116,7 +120,9 @@ const ToggleChartComponent = ({
 		}
 	};
 	const updateChartData = (filteredData: any) => {
-		if (checkEmptyDataset(filteredData)) return;
+		if (filteredData?.length === 0) {
+			updateEmptyChart(webViewRef, iFrameRef);
+		}
 		if (isTooltipEnabled) {
 			updateChart("options", {
 				markers: {
@@ -209,60 +215,6 @@ const ToggleChartComponent = ({
 				webViewRef.current.injectJavaScript(updateFormateScript);
 			}
 		}
-	};
-	const checkEmptyDataset = (filterData: any) => {
-		if (filterData?.length === 0) {
-			updateChart("options", {
-				chart: {},
-				noData: { text: i18n.t("Data_not_available") },
-				grid: {
-					show: false,
-				},
-				xaxis: {
-					tickAmount: 0,
-					labels: {
-						show: false,
-					},
-					title: {
-						text: "",
-						style: {
-							fontSize: "0",
-						},
-					},
-					axisTicks: {
-						show: false,
-					},
-					axisBorder: {
-						show: false,
-					},
-				},
-				yaxis: {
-					labels: {
-						show: false,
-					},
-					title: {
-						text: "",
-						style: {
-							fontSize: "0",
-						},
-					},
-				},
-				title: {
-					text: "",
-					align: "center",
-					style: {
-						fontSize: "0",
-					},
-				},
-			});
-			updateChart("series", []);
-			setIsChartEmpty(true);
-			setTimeout(() => {
-				setLoading(false);
-			}, 500);
-			return true;
-		}
-		return false;
 	};
 	const fetchDataBYAPI = async () => {
 		try {
@@ -363,66 +315,22 @@ const ToggleChartComponent = ({
 				const data = await fetchChartData(activeTab);
 				updateLocale();
 				updateChartData(data);
-				// filterData(activeTab);
+				updateApexChart(
+					"series",
+					webViewRef,
+					iFrameRef,
+					data,
+					undefined,
+					"hello"
+				);
+
 				setPreviousTab(activeTab);
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}
 		}
 	};
-	const filterData = (activetab: any) => {
-		if (Platform.OS === "web") {
-			const iframe = iFrameRef.current;
-			if (iframe && iframe.contentWindow) {
-				switch (activetab) {
-					case "Day":
-						iframe.contentWindow.ZoomDayData();
-						break;
-					case "Week":
-						iframe.contentWindow.ZoomWeekData();
-						break;
-					case "Month":
-						iframe.contentWindow.ZoomMonthData();
-						break;
-					case "Quarter":
-						iframe.contentWindow.ZoomQuarterData();
-						break;
-					case "Year":
-						iframe.contentWindow.ResetData();
-						break;
-					default:
-						iframe.contentWindow.ResetData();
-						break;
-				}
-			} else {
-				console.error("Iframe contentWindow is not accessible.");
-			}
-		} else {
-			let jsCommand = "";
-			switch (activetab) {
-				case "Day":
-					jsCommand = `ZoomDayData()`;
-					break;
-				case "Week":
-					jsCommand = `ZoomWeekData()`;
-					break;
-				case "Month":
-					jsCommand = `ZoomMonthData()`;
-					break;
-				case "Quarter":
-					jsCommand = `ZoomQuarterData()`;
-					break;
-				case "Year":
-					jsCommand = `ResetData()`;
-					break;
-				default:
-					jsCommand = `ResetData()`;
-					break;
-			}
 
-			(webViewRef.current as any)?.injectJavaScript(jsCommand);
-		}
-	};
 	useEffect(() => {
 		const executeAfterRender = async () => {
 			if (isFirstRender.current) {
@@ -438,9 +346,6 @@ const ToggleChartComponent = ({
 		};
 		executeAfterRender();
 	}, [activeTab, fetchChartData, locale]);
-	const ZoomData = () => {
-		(webViewRef.current as any)?.injectJavaScript(`ZoomData()`);
-	};
 
 	return (
 		<View className="flex-1  bg-white">

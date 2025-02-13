@@ -39,7 +39,7 @@ const ContactUs = () => {
 				networkActivityIndicatorVisible
 			/>
 
-			<View className="top-0 w-full z-50 p-3 bg-[#e31837] h-20">
+			<View className="top-0 w-full z-50 p-3 bg-primary h-20">
 				<Text className="text-xl font-semibold text-white capitalize">
 					{i18n.t("contactus")}
 				</Text>
@@ -141,20 +141,20 @@ const ContactUs = () => {
 			</ScrollView>
 
 			{/* Footer Buttons */}
-			<View className="w-full flex flex-row justify-evenly border-t-2 border-[#e31837]">
+			<View className="w-full flex flex-row justify-evenly border-t-2 border-primary">
 				<TouchableOpacity
 					className="items-center p-5 w-[50%] bg-white"
 					onPress={() => {
 						router.back();
 					}}
 				>
-					<Text className="text-center text-[#e31837] font-normal uppercase bg-white">
+					<Text className="text-center text-primary font-normal uppercase bg-white">
 						{i18n.t("cancel")}
 					</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity
-					className="items-center p-5 w-[50%] bg-[#e31837]"
+					className="items-center p-5 w-[50%] bg-primary"
 					onPress={() => {
 						console.log("Message sent:", {
 							name,

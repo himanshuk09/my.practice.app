@@ -56,3 +56,16 @@ api.interceptors.response.use(
 );
 
 export default api;
+export const filterByEnergyType = (data: any[] = []) => {
+	return data.reduce(
+		(acc, item) => {
+			if (item.EnergyType === 1) {
+				acc.strom.push(item);
+			} else if (item.EnergyType === 2 || item.EnergyType === 5) {
+				acc.gas.push(item);
+			}
+			return acc;
+		},
+		{ gas: [] as any[], strom: [] as any[] }
+	);
+};

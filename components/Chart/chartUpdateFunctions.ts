@@ -6,14 +6,22 @@ export const updateApexChart = (
 	webViewRef: any,
 	iframeRef: any,
 	data?: any,
-	options?: any
+	options?: any,
+	title?: any
 ) => {
 	if (Platform.OS === "web") {
 		const iframe = iframeRef.current;
-		if (iframe && iframe.contentWindow) {
+		if (iframe && iframe?.contentWindow) {
 			switch (type) {
 				case "series":
-					iframe.contentWindow.updateChartSeries?.(data);
+					if (title !== undefined) {
+						iframe.contentWindow.updateChartSeries?.(
+							title,
+							data
+						);
+					} else {
+						iframe.contentWindow.updateChartSeries?.(data);
+					}
 					break;
 				case "options":
 					iframe.contentWindow.updateChartOptions?.(data);
@@ -32,7 +40,11 @@ export const updateApexChart = (
 		let jsCommand = "";
 		switch (type) {
 			case "series":
-				jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
+				if (title !== undefined) {
+					jsCommand = `updateChartSeries(${JSON.stringify(title)}, ${JSON.stringify(data)});`;
+				} else {
+					jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
+				}
 				break;
 			case "options":
 				jsCommand = `updateChartOptions(${JSON.stringify(data)});`;
@@ -61,7 +73,7 @@ export const updateEmptyChart = (
 			text: chartType == "donut" ? "NA" : i18n.t("Data_not_available"),
 		},
 		grid: {
-			show: false,
+			show: true,
 		},
 		xaxis: {
 			tickAmount: 0,

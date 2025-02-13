@@ -48,7 +48,7 @@ const fetchDataByToggle = async (tab: any) => {
 		return filterByMonthYearUTC();
 	}
 	if (tab === "Day") {
-		// return [];
+		return [];
 		return filterCurrentDayDataUTC();
 	}
 	if (tab === "Week") {

@@ -31,7 +31,7 @@ const FlatListBlock = ({
 	const router = useRouter();
 	const flatListRef = useRef<any>(null);
 	const currentYear = new Date().getFullYear();
-	const ITEM_HEIGHT = Platform.OS === "web" ? 77.8 : 72.8;
+	const ITEM_HEIGHT = Platform.OS === "web" ? 83 : 72.8;
 	const isFocused = useIsFocused();
 	const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -62,7 +62,7 @@ const FlatListBlock = ({
 			<Text className="text-listText text-sm">{item?.title}</Text>
 		</TouchableOpacity>
 	));
-	const PortfolioListItem = memo(({ item, router }: any) => (
+	const PFCListItem = memo(({ item, router }: any) => (
 		<TouchableOpacity
 			key={item.id}
 			className="flex justify-start flex-row px-5  py-6  text-lg font-serif font-medium rounded-sm my-1  mx-2 bg-white h-[4.7rem] "
@@ -71,21 +71,35 @@ const FlatListBlock = ({
 				dispatch(activeLoading());
 
 				setTimeout(() => {
-					// router.push(
-					// 	`${NavigateTo}/${item?.PortfolioId}` as Href
-					// );
+					router.push(`${NavigateTo}/1` as Href);
+				});
+			}}
+		>
+			{item?.notificationCount && (
+				<FontAwesome
+					name="circle"
+					size={8}
+					color="#e31837"
+					className="mr-1 mt-[0.4rem]"
+				/>
+			)}
+			<Text className="text-listText text-sm">
+				{item?.PriceForwardCurveName}
+			</Text>
+		</TouchableOpacity>
+	));
+	const PortfolioListItem = memo(({ item, router }: any) => (
+		<TouchableOpacity
+			key={item.id}
+			className="flex justify-start flex-row px-5  py-6  text-lg font-serif font-medium rounded-sm my-1  mx-2 bg-white h-[4.7rem] "
+			style={st.boxShadow}
+			onPress={() => {
+				dispatch(activeLoading());
+				setTimeout(() => {
 					router.push({
 						pathname: `dashboard/(tabs)/portfolio/[id]`,
 						params: {
-							id: encodeURIComponent(
-								JSON.stringify({
-									PortfolioID: item?.PortfolioId,
-									name: item?.PortfolioName,
-									year: new Date(
-										item.PortfolioDate
-									).getFullYear(),
-								})
-							),
+							id: encodeURIComponent(JSON.stringify(item)),
 						},
 					});
 				});
@@ -106,7 +120,6 @@ const FlatListBlock = ({
 	));
 	const onRefresh = async () => {
 		setIsRefreshing(true);
-		// Simulate a network request or refresh data logic
 		setTimeout(() => {
 			setIsRefreshing(false);
 		}, 2000);
@@ -114,6 +127,8 @@ const FlatListBlock = ({
 	const renderItem = ({ item }: any) =>
 		renderType === "Portfolio" ? (
 			<PortfolioListItem item={item} router={router} />
+		) : renderType === "pfc" ? (
+			<PFCListItem item={item} router={router} />
 		) : (
 			<ListItem item={item} router={router} />
 		);
@@ -123,9 +138,8 @@ const FlatListBlock = ({
 	}, [currentRoute]);
 
 	useEffect(() => {
-		if (/^\/dashboard\/portfolio\/\d+$/.test(previousRoute)) return;
+		if (/^\/dashboard\/portfolio\/.+%/.test(previousRoute)) return;
 		if (enableAutoScroll && flatListRef.current && isFocused) {
-			// Find the first index that matches the current year
 			const targetIndex = items.findIndex(
 				(item: any) =>
 					new Date(item.PortfolioDate).getFullYear() ===
@@ -182,7 +196,7 @@ const FlatListBlock = ({
 				data={items}
 				renderItem={renderItem}
 				keyExtractor={
-					keyExtractor || ((item, index) => item?.id.toString())
+					keyExtractor || ((item, index) => index.toString())
 				}
 				getItemLayout={(data, index) => ({
 					length: ITEM_HEIGHT,

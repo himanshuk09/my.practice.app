@@ -1,28 +1,28 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FlatList, RefreshControl, StatusBar } from "react-native";
 import AccordionFlatlist from "@/components/AccordionFlatlist";
-import { AccordionData } from "@/constants/constantData";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getLoadDataList } from "@/services/loaddata.service";
 
 const LoadData = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
-	const [loadDataMeters, setLoadDataMeters] = useState<any>([]);
+	const mainFlatListRef = useRef<FlatList>(null);
 	const [isRefreshing, setIsRefreshing] = useState(false);
-
+	const [loadDataGasList, setLoadDataGasList] = useState<any>([]);
+	const [loadDataSromList, setLoadDataSromList] = useState<any>([]);
 	const onRefresh = async () => {
 		setIsRefreshing(true);
-		// Simulate a network request or refresh data logic
 		setTimeout(() => {
 			setIsRefreshing(false);
 		}, 2000);
 	};
 	const data = [
-		{ id: "1", data: loadDataMeters, title: "Gas" },
-		{ id: "2", data: loadDataMeters, title: "Power" },
+		{ id: "1", data: loadDataGasList, title: "Gas" },
+		{ id: "2", data: loadDataSromList, title: "Power" },
 	];
 	const startLoader = () => {
 		dispatch(activeLoading());
@@ -37,19 +37,23 @@ const LoadData = () => {
 		/>
 	);
 
-	const mainFlatListRef = useRef<FlatList>(null);
-
 	const scrollToIndex = (index: number) => {
 		mainFlatListRef.current?.scrollToIndex({
 			index,
 			animated: true,
 		});
 	};
+
+	useEffect(() => {
+		const fetchLoadDataList = async () => {
+			const resLoadDataList = await getLoadDataList();
+			setLoadDataGasList(resLoadDataList?.gas);
+			setLoadDataSromList(resLoadDataList?.strom);
+		};
+		fetchLoadDataList();
+	}, []);
 	useLayoutEffect(() => {
 		dispatch(inActiveLoading());
-		setTimeout(() => {
-			setLoadDataMeters(AccordionData);
-		}, 1000);
 	}, [isFocused]);
 	return (
 		<SafeAreaView className="flex-1 bg-white">

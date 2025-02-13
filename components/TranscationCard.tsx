@@ -7,14 +7,18 @@ import { View, Platform, FlatList, TouchableOpacity } from "react-native";
 import {
 	saveCSVToFileWeb,
 	saveCSVToFileString,
+	saveDealseCSV,
 } from "./ConstantFunctions/saveCSVFile";
 import { Text } from "react-native";
+import StackHeader from "./StackHeader";
+import { useEffect, useState } from "react";
+import { ChartLoaderPNG } from "./Loader";
 
-const Card = ({ title, data }: any) => {
+const Card = ({ title, deals }: any) => {
 	return (
-		<View className="bg-cardBg rounded-lg p-3 my-1 " style={st.boxShadow}>
+		<View className="bg-cardBg rounded-xs p-3 my-1 " style={st.boxShadow}>
 			<Text className="text-sm text-cardTextHeader font-medium mb-2">
-				{title}
+				{deals?.ProductName}
 			</Text>
 			<View className="space-y-2 flex-row justify-between">
 				<View className="flex-col w-[45%]">
@@ -24,7 +28,7 @@ const Card = ({ title, data }: any) => {
 						</Text>
 						<View className="items-start justify-start w-[30%]">
 							<Text className="text-xs text-cardText">
-								{data.direction}
+								{deals?.Direction ? "Buy" : "Sell"}
 							</Text>
 						</View>
 					</View>
@@ -34,7 +38,7 @@ const Card = ({ title, data }: any) => {
 						</Text>
 						<View className="items-start justify-start w-[30%]">
 							<Text className="text-xs  text-cardText">
-								{data.amount}
+								{deals?.Amount} MW
 							</Text>
 						</View>
 					</View>
@@ -44,7 +48,7 @@ const Card = ({ title, data }: any) => {
 						</Text>
 						<View className="items-start justify-start w-[50%]">
 							<Text className="text-xs text-cardText">
-								{data.price}
+								{deals?.Price} €/MWh
 							</Text>
 						</View>
 					</View>
@@ -57,7 +61,7 @@ const Card = ({ title, data }: any) => {
 
 						<View className="items-start justify-start w-[50%]">
 							<Text className="text-xs text-cardText">
-								{data.trader}
+								{deals?.Trader}
 							</Text>
 						</View>
 					</View>
@@ -68,7 +72,7 @@ const Card = ({ title, data }: any) => {
 
 						<View className="items-start justify-start w-[50%]">
 							<Text className="text-xs text-cardText">
-								{data.date}
+								{deals?.Date}
 							</Text>
 						</View>
 					</View>
@@ -78,7 +82,7 @@ const Card = ({ title, data }: any) => {
 						</Text>
 						<View className="items-start justify-start w-[50%]">
 							<Text className="text-xs text-cardText">
-								{data.state}
+								{deals?.State ? "Confirmed" : "Pending"}
 							</Text>
 						</View>
 					</View>
@@ -87,13 +91,25 @@ const Card = ({ title, data }: any) => {
 		</View>
 	);
 };
-const Transactions = ({ cards, setModalVisible, modalVisible }: any) => {
+const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
+	const [loading, setLoadig] = useState<any>(true);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setLoadig(false);
+		}, 1000);
+	}, []);
 	return (
-		<View className="flex-1 pt-20 ">
-			<View className="flex justify-between  bg-white flex-row    h-20 px-3 pl-5 shadow-2xl shadow-black ">
+		<View className="flex-1 bg-white ">
+			<StackHeader
+				title={"portfolio_overview"}
+				closed={true}
+				setModalVisible={setModalVisible}
+			/>
+			<View className="flex justify-between  bg-white flex-row    h-20 px-3 pl-5 shadow-lg shadow-cardBg ">
 				<View className="justify-center items-start bg-white">
 					<Text className="text-xl font-semibold  text-mainCardHeaderText">
-						Strom 2024
+						{title}
 					</Text>
 					<Text className="text-md font-medium text-mainCardHeaderText">
 						Trade Transaction
@@ -109,16 +125,23 @@ const Transactions = ({ cards, setModalVisible, modalVisible }: any) => {
 							if (Platform.OS === "web") {
 								saveCSVToFileWeb(cockpitChartData);
 							} else {
-								saveCSVToFileString(stringChartData);
+								saveDealseCSV(
+									cards,
+									`${title}_deals.csv`
+								);
 							}
 						}}
 					/>
 				</View>
 			</View>
 			{cards?.length === 0 ? (
-				<View className="items-center justify-center h-full w-full">
-					<Text>Data Not Available</Text>
+				<View className="items-center justify-center h-3/6 w-full">
+					<Text className="text-md font-medium text-mainCardHeaderText">
+						Data Not Available
+					</Text>
 				</View>
+			) : loading ? (
+				<ChartLoaderPNG />
 			) : (
 				<FlatList
 					showsHorizontalScrollIndicator={false}
@@ -128,20 +151,20 @@ const Transactions = ({ cards, setModalVisible, modalVisible }: any) => {
 						<Card
 							key={index}
 							title={item.title}
-							data={item}
+							deals={item}
 						/>
 					)}
 					keyExtractor={(item: any, index) => index.toString()}
 					nestedScrollEnabled={true}
 					scrollEnabled={true}
-					initialNumToRender={1}
+					initialNumToRender={10}
 					maxToRenderPerBatch={5}
 					style={{ padding: 8, flex: 1 }}
-					className="bg-slate-50 overflow-scroll  p-2"
+					className=" overflow-scroll  p-2"
 				/>
 			)}
 			<TouchableOpacity
-				className={`bg-[#e31836]  bottom-0 mx-2 mb-2 py-3 flex justify-center items-center rounded-sm absolute left-0 right-0  
+				className={`bg-primary my-2  mx-2 absolute left-0 right-0 bottom-0 py-3 flex justify-center items-center rounded-sm   
 						}`}
 				onPress={() => setModalVisible(!modalVisible)}
 			>

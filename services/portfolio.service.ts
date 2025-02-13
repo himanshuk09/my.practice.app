@@ -1,10 +1,14 @@
 import api from "./api";
 
 const getPortfolioList = async () => {
-	const response = await api.get("/api/portfolio/GetPortfolioList");
-	return response?.data;
+	try {
+		const response = await api.get("/api/portfolio/GetPortfolioList");
+		return response?.data;
+	} catch (error) {
+		console.log("Error while Fetching PortfolioList", error);
+	}
 };
-function filterPortfolioDetails(response: any) {
+const filterPortfolioDetails = (response: any) => {
 	// Extract response lists safely
 	const { ResponseMonthlyList, ResponseOpenCloseList } = response;
 
@@ -68,41 +72,73 @@ function filterPortfolioDetails(response: any) {
 			unit: "€/MWh",
 		})),
 	};
-}
-
+};
 const getPortfolioDetails = async (payload: any) => {
-	const response = await api.post(
-		"/api/portfolio/GetPortfolioOpenCloseByPortfolioId",
-		{ PortfolioId: payload }
-	);
-	if (response?.data?.ResponseOpenCloseList?.length === 0) {
-		return {
-			message: "no data",
-			closedData: [
-				{
-					Price: 0,
-					Load: 0,
-					Value: 0,
-					PriceUnit: "€",
-					LoadUnit: "MWh",
-					unit: "€/MWh",
-				},
-			],
-			openData: [
-				{
-					Price: 0,
-					Load: 0,
-					Value: 0,
-					PriceUnit: "€",
-					LoadUnit: "MWh",
-					unit: "€/MWh",
-				},
-			],
-		};
+	try {
+		const response = await api.post(
+			"/api/portfolio/GetPortfolioOpenCloseByPortfolioId",
+			{ ...payload }
+		);
+		if (response?.data?.ResponseOpenCloseList?.length === 0) {
+			return {
+				message: "no data",
+				closedData: [
+					{
+						Price: 0,
+						Load: 0,
+						Value: 0,
+						PriceUnit: "€",
+						LoadUnit: "MWh",
+						unit: "€/MWh",
+					},
+				],
+				openData: [
+					{
+						Price: 0,
+						Load: 0,
+						Value: 0,
+						PriceUnit: "€",
+						LoadUnit: "MWh",
+						unit: "€/MWh",
+					},
+				],
+			};
+		}
+		const filteredPortfolioDetails = filterPortfolioDetails(
+			response.data
+		);
+		return filteredPortfolioDetails;
+	} catch (error) {
+		console.log("Error while Fetching PortfolioDetails", error);
 	}
-	const filteredPortfolioDetails = filterPortfolioDetails(response.data);
-	console.log("response.data", filteredPortfolioDetails);
-	return filteredPortfolioDetails;
+};
+const getPortfolioDeals = async (payload: any) => {
+	try {
+		const response = await api.post(
+			"/api/portfolio/GetPortfolioDealsDetailsByPortfolioId",
+			{ ...payload }
+		);
+		return response.data;
+	} catch (error) {
+		console.log("Error while Fetching PortfolioDeals", error);
+	}
 };
 
-export { getPortfolioList, getPortfolioDetails };
+const getPortfolioReportBase64PDF = async (payload: any) => {
+	try {
+		const response = await api.post(
+			`/api/portfolio/ExportPortfolioByteReportById`,
+			{ ...payload }
+		);
+
+		return response.data;
+	} catch (error) {
+		console.log("Error while Fetching PortfolioReport", error);
+	}
+};
+export {
+	getPortfolioList,
+	getPortfolioDetails,
+	getPortfolioDeals,
+	getPortfolioReportBase64PDF,
+};
