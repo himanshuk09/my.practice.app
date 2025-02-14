@@ -9,14 +9,13 @@ import {
 	Easing,
 	RefreshControl,
 } from "react-native";
-import { Href, Link, usePathname, useRouter } from "expo-router";
+import { Href, usePathname, useRouter } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import { FontAwesome } from "@expo/vector-icons";
 import { st } from "@/utils/Styles";
 import { ShimmerFlatListBlock } from "./ShimmerEffect";
-import Portfolio from "./SVG/Portfolio";
 
 const FlatListBlock = ({
 	title,
@@ -118,21 +117,22 @@ const FlatListBlock = ({
 			</Text>
 		</TouchableOpacity>
 	));
+
+	const renderItem = ({ item }: any) => {
+		const Component =
+			renderType === "Portfolio"
+				? PortfolioListItem
+				: renderType === "pfc"
+					? PFCListItem
+					: ListItem;
+		return <Component item={item} router={router} />;
+	};
 	const onRefresh = async () => {
 		setIsRefreshing(true);
 		setTimeout(() => {
 			setIsRefreshing(false);
 		}, 2000);
 	};
-	const renderItem = ({ item }: any) =>
-		renderType === "Portfolio" ? (
-			<PortfolioListItem item={item} router={router} />
-		) : renderType === "pfc" ? (
-			<PFCListItem item={item} router={router} />
-		) : (
-			<ListItem item={item} router={router} />
-		);
-
 	useEffect(() => {
 		previousRouteRef.current = currentRoute;
 	}, [currentRoute]);

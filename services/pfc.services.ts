@@ -1,10 +1,17 @@
-import api, { filterByEnergyType } from "./api";
+import api, { formateByEnergyType } from "./api";
 
 const getPFCList = async () => {
-	const response = await api.get("/api/pfc/GetPriceForwardCurves");
-	const formateData = filterByEnergyType(response.data);
+	try {
+		const response = await api.get("/api/pfc/GetPriceForwardCurves");
+		const formateData = formateByEnergyType(response.data);
 
-	return formateData;
+		return formateData;
+	} catch (error) {
+		console.log(
+			"Error while Fetching PFC List",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
+	}
 };
 
 export { getPFCList };

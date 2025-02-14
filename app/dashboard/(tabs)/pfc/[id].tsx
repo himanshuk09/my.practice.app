@@ -109,6 +109,7 @@ const PFCDetails = () => {
 						showValueRange={false}
 						visibleTabs={visibleTabs}
 						fetchChartData={fetchChartData}
+						isChartLoaded={isChartLoaded}
 						setIsChartLoaded={setIsChartLoaded}
 					/>
 				</View>

@@ -27,7 +27,15 @@ export const updateApexChart = (
 					iframe.contentWindow.updateChartOptions?.(data);
 					break;
 				case "chart":
-					iframe.contentWindow.updateChart?.(data, options);
+					if (title !== undefined) {
+						iframe.contentWindow.updateChart?.(
+							data,
+							options,
+							title
+						);
+					} else {
+						iframe.contentWindow.updateChart?.(data, options);
+					}
 					break;
 				default:
 					console.error("Invalid chart update type");
@@ -50,9 +58,16 @@ export const updateApexChart = (
 				jsCommand = `updateChartOptions(${JSON.stringify(data)});`;
 				break;
 			case "chart":
-				jsCommand = `updateChart(${JSON.stringify(
-					data
-				)}, ${JSON.stringify(options || {})});`;
+				if (title !== undefined) {
+					jsCommand = `updateChart(${JSON.stringify(
+						data
+					)}, ${JSON.stringify(options || {})},${JSON.stringify(title)});`;
+				} else {
+					jsCommand = `updateChart(${JSON.stringify(
+						data
+					)}, ${JSON.stringify(options || {})});`;
+				}
+
 				break;
 			default:
 				console.error("Invalid chart update type");

@@ -62,10 +62,7 @@ const SignIn: React.FC = () => {
 		try {
 			Keyboard.dismiss();
 			dispatch(activeLoading());
-			// const payload = {
-			//     username: `angadc1`,
-			//     password: `replaced2Angad#`,
-			// };
+
 			const payload = {
 				username: userName,
 				password: password,

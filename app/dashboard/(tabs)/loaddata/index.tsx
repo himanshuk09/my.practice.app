@@ -6,28 +6,45 @@ import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getLoadDataList } from "@/services/loaddata.service";
-
+import { MeterArray } from "@/types/type";
+interface DataItem {
+	id: string;
+	data: MeterArray;
+	title: string;
+}
 const LoadData = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
-	const mainFlatListRef = useRef<FlatList>(null);
-	const [isRefreshing, setIsRefreshing] = useState(false);
-	const [loadDataGasList, setLoadDataGasList] = useState<any>([]);
-	const [loadDataSromList, setLoadDataSromList] = useState<any>([]);
+	const mainFlatListRef = useRef<FlatList<DataItem>>(null);
+	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+	const [loadDataGasList, setLoadDataGasList] = useState<MeterArray>([]);
+	const [loadDataSromList, setLoadDataSromList] = useState<MeterArray>([]);
 	const onRefresh = async () => {
 		setIsRefreshing(true);
 		setTimeout(() => {
 			setIsRefreshing(false);
 		}, 2000);
 	};
-	const data = [
+	const data: DataItem[] = [
 		{ id: "1", data: loadDataGasList, title: "Gas" },
 		{ id: "2", data: loadDataSromList, title: "Power" },
 	];
 	const startLoader = () => {
 		dispatch(activeLoading());
 	};
-	const renderItem = ({ item, index }: any) => (
+	const scrollToIndex = (index: number) => {
+		mainFlatListRef.current?.scrollToIndex({
+			index,
+			animated: true,
+		});
+	};
+	const renderItem = ({
+		item,
+		index,
+	}: {
+		item: DataItem;
+		index: number;
+	}) => (
 		<AccordionFlatlist
 			data={item?.data}
 			title={item?.title}
@@ -37,18 +54,11 @@ const LoadData = () => {
 		/>
 	);
 
-	const scrollToIndex = (index: number) => {
-		mainFlatListRef.current?.scrollToIndex({
-			index,
-			animated: true,
-		});
-	};
-
 	useEffect(() => {
 		const fetchLoadDataList = async () => {
 			const resLoadDataList = await getLoadDataList();
-			setLoadDataGasList(resLoadDataList?.gas);
-			setLoadDataSromList(resLoadDataList?.strom);
+			setLoadDataGasList(resLoadDataList?.gas || []);
+			setLoadDataSromList(resLoadDataList?.strom || []);
 		};
 		fetchLoadDataList();
 	}, []);

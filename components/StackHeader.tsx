@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { i18n } from "@/localization/localConfig";
-import { useDispatch } from "react-redux";
 import { useRouter } from "expo-router";
 
 const StackHeader = ({ title, closed = false, setModalVisible }: any) => {

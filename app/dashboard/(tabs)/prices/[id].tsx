@@ -121,6 +121,7 @@ const PricesDetails = () => {
 						showPeriodOfTime={true}
 						showValueRange={false}
 						fetchChartData={fetchChartData}
+						isChartLoaded={isChartLoaded}
 						setIsChartLoaded={setIsChartLoaded}
 					/>
 				</View>

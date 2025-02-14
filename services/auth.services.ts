@@ -8,16 +8,20 @@ import {
 	filterCurrentWeekDataUTC,
 } from "@/components/Chart/filterFunction";
 import { stringChartData } from "@/constants/stringChartData";
+import { loginPayloadProps, AuthResponse } from "@/types/apiTypes";
 
-const loginUser = async (payload: any) => {
+//Login
+const loginUser = async (payload: loginPayloadProps) => {
 	try {
-		const response = await api.post("/token", {
+		const response = await api.post<AuthResponse>("/token", {
 			grant_type: "password",
 			...payload,
 		});
 
 		const { access_token, UserId, cultureId, clientId, ApiApkVersion } =
 			response?.data;
+		console.log(response);
+
 		// Store token
 		await AsyncStorage.multiSet([
 			["token", JSON.stringify(access_token)],
@@ -30,11 +34,14 @@ const loginUser = async (payload: any) => {
 			token: access_token,
 			clientId,
 		};
-	} catch (error: any) {
+	} catch (error) {
 		return {
 			success: false,
 			message: "Authentication failed. Please check your credentials.",
-			error: error.response ? error.response.data : error.message,
+			error:
+				error instanceof Error
+					? error.message
+					: JSON.stringify(error),
 		};
 	}
 };
@@ -71,8 +78,11 @@ export const logout = async () => {
 		await AsyncStorage.removeItem("authToken");
 		await AsyncStorage.removeItem("user");
 		return { success: true };
-	} catch (error: any) {
-		console.error("Logout error:", error.response || error.message);
+	} catch (error) {
+		console.error(
+			"Logout error:",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
 		return { success: false, error: "Failed to log out" };
 	}
 };

@@ -23,8 +23,8 @@ const AccordionFlatlist = ({
 	const animations = useRef<any>({}).current;
 	const router = useRouter();
 	data?.forEach((item: any) => {
-		if (!animations[item.MeterId]) {
-			animations[item.MeterId] = new Animated.Value(0);
+		if (!animations[item?.MeterId]) {
+			animations[item?.MeterId] = new Animated.Value(0);
 		}
 	});
 

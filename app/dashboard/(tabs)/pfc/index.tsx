@@ -4,25 +4,34 @@ import {
 	RefreshControl,
 	SafeAreaView,
 	StatusBar,
+	ListRenderItem,
 } from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import { getPFCList } from "@/services/pfc.services";
-
+import { PriceForwardCurveArray } from "@/types/type";
+import { AppDispatch } from "@/store/store";
+interface CombinedData {
+	type: "header";
+	title: string;
+	data: PriceForwardCurveArray;
+}
 const PFC = () => {
-	const [isRefreshing, setIsRefreshing] = useState(false);
-	const [pfcGasList, setPFCGasList] = useState<any>();
-	const [pfcStromList, setPFCStromList] = useState<any>();
-	const dispatch = useDispatch();
+	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+	const [pfcGasList, setPFCGasList] = useState<PriceForwardCurveArray>([]);
+	const [pfcStromList, setPFCStromList] = useState<PriceForwardCurveArray>(
+		[]
+	);
+	const dispatch = useDispatch<AppDispatch>();
 	const isFocused = useIsFocused();
 	let NavigateTo = "dashboard/pfc";
-	const combinedData = [
+	const combinedData: CombinedData[] = [
 		{ type: "header", title: "Gas", data: pfcGasList },
 		{ type: "header", title: "Strom", data: pfcStromList },
 	];
-	const renderItem = ({ item }: any) => {
+	const renderItem: ListRenderItem<CombinedData> = ({ item }) => {
 		if (item.type === "header") {
 			return (
 				<FlatListBlock

@@ -1,17 +1,10 @@
-import { cockpitChartData } from "@/constants/cockpitchart";
-import { stringChartData } from "@/constants/stringChartData";
+import { useEffect, useState } from "react";
+import { View, Platform, FlatList, TouchableOpacity, Text } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { i18n } from "@/localization/localConfig";
 import { st } from "@/utils/Styles";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { View, Platform, FlatList, TouchableOpacity } from "react-native";
-import {
-	saveCSVToFileWeb,
-	saveCSVToFileString,
-	saveDealseCSV,
-} from "./ConstantFunctions/saveCSVFile";
-import { Text } from "react-native";
+import { saveDealsCSV, saveDealsCSVWeb } from "./ConstantFunctions/saveCSVFile";
 import StackHeader from "./StackHeader";
-import { useEffect, useState } from "react";
 import { ChartLoaderPNG } from "./Loader";
 
 const Card = ({ title, deals }: any) => {
@@ -123,9 +116,12 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 						color="#ef4444"
 						onPress={() => {
 							if (Platform.OS === "web") {
-								saveCSVToFileWeb(cockpitChartData);
+								saveDealsCSVWeb(
+									cards,
+									`${title}_deals.csv`
+								);
 							} else {
-								saveDealseCSV(
+								saveDealsCSV(
 									cards,
 									`${title}_deals.csv`
 								);
@@ -134,35 +130,39 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 					/>
 				</View>
 			</View>
-			{cards?.length === 0 ? (
-				<View className="items-center justify-center h-3/6 w-full">
-					<Text className="text-md font-medium text-mainCardHeaderText">
-						Data Not Available
-					</Text>
-				</View>
-			) : loading ? (
-				<ChartLoaderPNG />
-			) : (
-				<FlatList
-					showsHorizontalScrollIndicator={false}
-					showsVerticalScrollIndicator={false}
-					data={cards}
-					renderItem={({ item, index }) => (
-						<Card
-							key={index}
-							title={item.title}
-							deals={item}
-						/>
-					)}
-					keyExtractor={(item: any, index) => index.toString()}
-					nestedScrollEnabled={true}
-					scrollEnabled={true}
-					initialNumToRender={10}
-					maxToRenderPerBatch={5}
-					style={{ padding: 8, flex: 1 }}
-					className=" overflow-scroll  p-2"
-				/>
-			)}
+			<View className="flex-1 w-full h-full">
+				{cards?.length === 0 ? (
+					<View className="items-center justify-center h-3/6 w-full">
+						<Text className="text-md font-medium text-mainCardHeaderText">
+							Data Not Available
+						</Text>
+					</View>
+				) : loading ? (
+					<ChartLoaderPNG />
+				) : (
+					<FlatList
+						showsHorizontalScrollIndicator={false}
+						showsVerticalScrollIndicator={false}
+						data={cards}
+						renderItem={({ item, index }) => (
+							<Card
+								key={index}
+								title={item.title}
+								deals={item}
+							/>
+						)}
+						keyExtractor={(item: any, index) =>
+							index.toString()
+						}
+						nestedScrollEnabled={true}
+						scrollEnabled={true}
+						initialNumToRender={10}
+						maxToRenderPerBatch={5}
+						style={{ padding: 8, flex: 1 }}
+						className=" overflow-scroll  p-2"
+					/>
+				)}
+			</View>
 			<TouchableOpacity
 				className={`bg-primary my-2  mx-2 absolute left-0 right-0 bottom-0 py-3 flex justify-center items-center rounded-sm   
 						}`}
@@ -177,24 +177,33 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 };
 
 const DataRow = ({
-	label,
 	value,
 	unit,
+	locale,
 }: {
-	label: string;
+	label?: string;
 	value: any;
 	unit: string;
+	locale?: string;
 }) => (
 	<View className="flex-row w-full">
 		<Text className="text-chartText text-xs font-normal flex-1 text-right">
-			{value ?? "N/A"}
+			{value ? new Intl.NumberFormat(locale).format(value) : "0"}
 		</Text>
 		<Text className="text-chartText text-xs w-12 text-left ml-2">
 			{unit}
 		</Text>
 	</View>
 );
-export const DataDisplay = ({ data, title }: { data: any; title: string }) => {
+export const DataDisplay = ({
+	data,
+	title,
+	locale,
+}: {
+	data: any;
+	title: string;
+	locale?: string;
+}) => {
 	if (!data) return null; // Prevents rendering if data is missing
 
 	return (
@@ -206,19 +215,24 @@ export const DataDisplay = ({ data, title }: { data: any; title: string }) => {
 			</Text>
 			<DataRow
 				label="Price"
-				value={data?.Price}
+				value={Math.trunc(data?.Price)}
 				unit={data?.PriceUnit}
+				locale={locale}
 			/>
-			<DataRow label="Load" value={data?.Load} unit={data?.LoadUnit} />
+			<DataRow
+				label="Load"
+				value={data?.Load}
+				unit={data?.LoadUnit}
+				locale={locale}
+			/>
 			<DataRow
 				label="Value"
 				value={data?.Value}
 				unit={data?.unit || "€/MWh"}
+				locale={locale}
 			/>
 		</View>
 	);
 };
-
-// Reusable Row Component
 
 export default Transactions;

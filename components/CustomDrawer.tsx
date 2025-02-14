@@ -68,13 +68,12 @@ const Submenu = memo(
 		);
 	}
 );
-const CustomDrawer = memo((props: any) => {
+const CustomDrawer = memo(() => {
 	const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
 	const [isPressed, setIsPressed] = useState(false);
 	const dispatch = useDispatch();
 	const pathnames = usePathname();
 	const router = useRouter();
-	const { startLoader } = props;
 	const pathname = usePathname();
 	const toggleSubmenu = (key: string) => {
 		setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
@@ -303,7 +302,6 @@ const CustomDrawer = memo((props: any) => {
 			}
 		}
 	};
-	const rotationAnim = useRef(new Animated.Value(0)).current; // Animation value
 
 	return (
 		<ScrollView
@@ -321,29 +319,29 @@ const CustomDrawer = memo((props: any) => {
 								activeOpacity={0.6}
 								className={`flex-row items-center  p-5   break-words  `}
 								onPress={() =>
-									toggleSubmenu(submenu.key)
+									toggleSubmenu(submenu?.key)
 								}
 							>
-								{submenu.icon}
+								{submenu?.icon}
 								<Text
 									className={`text-lg font-semibold ml-4 text-chartText  flex-1 break-words `}
 									onPress={() =>
-										toggleSubmenu(submenu.key)
+										toggleSubmenu(submenu?.key)
 									}
 								>
-									{i18n.t(submenu.label)}
+									{i18n.t(submenu?.label)}
 								</Text>
 								<Feather
 									className="mr-10"
 									name={
-										activeSubmenu === submenu.key
+										activeSubmenu === submenu?.key
 											? "chevron-up"
 											: "chevron-down"
 									}
 									size={18}
 									color="#9a9b9f"
 									onPress={() =>
-										toggleSubmenu(submenu.key)
+										toggleSubmenu(submenu?.key)
 									}
 								/>
 							</TouchableOpacity>
@@ -366,23 +364,23 @@ const CustomDrawer = memo((props: any) => {
 									}
 								>
 									{React.cloneElement(
-										submenu.icon,
+										submenu?.icon,
 										getTextAndIconStyle(
-											submenu.route
+											submenu?.route
 										)
 									)}
 									<Text
 										className={`text-lg font-semibold ml-4 bg-yellow text-chartText  ${
-											submenu.label ===
+											submenu?.label ===
 											"portfolio"
 												? "uppercase"
 												: "capitalize"
 										}`}
 										style={getTextAndIconStyle(
-											submenu.route
+											submenu?.route
 										)}
 									>
-										{i18n.t(submenu.label)}
+										{i18n.t(submenu?.label)}
 									</Text>
 								</TouchableOpacity>
 							</View>
@@ -392,11 +390,11 @@ const CustomDrawer = memo((props: any) => {
 						{hasItems && (
 							<Submenu
 								isVisible={
-									activeSubmenu === submenu.key
+									activeSubmenu === submenu?.key
 								}
 								height={submenu?.height}
 							>
-								{submenu.items.map(
+								{submenu?.items.map(
 									(item: any, subIndex: any) => (
 										<TouchableOpacity
 											activeOpacity={0.6}
@@ -418,10 +416,12 @@ const CustomDrawer = memo((props: any) => {
 											<Text
 												className="text-lg font-normal text-chartText"
 												style={getTextAndIconStyle(
-													item.route
+													item?.route
 												)}
 											>
-												{i18n.t(item.label)}
+												{i18n.t(
+													item?.label
+												)}
 											</Text>
 										</TouchableOpacity>
 									)

@@ -18,9 +18,9 @@ import { stringChartData } from "@/constants/stringChartData";
 import { st } from "@/utils/Styles";
 
 const LoadDataDetails = () => {
-	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
+	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
 	const [loadDetail, setloadDetails] = useState<any>([]);
-	const { meterid, id } = useLocalSearchParams();
+	const { id } = useLocalSearchParams();
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
@@ -131,6 +131,7 @@ const LoadDataDetails = () => {
 						showValueRange={true}
 						fetchChartData={fetchChartData}
 						yaxisunit={"€/MWh"}
+						isChartLoaded={isChartLoaded}
 						setIsChartLoaded={setIsChartLoaded}
 					/>
 				</View>

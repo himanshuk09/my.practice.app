@@ -22,7 +22,7 @@ import {
 import { i18n } from "@/localization/localConfig";
 import { useLocalSearchParams } from "expo-router";
 import { RootState } from "@/store/store";
-import WebView from "react-native-webview";
+import WebView, { WebViewMessageEvent } from "react-native-webview";
 import { PortFolioChartShimmer } from "@/components/ChartShimmer";
 import {
 	getPortfolioDeals,
@@ -40,13 +40,26 @@ import {
 	saveBase64AsPDFWeb,
 } from "@/components/ConstantFunctions/saveCSVFile";
 import Toast from "react-native-toast-message";
+import {
+	FormattedPortfolioDetails,
+	PortfolioDetailsError,
+	TradeDetailsArray,
+} from "@/types/type";
 
 const PortfolioOverView = () => {
 	const [modalVisible, setModalVisible] = useState(false);
-	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
-	const [portfolioDetails, setPortfolioDetails] = useState<any>([]);
-	const [portfolioDeals, setPortfolioDeals] = useState<any>([]);
-	const [portfolioReport, setPortfolioReport] = useState<string>("");
+	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
+	const [portfolioDetails, setPortfolioDetails] =
+		useState<FormattedPortfolioDetails>({
+			areaChartData: [],
+			donotChartData: [],
+			closedData: [],
+			openData: [],
+			message: "",
+		});
+	const [portfolioDeals, setPortfolioDeals] = useState<TradeDetailsArray>(
+		[]
+	);
 	const { height: screenHeight } = Dimensions.get("window");
 	const locale = useSelector((state: RootState) => state.language.locale);
 	const dispatch = useDispatch();
@@ -54,10 +67,10 @@ const PortfolioOverView = () => {
 	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null);
 	const areaWebViewRef = useRef<WebView | null>(null);
 	const areaIFrameRef = useRef<HTMLIFrameElement | any>(null);
-	const { id }: any = useLocalSearchParams();
+	const { id } = useLocalSearchParams();
 	const paramsID = id ? JSON.parse(decodeURIComponent(id as string)) : {};
 
-	const onMessage = async (event: any) => {
+	const onMessage = async (event: WebViewMessageEvent) => {
 		const message = JSON.parse(event.nativeEvent.data);
 	};
 
@@ -65,7 +78,7 @@ const PortfolioOverView = () => {
 		if (Platform.OS === "web") {
 			const iframe = areaIFrameRef.current;
 			if (iframe && iframe?.contentWindow) {
-				iframe.contentWindow.updateLocale?.(
+				iframe?.contentWindow?.updateLocale?.(
 					locale,
 					`Target ${new Date(paramsID?.PortfolioDate).getFullYear()}`
 				);
@@ -83,7 +96,7 @@ const PortfolioOverView = () => {
 			},
 		});
 	};
-	const calledPortfolioReport = async () => {
+	const exportPortfolioReport = async () => {
 		// Show initial toast indicating download is in progress
 		const toastId = Toast.show({
 			type: "download",
@@ -118,7 +131,7 @@ const PortfolioOverView = () => {
 					`${fileName}_details.pdf`
 				);
 			}
-		} catch (error: any) {
+		} catch (error) {
 			// Hide previous toast if there's an error
 			Toast.hide(toastId);
 
@@ -126,7 +139,10 @@ const PortfolioOverView = () => {
 			Toast.show({
 				type: "error",
 				text1: "Download Failed!",
-				text2: error.message || "Something went wrong.",
+				text2:
+					error instanceof Error
+						? error.message
+						: "Something went wrong.",
 				position: "bottom",
 				bottomOffset: 0,
 				visibilityTime: 3000,
@@ -157,6 +173,7 @@ const PortfolioOverView = () => {
 			try {
 				const responsePortfolioDeals: any =
 					await getPortfolioDeals(paramsID);
+
 				if (portfolioDetails?.message != "no data") {
 					setPortfolioDeals(responsePortfolioDeals);
 				}
@@ -166,10 +183,10 @@ const PortfolioOverView = () => {
 				dispatch(inActiveLoading());
 			}
 		};
-		fetchDeals();
+		if (modalVisible) fetchDeals();
 	}, [modalVisible]);
 	useEffect(() => {
-		if (portfolioDetails) {
+		if (portfolioDetails && isChartLoaded) {
 			if (portfolioDetails?.message === "no data") {
 				updateEmptyChart(donutwebViewRef, donutIFrameRef, "donut");
 				updateEmptyChart(areaWebViewRef, areaIFrameRef);
@@ -201,7 +218,7 @@ const PortfolioOverView = () => {
 				showHideTransition={"slide"}
 				networkActivityIndicatorVisible
 			/>
-			{portfolioDetails.length === 0 ? (
+			{portfolioDetails?.closedData?.length === 0 ? (
 				<View className="flex-1  bg-white">
 					<PortFolioChartShimmer />
 				</View>
@@ -254,6 +271,7 @@ const PortfolioOverView = () => {
 													?.closedData[0]
 											}
 											title={"Closed"}
+											locale={locale}
 										/>
 										<DataDisplay
 											data={
@@ -261,6 +279,7 @@ const PortfolioOverView = () => {
 													?.openData[0]
 											}
 											title={"Open"}
+											locale={locale}
 										/>
 									</View>
 									<View className="mr-10 ml-7 mt-3">
@@ -269,7 +288,7 @@ const PortfolioOverView = () => {
 											size={35}
 											color="#ef4444"
 											onPress={
-												calledPortfolioReport
+												exportPortfolioReport
 											}
 										/>
 									</View>

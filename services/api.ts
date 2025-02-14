@@ -36,8 +36,9 @@ api.interceptors.response.use(
 	async (error) => {
 		if (error.response && error.response.status === 401) {
 			// 401 indicates token is invalid (expired or not matching)
-			console.log("Token expired or unauthorized");
-			console.log("Unauthorized, please log in again");
+			console.log(
+				"Token expired or Unauthorized, please log in again"
+			);
 			await AsyncStorage.removeItem("token"); // Clear token
 			router.replace("/"); // Redirect to login screen
 		} else if (error.response && error.response.status === 403) {
@@ -55,8 +56,7 @@ api.interceptors.response.use(
 	}
 );
 
-export default api;
-export const filterByEnergyType = (data: any[] = []) => {
+export const formateByEnergyType = (data: any[] = []) => {
 	return data.reduce(
 		(acc, item) => {
 			if (item.EnergyType === 1) {
@@ -69,3 +69,5 @@ export const filterByEnergyType = (data: any[] = []) => {
 		{ gas: [] as any[], strom: [] as any[] }
 	);
 };
+
+export default api;

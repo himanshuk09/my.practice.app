@@ -48,7 +48,6 @@ const DateTimePickerComponents = ({
 				setSelectedStartDate((prev: any) =>
 					params?.startDate !== prev ? params?.startDate : prev
 				);
-
 				// Only update end date if it has changed
 				setSelectedEndDate((prev: any) =>
 					params?.endDate !== prev ? params?.endDate : prev

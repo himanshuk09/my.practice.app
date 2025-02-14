@@ -870,11 +870,13 @@ export let WebviewLineHtmlContent = `
             // Bind the button to trigger export
             window.exportChart = exportChart;
 
-            function updateChart(filteredData, updatedOptions) {
-                chart.updateSeries([{ data: filteredData }]);
-                chart.updateOptions(updatedOptions);
+            function updateChart(filteredData, updatedOptions,title="Energy Use1") {
+                chart.updateOptions({
+                    series: [{name: title, data: filteredData }],
+                    ...updatedOptions, 
+                });
                 window.ReactNativeWebView.postMessage(
-                    JSON.stringify({ action: "updateChart" })
+                    JSON.stringify({ action: "updateChart1111",values:[title,filteredData[0]] })
                 );
             }
 
@@ -883,7 +885,7 @@ export let WebviewLineHtmlContent = `
                 window.ReactNativeWebView.postMessage(
                     JSON.stringify({
                         action: "updateChartSeries",
-                        values: title,
+                        values: title ,
                     })
                 );
             }
@@ -1651,7 +1653,7 @@ export let iFrameLineHtmlcontent = `
 				offsetX: 0,
 				offsetY: -50,
 				style: {
-					color: "#e31837",
+                    color: "#898a8c",
 					fontSize: "25px",
 					fontFamily: "Helvetica, Arial, sans-serif",
 				},
@@ -2018,12 +2020,14 @@ export let iFrameLineHtmlcontent = `
 		var chart = new ApexCharts(document.querySelector("#chart"), options);
 		chart.render();
 
-		window.updateChart = function (filteredData, updatedOptions) {
-			chart.updateSeries([{ name: "Energy Use", data: filteredData }]);
-			chart.updateOptions(updatedOptions);
-
-		};
-
+		window.updateChart = function (filteredData, updatedOptions,title="Energy Use1") {
+            chart.updateOptions({
+                series: [{name: title, data: filteredData }],
+                ...updatedOptions, 
+            });
+           
+        }
+        
 		window.updateChartSeries = function (title, filteredData) {
 			chart.updateSeries([{ name: title, data: filteredData }]);
 			sendMessageToReactNative("updateChartSeries")
@@ -3045,8 +3049,7 @@ export const webviewAreaHtmlcontent = `
                 },
                 stroke: {
                     curve: "straight",
-                    width: 1, //['straight', 'smooth', 'monotoneCubic', 'stepline']
-                    // colors: ['#FF4560'],
+                    width: 1, 
                 },
                 markers: {
                     size: 0,
@@ -3075,6 +3078,8 @@ export const webviewAreaHtmlcontent = `
                         show: true,
                         position: "top",
                         textAnchor: "start",
+                        // rotate: -90,
+                        // rotateAlways: true,
                         hideOverlappingLabels: true,
                         showDuplicates: false,
                         trim: false,
@@ -3084,7 +3089,7 @@ export const webviewAreaHtmlcontent = `
                         style: {
                             fontSize: "9px",
                             fontFamily: "Helvetica, Arial, sans-serif",
-                            fontWeight: 600,
+                            fontWeight: 900,
                         },
                     },
                     axisBorder: {

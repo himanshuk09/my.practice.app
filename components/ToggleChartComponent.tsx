@@ -23,9 +23,6 @@ import {
 	updateEmptyChart,
 } from "./Chart/chartUpdateFunctions";
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-type ChartUpdateType = "series" | "options" | "chart";
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
 type ToggleChartComponentProps = {
 	isSignaleScreen?: boolean;
@@ -36,6 +33,7 @@ type ToggleChartComponentProps = {
 	visibleTabs?: any;
 	fetchChartData?: any;
 	yaxisunit?: string;
+	isChartLoaded?: boolean;
 	setIsChartLoaded?: any;
 };
 
@@ -48,6 +46,7 @@ const ToggleChartComponent = ({
 	visibleTabs,
 	fetchChartData,
 	yaxisunit = "€/MWh",
+	isChartLoaded,
 	setIsChartLoaded,
 }: ToggleChartComponentProps) => {
 	const [isLoading, setLoading] = useState(true);
@@ -71,142 +70,65 @@ const ToggleChartComponent = ({
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-	const updateChart = (type: ChartUpdateType, data?: any, options?: any) => {
-		if (Platform.OS === "web") {
-			const iframe = iFrameRef.current;
-			if (iframe && iframe.contentWindow) {
-				switch (type) {
-					case "series":
-						iframe.contentWindow.updateChartSeries?.(
-							title,
-							data
-						);
-						break;
-					case "options":
-						iframe.contentWindow.updateChartOptions?.(data);
-						break;
-					case "chart":
-						iframe.contentWindow.updateChart?.(data, options);
-						break;
-					default:
-						console.error("Invalid chart update type");
-						return;
-				}
-			} else {
-				console.error("Iframe contentWindow is not accessible.");
-			}
-		} else {
-			let jsCommand = "";
-			switch (type) {
-				case "series":
-					jsCommand = `updateChartSeries(${JSON.stringify(
-						title
-					)},${JSON.stringify(data)});`;
-					break;
-				case "options":
-					jsCommand = `updateChartOptions(${JSON.stringify(data)});`;
-					break;
-				case "chart":
-					jsCommand = `updateChart(${JSON.stringify(
-						data
-					)}, ${JSON.stringify(options || {})});`;
-					break;
-				default:
-					console.error("Invalid chart update type");
-					return;
-			}
 
-			(webViewRef.current as any)?.injectJavaScript(jsCommand);
-		}
-	};
 	const updateChartData = (filteredData: any) => {
 		if (filteredData?.length === 0) {
 			updateEmptyChart(webViewRef, iFrameRef);
 		}
+
 		if (isTooltipEnabled) {
-			updateChart("options", {
-				markers: {
-					size: 0,
-				},
+			updateApexChart("options", webViewRef, iFrameRef, {
+				markers: { size: 0 },
 			});
 			setIsTooltipEnabled(false);
 		}
-		if (
-			activeTab === "Year" ||
-			previousTab === "Year" ||
-			activeTab === "Quarter" ||
-			previousTab === "Quarter" ||
-			activeTab === "Year_3" ||
-			previousTab === "Year_3"
-		) {
-			if (isChartZoomed) {
-				webViewRef?.current.injectJavaScript(
-					"window.resetZoom(); true;"
-				);
-				setIschartZoomed(false);
-			}
-			updateChart("options", {
-				chart: {
-					animations: {
-						enabled: false,
-					},
-				},
-				grid: {
-					show: true,
-				},
-			});
-			updateChart("series", filteredData);
 
-			if (
-				iFrameRef?.current &&
-				iFrameRef?.current?.contentWindow &&
-				iFrameRef?.current?.contentWindow?.isChartZoomed()
-			) {
-				iFrameRef?.current?.contentWindow?.resetZoom();
-			}
-		} else {
-			if (isChartZoomed) {
-				webViewRef?.current.injectJavaScript(
-					"window.resetZoom(); true;"
-				);
-				setLoading(true);
-				setIschartZoomed(false);
-			}
-			updateChart("options", {
-				chart: {
-					animations: {
-						enabled: true,
-					},
-				},
-				grid: {
-					show: true,
-				},
-			});
-			updateChart("series", filteredData);
-			if (
-				iFrameRef?.current &&
-				iFrameRef?.current?.contentWindow &&
-				iFrameRef?.current?.contentWindow.isChartZoomed()
-			) {
-				iFrameRef?.current?.contentWindow?.resetZoom();
-			}
+		const isYearlyView =
+			["Year", "Quarter", "Year_3"].includes(activeTab) ||
+			["Year", "Quarter", "Year_3"].includes(previousTab);
+
+		if (isChartZoomed) {
+			webViewRef?.current?.injectJavaScript(
+				"window.resetZoom(); true;"
+			);
+			setIschartZoomed(false);
+			if (!isYearlyView) setLoading(true);
 		}
-		setIsChartEmpty(false);
-	};
-	const updateLocale = () => {
-		let localOption = {
-			xaxis: {
-				title: { text: i18n.t("datetime") },
-			},
+
+		const chartOptions = {
+			chart: { animations: { enabled: !isYearlyView } },
+			grid: { show: true },
 		};
 
+		updateApexChart(
+			"chart",
+			webViewRef,
+			iFrameRef,
+			filteredData,
+			chartOptions,
+			title
+		);
+
+		if (iFrameRef?.current?.contentWindow?.isChartZoomed?.()) {
+			iFrameRef.current.contentWindow.resetZoom();
+		}
+
+		setIsChartEmpty(false);
+	};
+
+	const updateLocale = () => {
 		if (Platform.OS === "web") {
 			const iframe = iFrameRef.current;
 			if (iframe && iframe.contentWindow) {
 				iframe.contentWindow.updateLocale?.(locale);
 				iframe.contentWindow.updateFormate?.(activeTab, locale);
 			}
-			updateChart("options", localOption);
+
+			updateApexChart("options", webViewRef, iFrameRef, {
+				xaxis: {
+					title: { text: i18n.t("datetime") },
+				},
+			});
 		} else {
 			if (webViewRef?.current) {
 				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}','${yaxisunit}');}`;
@@ -233,46 +155,36 @@ const ToggleChartComponent = ({
 			selectedStartDate,
 			selectedEndDate
 		);
-		console.log(
-			"selectedStartDate",
-			dayjs(selectedStartDate).format("YYYY-MM-DD"),
-			"selectedEndDate",
-			dayjs(selectedEndDate).format("YYYY-MM-DD")
-		);
-		fetchDataBYAPI();
-		// if (checkEmptyDataset(rangeFilterData)) {
-		//     setActiveTab("");
-		//     return;
-		// } else {
-		//     if (isChartZoomed) {
-		//         webViewRef?.current.injectJavaScript(
-		//             "window.resetZoom(); true;"
-		//         );
-		//         setIschartZoomed(false);
-		//     }
-		//     updateChart("options", {
-		//         chart: {
-		//             animations: {
-		//                 enabled: false,
-		//             },
-		//         },
-		//         grid: {
-		//             show: true,
-		//         },
-		//     });
-		//     updateChart("series", rangeFilterData);
-		//     updateChart("options", {
-		//         chart: {
-		//             animations: {
-		//                 enabled: false,
-		//             },
-		//         },
-		//         grid: {
-		//             show: true,
-		//         },
-		//     });
-		// }
-		// setActiveTab("");
+		// fetchDataBYAPI();
+		if (rangeFilterData?.length === 0) {
+			updateEmptyChart(webViewRef, iFrameRef);
+			setActiveTab("");
+			return;
+		} else {
+			if (isChartZoomed) {
+				webViewRef?.current.injectJavaScript(
+					"window.resetZoom(); true;"
+				);
+				setIschartZoomed(false);
+			}
+			updateApexChart(
+				"chart",
+				webViewRef,
+				iFrameRef,
+				rangeFilterData,
+				{
+					chart: {
+						animations: {
+							enabled: false,
+						},
+					},
+					grid: {
+						show: true,
+					},
+				}
+			);
+		}
+		setActiveTab("");
 	};
 	const onMessage = async (event: any) => {
 		//for loader
@@ -314,16 +226,8 @@ const ToggleChartComponent = ({
 			try {
 				const data = await fetchChartData(activeTab);
 				updateLocale();
-				updateChartData(data);
-				updateApexChart(
-					"series",
-					webViewRef,
-					iFrameRef,
-					data,
-					undefined,
-					"hello"
-				);
 
+				updateChartData(data);
 				setPreviousTab(activeTab);
 			} catch (error) {
 				console.error("Error fetching data:", error);
@@ -335,7 +239,6 @@ const ToggleChartComponent = ({
 		const executeAfterRender = async () => {
 			if (isFirstRender.current) {
 				setTimeout(() => {
-					// updateChartData(cockpitChartData);
 					fetchData();
 					isFirstRender.current = false;
 				}, 1000);
@@ -344,8 +247,8 @@ const ToggleChartComponent = ({
 				fetchData();
 			}
 		};
-		executeAfterRender();
-	}, [activeTab, fetchChartData, locale]);
+		if (isChartLoaded) executeAfterRender();
+	}, [activeTab, fetchChartData, locale, isChartLoaded]);
 
 	return (
 		<View className="flex-1  bg-white">

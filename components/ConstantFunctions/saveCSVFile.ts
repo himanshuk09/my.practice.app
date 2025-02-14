@@ -297,7 +297,7 @@ const convertDealsToCSV = (data: any) => {
 	);
 };
 
-const saveDealseCSV = async (jsonData: any, fileName = "trades.csv") => {
+const saveDealsCSV = async (jsonData: any, fileName = "trades.csv") => {
 	try {
 		let savedDirectoryUri = await AsyncStorage.getItem(DIRECTORY_URI_KEY);
 
@@ -347,6 +347,25 @@ const saveDealseCSV = async (jsonData: any, fileName = "trades.csv") => {
 		});
 	}
 };
+const saveDealsCSVWeb = async (jsonData: any, fileName = "trades.csv") => {
+	try {
+		const csvContent = convertDealsToCSV(jsonData);
+		const blob = new Blob([csvContent], { type: "text/csv" });
+		// Fallback for older browsers - trigger a download
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = fileName;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+		alert("CSV file saved successfully!");
+	} catch (error) {
+		alert("Failed to save CSV file.");
+		console.error("Error saving CSV:", error);
+	}
+};
 
 export {
 	saveCSVToFileWeb,
@@ -354,5 +373,6 @@ export {
 	saveCSVToFileString,
 	shareBase64AsPDF,
 	saveBase64AsPDFWeb,
-	saveDealseCSV,
+	saveDealsCSV,
+	saveDealsCSVWeb,
 };

@@ -1,14 +1,17 @@
-import api from "./api";
+import api, { formateByEnergyType } from "./api";
 
 const getPortfolioList = async () => {
 	try {
 		const response = await api.get("/api/portfolio/GetPortfolioList");
-		return response?.data;
+		return formateByEnergyType(response.data);
 	} catch (error) {
-		console.log("Error while Fetching PortfolioList", error);
+		console.log(
+			"Error while Fetching PortfolioList",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
 	}
 };
-const filterPortfolioDetails = (response: any) => {
+const formatePortfolioDetails = (response: any) => {
 	// Extract response lists safely
 	const { ResponseMonthlyList, ResponseOpenCloseList } = response;
 
@@ -104,26 +107,31 @@ const getPortfolioDetails = async (payload: any) => {
 				],
 			};
 		}
-		const filteredPortfolioDetails = filterPortfolioDetails(
+		const filteredPortfolioDetails = formatePortfolioDetails(
 			response.data
 		);
 		return filteredPortfolioDetails;
 	} catch (error) {
-		console.log("Error while Fetching PortfolioDetails", error);
+		console.log(
+			"Error while Fetching PortfolioDetails",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
 	}
 };
 const getPortfolioDeals = async (payload: any) => {
 	try {
-		const response = await api.post(
+		const response: any = await api.post(
 			"/api/portfolio/GetPortfolioDealsDetailsByPortfolioId",
 			{ ...payload }
 		);
 		return response.data;
 	} catch (error) {
-		console.log("Error while Fetching PortfolioDeals", error);
+		console.log(
+			"Error while Fetching PortfolioDeals",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
 	}
 };
-
 const getPortfolioReportBase64PDF = async (payload: any) => {
 	try {
 		const response = await api.post(
@@ -133,7 +141,10 @@ const getPortfolioReportBase64PDF = async (payload: any) => {
 
 		return response.data;
 	} catch (error) {
-		console.log("Error while Fetching PortfolioReport", error);
+		console.log(
+			"Error while Fetching PortfolioReport",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
 	}
 };
 export {
