@@ -1822,13 +1822,13 @@ export let iFrameLineHtmlcontent = `
 					},
 				},
 				axisBorder: {
-					show: true,
+					show: false,
 					color: "#78909C",
 					offsetX: 0,
 					offsetY: 0,
 				},
 				axisTicks: {
-					show: true,
+					show: false,
 					borderType: "solid",
 					color: "#78909C",
 					width: 6,
@@ -1940,14 +1940,13 @@ export let iFrameLineHtmlcontent = `
 							type: 'datetime',
 							labels: {
 								show: true,
-								// rotate: -45,
-								// rotateAlways: true,
-								// position: "top",
-								// textAnchor: "end",
-								hideOverlappingLabels: true,
+								textAnchor: "start",
+								hideOverlappingLabels: false,
 								showDuplicates: false,
 								trim: false,
 								maxHeight: 120,
+								offsetX: 5,
+								tickAmount:5,
 								style: {
 									fontSize: "8px",
 									fontFamily: "Helvetica, Arial, sans-serif",
@@ -1963,56 +1962,56 @@ export let iFrameLineHtmlcontent = `
 								},
 							},
 						},
-						yaxis: {
-							title: {
-								text: "kWh",
-							},
-							labels: {
-								show: true,
-								minWidth: 0,
-								maxWidth: 160,
-								style: {
-									fontSize: "8px",
-									fontFamily: "Helvetica, Arial, sans-serif",
-									fontWeight: 400,
-								},
-								offsetX: 0,
-								offsetY: 0,
-								formatter: (val) => {
-									return val.toLocaleString("en-IN");
-								},
-							},
-						},
-						grid: {
-							show: true,
-							borderColor: "#ccc",
-							strokeDashArray: 0,
-							position: "back",
-							row: {
-								colors: ["#e5e5e5", "transparent"],
-								opacity: 0.2,
-							},
-							column: {
-								colors: ["#f8f8f8", "transparent"],
-								opacity: 0.2,
-							},
-							xaxis: {
-								lines: {
-									show: true,
-								},
-							},
-							yaxis: {
-								lines: {
-									show: true,
-								},
-							},
-							padding: {
-								top: -25,
-								right: 15,
-								bottom: 0,
-								left: 10,
-							},
-						},
+						// yaxis: {
+						// 	title: {
+						// 		text: "kWh",
+						// 	},
+						// 	labels: {
+						// 		show: true,
+						// 		minWidth: 0,
+						// 		maxWidth: 160,
+						// 		style: {
+						// 			fontSize: "8px",
+						// 			fontFamily: "Helvetica, Arial, sans-serif",
+						// 			fontWeight: 400,
+						// 		},
+						// 		offsetX: 0,
+						// 		offsetY: 0,
+						// 		formatter: (val) => {
+						// 			return val.toLocaleString("en-IN");
+						// 		},
+						// 	},
+						// },
+						// grid: {
+						// 	show: true,
+						// 	borderColor: "#ccc",
+						// 	strokeDashArray: 0,
+						// 	position: "back",
+						// 	row: {
+						// 		colors: ["#e5e5e5", "transparent"],
+						// 		opacity: 0.2,
+						// 	},
+						// 	column: {
+						// 		colors: ["#f8f8f8", "transparent"],
+						// 		opacity: 0.2,
+						// 	},
+						// 	xaxis: {
+						// 		lines: {
+						// 			show: true,
+						// 		},
+						// 	},
+						// 	yaxis: {
+						// 		lines: {
+						// 			show: true,
+						// 		},
+						// 	},
+						// 	padding: {
+						// 		top: -25,
+						// 		right: 15,
+						// 		bottom: 0,
+						// 		left: 10,
+						// 	},
+						// },
 					},
 				},
 			]
@@ -2093,13 +2092,13 @@ export let iFrameLineHtmlcontent = `
 						}
 					},
 					axisBorder: {
-						show: true,
+						show: false,
 						color: "#78909C",
 						offsetX: 0,
 						offsetY: 0,
 					},
 					axisTicks: {
-						show: true,
+						show: false,
 						borderType: "solid",
 						color: "#78909C",
 						width: 6,
