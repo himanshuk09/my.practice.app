@@ -13,7 +13,7 @@ import { st } from "@/utils/Styles";
 import {
 	saveCSVToFileWeb,
 	saveCSVToFileString,
-} from "@/components/ConstantFunctions/saveCSVFile";
+} from "@/components/fileDownloaders/saveCSVFile";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { ChartShimmer } from "@/components/ChartShimmer";
 import { stringChartData } from "@/constants/stringChartData";

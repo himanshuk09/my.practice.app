@@ -9,6 +9,7 @@ import {
 import * as Sharing from "expo-sharing";
 import {
 	AntDesign,
+	EvilIcons,
 	FontAwesome6,
 	Fontisto,
 	MaterialIcons,
@@ -16,6 +17,37 @@ import {
 import * as IntentLauncher from "expo-intent-launcher";
 import * as FileSystem from "expo-file-system";
 import Toast from "react-native-toast-message";
+import { Animated, Easing } from "react-native";
+import { useEffect, useRef } from "react";
+
+const AnimatedSpinner = () => {
+	const spinValue = useRef(new Animated.Value(0)).current;
+
+	useEffect(() => {
+		const spinAnimation = Animated.loop(
+			Animated.timing(spinValue, {
+				toValue: 1,
+				duration: 1000, // 1 second per full rotation
+				easing: Easing.linear,
+				useNativeDriver: true, // Ensures smooth performance
+			})
+		);
+		spinAnimation.start();
+		return () => spinAnimation.stop();
+	}, []);
+
+	const spin = spinValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"], // Rotates 360 degrees
+	});
+
+	return (
+		<Animated.View style={{ transform: [{ rotate: spin }] }}>
+			{/* <EvilIcons name="spinner-2" size={24} color="black" /> */}
+			<AntDesign name="loading1" size={20} color="white" />
+		</Animated.View>
+	);
+};
 
 const openCSVFile = async (fileUri: string) => {
 	try {
@@ -53,7 +85,7 @@ const openPNGFile = async (fileUri: string) => {
 		}
 	} catch (error) {
 		Toast.show({
-			type: "download",
+			type: "error",
 			text1: "Cannot Open File",
 			text2: "Install a file viewer app (e.g., Google Files) to open PNGs.",
 			position: "bottom",
@@ -62,11 +94,10 @@ const openPNGFile = async (fileUri: string) => {
 		});
 	}
 };
-
-async function shareFile(fileName: string, fileUri: string) {
+const shareFile = async (fileName: string, fileUri: string) => {
 	if (!(await Sharing.isAvailableAsync())) {
 		Toast.show({
-			type: "download",
+			type: "error",
 			text1: "Sharing isn't available on your platform",
 			position: "bottom",
 			bottomOffset: 0,
@@ -89,14 +120,14 @@ async function shareFile(fileName: string, fileUri: string) {
 		await Sharing.shareAsync(destUri);
 	} catch (error: any) {
 		Toast.show({
-			type: "download",
+			type: "error",
 			text1: "Unabled to shared",
 			position: "bottom",
 			bottomOffset: 0,
 			visibilityTime: 3000,
 		});
 	}
-}
+};
 const sharePNGFile = async (fileName: string) => {
 	try {
 		const cleanName = fileName.startsWith("file://")
@@ -125,19 +156,13 @@ const toastConfig: any = {
 		</View>
 	),
 	error: ({ text1, text2, ...rest }: any) => (
-		<View className="flex-row justify-start items-start py-3 px-5 w-full bg-red-100 rounded-sm">
-			<AntDesign
-				name="closecircleo"
-				size={24}
-				color="#ef4444"
-				className="mr-2"
-			/>
+		<View className="flex-row justify-start items-start py-3 px-5 w-full bg-[#5D5D5D] rounded-sm">
 			<View>
-				<Text className="text-lg justify-start items-center font-semibold text-red-500">
+				<Text className="text-lg justify-start items-center font-semibold text-white">
 					{text1}
 				</Text>
 				{text2 ? (
-					<Text className="text-sm text-red-700">{text2}</Text>
+					<Text className="text-sm text-white">{text2}</Text>
 				) : null}
 			</View>
 		</View>
@@ -162,13 +187,23 @@ const toastConfig: any = {
 	),
 	download: ({ text1, text2, props }: any) => (
 		<View className="flex-row justify-between items-start py-3 px-5 w-full  bg-[#5D5D5D] rounded-sm">
-			<View className="mx-3">
-				<Text className="text-md justify-start items-center font-semibold text-white">
-					{text1}
-				</Text>
-				{text2 ? (
-					<Text className="text-sm text-white">{text2}</Text>
-				) : null}
+			<View className="mx-3 flex justify-between flex-row ">
+				<View
+					className={`${props?.spinner && Platform.OS !== "web" ? "w-[90%]" : ""}`}
+				>
+					<Text className="text-md justify-start items-center font-semibold text-white">
+						{text1}
+					</Text>
+					{text2 ? (
+						<Text className="text-sm text-white">
+							{text2}
+						</Text>
+					) : null}
+				</View>
+
+				{props?.spinner && Platform.OS !== "web" && (
+					<AnimatedSpinner />
+				)}
 			</View>
 			<View className="mx-3 flex-row gap-3">
 				{props?.fileUri && (

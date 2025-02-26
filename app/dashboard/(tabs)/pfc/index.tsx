@@ -13,6 +13,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { getPFCList } from "@/services/pfc.services";
 import { PriceForwardCurveArray } from "@/types/type";
 import { AppDispatch } from "@/store/store";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 interface CombinedData {
 	type: "header";
 	title: string;
@@ -26,6 +27,7 @@ const PFC = () => {
 	);
 	const dispatch = useDispatch<AppDispatch>();
 	const isFocused = useIsFocused();
+	const isOnline = useNetworkStatus();
 	let NavigateTo = "dashboard/pfc";
 	const combinedData: CombinedData[] = [
 		{ type: "header", title: "Gas", data: pfcGasList },
@@ -58,16 +60,20 @@ const PFC = () => {
 	}, [isFocused]);
 	useEffect(() => {
 		const fetchPFCLIst = async () => {
-			try {
-				let responsePFCList = await getPFCList();
-				setPFCGasList(responsePFCList?.gas);
-				setPFCStromList(responsePFCList?.strom);
-			} catch (error) {
-				console.log("Error fetching PFC list:", error);
+			if (!isOnline) {
+				return;
+			} else {
+				try {
+					let responsePFCList = await getPFCList();
+					setPFCGasList(responsePFCList?.gas);
+					setPFCStromList(responsePFCList?.strom);
+				} catch (error) {
+					console.log("Error fetching PFC list:", error);
+				}
 			}
 		};
 		fetchPFCLIst();
-	}, []);
+	}, [isOnline]);
 	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar

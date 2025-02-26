@@ -46,7 +46,7 @@ const FlatListBlock = ({
 				dispatch(activeLoading());
 
 				setTimeout(() => {
-					router.push(`${NavigateTo}/${item.id}` as Href);
+					router.push(`${NavigateTo}/${item?.id}` as Href);
 				});
 			}}
 		>

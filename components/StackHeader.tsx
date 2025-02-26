@@ -14,10 +14,12 @@ const StackHeader = ({ title, closed = false, setModalVisible }: any) => {
 						setModalVisible(false);
 						return;
 					}
-					router.back();
+
 					if (Platform.OS === "web") {
 						window.history.back();
+						return;
 					}
+					router.back();
 				}}
 				className="w-7 ml-3"
 			>

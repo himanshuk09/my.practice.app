@@ -7,14 +7,18 @@ import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getLoadDataList } from "@/services/loaddata.service";
 import { MeterArray } from "@/types/type";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
+
 interface DataItem {
 	id: string;
 	data: MeterArray;
 	title: string;
 }
+
 const LoadData = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
+	const isOnline = useNetworkStatus();
 	const mainFlatListRef = useRef<FlatList<DataItem>>(null);
 	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 	const [loadDataGasList, setLoadDataGasList] = useState<MeterArray>([]);
@@ -56,12 +60,25 @@ const LoadData = () => {
 
 	useEffect(() => {
 		const fetchLoadDataList = async () => {
-			const resLoadDataList = await getLoadDataList();
-			setLoadDataGasList(resLoadDataList?.gas || []);
-			setLoadDataSromList(resLoadDataList?.strom || []);
+			if (!isOnline) {
+				console.log("offline");
+
+				return;
+			} else {
+				try {
+					console.log("inside on offline");
+					const resLoadDataList = await getLoadDataList();
+					setLoadDataGasList(resLoadDataList?.gas || []);
+					setLoadDataSromList(resLoadDataList?.strom || []);
+				} catch (error: any) {
+					console.log("Error fetching data:", error.message);
+				}
+			}
 		};
 		fetchLoadDataList();
-	}, []);
+	}, [isOnline]);
+	console.log("isOnline", isOnline);
+
 	useLayoutEffect(() => {
 		dispatch(inActiveLoading());
 	}, [isFocused]);

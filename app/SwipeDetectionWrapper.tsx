@@ -5,78 +5,78 @@ import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import { usePathname } from "expo-router";
 import { RootState } from "@/store/store";
 type SwipeDetectionWrapperProps = {
-    children: React.ReactNode;
+	children: React.ReactNode;
 };
 const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
-    children,
+	children,
 }) => {
-    const dispatch = useDispatch();
-    const pathname = usePathname();
-    const isLoginRoute =
-        pathname === "/login" || pathname === "/login/forgotpassword";
-    let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
-    const isDrawerOpen = useSelector(
-        (state: RootState) => state.drawer.isDrawerOpen
-    );
+	const dispatch = useDispatch();
+	const pathname = usePathname();
+	const isLoginRoute =
+		pathname === "/login" || pathname === "/login/forgotpassword";
+	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+	const isDrawerOpen = useSelector(
+		(state: RootState) => state.drawer.isDrawerOpen
+	);
 
-    const debounceAction = (action: () => void) => {
-        if (debounceTimeout) {
-            clearTimeout(debounceTimeout);
-        }
-        debounceTimeout = setTimeout(action, 300);
-    };
-    const debounceToggleDrawer = () => {
-        debounceAction(() => {
-            console.log("Left swipe detected!");
-            dispatch(toggleDrawer());
-        });
-    };
-    const debounceCloseDrawer = () => {
-        debounceAction(() => {
-            console.log("Right to left swipe detected, closing drawer!");
-            dispatch(closeDrawer());
-        });
-    };
+	const debounceAction = (action: () => void) => {
+		if (debounceTimeout) {
+			clearTimeout(debounceTimeout);
+		}
+		debounceTimeout = setTimeout(action, 300);
+	};
+	const debounceToggleDrawer = () => {
+		debounceAction(() => {
+			console.log("Left swipe detected!");
+			dispatch(toggleDrawer());
+		});
+	};
+	const debounceCloseDrawer = () => {
+		debounceAction(() => {
+			console.log("Right to left swipe detected, closing drawer!");
+			dispatch(closeDrawer());
+		});
+	};
 
-    const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: () => true, // Let the responder handle the touch event
-        onMoveShouldSetPanResponder: () => true, // Allow movement during gesture
-        onPanResponderMove: (e, gestureState) => {
-            // Detect swipe gesture from the left side to open the drawer
-            if (
-                gestureState.moveX < 50 &&
-                gestureState.dx > 20 &&
-                !isDrawerOpen
-            ) {
-                debounceToggleDrawer();
-            }
-            // Detect swipe gesture from the right side to close the drawer
-            if (gestureState.dx < -20 && isDrawerOpen) {
-                debounceCloseDrawer();
-            }
-        },
-        onPanResponderRelease: () => true,
-    });
-    return (
-        <View
-            style={styles.container}
-            {...(!isLoginRoute ? panResponder.panHandlers : {})}
-            className="font-sans"
-        >
-            {children}
-        </View>
-    );
+	const panResponder = PanResponder.create({
+		onStartShouldSetPanResponder: () => true, // Let the responder handle the touch event
+		onMoveShouldSetPanResponder: () => true, // Allow movement during gesture
+		onPanResponderMove: (e, gestureState) => {
+			// Detect swipe gesture from the left side to open the drawer
+			if (
+				gestureState.moveX < 50 &&
+				gestureState.dx > 20 &&
+				!isDrawerOpen
+			) {
+				debounceToggleDrawer();
+			}
+			// Detect swipe gesture from the right side to close the drawer
+			if (gestureState.dx < -20 && isDrawerOpen) {
+				debounceCloseDrawer();
+			}
+		},
+		onPanResponderRelease: () => true,
+	});
+	return (
+		<View
+			style={styles.container}
+			{...(!isLoginRoute ? panResponder.panHandlers : {})}
+			className="font-sans"
+		>
+			{children}
+		</View>
+	);
 };
 
 const styles = StyleSheet.create({
-    container: {
-        ...StyleSheet.absoluteFillObject, // Cover the entire screen
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "transparent", // Make it invisible
-    },
+	container: {
+		...StyleSheet.absoluteFillObject, // Cover the entire screen
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		backgroundColor: "transparent", // Make it invisible
+	},
 });
 
 export default SwipeDetectionWrapper;

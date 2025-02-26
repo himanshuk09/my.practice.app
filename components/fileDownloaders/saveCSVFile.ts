@@ -202,6 +202,7 @@ const shareBase64AsPDF = async (base64: string, fileName = "document.pdf") => {
 		await FileSystem.writeAsStringAsync(fileUri, base64, {
 			encoding: FileSystem.EncodingType.Base64,
 		});
+		console.log(fileUri, fileName);
 
 		// Show success toast
 		Toast.show({
@@ -227,69 +228,69 @@ const shareBase64AsPDF = async (base64: string, fileName = "document.pdf") => {
 };
 const saveBase64AsPDFWeb = (base64: string, fileName = "document.pdf") => {
 	try {
-		if (base64 === "") {
-			return;
-		}
-		// Convert Base64 to a Blob
+		if (!base64) return;
+
+		// Convert Base64 to a byte array
 		const byteCharacters = atob(base64);
 		const byteNumbers = new Uint8Array(byteCharacters.length);
 		for (let i = 0; i < byteCharacters.length; i++) {
 			byteNumbers[i] = byteCharacters.charCodeAt(i);
 		}
+
+		// Create a Blob object
 		const pdfBlob = new Blob([byteNumbers], { type: "application/pdf" });
+
+		// Create a URL for the Blob
+		const blobUrl = URL.createObjectURL(pdfBlob);
+
+		// Open the file in a new tab (ensures the browser downloads it)
+		window.open(blobUrl, "_blank");
 
 		// Create a download link
 		const link = document.createElement("a");
-		link.href = URL.createObjectURL(pdfBlob);
+		link.href = blobUrl;
 		link.download = fileName;
 
-		// Trigger the download
+		// Append link to body, trigger download, then clean up
 		document.body.appendChild(link);
 		link.click();
-
-		// Cleanup
 		document.body.removeChild(link);
-		URL.revokeObjectURL(link.href);
+
+		// Release object URL after a short delay
+		setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
 	} catch (error) {
 		console.error("Error saving PDF:", error);
 	}
 };
-
 const convertDealsToCSV = (data: any) => {
 	const headers = [
-		"PortfolioId",
-		"ProductName",
-		"Direction",
-		"Amount",
-		"Price",
-		"Trader",
 		"Date",
-		"State",
-		"DerivativesMarket",
-		"IsPercentage",
-		"CounterParty",
-		"Release",
-		"EuroPerMW",
 		"Time",
-		"ShortCounterPartyName",
+		"Derivatives Market",
+		"Product / Period",
+		"Trade Direction",
+		"MW",
+		"%",
+		"EUR/MWh",
+		"CounterParty",
+		"Trader",
+		"Release",
+		"Status",
 	];
 
 	const rows = data.map((item: any) => [
-		item.PortfolioId,
-		item.ProductName,
-		item.Direction ? "Buy" : "Sell",
-		item.Amount,
-		item.Price,
-		item.Trader,
-		item.Date,
-		item.State ? "Confirmed" : "Pending",
-		item.DerivativesMarket,
-		item.IsPercentage,
-		item.CounterParty,
-		item.Release,
-		item.EuroPerMW,
-		item.Time,
-		item.ShortCounterPartyName,
+		item.Date, // Date
+		item.Time, // Time
+		item.DerivativesMarket, // Derivatives Market
+		item.ProductName, // Product / Period
+		item.Direction ? "Buy" : "Sell", // Trade Direction
+		item.Amount, // MW
+		item.IsPercentage ? "%" : "", // Percentage
+		item.EuroPerMW, // EUR/MWh
+		item.CounterParty, // CounterParty
+		item.Trader, // Trader
+		item.Release, // Release
+		item.State ? "Confirmed" : "Pending", // Status
 	]);
 
 	return [headers.join(","), ...rows.map((row: any) => row.join(","))].join(
@@ -347,22 +348,31 @@ const saveDealsCSV = async (jsonData: any, fileName = "trades.csv") => {
 		});
 	}
 };
+
 const saveDealsCSVWeb = async (jsonData: any, fileName = "trades.csv") => {
 	try {
 		const csvContent = convertDealsToCSV(jsonData);
 		const blob = new Blob([csvContent], { type: "text/csv" });
-		// Fallback for older browsers - trigger a download
+
+		// Create a URL for the Blob
 		const url = URL.createObjectURL(blob);
+
+		// Open in a new tab (forces browser to recognize download)
+		window.open(url, "_blank");
+
+		// Create an anchor element for downloading
 		const a = document.createElement("a");
 		a.href = url;
 		a.download = fileName;
+
+		// Append, trigger download, and clean up
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
-		URL.revokeObjectURL(url);
-		alert("CSV file saved successfully!");
+
+		// Delay revoking the URL to ensure file download is registered
+		setTimeout(() => URL.revokeObjectURL(url), 1000);
 	} catch (error) {
-		alert("Failed to save CSV file.");
 		console.error("Error saving CSV:", error);
 	}
 };

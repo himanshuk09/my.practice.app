@@ -310,7 +310,7 @@ const CustomDrawer = memo(() => {
 		>
 			{submenus.map((submenu: any, index) => {
 				// Check if there are items in the submenu
-				const hasItems = submenu.items.length > 0;
+				const hasItems = submenu.items?.length > 0;
 				return (
 					<View key={index}>
 						{/* Render simple View if no submenu items */}

@@ -1,6 +1,30 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
+
+export const checkInternetConnection = async (): Promise<boolean> => {
+	try {
+		const netInfo = await NetInfo.fetch();
+		if (!netInfo.isConnected) {
+			console.log("No internet connection. Skipping API call.");
+			Toast.show({
+				type: "download",
+				text1: "No Internet Connection",
+				text2: "Waiting for reconnection...",
+				autoHide: false, // Keep the toast visible until reconnection
+				position: "bottom",
+				bottomOffset: 0,
+			});
+			return false;
+		}
+		return true;
+	} catch (error) {
+		console.log("Error checking internet connection:", error);
+		return false;
+	}
+};
 const api = axios.create({
 	baseURL: process.env.EXPO_PUBLIC_BASE_URL,
 	headers: {
@@ -13,8 +37,10 @@ const api = axios.create({
 	],
 });
 
+// Queue for storing API requests
 api.interceptors.request.use(
-	async (config) => {
+	async (config: any) => {
+		if (!(await checkInternetConnection)) return;
 		let token = await AsyncStorage.getItem("token");
 		let UserId = await AsyncStorage.getItem("UserId");
 		let ApkVersion = await AsyncStorage.getItem("ApkVersion");
@@ -55,7 +81,12 @@ api.interceptors.response.use(
 		return Promise.reject(error); // Pass error to the calling code
 	}
 );
-
+// Listen for internet reconnection and retry failed requests
+NetInfo.addEventListener((state) => {
+	if (state.isConnected) {
+		// console.log("Internet reconnected. event");
+	}
+});
 export const formateByEnergyType = (data: any[] = []) => {
 	return data.reduce(
 		(acc, item) => {

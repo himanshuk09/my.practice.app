@@ -8,12 +8,14 @@ import { updateLocale } from "@/store/languageSlice";
 import { closeDrawer } from "@/store/drawerSlice";
 import { activeLoading } from "@/store/navigationSlice";
 import { RootState } from "@/store/store";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 type NavigationWatcherProps = {
 	children: React.ReactNode;
 };
 
 const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
+	const isOnline = useNetworkStatus();
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const history = useSelector(
@@ -23,7 +25,11 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 	const [shouldExitApp, setShouldExitApp] = useState(false);
 	const currentPath = "/" + segments.join("/");
 	const store = useStore();
-
+	// Handle network disconnection case
+	useEffect(() => {
+		if (!isOnline) {
+		}
+	}, [isOnline]);
 	// Fetch user login status and initialize app
 	const fetchUserLoginStatus = async () => {
 		try {
@@ -111,6 +117,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 		};
 
 		fetchUserLoginStatus();
+		// checkInternetConnection();
 		const backHandler = BackHandler.addEventListener(
 			"hardwareBackPress",
 			backAction

@@ -112,13 +112,13 @@ const PricesSettings = () => {
 		selectedPlace === "HUPX" ? ["Power"] : energyTypes;
 
 	useEffect(() => {
-		if (filteredEnergyTypes.length === 1) {
+		if (filteredEnergyTypes?.length === 1) {
 			setSelectedEnergyType(filteredEnergyTypes[0]);
 		}
 	}, [filteredEnergyTypes]);
 
 	useEffect(() => {
-		if (filteredProductTypes.length === 1) {
+		if (filteredProductTypes?.length === 1) {
 			setSelectedProductType(filteredProductTypes[0]);
 		}
 	}, [filteredProductTypes]);

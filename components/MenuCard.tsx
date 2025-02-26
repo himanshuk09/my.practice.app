@@ -7,7 +7,7 @@ import PFC from "@/components/SVG/PFC";
 import Load from "@/components/SVG/Load";
 import Settings from "@/components/SVG/Settings";
 import { i18n } from "@/localization/localConfig";
-import { Href, router } from "expo-router";
+import { router } from "expo-router";
 import Signals from "./SVG/Signals";
 import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
@@ -18,7 +18,7 @@ interface MenuCardProps {
 		title: string;
 		icon: string;
 		notificationCount: number;
-		route: Href;
+		route: any;
 	};
 	index: number;
 }

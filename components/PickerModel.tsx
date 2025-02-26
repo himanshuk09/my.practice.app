@@ -182,22 +182,6 @@ const PickerModel = ({
 											/>
 										</Pressable>
 									</View>
-									{/* <View className="flex-1 ml-2">
-										<Text className="text-gray-400 mb-1">
-											{" "}
-											{""}
-										</Text>
-										<Pressable className=" bg-disableCard  px-2 py-3 flex-row justify-between">
-											<Text className="text-[#616161]">
-												00:00
-											</Text>
-											<Ionicons
-												name="alarm-outline"
-												size={20}
-												color="#696969"
-											/>
-										</Pressable>
-									</View> */}
 								</View>
 
 								<View className="flex-row justify-between items-center m-5">
@@ -245,22 +229,6 @@ const PickerModel = ({
 											/>
 										</Pressable>
 									</View>
-									{/* <View className="flex-1 ml-2 ">
-										<Text className="text-gray-400 mb-1">
-											{" "}
-											{""}
-										</Text>
-										<Pressable className="bg-disableCard  px-2 py-3 flex-row justify-between">
-											<Text className="text-[#616161]">
-												00:00
-											</Text>
-											<Ionicons
-												name="alarm-outline"
-												size={20}
-												color="#696969"
-											/>
-										</Pressable>
-									</View> */}
 								</View>
 							</>
 						) : (

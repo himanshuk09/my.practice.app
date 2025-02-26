@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Href, Redirect, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "@/store/authSlice";
 import { i18n } from "@/localization/localConfig";
 import Logo from "@/components/SVG/Logo";
@@ -20,9 +20,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginUser } from "@/services/auth.services";
-import { RootState } from "@/store/store";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const SignIn: React.FC = () => {
+	const isOnline = useNetworkStatus();
 	const [userName, setUserName] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [hidePassword, setHidePassword] = useState<boolean>(true);
@@ -62,7 +63,10 @@ const SignIn: React.FC = () => {
 		try {
 			Keyboard.dismiss();
 			dispatch(activeLoading());
-
+			if (!isOnline) {
+				setErrorMessage("No_Internet_Connection");
+				return;
+			}
 			const payload = {
 				username: userName,
 				password: password,
@@ -81,7 +85,7 @@ const SignIn: React.FC = () => {
 						bottomOffset: 25,
 						visibilityTime: 2000,
 					});
-				}, 2000);
+				}, 1000);
 			} else {
 				setErrorMessage("Login failed. Please try again.");
 				Toast.show({

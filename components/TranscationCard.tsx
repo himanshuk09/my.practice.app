@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
-import { View, Platform, FlatList, TouchableOpacity, Text } from "react-native";
+import {
+	View,
+	Platform,
+	FlatList,
+	TouchableOpacity,
+	Text,
+	StyleSheet,
+} from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { i18n } from "@/localization/localConfig";
 import { st } from "@/utils/Styles";
-import { saveDealsCSV, saveDealsCSVWeb } from "./ConstantFunctions/saveCSVFile";
+import { saveDealsCSV, saveDealsCSVWeb } from "./fileDownloaders/saveCSVFile";
 import StackHeader from "./StackHeader";
 import { ChartLoaderPNG } from "./Loader";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const Card = ({ title, deals }: any) => {
 	return (
@@ -86,14 +94,14 @@ const Card = ({ title, deals }: any) => {
 };
 const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 	const [loading, setLoadig] = useState<any>(true);
-
+	const isOnline = useNetworkStatus();
 	useEffect(() => {
 		setTimeout(() => {
 			setLoadig(false);
 		}, 1000);
 	}, []);
 	return (
-		<View className="flex-1 bg-white ">
+		<View className="flex-1 bg-white " style={StyleSheet.absoluteFill}>
 			<StackHeader
 				title={"portfolio_overview"}
 				closed={true}
@@ -115,6 +123,8 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 						size={30}
 						color="#ef4444"
 						onPress={() => {
+							setModalVisible(!modalVisible);
+							if (!isOnline) return;
 							if (Platform.OS === "web") {
 								saveDealsCSVWeb(
 									cards,
@@ -130,9 +140,19 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 					/>
 				</View>
 			</View>
-			<View className="flex-1 w-full h-full">
+			<View
+				className="flex-1  h-full   w-full"
+				style={{
+					height: "90%",
+				}}
+			>
 				{cards?.length === 0 ? (
-					<View className="items-center justify-center h-3/6 w-full">
+					<View
+						className="items-center justify-center"
+						style={{
+							height: "90%",
+						}}
+					>
 						<Text className="text-md font-medium text-mainCardHeaderText">
 							Data Not Available
 						</Text>
@@ -157,21 +177,21 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 						nestedScrollEnabled={true}
 						scrollEnabled={true}
 						initialNumToRender={10}
-						maxToRenderPerBatch={5}
-						style={{ padding: 8, flex: 1 }}
-						className=" overflow-scroll  p-2"
+						maxToRenderPerBatch={1}
+						style={{ padding: 8, flex: 1, marginBottom: 7 }}
+						className=" overflow-scroll  p-2 "
 					/>
 				)}
+				<TouchableOpacity
+					className={`bg-primary my-1 mx-2  py-3 flex justify-center items-center rounded-sm   
+						${loading && "absolute bottom-0 left-0 right-0 "}}`}
+					onPress={() => setModalVisible(!modalVisible)}
+				>
+					<Text className="text-white text-center text-base font-medium uppercase">
+						{i18n.t("View_Portfolio")}
+					</Text>
+				</TouchableOpacity>
 			</View>
-			<TouchableOpacity
-				className={`bg-primary my-2  mx-2 absolute left-0 right-0 bottom-0 py-3 flex justify-center items-center rounded-sm   
-						}`}
-				onPress={() => setModalVisible(!modalVisible)}
-			>
-				<Text className="text-white text-center text-base font-medium uppercase">
-					{i18n.t("View_Portfolio")}
-				</Text>
-			</TouchableOpacity>
 		</View>
 	);
 };

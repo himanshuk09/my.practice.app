@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import RootLayout from "./RootLayout";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
@@ -11,9 +11,8 @@ import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
 import toastConfig from "@/components/ToastConfig";
 import Toast from "react-native-toast-message";
 import { Platform } from "react-native";
-import { Href, usePathname, useRouter, useSegments } from "expo-router";
+import { Href, usePathname, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Portal } from "react-native-paper";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,7 +22,6 @@ SplashScreen.setOptions({
 });
 
 const Layout = () => {
-	const segment = useSegments();
 	const router = useRouter();
 	const pathname = usePathname();
 

@@ -2411,260 +2411,218 @@ export const iFreameDonutChartHtml = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-	<style>
-		#donut-chart {
-			touch-action: none;
-			overflow: hidden;
-			height: "100%";
-			width: "100%";
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donut Chart with ApexCharts</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+	  #chart {
+		
+		touch-action: none;
+		overflow: hidden;
+		height: "100%";
+		width: "100%";
+	  }
+    </style>
 </head>
 <body>
-	<div id="donut-chart"></div>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var options =
-			{
-				series: [],
-				labels: ["Open", "Closed"],
-				chart: {
-					type: 'donut',
-					height: '120%',
-					width: '100%',
-					background: "none",
-					animations: {
-						enabled: true,
-						easing: "ease",
-						speed: 1000,
-						dynamicAnimation: { enabled: true, speed: 1000 },
-						animategradually: { enabled: true, delay: 2000 },
-						initialAnimation: { enabled: true }
-					},
-					toolbar: { show: false },
-				},
-				noData: {
-					text: "",
-					align: "center",
-					verticalAlign: "middle",
-					offsetX: 0,
-					offsetY: -10,
-					style: {
-						color: "#7f7f7f",
-						fontSize: "25px",
-				fontWeight: "600",
-						fontFamily: "Helvetica, Arial, sans-serif",
-					},
-				},
-				colors: ["#7f7f7f", "#e31837"],
-				plotOptions: {
-					pie:
-					{
-						startAngle: 0,
-						endAngle: 360,
-						expandOnClick: false,
-						offsetX: 0,
-						offsetY: 0,
-						customScale: 1.1,
-						dataLabels: {
-							offset: 0,
-							minAngleToShowLabel: 10,
-						},
-						donut:
-						{
-							size: '70%',
-							background: 'transparent',
-							labels: {
-								show: true,
-								name: {
-									show: true,
-									fontSize: '15px',
-									fontFamily: 'Helvetica, Arial, sans-serif',
-									fontWeight: 600,
-									color: undefined,
-									offsetY: -10,
-									formatter: function (val) {
-										return val
-									}
-								},
-								value: {
-									show: true,
-									fontSize: '15px',
-									fontFamily: 'Helvetica, Arial, sans-serif',
-									fontWeight: 500,
-									color: undefined,
-									offsetY: -5,
-									offsetX: -5,
-									formatter: function (val) {
-										return val + '%';
-									},
-								},
-								total: {
-									show: false,
-									showAlways: false,
-									label: "Total",
-									formatter: function (w) {
-										return w.globals.seriesTotals.reduce(
-											(a, b) => a + b,
-											0
-										);
-									},
-								},
-							},
-						},
-					},
-				},
-				tooltip: {
+    <div id="chart"></div>
+
+    <script>
+	  document.addEventListener("DOMContentLoaded", function() {
+		var initialSeries = [44, 55]; // Initial data for "Open" and "Closed"
+		var activeIndex = null; // Track the active dataset index
+		var chart; // Chart instance
+
+		var options = {
+		    series: initialSeries,
+		    chart: {
+			  	type: 'donut',
+			  	height: '120%',
+				width: '100%',
+				background: "none",
+				animations: {
 					enabled: true,
-					enabledOnSeries: undefined,
-					shared: true,
-					followCursor: true,
-					intersect: false,
-					inverseOrder: false,
-					custom: undefined,
-					hideEmptySeries: false,
-					fillSeriesColor: true,
-					theme: false,
-					x: {
-						show: true,
-						formatter: function (val) {
-							return val + '%';
-						},
-					},
-					style: {
-						fontSize: '12px',
-						fontFamily: undefined,
-						backgroundColor: "#fff",
-					},
-					onDatasetHover: {
-						highlightDataSeries: false,
-					},
-				},
-				dataLabels: { enabled: false },
-				legend: {
-					show: false,
-				},
-				fill: {
-					type: 'gradient',
-				},
-				title: {
-					text: "",
-					align: "center",
-					style: {
-						fontSize: "14px",
-						fontWeight: "600",
-						color: "#7f7f7f",
-					},
-				},
-				responsive: [{
-					breakpoint: 480,
-					options: {
-						chart: { width: '100%', height: "100%" },
-						plotOptions: {
-							pie: {
-								startAngle: 0,
-								endAngle: 360,
-								expandOnClick: false,
-								offsetX: 0,
-								offsetY: 0,
-								customScale: 1.1,
-								dataLabels: {
-									offset: 0,
-									minAngleToShowLabel: 1,
-								},
-								donut: {
-									size: '65%',
-									background: 'transparent',
+					easing: "easeout", // Try "easeout" or "linear" for smoother transitions
+					speed: 1000,       // Reduce the main animation speed
+					dynamicAnimation: { enabled: true, speed: 1500 },
+					animateGradually: { enabled: true, delay: 500 }, 
+					initialAnimation: { enabled: true }
+				  },
+				toolbar: { show: false },
+			events: {
+				dataPointSelection: function(event, chartContext, config) {
+				    	var clickedIndex = config.dataPointIndex;
+				    	if (activeIndex === clickedIndex) {
+					  	activeIndex = null;
+						  chartContext.updateOptions({
+							plotOptions: {
+							    pie: {
+								  donut: {
 									labels: {
-										show: true,
-										name: {
-											show: false,
-										},
-										value: {
-											show: true,
-											fontSize: '19px',
-											fontFamily: 'Helvetica, Arial, sans-serif',
-											fontWeight: 400,
-											color: "red",
-											offsetY: 5,
-											offsetX: 1,
-											formatter: function (val) {
-												return val + '%';
-											},
-										},
-										total: {
-											show: false,
-											showAlways: false,
-											label: "Total",
-											formatter: function (w) {
-												return w.globals.seriesTotals.reduce(
-													(a, b) => a + b,
-													0
-												);
-											},
-										},
-									},
+									    show: false
+									}
+								  }
+							    }
+							}
+						  }, false, false);
+						  
+				    	} else {
+						activeIndex = clickedIndex;
+				    }
+				},
+				
+				dataPointMouseLeave: function(event, chartContext, config) {
+				    if (activeIndex !== null) {
+					  donutchart.toggleDataPointSelection(activeIndex); 
+					  activeIndex = null;
+					}
+				    	chartContext.updateOptions({
+						plotOptions: {
+						    pie: {
+							  donut: {
+								labels: {
+								    show: true
+								}
+							  }
+						    }
+						}
+				  }, false, false);
+				},
+				
+			  }
+		    },
+		    colors: ["#7f7f7f", "#e31837"],
+		    labels: ["Open", "Closed"],
+		    noData: {
+				text: "",
+				align: "center",
+				verticalAlign: "middle",
+				offsetX: 0,
+				offsetY: -10,
+				style: {
+					color: "#7f7f7f",
+					fontSize: "25px",
+					fontWeight: "600",
+					fontFamily: "Helvetica, Arial, sans-serif",
+				},
+			},
+		    	plotOptions: {
+			  	pie: {
+					expandOnClick: false,
+					startAngle: 0,
+					endAngle: 360,
+					donut: {
+					    	labels: {
+						  	show: true, 
+						  	name: {
+								show: true,
+								fontSize: '15px',
+								fontFamily: 'Helvetica, Arial, sans-serif',
+								fontWeight: 600,
+								color: undefined,
+								offsetY: -10,
+								formatter: function (val) {
+									return val
+								}
+						  	},
+							value: {
+								show: true,
+								fontSize: '15px',
+								fontFamily: 'Helvetica, Arial, sans-serif',
+								fontWeight: 500,
+								color: undefined,
+								offsetY: -5,
+								offsetX: -5,
+								formatter: function (val) {
+									return val + '%';
 								},
 							},
-						},
-					},
-				}],
-			};
+							total: {
+								show: false
+							}
+						}
+					}
+			  	}
+		    	},
+		    tooltip: {
+			  enabled: false // Disable tooltip
+		    },
+		    dataLabels: {
+			  enabled: false // Disable data labels
+		    },
+		    legend: {
+			  show: false // Disable legend
+		    },
+		    fill: {
+			type: 'gradient',
+		},
+		title: {
+			text: "",
+			align: "center",
+			style: {
+				fontSize: "14px",
+				fontWeight: "600",
+				color: "#7f7f7f",
+			},
+		},
+		    responsive: [{
+			  breakpoint: 480,
+			  options: {
+				chart: { width: '100%', height: "100%" },
+			  }
+		    }]
+		};
 
-			var donutchart = new ApexCharts(document.querySelector("#donut-chart"), options);
-			donutchart.render();
+		var donutchart = new ApexCharts(document.querySelector("#chart"), options);
+		donutchart.render();
+		//...
+		function updateChart(filteredData, updatedOptions) {
+			donutchart.updateSeries([{ data: filteredData }],true);
+			donutchart.updateOptions(updatedOptions);
+			
+		}
 
-			//...........
-			function updateChart(filteredData, updatedOptions) {
-				chart.updateSeries([{ data: filteredData }]);
-				chart.updateOptions(updatedOptions);
-				window.ReactNativeWebView.postMessage(
-					JSON.stringify({ action: 'updateChart' })
-				);
+		function updateChartSeries(filteredData) {
+			donutchart.updateSeries([{ data: filteredData }],true)
+			
+		}
+
+		function updateChartOptions(updatedOptions) {
+			donutchart.updateOptions(updatedOptions);	
+		}
+
+		function resetChartSeries() {
+			donutchart.resetSeries();
+			
+		}
+
+		function appendChartData(data) {
+			donutchart.appendData(data)
+		}
+
+		// Expose updateChartSeries globally
+		window.updateChartSeries = function (filteredData) {
+
+			if (Array.isArray(filteredData) && filteredData.every(val => typeof val === 'number')) {
+				donutchart.updateSeries(filteredData,true);
+			} else {
+				console.error("Invalid data format for chart series.");
 			}
+		};
 
-			function updateChartSeries(filteredData) {
-				chart.updateSeries([{ data: filteredData }])
-				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartSeries' }));
-			}
+		window.updateChartOptions = function (updatedOptions) {
+			donutchart.updateOptions(updatedOptions);
+		};
 
-			function updateChartOptions(updatedOptions) {
-				chart.updateOptions(updatedOptions);
-				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartOptions' }));
+		window.parent.postMessage("iframeReady", "*");
 
-			}
-
-			function resetChartSeries() {
-				chart.resetSeries();
-				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'resetChartSeries' }));
-			}
-
-			function appendChartData(data) {
-				chart.appendData(data)
-			}
-
-			// Expose updateChartSeries globally
-			window.updateChartSeries = function (filteredData) {
-
-				if (Array.isArray(filteredData) && filteredData.every(val => typeof val === 'number')) {
-					donutchart.updateSeries(filteredData);
-				} else {
-					console.error("Invalid data format for chart series.");
-				}
-			};
-
-			window.updateChartOptions = function (updatedOptions) {
-				donutchart.updateOptions(updatedOptions);
-			};
-
-			window.parent.postMessage("iframeReady", "*");
-		});
-	</script>
+		
+	  });
+    </script>
 </body>
 </html>
+
 `;
 export const webviewDonutChartHtml = `
 <!DOCTYPE html>
@@ -2685,28 +2643,67 @@ export const webviewDonutChartHtml = `
 	<div id="donut-chart"></div>
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
+			var activeIndex = null;
 			var options = {
 				series: [0,0],
 				labels: ["Open", "Closed"],
 				chart: {
 					type: 'donut',
-					height: '95%',
-					width: '95%',
+					height: '100%',
+					width: '100%',
 					background: "none",
-			  animations: {
-				enabled: true, 
-				easing: "easeinout", 
-				speed: 1200, 
-				animateGradually: {
-				  enabled: true,
-				  delay: 300,
-				},
-				dynamicAnimation: {
-				  enabled: true,
-				  speed: 1200,
-				},
-			    },
+				  	animations: {
+						enabled: true, 
+						easing: "easeinout", 
+						speed: 3000, 
+						animateGradually: {
+						  	enabled: true,
+						  	delay: 5000,
+						},
+						dynamicAnimation: {
+						  enabled: true,
+						  speed: 5100,
+						},
+				    	},
 					toolbar: { show: false },
+					events: {
+						dataPointSelection: function(event, chartContext, config) {
+							var clickedIndex = config.dataPointIndex;
+							if (activeIndex === clickedIndex) {
+								activeIndex = null;
+								chartContext.updateOptions({
+									plotOptions: {
+									    pie: {
+										  donut: {
+											labels: {
+											    show: false
+											}
+										  }
+									    }
+									}
+								  }, false, false);
+							  } else {
+							    activeIndex = clickedIndex;
+						  	} 
+						},
+						dataPointMouseLeave: function(event, chartContext, config) {
+							if (activeIndex !== null) {
+								donutchart.toggleDataPointSelection(activeIndex); 
+								activeIndex = null; 
+							}
+							chartContext.updateOptions({
+								plotOptions: {
+								    pie: {
+									  donut: {
+										labels: {
+										    show: true
+										}
+									  }
+								    }
+								}
+							  }, false, false);
+						}
+					},
 				},
 				noData: {
 					text: "",
@@ -2741,6 +2738,7 @@ export const webviewDonutChartHtml = `
 								show: true,
 								name: {
 									show: true,
+									showAlways: true,
 									fontSize: '15px',
 									fontFamily: 'Helvetica, Arial, sans-serif',
 									fontWeight: 600,
@@ -2752,6 +2750,7 @@ export const webviewDonutChartHtml = `
 								},
 								value: {
 									show: true,
+									showAlways: true,
 									fontSize: '15px',
 									fontFamily: 'Helvetica, Arial, sans-serif',
 									fontWeight: 500,
@@ -2767,8 +2766,11 @@ export const webviewDonutChartHtml = `
 									show: false,
 									showAlways: false,
 									label: "Total",
+									fontSize: '15px',
+									fontFamily: 'Helvetica, Arial, sans-serif',
+									fontWeight: 500,
 									formatter: function (w) {
-										return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+										return w.globals.seriesTotals.reduce((a, b) => a + b, 0) + "%";
 									},
 								},
 							},
@@ -2776,30 +2778,7 @@ export const webviewDonutChartHtml = `
 					},
 				},
 				tooltip: {
-					enabled: true,
-					enabledOnSeries: undefined,
-					shared: true,
-					followCursor: true,
-					intersect: false,
-					inverseOrder: false,
-					custom: undefined,
-					hideEmptySeries: false,
-					fillSeriesColor: true,
-					theme: false,
-					x: {
-						show: true,
-						formatter: function (val) {
-							return val + '%';
-						},
-					},
-					style: {
-						fontSize: '12px',
-						fontFamily: undefined,
-						backgroundColor: undefined,
-					},
-					onDatasetHover: {
-						highlightDataSeries: false,
-					},
+					enabled: false,
 				},
 				dataLabels: { enabled: false },
 				legend: {
@@ -2860,7 +2839,13 @@ export const webviewDonutChartHtml = `
 			window.updateChartSeries = function (filteredData) {
 
 				if (Array.isArray(filteredData) && filteredData.every(val => typeof val === 'number')) {
-					donutchart.updateSeries(filteredData);
+					donutchart.destroy();
+	  
+	  var options = donutchart.w.config; // Get existing config
+	  options.series = filteredData; // Update series
+
+	  donutchart = new ApexCharts(document.querySelector("#donut-chart"), options);
+	  donutchart.render();
 				} else {
 					console.error("Invalid data format for chart series.");
 				}

@@ -3,15 +3,10 @@ import {
 	Text,
 	SafeAreaView,
 	TouchableOpacity,
-	Animated,
-	Easing,
-	FlatList,
-	Platform,
-	StyleSheet,
 	Modal,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
 import { PricesItem, signalsCards } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,8 +19,6 @@ import { StatusBar } from "react-native";
 import { fetchDataByToggle } from "@/services/auth.services";
 import { st } from "@/utils/Styles";
 import { ChartShimmer } from "@/components/ChartShimmer";
-import StackHeader from "@/components/StackHeader";
-import { ChartLoaderPNG } from "@/components/Loader";
 import SignalSettings from "@/components/SignalSettings";
 
 const SignalDetails = () => {

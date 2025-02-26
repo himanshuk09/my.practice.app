@@ -38,13 +38,10 @@ import {
 import {
 	shareBase64AsPDF,
 	saveBase64AsPDFWeb,
-} from "@/components/ConstantFunctions/saveCSVFile";
+} from "@/components/fileDownloaders/saveCSVFile";
 import Toast from "react-native-toast-message";
-import {
-	FormattedPortfolioDetails,
-	PortfolioDetailsError,
-	TradeDetailsArray,
-} from "@/types/type";
+import { FormattedPortfolioDetails, TradeDetailsArray } from "@/types/type";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const PortfolioOverView = () => {
 	const [modalVisible, setModalVisible] = useState(false);
@@ -63,6 +60,7 @@ const PortfolioOverView = () => {
 	const { height: screenHeight } = Dimensions.get("window");
 	const locale = useSelector((state: RootState) => state.language.locale);
 	const dispatch = useDispatch();
+	const isOnline = useNetworkStatus();
 	const donutwebViewRef = useRef<WebView | null>(null);
 	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null);
 	const areaWebViewRef = useRef<WebView | null>(null);
@@ -97,94 +95,108 @@ const PortfolioOverView = () => {
 		});
 	};
 	const exportPortfolioReport = async () => {
-		// Show initial toast indicating download is in progress
-		const toastId = Toast.show({
-			type: "download",
-			text1: "File Downloading....",
-			position: "bottom",
-			bottomOffset: 0,
-			autoHide: false, // Keeps the toast visible
-		});
-
-		try {
-			// Fetch the portfolio report
-			const responsePortfolioReport =
-				await getPortfolioReportBase64PDF(paramsID);
-
-			// Hide the previous toast
-			Toast.hide(toastId);
-			// Save or share the file based on platform
-			const fileName = paramsID.PortfolioName.replace(
-				/[&\/\\#,+()$~%.'":*?<>{}]/g,
-				""
-			);
-			console.log(fileName);
-
-			if (Platform.OS === "web") {
-				saveBase64AsPDFWeb(
-					responsePortfolioReport,
-					`${fileName}_details.pdf`
-				);
-			} else {
-				shareBase64AsPDF(
-					responsePortfolioReport,
-					`${fileName}_details.pdf`
-				);
-			}
-		} catch (error) {
-			// Hide previous toast if there's an error
-			Toast.hide(toastId);
-
-			// Show error toast
-			Toast.show({
-				type: "error",
-				text1: "Download Failed!",
-				text2:
-					error instanceof Error
-						? error.message
-						: "Something went wrong.",
+		if (!isOnline || portfolioDetails?.message === "no data") return;
+		else {
+			// Show initial toast indicating download is in progress
+			const toastId = Toast.show({
+				type: "download",
+				text1: "File Downloading....",
 				position: "bottom",
 				bottomOffset: 0,
-				visibilityTime: 3000,
+				autoHide: false, // Keeps the toast visible
+				props: { spinner: true },
 			});
 
-			console.error("Error downloading portfolio report:", error);
+			try {
+				// Fetch the portfolio report
+				const responsePortfolioReport =
+					await getPortfolioReportBase64PDF(paramsID);
+
+				// Hide the previous toast
+				Toast.hide(toastId);
+				// Save or share the file based on platform
+				const fileName = paramsID.PortfolioName.replace(
+					/[&\/\\#,+()$~%.'":*?<>{}]/g,
+					""
+				);
+				console.log(fileName, responsePortfolioReport);
+
+				if (Platform.OS === "web") {
+					saveBase64AsPDFWeb(
+						responsePortfolioReport,
+						`${fileName}_details.pdf`
+					);
+				} else {
+					shareBase64AsPDF(
+						responsePortfolioReport,
+						`${fileName}_details.pdf`
+					);
+				}
+			} catch (error) {
+				// Hide previous toast if there's an error
+				Toast.hide(toastId);
+
+				// Show error toast
+				Toast.show({
+					type: "error",
+					text1: "Download Failed!",
+					text2:
+						error instanceof Error
+							? error.message
+							: "Something went wrong.",
+					position: "bottom",
+					bottomOffset: 0,
+					visibilityTime: 3000,
+				});
+
+				console.error("Error downloading portfolio report:", error);
+			}
 		}
 	};
 
 	useEffect(() => {
 		const fetchDetails = async () => {
-			try {
-				const responsePortfolioDetails: any =
-					await getPortfolioDetails(paramsID);
+			if (!isOnline) return;
+			else {
+				try {
+					const responsePortfolioDetails: any =
+						await getPortfolioDetails(paramsID);
 
-				setPortfolioDetails(responsePortfolioDetails);
-			} catch (error) {
-				console.log("Error fetching portfolio details:", error);
-			} finally {
-				dispatch(inActiveLoading());
+					setPortfolioDetails(responsePortfolioDetails);
+				} catch (error) {
+					console.log(
+						"Error fetching portfolio details:",
+						error
+					);
+				} finally {
+					dispatch(inActiveLoading());
+				}
 			}
 		};
 
 		if (paramsID?.PortfolioId) fetchDetails();
-	}, [paramsID?.PortfolioId]);
+	}, [paramsID?.PortfolioId, isOnline]);
 	useEffect(() => {
 		const fetchDeals = async () => {
-			try {
-				const responsePortfolioDeals: any =
-					await getPortfolioDeals(paramsID);
+			if (!isOnline) {
+				return;
+			} else {
+				try {
+					const responsePortfolioDeals: any =
+						await getPortfolioDeals(paramsID);
 
-				if (portfolioDetails?.message != "no data") {
-					setPortfolioDeals(responsePortfolioDeals);
+					if (portfolioDetails?.message != "no data") {
+						setPortfolioDeals(responsePortfolioDeals);
+					}
+				} catch (error) {
+					console.log("Error fetching portfolio deals:", error);
+				} finally {
+					dispatch(inActiveLoading());
 				}
-			} catch (error) {
-				console.log("Error fetching portfolio deals:", error);
-			} finally {
-				dispatch(inActiveLoading());
 			}
 		};
 		if (modalVisible) fetchDeals();
-	}, [modalVisible]);
+	}, [modalVisible, isOnline]);
 	useEffect(() => {
 		if (portfolioDetails && isChartLoaded) {
 			if (portfolioDetails?.message === "no data") {
@@ -232,104 +244,105 @@ const PortfolioOverView = () => {
 								},
 							]}
 						>
-							<View className="flex-1 bg-white">
-								<View
-									className={`flex flex-row justify-between`}
-									style={{
-										height:
-											Platform.OS === "web"
-												? screenHeight *
-													0.25
-												: screenHeight *
-													0.23,
-									}}
-								>
-									<ChartComponent
-										webViewRef={donutwebViewRef}
-										iFrameRef={donutIFrameRef}
-										onMessage={onMessage}
-										webViewhtmlContent={
-											webviewDonutChartHtml
-										}
-										iFramehtmlContent={
-											iFreameDonutChartHtml
-										}
-										showToggleOrientation={false}
-										showToolbar={false}
-										iFrameWidth="50%"
-										setIsChartLoaded={
-											setIsChartLoaded
-										}
-									/>
+							<View
+								className={`flex flex-row justify-between `}
+								style={{
+									height:
+										Platform.OS === "web"
+											? screenHeight * 0.23
+											: screenHeight * 0.23,
+								}}
+							>
+								<ChartComponent
+									webViewRef={donutwebViewRef}
+									iFrameRef={donutIFrameRef}
+									onMessage={onMessage}
+									webViewhtmlContent={
+										webviewDonutChartHtml
+									}
+									iFramehtmlContent={
+										iFreameDonutChartHtml
+									}
+									showToggleOrientation={false}
+									showToolbar={false}
+									iFrameWidth="50%"
+									setIsChartLoaded={setIsChartLoaded}
+								/>
 
-									<View
-										className={`flex-col justify-start w-[35%] md:w-[10%]`}
-									>
-										<DataDisplay
-											data={
-												portfolioDetails
-													?.closedData[0]
-											}
-											title={"Closed"}
-											locale={locale}
-										/>
-										<DataDisplay
-											data={
-												portfolioDetails
-													?.openData[0]
-											}
-											title={"Open"}
-											locale={locale}
-										/>
-									</View>
-									<View className="mr-10 ml-7 mt-3">
-										<FontAwesome5
-											name="file-download"
-											size={35}
-											color="#ef4444"
-											onPress={
-												exportPortfolioReport
-											}
-										/>
-									</View>
-								</View>
-								<View className="h-1 bg-[#DEDEDE] mt-1" />
 								<View
-									className=""
+									className={`flex-col justify-start w-[31%] md:w-[10%]`}
+								>
+									<DataDisplay
+										data={
+											portfolioDetails
+												?.closedData[0]
+										}
+										title={"Closed"}
+										locale={locale}
+									/>
+									<DataDisplay
+										data={
+											portfolioDetails
+												?.openData[0]
+										}
+										title={"Open"}
+										locale={locale}
+									/>
+								</View>
+								<View
+									className="ml-7 mt-3 "
 									style={{
-										height:
+										marginRight:
 											Platform.OS === "web"
-												? screenHeight *
-													0.58
-												: screenHeight *
-													0.61,
-										paddingTop:
-											Platform.OS !== "web"
-												? 15
-												: undefined,
-										padding: 3,
+												? "10%"
+												: 40,
 									}}
 								>
-									<ChartComponent
-										webViewRef={areaWebViewRef}
-										iFrameRef={areaIFrameRef}
-										onMessage={onMessage}
-										webViewhtmlContent={
-											webviewAreaHtmlcontent
-										}
-										iFramehtmlContent={
-											iframeAreahtlcontent
-										}
-										showToggleOrientation={false}
-										showToggle={false}
-										setIsChartLoaded={
-											setIsChartLoaded
+									<FontAwesome5
+										name="file-download"
+										size={35}
+										color="#ef4444"
+										onPress={
+											exportPortfolioReport
 										}
 									/>
 								</View>
 							</View>
+							<View className="h-1 bg-[#DEDEDE] mt-1" />
+							<View
+								className=""
+								style={{
+									height:
+										Platform.OS === "web"
+											? screenHeight * 0.6
+											: screenHeight * 0.61,
+									paddingTop:
+										Platform.OS !== "web"
+											? 15
+											: undefined,
+									padding: 3,
+								}}
+							>
+								<ChartComponent
+									isChartEmpty={
+										portfolioDetails?.message ===
+										"no data"
+									}
+									webViewRef={areaWebViewRef}
+									iFrameRef={areaIFrameRef}
+									onMessage={onMessage}
+									webViewhtmlContent={
+										webviewAreaHtmlcontent
+									}
+									iFramehtmlContent={
+										iframeAreahtlcontent
+									}
+									showToggleOrientation={false}
+									showToggle={false}
+									setIsChartLoaded={setIsChartLoaded}
+								/>
+							</View>
 						</View>
-
 						<Modal
 							animationType="slide"
 							transparent={false}
@@ -351,6 +364,7 @@ const PortfolioOverView = () => {
 							</View>
 						</Modal>
 					</View>
+
 					<TouchableOpacity
 						className={`bg-primary mb-2 bottom-0   py-2 mx-5 rounded-sm my-2 
 								

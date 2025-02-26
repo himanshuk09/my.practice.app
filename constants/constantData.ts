@@ -379,7 +379,7 @@ export const powerItems = [
 		year: 2027,
 	},
 ];
-export const DashboardCardsEng = [
+export const DashboardCardsList = [
 	{
 		id: 1,
 		title: "prices",

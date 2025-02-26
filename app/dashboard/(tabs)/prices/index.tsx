@@ -76,7 +76,7 @@ const Prices = () => {
 		</TouchableOpacity>
 	));
 	const renderItem = ({ item }: any) =>
-		prices.length <= 0 ? <ShimmerPrices /> : <ListItem item={item} />;
+		prices?.length <= 0 ? <ShimmerPrices /> : <ListItem item={item} />;
 	const onRefresh = async () => {
 		setTimeout(() => {
 			setIsRefreshing(false);
@@ -98,7 +98,7 @@ const Prices = () => {
 				networkActivityIndicatorVisible
 			/>
 
-			{prices.length <= 0 ? (
+			{prices?.length <= 0 ? (
 				<ShimmerPricesHeader />
 			) : (
 				<View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-primary ">
@@ -132,7 +132,7 @@ const Prices = () => {
 
 			<FlatList
 				data={
-					prices.length <= 0
+					prices?.length <= 0
 						? [...Array(10).keys()].map((index) => ({
 								id: index,
 								title: `Shimmer ${index}`,

@@ -4,6 +4,7 @@ import {
 	Animated,
 	Platform,
 	Easing,
+	StyleSheet,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 
@@ -73,7 +74,10 @@ export const ChartLoaderPNG = () => {
 	});
 
 	return (
-		<View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#ffffffda] z-50">
+		<View
+			className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#ffffffda] z-50"
+			style={[StyleSheet.absoluteFill]}
+		>
 			<Animated.Image
 				source={require("@/assets/images/ic_loader2.png")} // Update the path if needed
 				style={[

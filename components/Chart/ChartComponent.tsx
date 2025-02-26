@@ -44,7 +44,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 	iFrameWidth = "100%",
 	setLoading,
 	isTooltipEnabled,
-	isChartEmpty,
+	isChartEmpty = false,
 	setIsChartLoaded,
 }) => {
 	const dispatch = useDispatch();
@@ -101,11 +101,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 			if (isLandscape) {
 				ScreenOrientation.lockAsync(
 					ScreenOrientation.OrientationLock.PORTRAIT
-				); // Switch to portrait mode
-				dispatch(setOrientation(false)); // Update the state to reflect the change
-				return true; // Prevent default back button behavior (optional)
+				);
+				dispatch(setOrientation(false));
+				return true;
 			}
-			return false; // Let the default back button behavior proceed if not in landscape
+			return false;
 		};
 
 		// Add the back button listener
@@ -184,7 +184,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 				if (event.data?.source === "react-devtools-bridge") {
 					return; // Ignore DevTools messages
 				}
-				// console.log("Message from iframe:", event.data);
+				console.log("Message from iframe:", event.data);
 
 				if (
 					event.data === "updateChartSeries" ||
@@ -230,13 +230,15 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 		<>
 			{Platform.OS !== "web" ? (
 				<>
-					{showToolbar && !isChartEmpty ? (
-						<ToolBarFloatingActionMenu
-							webViewRef={webViewRef}
-							showToggle={showToggle}
-							captureWebView={captureWebView}
-							isTooltipEnabled={isTooltipEnabled}
-						/>
+					{showToolbar ? (
+						!isChartEmpty ? (
+							<ToolBarFloatingActionMenu
+								webViewRef={webViewRef}
+								showToggle={showToggle}
+								captureWebView={captureWebView}
+								isTooltipEnabled={isTooltipEnabled}
+							/>
+						) : null
 					) : null}
 					<ViewShot
 						ref={viewShotRef}
@@ -346,60 +348,3 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 };
 
 export default ChartComponent;
-
-// const checkOrientation = async () => {
-//   const orientationInfo = await ScreenOrientation.getOrientationAsync();
-//   const isLandscapeMode =
-//     orientationInfo === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-//     orientationInfo === ScreenOrientation.Orientation.LANDSCAPE_RIGHT;
-
-//   // Dispatch the action to update Redux state
-//   dispatch(setOrientation(isLandscapeMode));
-// };
-// useEffect(() => {
-//   checkOrientation(); // Check the initial orientation
-//   const subscription = ScreenOrientation.addOrientationChangeListener(() => {
-//     checkOrientation(); // Check orientation when it changes
-//   });
-
-//   // Cleanup on unmount
-//   return () => {
-//     subscription.remove();
-//   };
-// }, [dispatch]);
-
-// const captureWebView = useCallback(async () => {
-//     try {
-//         const uri = await viewShotRef?.current?.capture(); // Capture the WebView
-//         console.log("Captured URI:", uri);
-
-//         // Save the file locally
-//         const fileUri = `${FileSystem.documentDirectory}webview_capture.png`;
-//         const fileName = `${
-//             FileSystem.documentDirectory
-//         }cockpi_chart_${new Date()
-//             .toISOString()
-//             .replace(/:/g, "-")
-//             .replace(/T/, "_")
-//             .replace(/\..+/, "")}.png`;
-//         await FileSystem.moveAsync({
-//             from: uri,
-//             to: fileName,
-//         });
-
-//         // Alert.alert("Success", "Screenshot saved to your device!");
-
-//         // Share the file
-//         if (await Sharing.isAvailableAsync()) {
-//             await Sharing.shareAsync(fileName);
-//         } else {
-//             Alert.alert(
-//                 "Sharing not available",
-//                 "The image is saved to your device."
-//             );
-//         }
-//     } catch (error) {
-//         // console.error("Error capturing WebView:", error);
-//         Alert.alert("Error", "Failed to capture WebView.");
-//     }
-// }, []);
