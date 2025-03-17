@@ -299,8 +299,8 @@ export let WebviewLineHtmlContent = `
 				},
 
 				events: {
-				    dataURI: function (event, chartContext, config) {
-					  window.ReactNativeWebView.postMessage(
+				    	dataURI: function (event, chartContext, config) {
+					 	 window.ReactNativeWebView.postMessage(
 						JSON.stringify({
 						    type: "dataURI",
 						    dataURI: config.dataURI,
@@ -308,155 +308,115 @@ export let WebviewLineHtmlContent = `
 					  );
 				    },
 
-				    animationEnd: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "animationEnd" })
-					  );
-				    },
+				      animationEnd: function (chartContext,{ xaxis, yaxis }) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "animationEnd" })
+					  	);
+				      },
 
-				    mouseMove: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "mouseMove" })
-					  );
-				    },
+				    	mouseMove: function (chartContext,{ xaxis, yaxis }) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "mouseMove" })
+					  	);
+				    	},
 
-				    mouseLeave: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "mouseLeave" })
-					  );
-				    },
+				      mouseLeave: function (chartContext,{ xaxis, yaxis }) {
+						window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "mouseLeave" })
+						);
+				    	},
 
-				    click: function (chartContext, { xaxis, yaxis }) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "click" })
-					  );
-				    },
+				    	click: function (chartContext, { xaxis, yaxis }) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "click" })
+					  	);
+				    	},
 
-				    legendClick: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "legendClick" })
-					  );
-				    },
+				    	legendClick: function (chartContext,{ xaxis, yaxis }) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "legendClick" })
+					  	);
+				    	},
 
-				    markerClick: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "markerClick" })
-					  );
-				    },
+				    	markerClick: function (chartContext,{ xaxis, yaxis }) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "markerClick" })
+					  	);
+				    	},
 
-				    xAxisLabelClick: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({
-						    action: "xAxisLabelClick",
-						})
-					  );
-				    },
+				    	xAxisLabelClick: function (chartContext,{ xaxis, yaxis }) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({
+							    action: "xAxisLabelClick",
+							})
+					  	);
+				    	},
 
-				    selection: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  const currentMin = chart.w.globals.minX;
-					  const currentMax = chart.w.globals.maxX;
+				      selection: function ( chartContext,{ xaxis, yaxis }) {
+						const currentMin = chart.w.globals.minX;
+						const currentMax = chart.w.globals.maxX;
 
-					  const zoomAmount =
-						(currentMax - currentMin) * 0.3;
+						const zoomAmount =
+							(currentMax - currentMin) * 0.3;
 
-					  // Ensure the new zoomed range stays within the series bounds
-					  const newMinX = Math.max(
-						currentMin - zoomAmount,
-						chart.w.globals.seriesX[0][0] // Series minimum
-					  );
-					  const newMaxX = Math.min(
-						currentMax + zoomAmount,
-						chart.w.globals.seriesX[0][
-						    chart.w.globals.seriesX[0].length - 1
-						] // Series maximum
-					  );
+						// Ensure the new zoomed range stays within the series bounds
+						const newMinX = Math.max(
+							currentMin - zoomAmount,
+							chart.w.globals.seriesX[0][0] // Series minimum
+						);
+						const newMaxX = Math.min(
+							currentMax + zoomAmount,
+							chart.w.globals.seriesX[0][
+							    chart.w.globals.seriesX[0].length - 1
+							] // Series maximum
+						);
 
-					  // Update chart options
-					  chart.updateOptions({
-						xaxis: {
-						    min: newMinX,
-						    max: newMaxX,
-						},
-					  });
-				    },
+						// Update chart options
+						chart.updateOptions({
+							xaxis: {
+							    min: newMinX,
+							    max: newMaxX,
+							},
+						  });
+				      },
 
-				    dataPointMouseEnter: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({
-						    action: "dataPointMouseEnter",
-						})
-					  );
-				    },
+				      dataPointMouseEnter: function ( chartContext,{ xaxis, yaxis }) {
+						 window.ReactNativeWebView.postMessage(
+							JSON.stringify({
+							    action: "dataPointMouseEnter",
+							})
+						  );
+				    	},
 
-				    dataPointMouseLeave: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({
-						    action: "dataPointMouseLeave",
-						})
-					  );
-				    },
+				    	dataPointMouseLeave: function (chartContext,{ xaxis, yaxis } ) {
+					   	window.ReactNativeWebView.postMessage(
+							JSON.stringify({
+							    action: "dataPointMouseLeave",
+							})
+					  	);
+				    	},
 
-				    scrolled: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "scrolled" })
-					  );
-				    },
+				    	scrolled: function (chartContext, { xaxis, yaxis }) {
+						window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "scrolled" })
+						);
+				    	},
 
-				    beforeZoom: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  // Access the chart's series data
-					  const seriesMin =
-						chartContext.w.globals.seriesX[0][0]; // Minimum x-value in the dataset
-					  const seriesMax =
-						chartContext.w.globals.seriesX[0][
-						    chartContext.w.globals.seriesX[0]
-							  .length - 1
-						]; // Maximum x-value in the dataset
+				    	beforeZoom: function (
+					  	chartContext,
+					  	{ xaxis, yaxis }
+				    	) {
+					  	// Access the chart's series data
+					  	const seriesMin = chartContext.w.globals.seriesX[0][0]; // Minimum x-value in the dataset
+					  	const seriesMax =chartContext.w.globals.seriesX[0][chartContext.w.globals.seriesX[0].length - 1]; // Maximum x-value in the dataset
 
-					  const minDistanceBetweenPoints =
-						chartContext.w.globals.seriesX[0][1] -
-						chartContext.w.globals.seriesX[0][0]; // Distance between two consecutive points
+					  	const minDistanceBetweenPoints =chartContext.w.globals.seriesX[0][1] - chartContext.w.globals.seriesX[0][0]; // Distance between two consecutive points
 
-					  // Ensure at least one point is visible in the zoomed range
-					  const newMinX = Math.max(xaxis.min, seriesMin);
-					  const newMaxX = Math.min(xaxis.max, seriesMax);
+						// Ensure at least one point is visible in the zoomed range
+						const newMinX = Math.max(xaxis.min, seriesMin);
+						const newMaxX = Math.min(xaxis.max, seriesMax);
 
-					  if (
-						newMaxX - newMinX <
-						minDistanceBetweenPoints
-					  ) {
+						if (newMaxX - newMinX <minDistanceBetweenPoints ) {
 						// Prevent zooming if no point would be visible
 						window.ReactNativeWebView.postMessage(
 						    JSON.stringify({
@@ -494,67 +454,60 @@ export let WebviewLineHtmlContent = `
 					  };
 				    },
 
-				    beforeResetZoom: function (
-					  chartContext,
-					  { xaxis, yaxis }
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({
-						    action: "beforeResetZoom",
-						})
-					  );
+				      beforeResetZoom: function (chartContext, { xaxis, yaxis }) {
+					      window.ReactNativeWebView.postMessage(
+							JSON.stringify({
+							    action: "beforeResetZoom",
+							})
+					  	);
+				    	},
+
+				      zoomed: function (chartContext, { xaxis, yaxis }) {
+						window.ReactNativeWebView.postMessage(
+							JSON.stringify({
+							    action: "chartZoomed",
+							    isZoomed: true,
+							})
+						  );
+						window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "Zoomed" })
+						  );
 				    },
 
-				    zoomed: function (chartContext, { xaxis, yaxis }) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({
-						    action: "chartZoomed",
-						    isZoomed: true,
-						})
-					  );
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "Zoomed" })
-					  );
-				    },
+				    	beforeMount: function (chartContext) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "beforeMount" })
+					  	);
+				    	},
 
-				    beforeMount: function (chartContext) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "beforeMount" })
-					  );
-				    },
-
-				    mounted: function (chartContext) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "mounted" })
-					  );
-					  highlightMinAndMax(chartContext);
-					  document
-						.querySelector(".apexcharts-canvas")
-						?.addEventListener(
-						    "touchstart",
-						    (e) => {},
-						    { passive: true }
+				   	mounted: function (chartContext) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "mounted" })
+					  	);
+					  	highlightMinAndMax(chartContext);
+					  	document
+							.querySelector(".apexcharts-canvas")
+							?.addEventListener(
+						    	"touchstart",
+						    	(e) => {},
+						    	{ passive: true }
 						);
-				    },
+				    	},
 
-				    dataPointSelection: function (
-					  event,
-					  chartContext,
-					  config
-				    ) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({
-						    action: "dataPointSelection",
-						})
-					  );
-				    },
+				   	dataPointSelection: function (event,chartContext,config) {
+					     window.ReactNativeWebView.postMessage(
+							JSON.stringify({
+							    action: "dataPointSelection",
+							})
+					  	);
+				    	},
 
-				    updated: function (chartContext) {
-					  window.ReactNativeWebView.postMessage(
-						JSON.stringify({ action: "Chart updated" })
-					  );
-					  highlightMinAndMax(chartContext);
-				    },
+				      updated: function (chartContext) {
+					  	window.ReactNativeWebView.postMessage(
+							JSON.stringify({ action: "Chart updated" })
+					  	);
+					  	highlightMinAndMax(chartContext);
+				    	},
 				},
 			  },
 			  stroke: {
@@ -640,32 +593,32 @@ export let WebviewLineHtmlContent = `
 				    },
 				},
 				labels: {
-				    show: true,
-				    rotate: 0,
-				    rotateAlways: true,
-				    textAnchor: "start",
-				    hideOverlappingLabels: false,
-				    showDuplicates: false,
-				    trim: false,
-				    maxHeight: 120,
-				    offsetX: 5,
-				    offsetY: 10,
-				    style: {
-					  fontSize: "8px",
-					  fontFamily: "Helvetica, Arial, sans-serif",
-					  fontWeight: 300,
-					  // cssClass: 'apexcharts-xaxis-label',
-				    },
+					      show: true,
+					      rotate: 0,
+					      rotateAlways: true,
+					      textAnchor: "start",
+					      hideOverlappingLabels: false,
+					      showDuplicates: false,
+					      trim: false,
+					      maxHeight: 120,
+					      offsetX: 5,
+					      offsetY: 10,
+					      style: {
+						      fontSize: "8px",
+						      fontFamily: "Helvetica, Arial, sans-serif",
+						  	fontWeight: 300,
+						  	// cssClass: 'apexcharts-xaxis-label',
+				    		},
 
-				    formatter: (value) => {
-					  const date = new Date(value);
-					  return date.toLocaleString("en-IN", {
-						year: "numeric",
-						month: "short",
-						day: "2-digit",
-						// timeZone: "Europe/Berlin",
-					  });
-				    },
+				    		formatter: (value) => {
+					  		const date = new Date(value);
+					  		return date.toLocaleString("en-IN", {
+								year: "numeric",
+								month: "short",
+								day: "2-digit",
+								// timeZone: "Europe/Berlin",
+					  	});
+				    	},
 				},
 				// axisBorder: {
 				// 	show: true,
@@ -676,114 +629,113 @@ export let WebviewLineHtmlContent = `
 				// 	offsetY: 0,
 				// },
 				axisTicks: {
-				    show: true,
-				    borderType: "solid",
-				    color: "#e5e5e5",
-				    height: 6,
-				    offsetX: 0,
-				    offsetY: 0,
+				    	show: true,
+				    	borderType: "solid",
+				    	color: "#e5e5e5",
+				    	height: 6,
+				    	offsetX: 0,
+				    	offsetY: 0,
 				},
 				crosshairs: {
-				    show: false,
-				    width: 0,
-				    position: "back",
-				    opacity: 0.9,
-				    stroke: {
-					  color: "#b6b6b6",
-					  width: 0,
-					  dashArray: 1,
-				    },
-				    fill: {
-					  type: "solid",
-					  color: "#B1B9C4",
-					  gradient: {
-						colorFrom: "#D8E3F0",
-						colorTo: "#BED1E6",
-						stops: [0, 100],
-						opacityFrom: 0.4,
-						opacityTo: 0.5,
-					  },
-				    },
-				    dropShadow: {
-					  enabled: false,
-					  top: 0,
-					  left: 0,
-					  blur: 0,
-					  opacity: 0.4,
-				    },
+				    	show: false,
+				    	width: 0,
+				    	position: "back",
+				    	opacity: 0.9,
+				    	stroke: {
+					  	color: "#b6b6b6",
+					  	width: 0,
+					  	dashArray: 1,
+				    	},
+				    	fill: {
+					  	type: "solid",
+					  	color: "#B1B9C4",
+					  	gradient: {
+							colorFrom: "#D8E3F0",
+							colorTo: "#BED1E6",
+							stops: [0, 100],
+							opacityFrom: 0.4,
+							opacityTo: 0.5,
+					  	},
+				    	},
+				    	dropShadow: {
+					  	enabled: false,
+					  	top: 0,
+					  	left: 0,
+					  	blur: 0,
+					  	opacity: 0.4,
+				    	},
 				},
 			  },
 
 			  yaxis: {
 				title: {
-				    text: "kWh",
-				    rotate: -90,
-				    offsetX: 0,
-				    offsetY: 0,
-				    style: {
-					  color: "undefined",
-					  fontSize: "12px",
-					  fontFamily: "Helvetica, Arial, sans-serif",
-					  fontWeight: 600,
-					  cssClass: "apexcharts-yaxis-title",
-				    },
+				    	text: "kWh",
+				    	rotate: -90,
+				    	offsetX: 0,
+				    	offsetY: 0,
+				    	style: {
+					  	color: "undefined",
+					  	fontSize: "12px",
+					  	fontFamily: "Helvetica, Arial, sans-serif",
+					  	fontWeight: 600,
+					  	cssClass: "apexcharts-yaxis-title",
+				    	},
 				},
 				labels: {
-				    show: true,
-				    minWidth: 0,
-				    maxWidth: 160,
-				    style: {
-					  fontSize: "8px",
-					  fontFamily: "Helvetica, Arial, sans-serif",
-					  fontWeight: 300,
-				    },
-				    offsetX: 0, //y axis labels
-				    offsetY: 0,
-				    formatter: (value) =>
-					  new Intl.NumberFormat("en-EN", {
-						maximumFractionDigits: 3,
-					  }).format(value),
-				},
+				    	show: true,
+				    	minWidth: 0,
+				    	maxWidth: 160,
+				    	style: {
+					  	fontSize: "8px",
+					  	fontFamily: "Helvetica, Arial, sans-serif",
+					  	fontWeight: 300,
+				    	},
+				    	offsetX: 0, //y axis labels
+				    	offsetY: 0,
+				    	formatter: (value) =>
+					  	new Intl.NumberFormat("en-EN", {
+							maximumFractionDigits: 3,
+					  	}).format(value),
+					},
+				// 	axisBorder: {
+				// 		show: true,
+				// 		color: "#78909C",
+				// 		height: "100%",
+				// 		width:1,
+				// 		offsetX: -1,
+				// 		offsetY: 0,
+				// 	},
+					axisTicks: {
+				    		show: true,
+				    		borderType: "solid",
+				    		color: "#e5e5e5",
+				    		width: 3,
+				    		offsetX: 0,
+				    		offsetY: 0,
+					},
+			  	},
 
-				// axisBorder: {
-				// 	show: true,
-				// 	color: "#78909C",
-				// 	height: "100%",
-				// 	width:1,
-				// 	offsetX: -1,
-				// 	offsetY: 0,
-				// },
-				axisTicks: {
-				    show: true,
-				    borderType: "solid",
-				    color: "#e5e5e5",
-				    width: 3,
-				    offsetX: 0,
-				    offsetY: 0,
-				},
-			  },
+			  	annotations: {
+					points: [],
+			  	},
 
-			  annotations: {
-				points: [],
-			  },
-
-			  tooltip: {
-				enabled: true,
-				shared: false,
-				intersect: false,
-				hideEmptySeries: true,
-				fillSeriesColor: false,
-				offsetX: 10,
-				offsetY: 10,
-				style: {
-				    fontSize: "10px",
-				    fontFamily: "Arial, sans-serif",
-				    background: "#333",
-				    color: "#fff",
-				    borderRadius: "10px",
-				    padding: "1px",
-				    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-				},
+			  	tooltip: {
+					enabled: true,
+					shared: false,
+					intersect: false,
+					hideEmptySeries: true,
+					fillSeriesColor: false,
+					offsetX: 10,
+					offsetY: 10,
+					style: {
+					    	fontSize: "10px",
+					    	fontFamily: "Arial, sans-serif",
+					   	background: "#333",
+					    	color: "#fff",
+					    	borderRadius: "10px",
+					    	padding: "1px",
+					    	boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+					},
 				onDatasetHover: {
 				    highlightDataSeries: true,
 				},
@@ -2430,12 +2382,11 @@ export const iFreameDonutChartHtml = `
 
     <script>
 	  document.addEventListener("DOMContentLoaded", function() {
-		var initialSeries = [44, 55]; // Initial data for "Open" and "Closed"
 		var activeIndex = null; // Track the active dataset index
 		var chart; // Chart instance
 
 		var options = {
-		    series: initialSeries,
+		    series: [],
 		    chart: {
 			  	type: 'donut',
 			  	height: '120%',
@@ -2839,13 +2790,7 @@ export const webviewDonutChartHtml = `
 			window.updateChartSeries = function (filteredData) {
 
 				if (Array.isArray(filteredData) && filteredData.every(val => typeof val === 'number')) {
-					donutchart.destroy();
-	  
-	  var options = donutchart.w.config; // Get existing config
-	  options.series = filteredData; // Update series
-
-	  donutchart = new ApexCharts(document.querySelector("#donut-chart"), options);
-	  donutchart.render();
+					donutchart.updateSeries(filteredData,true);
 				} else {
 					console.error("Invalid data format for chart series.");
 				}
@@ -3549,6 +3494,9 @@ export const iframeAreahtlcontent = `
 <body style="margin:0; padding:0; display:flex; justify-content:center; align-items:center; height:100vh;">
     <div id="chart" style="width:100%; height:100%;"></div>
     <script>
+	  let localeAfterMount="en-IN";
+	  let titleAfterMount="";
+	  let initialXAxisRange = {};
 	  function getLocalizedMonths(locale = 'en-US') {
 		try {
 		    const formatter = new Intl.DateTimeFormat(locale, { month: 'short' });
@@ -3558,11 +3506,52 @@ export const iframeAreahtlcontent = `
 		    return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 		}
 	  }
+	  // Common function to handle both zoom and pan
+	function handleZoomOrPan(chartContext, xaxis, yaxis) {
+	    const seriesX = chartContext.w.globals.seriesX[0] || []; // Ensure series exists
 
+	    if (seriesX.length < 2) {
+		  console.warn("Not enough data points to zoom or pan");
+		  return {
+			xaxis: {
+			    min: chartContext.w.globals.minX,
+			    max: chartContext.w.globals.maxX,
+			},
+			yaxis,
+		  };
+	    }
+
+	    const seriesMin = seriesX[0];
+	    const seriesMax = seriesX[seriesX.length - 1];
+	    const minDistanceBetweenPoints = seriesX[1] - seriesX[0];
+
+	    const newMinX = Math.max(xaxis?.min ?? seriesMin, seriesMin);
+	    const newMaxX = Math.min(xaxis?.max ?? seriesMax, seriesMax);
+
+	    if (newMaxX - newMinX < minDistanceBetweenPoints) {
+		  return {
+			xaxis: {
+			    min: chartContext.w.globals.minX,
+			    max: chartContext.w.globals.maxX,
+			},
+			yaxis,
+		  };
+	    }
+
+	    return {
+		  xaxis: {
+			min: newMinX,
+			max: newMaxX,
+		  },
+		  yaxis,
+	    };
+	}
 	  let categories = getLocalizedMonths('en-IN');  // Default locale
 	  // Function to update the chart's locale
-	  function updateLocale(newLocale = "en-IN",newTitle) {
+	  function updateLocale(newLocale = "en-IN",newTitle="") {
 		categories = getLocalizedMonths(newLocale);
+		localeAfterMount=newLocale;
+		titleAfterMount=newTitle;
 		chart.updateOptions({
 		    xaxis: {
 			  categories: categories,
@@ -3603,6 +3592,48 @@ export const iframeAreahtlcontent = `
 			  animategradually: { enabled: true, delay: 2000 },
 			  initialAnimation: { enabled: true }
 		    },
+		    events: {
+				mounted: function(chartContext) {
+					setTimeout(()=>{
+						initialXAxisRange.min = chartContext.w.globals.minX;
+						initialXAxisRange.max = chartContext.w.globals.maxX;
+					},1000)
+				  },
+				
+				//   beforeResetZoom: function () {
+				// 	console.log("Reset zoom triggered - Resetting to:", initialXAxisRange);
+		  
+				// 	// Ensure the chart resets to its original range
+				// 	return {
+				// 	    xaxis: {
+				// 		  min: initialXAxisRange.min,
+				// 		  max: initialXAxisRange.max,
+				// 	    },
+				// 	    yaxis: {},
+				// 	};
+				//   },
+				beforeZoom: function (chartContext, { xaxis, yaxis }) {
+					updateLocale(localeAfterMount,titleAfterMount)
+					return handleZoomOrPan(chartContext, xaxis, yaxis);
+				  },
+				  scrolled: function (chartContext, { xaxis, yaxis }) {
+					chartContext.updateOptions({
+					    xaxis: handleZoomOrPan(chartContext, xaxis, yaxis).xaxis,
+					});
+					updateLocale(localeAfterMount,titleAfterMount)
+				  },
+				  beforeResetZoom: function (chartContext) {
+					
+					chartContext.updateOptions({
+						xaxis:{
+							min: "Jan",
+							max:  "Dec",
+						  },
+						  yaxis: {},
+					  });
+					  updateLocale(localeAfterMount,titleAfterMount)
+				  }
+		  }
 		},
 		title: {
 		    text: "",

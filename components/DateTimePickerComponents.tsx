@@ -62,7 +62,7 @@ const DateTimePickerComponents = ({
 	if (!open) return null;
 	return (
 		<Pressable
-			className={`w-96 -z-0 bg-[#fff] p-1 rounded-md  md:mt-9 md:ml-5  shadow-lg`}
+			className={`w-80 -z-0 bg-[#fff] p-1 rounded-sm  md:mt-9 md:ml-5  shadow-lg`}
 		>
 			<View className="flex flex-row items-start justify-between">
 				<Text className="text-slate-90000 font-bold my-1 ml-1">
@@ -134,7 +134,7 @@ const DateTimePickerComponents = ({
 								accessibilityRole="button"
 								accessibilityLabel="Today"
 							>
-								<View className="bg-[#E63757] px-3 py-2  rounded-md items-center ">
+								<View className="bg-[#E63757] px-3 py-2  rounded-sm items-center ">
 									<Text className="text-white font-medium">
 										{i18n.t("today")}
 									</Text>
@@ -151,7 +151,7 @@ const DateTimePickerComponents = ({
 									accessibilityRole="button"
 									accessibilityLabel="select"
 								>
-									<View className="bg-[#E63757] px-4 py-2  rounded-md items-center ">
+									<View className="bg-[#E63757] px-4 py-2  rounded-sm items-center ">
 										<Text className="text-white font-medium">
 											{i18n.t("select")}
 										</Text>
@@ -224,7 +224,7 @@ const DateTimePickerComponents = ({
 								accessibilityLabel="select"
 								style={{ marginBottom: 2 }}
 							>
-								<View className="bg-[#E63757] px-4 py-2 my-1 rounded-md items-center ">
+								<View className="bg-[#E63757] px-4 py-2 my-1 rounded-sm items-center ">
 									<Text className="text-white font-medium">
 										{i18n.t("select")}
 									</Text>

@@ -56,7 +56,7 @@ const ContactUs = () => {
 				{/* Name Field */}
 				<View className="w-full p-2 relative mb-1">
 					<TextInput
-						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-md text-lg"
+						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-sm text-lg"
 						placeholder={i18n.t("name")}
 						value={name}
 						onChangeText={setName}
@@ -77,7 +77,7 @@ const ContactUs = () => {
 				{/* Phone Field */}
 				<View className="w-full p-2 relative mb-1">
 					<TextInput
-						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-md text-lg"
+						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-sm text-lg"
 						placeholder={i18n.t("phone")}
 						value={phone}
 						onChangeText={setPhone}
@@ -98,7 +98,7 @@ const ContactUs = () => {
 				{/* Email Field */}
 				<View className="w-full p-2 relative mb-1">
 					<TextInput
-						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-md text-lg"
+						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-sm text-lg"
 						placeholder={i18n.t("email")}
 						value={email}
 						onChangeText={setEmail}
@@ -120,7 +120,7 @@ const ContactUs = () => {
 				{/* Message Field */}
 				<View className="w-full p-2 relative">
 					<TextInput
-						className="pr-10 pl-3 py-3 bg-gray-200 border h-40 w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-md text-lg align-top"
+						className="pr-10 pl-3 py-3 bg-gray-200 border h-40 w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-sm text-lg align-top"
 						placeholder={i18n.t("message")}
 						value={message}
 						onChangeText={setMessage}

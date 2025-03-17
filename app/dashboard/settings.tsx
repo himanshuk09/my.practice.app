@@ -55,7 +55,7 @@ const Settings = () => {
 					onValueChange={(newValue) =>
 						setSelectedLanguage(newValue)
 					}
-					className="w-full p-3 border-b-2  rounded-md "
+					className="w-full p-3 border-b-2  rounded-sm "
 				>
 					<Picker.Item
 						label="ENGLISH"

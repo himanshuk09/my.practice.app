@@ -122,9 +122,19 @@ const SignalSettings = ({
 					/>
 				</View>
 			</View>
-			<View className="w-full h-full flex-1">
+			<View
+				className="w-full h-full flex-1"
+				style={{
+					height: "100%",
+				}}
+			>
 				{cards?.length === 0 ? (
-					<View className="items-center  bg-gray-100 overflow-scroll  p-2 justify-center h-full w-full">
+					<View
+						className="items-center  justify-center "
+						style={{
+							height: "90%",
+						}}
+					>
 						<Text>Data Not Available</Text>
 					</View>
 				) : loading ? (
@@ -147,19 +157,19 @@ const SignalSettings = ({
 						contentContainerStyle={{ paddingTop: 4 }}
 						showsHorizontalScrollIndicator={false}
 						showsVerticalScrollIndicator={false}
-						initialNumToRender={0}
+						initialNumToRender={10}
 						maxToRenderPerBatch={5}
 					/>
 				)}
+				<TouchableOpacity
+					className={`bg-[#e31836]   h-12 py-3 mx-5 rounded-sm my-2 ${loading && "absolute bottom-0 left-0 right-0 "} `}
+					onPress={() => setModalVisible(!modalVisible)}
+				>
+					<Text className="text-white text-center text-base font-medium uppercase">
+						{i18n.t("View_Signal_Chart")}
+					</Text>
+				</TouchableOpacity>
 			</View>
-			<TouchableOpacity
-				className={`bg-[#e31836]  bottom-0  h-12 py-3 mx-5 rounded-sm my-2 absolute  left-0 right-0 `}
-				onPress={() => setModalVisible(!modalVisible)}
-			>
-				<Text className="text-white text-center text-base font-medium uppercase">
-					{i18n.t("View_Signal_Chart")}
-				</Text>
-			</TouchableOpacity>
 		</View>
 	);
 };

@@ -173,7 +173,7 @@ const SignIn: React.FC = () => {
 											? "#3B82F6" // Blue border on focus
 											: "#D1D5DB", // Default gray border
 									borderWidth: 1,
-									borderRadius: 8,
+									borderRadius: 2,
 									fontSize: 16,
 									marginBottom: 15,
 									color: "#808080",
@@ -262,7 +262,7 @@ const SignIn: React.FC = () => {
 											? "#3B82F6" // Blue border on focus
 											: "#D1D5DB", // Default gray border
 									borderWidth: 1,
-									borderRadius: 8,
+									borderRadius: 2,
 									fontSize: 16,
 									marginBottom: 15,
 									color: "#808080",

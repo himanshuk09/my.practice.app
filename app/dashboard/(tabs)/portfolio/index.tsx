@@ -3,7 +3,7 @@ import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import { Platform, SafeAreaView } from "react-native";
+import { Platform, SafeAreaView, useWindowDimensions } from "react-native";
 import { StatusBar } from "react-native";
 import { getPortfolioList } from "@/services/portfolio.service";
 import { Portfolioprops, PortfolioArray } from "@/types/type";
@@ -16,7 +16,7 @@ const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	let NavigateTo = "dashboard/portfolio";
-
+	const { height } = useWindowDimensions();
 	useEffect(() => {
 		const fetchDetails = async () => {
 			if (!isOnline) return;
@@ -49,7 +49,7 @@ const Portfolio: React.FC = () => {
 			<FlatListBlock
 				title="Gas"
 				items={gasList || []}
-				height={Platform.OS === "web" ? 343 : "50%"}
+				height={Platform.OS === "web" ? height * 0.45 : "50%"}
 				NavigateTo={NavigateTo}
 				renderType={"Portfolio"}
 				keyExtractor={(item: Portfolioprops) =>
@@ -59,7 +59,7 @@ const Portfolio: React.FC = () => {
 			<FlatListBlock
 				title="Power"
 				items={stromList || []}
-				height={Platform.OS === "web" ? 380 : "50%"}
+				height={Platform.OS === "web" ? height * 0.45 : "50%"}
 				NavigateTo={NavigateTo}
 				renderType={"Portfolio"}
 				keyExtractor={(item: Portfolioprops) =>

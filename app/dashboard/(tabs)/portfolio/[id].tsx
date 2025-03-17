@@ -182,10 +182,10 @@ const PortfolioOverView = () => {
 				return;
 			} else {
 				try {
-					const responsePortfolioDeals: any =
-						await getPortfolioDeals(paramsID);
-
 					if (portfolioDetails?.message != "no data") {
+						const responsePortfolioDeals: any =
+							await getPortfolioDeals(paramsID);
+						console.log(responsePortfolioDeals);
 						setPortfolioDeals(responsePortfolioDeals);
 					}
 				} catch (error) {
@@ -205,6 +205,7 @@ const PortfolioOverView = () => {
 				return;
 			}
 
+			updateLocale();
 			updateApexChart(
 				"series",
 				donutwebViewRef,
@@ -217,7 +218,6 @@ const PortfolioOverView = () => {
 				areaIFrameRef,
 				portfolioDetails?.areaChartData
 			);
-			updateLocale();
 		}
 	}, [portfolioDetails, isChartLoaded]);
 
@@ -270,7 +270,7 @@ const PortfolioOverView = () => {
 								/>
 
 								<View
-									className={`flex-col justify-start w-[31%] md:w-[10%]`}
+									className={`flex-col justify-start w-[33%] md:w-[10%]`}
 								>
 									<DataDisplay
 										data={
@@ -295,12 +295,12 @@ const PortfolioOverView = () => {
 										marginRight:
 											Platform.OS === "web"
 												? "10%"
-												: 40,
+												: 20,
 									}}
 								>
 									<FontAwesome5
 										name="file-download"
-										size={35}
+										size={25}
 										color="#ef4444"
 										onPress={
 											exportPortfolioReport
@@ -366,7 +366,7 @@ const PortfolioOverView = () => {
 					</View>
 
 					<TouchableOpacity
-						className={`bg-primary mb-2 bottom-0   py-2 mx-5 rounded-sm my-2 
+						className={`bg-primary mb-2 bottom-0   py-2 mx-2 rounded-sm my-2 
 								
 									absolute  left-0 right-0 
 								`}

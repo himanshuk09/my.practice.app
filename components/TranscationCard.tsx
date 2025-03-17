@@ -17,7 +17,7 @@ import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const Card = ({ title, deals }: any) => {
 	return (
-		<View className="bg-cardBg rounded-xs p-3 my-1 " style={st.boxShadow}>
+		<View className="bg-cardBg  mx-1 p-3 my-1 " style={st.boxShadow}>
 			<Text className="text-sm text-cardTextHeader font-medium mb-2">
 				{deals?.ProductName}
 			</Text>
@@ -101,7 +101,7 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 		}, 1000);
 	}, []);
 	return (
-		<View className="flex-1 bg-white " style={StyleSheet.absoluteFill}>
+		<View className="flex-1  " style={StyleSheet.absoluteFill}>
 			<StackHeader
 				title={"portfolio_overview"}
 				closed={true}
@@ -120,11 +120,11 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 				<View className="py-5 mr-5">
 					<FontAwesome5
 						name="file-download"
-						size={30}
+						size={25}
 						color="#ef4444"
 						onPress={() => {
+							if (!isOnline || cards?.length === 0) return;
 							setModalVisible(!modalVisible);
-							if (!isOnline) return;
 							if (Platform.OS === "web") {
 								saveDealsCSVWeb(
 									cards,
@@ -141,16 +141,16 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 				</View>
 			</View>
 			<View
-				className="flex-1  h-full   w-full"
+				className="flex-1  w-full  "
 				style={{
-					height: "90%",
+					height: "100%",
 				}}
 			>
 				{cards?.length === 0 ? (
 					<View
 						className="items-center justify-center"
 						style={{
-							height: "90%",
+							height: "91.5%",
 						}}
 					>
 						<Text className="text-md font-medium text-mainCardHeaderText">
@@ -177,14 +177,16 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 						nestedScrollEnabled={true}
 						scrollEnabled={true}
 						initialNumToRender={10}
-						maxToRenderPerBatch={1}
-						style={{ padding: 8, flex: 1, marginBottom: 7 }}
-						className=" overflow-scroll  p-2 "
+						maxToRenderPerBatch={5}
+						style={{
+							flex: 1,
+							marginBottom: 5,
+						}}
 					/>
 				)}
 				<TouchableOpacity
-					className={`bg-primary my-1 mx-2  py-3 flex justify-center items-center rounded-sm   
-						${loading && "absolute bottom-0 left-0 right-0 "}}`}
+					className={`bg-primary  mx-2  py-3 flex justify-center items-center rounded-sm    
+						${loading || cards?.length === 0 ? "absolute bottom-1 left-0 right-0 " : ""}}`}
 					onPress={() => setModalVisible(!modalVisible)}
 				>
 					<Text className="text-white text-center text-base font-medium uppercase">
@@ -229,7 +231,7 @@ export const DataDisplay = ({
 	return (
 		<View className="flex p-1 bg-white">
 			<Text
-				className={`${title === "Closed" ? "text-red-600" : "text-chartText"} text-sm font-bold`}
+				className={`${title === "Closed" ? "text-red-600" : "text-chartText"} mb-1 text-sm font-bold`}
 			>
 				{title}
 			</Text>

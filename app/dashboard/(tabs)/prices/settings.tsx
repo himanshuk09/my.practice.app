@@ -148,7 +148,7 @@ const PricesSettings = () => {
 					onValueChange={(newValue) =>
 						setSelectedPlace(newValue)
 					}
-					className="w-full p-3 border-b-2 bg-transparent rounded-md"
+					className="w-full p-3 border-b-2 bg-transparent rounded-sm"
 				>
 					<Picker.Item
 						label="EEX"

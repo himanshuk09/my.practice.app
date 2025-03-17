@@ -74,7 +74,7 @@ const Forgotpassword = () => {
 						) : null}
 						<View className="relative">
 							<TextInput
-								className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none  rounded-md  text-lg "} `}
+								className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none  rounded-sm  text-lg "} `}
 								style={{
 									paddingLeft: 12,
 									paddingRight: 12,
@@ -86,7 +86,7 @@ const Forgotpassword = () => {
 											? "#3B82F6" // Blue border on focus
 											: "#D1D5DB", // Default gray border
 									borderWidth: 1,
-									borderRadius: 8,
+									borderRadius: 2,
 									fontSize: 16,
 									marginBottom: 15,
 									color: "#808080",
