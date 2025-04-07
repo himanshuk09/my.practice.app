@@ -1,5 +1,4 @@
 // Drawer.js
-import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import React from "react";
 import {
 	View,
@@ -10,11 +9,13 @@ import {
 	Pressable,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { activeLoading } from "@/store/navigationSlice";
 import CustomDrawer from "./CustomDrawer";
+import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
+import { activeLoading } from "@/store/navigationSlice";
 
 const Drawer = ({ drawerWidth = 280 }: any) => {
 	const dispatch = useDispatch();
+	let debounceTimeout: any = null;
 	const isDrawerOpen = useSelector(
 		(state: any) => state.drawer.isDrawerOpen
 	);
@@ -33,7 +34,6 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 	const startLoader = () => {
 		dispatch(activeLoading());
 	};
-	let debounceTimeout: any = null;
 
 	const debounceAction = (action: () => void) => {
 		if (debounceTimeout) {

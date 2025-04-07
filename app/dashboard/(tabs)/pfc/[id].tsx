@@ -18,12 +18,12 @@ import { st } from "@/utils/Styles";
 
 const PFCDetails = () => {
 	const { id } = useLocalSearchParams();
+	let visibleTabs = ["Week", "Month", "Quarter", "Year", "Year_3"];
 	const [pfcDetails, setPfcDetails] = useState<any>([]);
 	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-	let visibleTabs = ["Week", "Month", "Quarter", "Year", "Year_3"];
 	const getCurrentUTCDateTime = () => {
 		const now = new Date();
 		// Extract UTC components

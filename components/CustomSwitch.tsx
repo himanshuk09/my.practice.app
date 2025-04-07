@@ -7,7 +7,6 @@ const CustomSwitch = ({ isEnabled = true, setIsEnabled }: any) => {
 
 	const toggleSwitch = () => {
 		setIsEnabled(!isEnabled);
-
 		Animated.spring(translateX, {
 			toValue: isEnabled ? 0 : 30, // Adjusting to smaller size
 			useNativeDriver: Platform.OS !== "web" ? true : false,

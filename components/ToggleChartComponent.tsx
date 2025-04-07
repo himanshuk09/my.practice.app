@@ -2,26 +2,24 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Platform, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import WebView from "react-native-webview";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+import dayjs, { Dayjs } from "dayjs";
 import { inActiveLoading } from "@/store/navigationSlice";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import ChartComponent from "@/components/Chart/ChartComponent";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { ChartLoaderPNG } from "@/components/Loader";
 import PickerModel from "@/components/PickerModel";
 import { RootState } from "@/store/store";
-import FloatingActionMenu from "./FloatingActionMenu";
-import {
-	WebviewLineHtmlContent,
-	iFrameLineHtmlcontent,
-} from "./Chart/charthtmlcontent";
-import { filterDataByDateRange } from "./Chart/filterFunction";
+import FloatingActionMenu from "@/components/FloatingActionMenu";
+import { filterDataByDateRange } from "@/components/Chart/filterFunction";
 import {
 	updateApexChart,
 	updateEmptyChart,
 } from "./Chart/chartUpdateFunctions";
+import webviewLineHtmlContent from "@/components/Chart/config/Linechart.android";
+import iframeLineHtmlContent from "@/components/Chart/config/Linechart.web";
+import { DateType } from "react-native-ui-datepicker";
+import { iFrameLineHtmlcontent } from "./Chart/charthtmlcontent";
 
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
 type ToggleChartComponentProps = {
@@ -49,31 +47,41 @@ const ToggleChartComponent = ({
 	isChartLoaded,
 	setIsChartLoaded,
 }: ToggleChartComponentProps) => {
+	const dispatch = useDispatch();
+	let title = i18n.t("Energy_Use");
+	const isFirstRender = useRef(true);
+	const webViewRef = useRef<WebView | any>(null);
+	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
+	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const locale = useSelector((state: any) => state.language.locale);
+	const isLandscape = useSelector(
+		(state: RootState) => state.orientation.isLandscape
+	);
 	const [isLoading, setLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState<tabsType>("Year");
 	const [previousTab, setPreviousTab] = useState<tabsType>("Year");
-	const [selectedStartDate, setSelectedStartDate] = useState<any>(dayjs());
-	const [selectedEndDate, setSelectedEndDate] = useState<any>(
-		dayjs().add(7, "day")
-	);
+	const [selectedStartDate, setSelectedStartDate] = useState<
+		Dayjs | DateType | any
+	>(dayjs());
+	const [selectedEndDate, setSelectedEndDate] = useState<
+		Dayjs | DateType | any
+	>(dayjs().add(7, "day"));
+	const [maxMinValues, setMaxMinValues] = useState<any>({
+		minX: 0,
+		minY: 0,
+		maxX: 0,
+		maxY: 0,
+	});
 	const [modalVisible, setModalVisible] = useState(false);
 	const [isChartZoomed, setIschartZoomed] = useState(false);
 	const [isTooltipEnabled, setIsTooltipEnabled] = useState(false);
 	const [isChartEmpty, setIsChartEmpty] = useState(false);
-	const locale = useSelector((state: any) => state.language.locale);
-	const dispatch = useDispatch();
-	const webViewRef = useRef<WebView | any>(null);
-	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
-	const isFirstRender = useRef(true);
-	let title = i18n.t("Energy_Use");
-	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-	const isLandscape = useSelector(
-		(state: RootState) => state.orientation.isLandscape
-	);
 
 	const updateChartData = (filteredData: any) => {
 		if (filteredData?.length === 0) {
 			updateEmptyChart(webViewRef, iFrameRef);
+			setIsChartEmpty(true);
+			return;
 		}
 
 		if (isTooltipEnabled) {
@@ -105,8 +113,7 @@ const ToggleChartComponent = ({
 			webViewRef,
 			iFrameRef,
 			filteredData,
-			chartOptions,
-			title
+			chartOptions
 		);
 
 		if (iFrameRef?.current?.contentWindow?.isChartZoomed?.()) {
@@ -138,27 +145,16 @@ const ToggleChartComponent = ({
 			}
 		}
 	};
-	const fetchDataBYAPI = async () => {
-		try {
-			const response = await fetch(
-				`http://test-productprice.enexion-sys.de/new/ProductPrice.asmx/GetProductPrice?token=936DA01F-9ABD-4D9D-80C7-02AF85C822A8&energyType=Gas&productType=pfc&from=${dayjs(selectedStartDate).format("YYYY-MM-DD")}&to=${dayjs(selectedEndDate).format("YYYY-MM-DD")}&quality=gapfree&frequency=5min&pfcName=Acyclic&refDate=2023-03-23&refDate2=2023-03-24`
-			);
 
-			const xmlText = await response.text(); // Convert response to text
-			console.log("Raw XML:", xmlText); // Log raw XML
-		} catch (error) {
-			console.error("Fetch error:", error);
-		}
-	};
 	const handleRangeDataFilter = () => {
 		let rangeFilterData = filterDataByDateRange(
-			selectedStartDate,
-			selectedEndDate
+			selectedStartDate.toISOString(),
+			selectedEndDate.toISOString()
 		);
-		// fetchDataBYAPI();
 		if (rangeFilterData?.length === 0) {
 			updateEmptyChart(webViewRef, iFrameRef);
 			setActiveTab("");
+			setIsChartEmpty(true);
 			return;
 		} else {
 			if (isChartZoomed) {
@@ -183,50 +179,59 @@ const ToggleChartComponent = ({
 					},
 				}
 			);
+			setActiveTab("");
+			setIsChartEmpty(false);
 		}
-		setActiveTab("");
 	};
-	const onMessage = async (event: any) => {
-		//for loader
-		const message = JSON.parse(event.nativeEvent.data);
-		if (
-			message.action === "updateChartSeries" ||
-			message.action === "updateChartOptions"
-		) {
-			setLoading(true);
-		}
-		if (message.action === "Chart updated") {
-			if (LoaderTimeoutRef.current) {
-				clearTimeout(LoaderTimeoutRef.current);
-			}
-			// Assign new timeout without optional chaining
-			LoaderTimeoutRef.current = setTimeout(() => {
-				setLoading(false);
-			}, 500);
-		}
 
-		// Handle loader actions on tooltip toggle
-		if (message.action === "startLoader") {
-			setLoading(true);
-		} else if (message.action === "stopLoader") {
-			setTimeout(() => {
-				setLoading(false);
-			}, 2000);
+	const onMessage = async (event: any) => {
+		const message = JSON.parse(event.nativeEvent.data);
+		const { action, values, reason, isZoomed } = message;
+
+		switch (action) {
+			case "updateChartSeries":
+			case "updateChartOptions":
+				setLoading(true);
+				break;
+
+			case "Chart updated":
+				if (LoaderTimeoutRef.current)
+					clearTimeout(LoaderTimeoutRef.current);
+				LoaderTimeoutRef.current = setTimeout(
+					() => setLoading(false),
+					500
+				);
+				break;
+
+			case "startLoader":
+				setLoading(true);
+				break;
+
+			case "stopLoader":
+			case "Empty":
+				setTimeout(() => setLoading(false), 2000);
+				break;
+
+			case "chartZoomed":
+				setIschartZoomed(isZoomed);
+				break;
+
+			case "tooltip":
+				setIsTooltipEnabled(values);
+				break;
+			case "highLightedMaxMin":
+				setMaxMinValues(values);
+			default:
+				break;
 		}
-		if (message.action === "chartZoomed") {
-			setIschartZoomed(message.isZoomed);
-		}
-		if (message.action === "tooltip") {
-			setIsTooltipEnabled(message?.values);
-		}
-		// console.log("message.action", message.action, message?.values);
+		//console.log("message from webview line chart ", action, values, reason, isZoomed);
 	};
+
 	const fetchData = async () => {
 		if (fetchChartData && activeTab !== "") {
 			try {
 				const data = await fetchChartData(activeTab);
 				updateLocale();
-
 				updateChartData(data);
 				setPreviousTab(activeTab);
 			} catch (error) {
@@ -249,7 +254,6 @@ const ToggleChartComponent = ({
 		};
 		if (isChartLoaded) executeAfterRender();
 	}, [activeTab, fetchChartData, locale, isChartLoaded]);
-
 	return (
 		<View className="flex-1  bg-white">
 			{!isLandscape ? (
@@ -276,12 +280,13 @@ const ToggleChartComponent = ({
 					iFrameRef={iFrameRef}
 					onMessage={onMessage}
 					activeTab={activeTab}
-					webViewhtmlContent={WebviewLineHtmlContent}
-					iFramehtmlContent={iFrameLineHtmlcontent}
-					showToggle={false}
+					webViewhtmlContent={webviewLineHtmlContent}
+					iFramehtmlContent={iframeLineHtmlContent}
+					// iFramehtmlContent={iFrameLineHtmlcontent}
 					setLoading={setLoading}
 					isTooltipEnabled={isTooltipEnabled}
 					setIsChartLoaded={setIsChartLoaded}
+					setMaxMinValues={setMaxMinValues}
 				/>
 			</View>
 
@@ -298,6 +303,8 @@ const ToggleChartComponent = ({
 						</Text>
 					</TouchableOpacity>
 					<PickerModel
+						maxMinValues={maxMinValues}
+						setMaxMinValues={setMaxMinValues}
 						showRangePicker={showRangePicker}
 						showPeriodOfTime={showPeriodOfTime}
 						showValueRange={showValueRange}

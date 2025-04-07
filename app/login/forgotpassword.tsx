@@ -10,17 +10,17 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Href, Redirect, useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Logo from "@/components/SVG/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
-import { i18n } from "@/localization/localConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { i18n } from "@/localization/config";
 const Forgotpassword = () => {
-	const [errorMessage, setErrorMessage] = useState<string>("");
-	const [isEmailFocused, setIsEmailFocused] = useState(false);
+	const router = useRouter();
+	let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const [email, setEmail] = useState<string>("");
 	const [isAuth, setIsAuth] = useState<boolean>();
-	const router = useRouter();
-	const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+	const [errorMessage, setErrorMessage] = useState<string>("");
+	const [isEmailFocused, setIsEmailFocused] = useState(false);
 	const validateEmail = (text: string) => {
 		if (emailRegex.test(text)) {
 			setErrorMessage("");
@@ -28,6 +28,7 @@ const Forgotpassword = () => {
 			setErrorMessage("Please enter a valid email address");
 		}
 	};
+
 	useEffect(() => {
 		if (email) {
 			const interval = setInterval(() => {

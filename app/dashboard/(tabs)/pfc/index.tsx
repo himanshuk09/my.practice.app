@@ -20,15 +20,15 @@ interface CombinedData {
 	data: PriceForwardCurveArray;
 }
 const PFC = () => {
+	const isFocused = useIsFocused();
+	let NavigateTo = "dashboard/pfc";
+	const isOnline = useNetworkStatus();
+	const dispatch = useDispatch<AppDispatch>();
 	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 	const [pfcGasList, setPFCGasList] = useState<PriceForwardCurveArray>([]);
 	const [pfcStromList, setPFCStromList] = useState<PriceForwardCurveArray>(
 		[]
 	);
-	const dispatch = useDispatch<AppDispatch>();
-	const isFocused = useIsFocused();
-	const isOnline = useNetworkStatus();
-	let NavigateTo = "dashboard/pfc";
 	const combinedData: CombinedData[] = [
 		{ type: "header", title: "Gas", data: pfcGasList },
 		{ type: "header", title: "Strom", data: pfcStromList },
@@ -51,9 +51,10 @@ const PFC = () => {
 
 	const onRefresh = async () => {
 		setIsRefreshing(true);
-		setTimeout(() => {
-			setIsRefreshing(false);
-		}, 2000);
+		let responsePFCList = await getPFCList();
+		setPFCGasList(responsePFCList?.gas);
+		setPFCStromList(responsePFCList?.strom);
+		setIsRefreshing(false);
 	};
 	useEffect(() => {
 		dispatch(inActiveLoading());

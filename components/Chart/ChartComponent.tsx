@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import { Platform, TouchableOpacity, BackHandler, Alert } from "react-native";
+import { Platform, TouchableOpacity, BackHandler } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setOrientation } from "@/store/chartSlice";
@@ -7,7 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 import WebView from "react-native-webview";
-import ViewShot, { captureRef } from "react-native-view-shot";
+import ViewShot from "react-native-view-shot";
 import Toast from "react-native-toast-message";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
@@ -15,20 +15,19 @@ import * as ScreenOrientation from "expo-screen-orientation";
 
 type ChartComponentProps = {
 	webViewRef: React.RefObject<WebView | any>;
-	iFrameRef?: React.RefObject<HTMLIFrameElement | any>;
+	iFrameRef: React.RefObject<HTMLIFrameElement | any>;
+	webViewhtmlContent: any;
+	iFramehtmlContent: any;
 	onMessage?: (event: any) => void;
-	id?: number;
 	activeTab?: string;
-	webViewhtmlContent?: any;
-	iFramehtmlContent?: any;
 	showToggleOrientation?: boolean;
 	showToolbar?: boolean;
-	showToggle?: boolean;
 	iFrameWidth?: string | number | undefined;
 	setLoading?: any;
 	isTooltipEnabled?: boolean;
 	isChartEmpty?: boolean;
 	setIsChartLoaded?: any;
+	setMaxMinValues?: any;
 };
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
@@ -40,20 +39,20 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 	iFramehtmlContent,
 	showToggleOrientation = true,
 	showToolbar = true,
-	showToggle,
 	iFrameWidth = "100%",
 	setLoading,
 	isTooltipEnabled,
 	isChartEmpty = false,
 	setIsChartLoaded,
+	setMaxMinValues,
 }) => {
 	const dispatch = useDispatch();
 	const viewShotRef = useRef<any>(null);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-
 	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 	const toggleOrientation = async () => {
 		if (Platform.OS != "web") {
 			dispatch(activeLoading());
@@ -95,30 +94,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 			dispatch(setOrientation(!isLandscape));
 		}
 	};
-
-	useEffect(() => {
-		const handleBackPress = () => {
-			if (isLandscape) {
-				ScreenOrientation.lockAsync(
-					ScreenOrientation.OrientationLock.PORTRAIT
-				);
-				dispatch(setOrientation(false));
-				return true;
-			}
-			return false;
-		};
-
-		// Add the back button listener
-		BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-
-		// Cleanup on unmount
-		return () => {
-			BackHandler.removeEventListener(
-				"hardwareBackPress",
-				handleBackPress
-			);
-		};
-	}, [isLandscape, dispatch]);
 
 	const captureWebView = useCallback(async () => {
 		try {
@@ -179,67 +154,104 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 	}, []);
 
 	useEffect(() => {
-		if (Platform.OS === "web") {
-			const receiveMessage = (event: MessageEvent) => {
-				if (event.data?.source === "react-devtools-bridge") {
-					return; // Ignore DevTools messages
-				}
-				console.log("Message from iframe:", event.data);
+		const handleBackPress = () => {
+			if (isLandscape) {
+				ScreenOrientation.lockAsync(
+					ScreenOrientation.OrientationLock.PORTRAIT
+				);
+				dispatch(setOrientation(false));
+				return true;
+			}
+			return false;
+		};
 
-				if (
-					event.data === "updateChartSeries" ||
-					event.data === "updateChartOptions"
-				) {
-					setLoading(true);
-				}
-				if (event.data === "Chart updated") {
-					if (LoaderTimeoutRef.current) {
-						clearTimeout(LoaderTimeoutRef.current);
-					}
-					// Assign new timeout without optional chaining
-					LoaderTimeoutRef.current = setTimeout(() => {
-						setLoading(false);
-					}, 1000);
-				}
+		// Add the back button listener
+		BackHandler.addEventListener("hardwareBackPress", handleBackPress);
 
-				// Handle loader actions on tooltip toggle
-				if (
-					event.data === "startLoader" ||
-					((activeTab === "Year" || activeTab === "Year_3") &&
-						event.data === "Zoom Start")
-				) {
-					setLoading(true);
-				} else if (
-					event.data === "stopLoader" ||
-					((activeTab === "Year" || activeTab === "Year_3") &&
-						event.data === "Zoomed")
-				) {
-					setTimeout(() => {
-						setLoading(false);
-					}, 2000);
-				}
-			};
+		// Cleanup on unmount
+		return () => {
+			BackHandler.removeEventListener(
+				"hardwareBackPress",
+				handleBackPress
+			);
+		};
+	}, [isLandscape, dispatch]);
 
-			window.addEventListener("message", receiveMessage);
-			return () =>
-				window.removeEventListener("message", receiveMessage);
-		}
-	}, []);
+	useEffect(() => {
+		if (Platform.OS !== "web") return;
+
+		const handleChartUpdate = () => {
+			setLoading(true);
+		};
+
+		const handleChartUpdated = () => {
+			if (LoaderTimeoutRef?.current) {
+				clearTimeout(LoaderTimeoutRef.current);
+			}
+			LoaderTimeoutRef.current = setTimeout(() => {
+				setLoading(false);
+			}, 1000);
+		};
+
+		const handleLoaderAction = (shouldStart: boolean) => {
+			if (shouldStart) {
+				setLoading(true);
+			} else {
+				setTimeout(() => setLoading(false), 2000);
+			}
+		};
+
+		const receiveMessage = (event: MessageEvent) => {
+			const { message, source, values } = event?.data;
+			if (source === "react-devtools-bridge") return;
+
+			const isYearTab = activeTab === "Year" || activeTab === "Year_3";
+
+			// Handle chart updates
+			if (
+				message === "updateChartSeries" ||
+				message === "updateChartOptions"
+			) {
+				handleChartUpdate();
+			} else if (message === "Chart updated") {
+				handleChartUpdated();
+			}
+			// Handle loader actions
+			else if (
+				message === "startLoader" ||
+				(isYearTab && message === "Zoom Start")
+			) {
+				handleLoaderAction(true);
+			} else if (
+				message === "stopLoader" ||
+				(isYearTab && message === "Zoomed")
+			) {
+				handleLoaderAction(false);
+			}
+			// Handle max/min values
+			else if (message === "highLightedMaxMin") {
+				setMaxMinValues(values ? values : "0");
+			}
+
+			//console.log(`Message from ${source} iframe:`, event.data);
+		};
+
+		window.addEventListener("message", receiveMessage);
+		return () => window.removeEventListener("message", receiveMessage);
+	}, [activeTab]);
 
 	return (
 		<>
 			{Platform.OS !== "web" ? (
 				<>
-					{showToolbar ? (
-						!isChartEmpty ? (
-							<ToolBarFloatingActionMenu
-								webViewRef={webViewRef}
-								showToggle={showToggle}
-								captureWebView={captureWebView}
-								isTooltipEnabled={isTooltipEnabled}
-							/>
-						) : null
-					) : null}
+					{showToolbar && !isChartEmpty && (
+						<ToolBarFloatingActionMenu
+							webViewRef={webViewRef}
+							captureWebView={captureWebView}
+							isTooltipEnabled={isTooltipEnabled}
+						/>
+					)}
+
 					<ViewShot
 						ref={viewShotRef}
 						options={{
@@ -253,18 +265,14 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 							ref={webViewRef}
 							originWhitelist={["*"]}
 							source={{ html: webViewhtmlContent }}
-							onLoadStart={() =>
-								console.log("WebView start Load")
-							}
-							onLoad={() => console.log("WebView Loaded")}
+							onLoadStart={() => {}}
+							onLoad={() => {}}
 							onLoadEnd={() => {
-								console.log("WebView end Load");
 								setIsChartLoaded(true);
 							}}
 							onMessage={onMessage}
 							onFileDownload={({ nativeEvent }: any) => {
 								const { downloadUrl } = nativeEvent;
-								console.log("DownloadUrl", downloadUrl);
 							}}
 							onHttpError={(syntheticEvent) => {
 								const { statusCode } =
@@ -278,7 +286,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 								overflow: "hidden",
 								width: "100%",
 								height: "90%",
-								// border: "2px solid black", // Adding a 2px solid black border
 								pointerEvents: "auto",
 								marginVertical: 0,
 								padding: 5,

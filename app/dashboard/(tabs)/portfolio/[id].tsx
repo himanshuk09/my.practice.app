@@ -13,13 +13,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesome5 } from "@expo/vector-icons";
-import {
-	iframeAreahtlcontent,
-	iFreameDonutChartHtml,
-	webviewAreaHtmlcontent,
-	webviewDonutChartHtml,
-} from "@/components/Chart/charthtmlcontent";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { useLocalSearchParams } from "expo-router";
 import { RootState } from "@/store/store";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
@@ -42,10 +36,25 @@ import {
 import Toast from "react-native-toast-message";
 import { FormattedPortfolioDetails, TradeDetailsArray } from "@/types/type";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
+import webviewAreaHtmlContent from "@/components/Chart/config/Areachart.android";
+import iframeAreaHtmlContent from "@/components/Chart/config/Areachart.web";
+import webviewDonutChartHtmlContent from "@/components/Chart/config/Donutchart.android";
+import iframeDonutChartHtmlContent from "@/components/Chart/config/Donutchart.web";
 
 const PortfolioOverView = () => {
+	const dispatch = useDispatch();
+	const isOnline = useNetworkStatus();
+	const { id } = useLocalSearchParams();
+	const locale = useSelector((state: RootState) => state.language.locale);
+	const donutwebViewRef = useRef<WebView | null>(null);
+	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null);
+	const areaWebViewRef = useRef<WebView | null>(null);
+	const areaIFrameRef = useRef<HTMLIFrameElement | any>(null);
+	const paramsID = id ? JSON.parse(decodeURIComponent(id as string)) : {};
 	const [modalVisible, setModalVisible] = useState(false);
 	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
+	const [isDonutChartLoaded, setIsDonutChartLoaded] =
+		useState<boolean>(false);
 	const [portfolioDetails, setPortfolioDetails] =
 		useState<FormattedPortfolioDetails>({
 			areaChartData: [],
@@ -57,43 +66,51 @@ const PortfolioOverView = () => {
 	const [portfolioDeals, setPortfolioDeals] = useState<TradeDetailsArray>(
 		[]
 	);
+	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 	const { height: screenHeight } = Dimensions.get("window");
-	const locale = useSelector((state: RootState) => state.language.locale);
-	const dispatch = useDispatch();
-	const isOnline = useNetworkStatus();
-	const donutwebViewRef = useRef<WebView | null>(null);
-	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null);
-	const areaWebViewRef = useRef<WebView | null>(null);
-	const areaIFrameRef = useRef<HTMLIFrameElement | any>(null);
-	const { id } = useLocalSearchParams();
-	const paramsID = id ? JSON.parse(decodeURIComponent(id as string)) : {};
-
 	const onMessage = async (event: WebViewMessageEvent) => {
 		const message = JSON.parse(event.nativeEvent.data);
+		//console.log(message?.action);
 	};
-
+	const onRefresh = async () => {
+		setIsRefreshing(true);
+		const responsePortfolioDeals: any = await getPortfolioDeals(paramsID);
+		setPortfolioDeals(responsePortfolioDeals);
+		setIsRefreshing(false);
+	};
 	const updateLocale = () => {
 		if (Platform.OS === "web") {
 			const iframe = areaIFrameRef.current;
 			if (iframe && iframe?.contentWindow) {
 				iframe?.contentWindow?.updateLocale?.(
 					locale,
-					`Target ${new Date(paramsID?.PortfolioDate).getFullYear()}`
+					`${new Date(paramsID?.PortfolioDate).getFullYear()}`
+				);
+			}
+			if (
+				donutIFrameRef?.current &&
+				donutIFrameRef?.current?.contentWindow
+			) {
+				donutIFrameRef?.current?.contentWindow?.updateLocale?.(
+					locale
 				);
 			}
 		} else {
 			if (areaWebViewRef?.current) {
-				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}', 'Target ${new Date(paramsID?.PortfolioDate).getFullYear()}');}`;
+				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}', ${new Date(paramsID?.PortfolioDate).getFullYear()});}`;
 
 				areaWebViewRef.current.injectJavaScript(updateLocaleScript);
 			}
+			if (donutwebViewRef?.current) {
+				console.log("inside", locale);
+				let updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
+				donutwebViewRef?.current.injectJavaScript(
+					updateLocaleScript
+				);
+			}
 		}
-		updateApexChart("options", donutwebViewRef, donutIFrameRef, {
-			title: {
-				text: paramsID?.PortfolioName,
-			},
-		});
 	};
+
 	const exportPortfolioReport = async () => {
 		if (!isOnline || portfolioDetails?.message === "no data") return;
 		else {
@@ -119,7 +136,6 @@ const PortfolioOverView = () => {
 					/[&\/\\#,+()$~%.'":*?<>{}]/g,
 					""
 				);
-				console.log(fileName, responsePortfolioReport);
 
 				if (Platform.OS === "web") {
 					saveBase64AsPDFWeb(
@@ -185,7 +201,6 @@ const PortfolioOverView = () => {
 					if (portfolioDetails?.message != "no data") {
 						const responsePortfolioDeals: any =
 							await getPortfolioDeals(paramsID);
-						console.log(responsePortfolioDeals);
 						setPortfolioDeals(responsePortfolioDeals);
 					}
 				} catch (error) {
@@ -201,16 +216,21 @@ const PortfolioOverView = () => {
 		if (portfolioDetails && isChartLoaded) {
 			if (portfolioDetails?.message === "no data") {
 				updateEmptyChart(donutwebViewRef, donutIFrameRef, "donut");
-				updateEmptyChart(areaWebViewRef, areaIFrameRef);
+				updateEmptyChart(areaWebViewRef, areaIFrameRef, "area");
 				return;
 			}
 
 			updateLocale();
 			updateApexChart(
-				"series",
+				"chart",
 				donutwebViewRef,
 				donutIFrameRef,
-				portfolioDetails?.donotChartData
+				portfolioDetails?.donotChartData,
+				{
+					title: {
+						text: paramsID?.PortfolioName,
+					},
+				}
 			);
 			updateApexChart(
 				"series",
@@ -219,7 +239,7 @@ const PortfolioOverView = () => {
 				portfolioDetails?.areaChartData
 			);
 		}
-	}, [portfolioDetails, isChartLoaded]);
+	}, [isChartLoaded, isDonutChartLoaded]);
 
 	return (
 		<SafeAreaView className="flex-1 bg-white">
@@ -258,15 +278,17 @@ const PortfolioOverView = () => {
 									iFrameRef={donutIFrameRef}
 									onMessage={onMessage}
 									webViewhtmlContent={
-										webviewDonutChartHtml
+										webviewDonutChartHtmlContent
 									}
 									iFramehtmlContent={
-										iFreameDonutChartHtml
+										iframeDonutChartHtmlContent
 									}
 									showToggleOrientation={false}
 									showToolbar={false}
 									iFrameWidth="50%"
-									setIsChartLoaded={setIsChartLoaded}
+									setIsChartLoaded={
+										setIsDonutChartLoaded
+									}
 								/>
 
 								<View
@@ -332,19 +354,18 @@ const PortfolioOverView = () => {
 									iFrameRef={areaIFrameRef}
 									onMessage={onMessage}
 									webViewhtmlContent={
-										webviewAreaHtmlcontent
+										webviewAreaHtmlContent
 									}
 									iFramehtmlContent={
-										iframeAreahtlcontent
+										iframeAreaHtmlContent
 									}
 									showToggleOrientation={false}
-									showToggle={false}
 									setIsChartLoaded={setIsChartLoaded}
 								/>
 							</View>
 						</View>
 						<Modal
-							animationType="slide"
+							animationType="fade"
 							transparent={false}
 							visible={modalVisible}
 							onRequestClose={() =>
@@ -360,16 +381,15 @@ const PortfolioOverView = () => {
 									setModalVisible={setModalVisible}
 									modalVisible={modalVisible}
 									title={paramsID?.PortfolioName}
+									onRefresh={onRefresh}
+									isRefreshing={isRefreshing}
 								/>
 							</View>
 						</Modal>
 					</View>
 
 					<TouchableOpacity
-						className={`bg-primary mb-2 bottom-0   py-2 mx-2 rounded-sm my-2 
-								
-									absolute  left-0 right-0 
-								`}
+						className="bg-primary  bottom-0   mx-2 mb-2 py-3 rounded-sm  absolute  left-0 right-0 "
 						onPress={() => setModalVisible(!modalVisible)}
 					>
 						<Text className="text-white text-center text-base font-medium uppercase">

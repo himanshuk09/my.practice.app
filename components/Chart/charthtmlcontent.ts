@@ -828,8 +828,13 @@ export let WebviewLineHtmlContent = `
 			  ...updatedOptions, 
 		    });
 		    window.ReactNativeWebView.postMessage(
-			  JSON.stringify({ action: "updateChart1111",values:[title,filteredData[0]] })
+			  JSON.stringify({ action: "update Chart",values:	[title,filteredData[0]] })
 		    );
+		    if (chart.w.config.series.length === 1) {
+			window.ReactNativeWebView.postMessage(
+			    JSON.stringify({ action: "Empty", values: chart.w.config.series.length })
+			);
+		  }
 		}
 
 		function updateChartSeries(title, filteredData) {
@@ -843,12 +848,21 @@ export let WebviewLineHtmlContent = `
 		}
 
 		function updateChartOptions(updatedOptions) {
-		    chart.updateOptions(updatedOptions);
-		    window.ReactNativeWebView.postMessage(
-			  JSON.stringify({ action: "updateChartOptions" })
-		    );
-		}
-
+			chart.updateOptions(updatedOptions);
+		  
+			// Send a message indicating the update has finished
+			window.ReactNativeWebView.postMessage(
+			    JSON.stringify({ action: "updateChartOptions" })
+			);
+		  
+			// Check if the chart has only one series
+			if (chart.w.config.series.length === 1) {
+			    window.ReactNativeWebView.postMessage(
+				  JSON.stringify({ action: "Empty", values: chart.w.config.series.length })
+			    );
+			}
+		  }
+		  
 		function resetChartSeries() {
 		    chart.resetSeries();
 		    window.ReactNativeWebView.postMessage(
@@ -1974,21 +1988,20 @@ export let iFrameLineHtmlcontent = `
 		chart.render();
 
 		window.updateChart = function (filteredData, updatedOptions,title="Energy Use1") {
-		chart.updateOptions({
-		    series: [{name: title, data: filteredData }],
-		    ...updatedOptions, 
-		});
-	     
-	  }
+			chart.updateOptions({
+			    series: [{name: title, data: filteredData }],
+			    ...updatedOptions, 
+			});
+			
+	      }
 	  
-		window.updateChartSeries = function (title, filteredData) {
-			chart.updateSeries([{ name: title, data: filteredData }]);
-			sendMessageToReactNative("updateChartSeries")
+		window.updateChartSeries = function ( filteredData,title) {
+			chart.updateSeries([{ name: title, data: filteredData }]);	
 		};
 
 		window.updateChartOptions = function (updatedOptions) {
 			chart.updateOptions(updatedOptions);
-			sendMessageToReactNative("updateChartOptions")
+			
 		};
 
 		window.updateLocale = (newLocale) => {
@@ -2565,7 +2578,13 @@ export const iFreameDonutChartHtml = `
 		window.updateChartOptions = function (updatedOptions) {
 			donutchart.updateOptions(updatedOptions);
 		};
-
+		window.updateChart= function(filteredData, updatedOptions) {
+			donutchart.updateSeries(filteredData,true)
+			donutchart.updateOptions(updatedOptions);
+			window.ReactNativeWebView.postMessage(
+				JSON.stringify({ action: 'updateChart updated' })
+			);
+		}
 		window.parent.postMessage("iframeReady", "*");
 
 		
@@ -2759,47 +2778,39 @@ export const webviewDonutChartHtml = `
 			donutchart.render();
 
 			//...........
-			function updateChart(filteredData, updatedOptions) {
-				chart.updateSeries([{ data: filteredData }], true);
-				chart.updateOptions(updatedOptions);
-				window.ReactNativeWebView.postMessage(
-					JSON.stringify({ action: 'updateChart' })
-				);
-			}
-
-			function updateChartSeries(filteredData) {
-				chart.updateSeries([filteredData], true)
-				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartSeries' }));
-			}
-
-			function updateChartOptions(updatedOptions) {
-				chart.updateOptions(updatedOptions);
-				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartOptions' }));
-			}
+			
 
 			function resetChartSeries() {
-				chart.resetSeries();
+				donutchart.resetSeries();
 				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'resetChartSeries' }));
 			}
 
 			function appendChartData(data) {
-				chart.appendData(data)
+				donutchart.appendData(data)
 			}
 
-			// Expose updateChartSeries globally
+			//Expose updateChartSeries globally
 			window.updateChartSeries = function (filteredData) {
-
 				if (Array.isArray(filteredData) && filteredData.every(val => typeof val === 'number')) {
 					donutchart.updateSeries(filteredData,true);
 				} else {
 					console.error("Invalid data format for chart series.");
 				}
+				window.ReactNativeWebView.postMessage(JSON.stringify({ action: 'updateChartSeries12' }));
+
 			};
 
 			window.updateChartOptions = function (updatedOptions) {
 				donutchart.updateOptions(updatedOptions);
 			};
 
+			window.updateChart= function(filteredData, updatedOptions) {
+				donutchart.updateSeries(filteredData,true)
+				donutchart.updateOptions(updatedOptions);
+				window.ReactNativeWebView.postMessage(
+					JSON.stringify({ action: 'updateChart updated' })
+				);
+			}
 		});
 	</script>
 </body>
@@ -2835,6 +2846,7 @@ export const webviewAreaHtmlcontent = `
     <body>
 	  <div id="chart"></div>
 	  <script>
+	  	var locale,title;
 		function getLocalizedMonths(locale = "en-US") {
 		    try {
 			  const formatter = new Intl.DateTimeFormat(locale, {
@@ -2865,6 +2877,8 @@ export const webviewAreaHtmlcontent = `
 		let categories = getLocalizedMonths("en-IN"); // Default locale
 		// Function to update the chart's locale
 		function updateLocale(newLocale = "en-IN",newTitle) {
+			title=newTitle;
+			locale=newLocale;
 		    categories = getLocalizedMonths(newLocale);
 		    chart.updateOptions({
 			  xaxis: {
@@ -2947,7 +2961,7 @@ export const webviewAreaHtmlcontent = `
 						max: newMaxX,
 					  },
 				    });
-				    updateLocale();
+				    updateLocale(locale,title);
 				},
 			  },
 		    },
@@ -3322,7 +3336,7 @@ export const webviewAreaHtmlcontent = `
 				    max: newMaxX,
 				},
 			  });
-			  updateLocale();
+			  updateLocale(locale,title);
 		    } else {
 			  console.warn(
 				"Zoom In action skipped: chart or required properties not available."
@@ -3359,7 +3373,7 @@ export const webviewAreaHtmlcontent = `
 				    max: newMaxX,
 				},
 			  });
-			  updateLocale();
+			  updateLocale(locale,title);
 		    } else {
 			  console.warn(
 				"Zoom Out action skipped: chart or required properties not available."
@@ -3380,7 +3394,7 @@ export const webviewAreaHtmlcontent = `
 				    max: initialMaxX,
 				},
 			  });
-			  updateLocale();
+			  updateLocale(locale,title);
 		    } else {
 			  console.error(
 				"Series data is empty, unable to reset zoom."
@@ -3410,7 +3424,7 @@ export const webviewAreaHtmlcontent = `
 				max: newMaxX,
 			  },
 		    },true); // false, false to not animate the chart and not update the series
-		    updateLocale();
+		    updateLocale(locale,title);
 		};
 		window.customPanRight = function () {
 		    const moveFactor =
@@ -3442,7 +3456,7 @@ export const webviewAreaHtmlcontent = `
 				max: newMaxX,
 			  },
 		    }); // false, false to not animate the chart and not update the series
-		    updateLocale();
+		    updateLocale(locale,title);
 		};
 
 		window.toggleZoomAndSelection = () => {
@@ -3560,8 +3574,7 @@ export const iframeAreahtlcontent = `
 		});
 	  }
 	  var options = {
-		series: [
-		],
+		series: [],
 		colors: ["#C2C1C3", "#DFDFDF", "#A4A4A5", "#E31837"],
 		chart: {
 		    height: "100%",
@@ -3602,7 +3615,6 @@ export const iframeAreahtlcontent = `
 				
 				//   beforeResetZoom: function () {
 				// 	console.log("Reset zoom triggered - Resetting to:", initialXAxisRange);
-		  
 				// 	// Ensure the chart resets to its original range
 				// 	return {
 				// 	    xaxis: {
@@ -3729,7 +3741,6 @@ export const iframeAreahtlcontent = `
 	  }
 
 	  function updateChartSeries(filteredData) {
-		window.parent.postMessage("iframeReady", "*");
 		chart.updateSeries(filteredData);
 	  }
 

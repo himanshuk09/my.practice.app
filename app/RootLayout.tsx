@@ -1,16 +1,16 @@
-import { Stack, useRouter } from "expo-router";
-import "react-native-reanimated";
 import "../global.css";
-import { AppState } from "react-native";
+import "react-native-reanimated";
 import { useEffect, useState } from "react";
+import { AppState } from "react-native";
 import { useDispatch } from "react-redux";
+import { Stack, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RootLayout = () => {
-	const [isAuth, setIsAuth] = useState<boolean>();
-	const [appState, setAppState] = useState(AppState.currentState);
 	const dispatch = useDispatch();
 	const router = useRouter();
+	const [isAuth, setIsAuth] = useState<boolean>();
+	const [appState, setAppState] = useState(AppState.currentState);
 	// useEffect(() => {
 	//     const handleAppStateChange = (nextAppState: any) => {
 	//         if (

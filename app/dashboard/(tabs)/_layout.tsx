@@ -1,5 +1,5 @@
 import Header from "@/components/MainHeader";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { activeLoading } from "@/store/navigationSlice";
 import { Tabs, usePathname } from "expo-router";
 import React, { useRef, useEffect } from "react";
@@ -63,7 +63,7 @@ const CustomTabBar = ({
 	}, [state.index]);
 
 	return (
-		<View className="overflow-hidden h-11 bg-white ">
+		<View className="overflow-hidden h-10 bg-white ">
 			<ScrollView
 				ref={scrollViewRef}
 				horizontal
@@ -72,7 +72,7 @@ const CustomTabBar = ({
 					flexDirection: "row",
 					alignItems: "center",
 				}}
-				className="h-16"
+				className=""
 			>
 				{state.routes.map((route: any, index: any) => {
 					const { options } = descriptors[route.key];
@@ -109,13 +109,13 @@ const CustomTabBar = ({
 							}}
 						>
 							<TouchableOpacity
-								className={`py-1 px-4 items-center justify-center ${
+								className={`py-1  w-auto px-5 items-center justify-center ${
 									isFocused && "opacity-100"
 								}`}
 								onPress={onPress}
 							>
 								<Text
-									className={`font-semibold uppercase text-lg ${
+									className={`font-medium uppercase text-lg ${
 										isFocused
 											? "text-activeText"
 											: "text-inactiveText"
@@ -128,7 +128,7 @@ const CustomTabBar = ({
 								</Text>
 								{notificationCount > 0 && (
 									<View
-										className="bg-primary rounded-full justify-center items-center absolute top-0 right-0 w-4 h-4"
+										className="bg-primary rounded-full justify-center items-center absolute top-1  right-0 w-4 h-4 "
 										style={{
 											alignSelf: "flex-start",
 										}}

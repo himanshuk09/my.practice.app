@@ -9,20 +9,19 @@ import {
 	ScrollView,
 	StatusBar,
 } from "react-native";
-
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import RatingStars from "@/components/RatingStars";
 
 const Rate = () => {
-	const [ratingMsg, setRatingMsg] = useState<string>("");
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
+	const [ratingMsg, setRatingMsg] = useState<string>("");
 
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);

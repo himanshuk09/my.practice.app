@@ -1,7 +1,7 @@
-import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { PricesItem } from "@/constants/constantData";
+import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";

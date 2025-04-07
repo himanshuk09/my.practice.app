@@ -1,24 +1,16 @@
-import {
-	Alert,
-	Linking,
-	Platform,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
 import * as Sharing from "expo-sharing";
+import { useEffect, useRef } from "react";
+import * as FileSystem from "expo-file-system";
+import Toast from "react-native-toast-message";
+import { Animated, Easing } from "react-native";
+import * as IntentLauncher from "expo-intent-launcher";
+import { Linking, Platform, Text, TouchableOpacity, View } from "react-native";
 import {
 	AntDesign,
-	EvilIcons,
 	FontAwesome6,
 	Fontisto,
 	MaterialIcons,
 } from "@expo/vector-icons";
-import * as IntentLauncher from "expo-intent-launcher";
-import * as FileSystem from "expo-file-system";
-import Toast from "react-native-toast-message";
-import { Animated, Easing } from "react-native";
-import { useEffect, useRef } from "react";
 
 const AnimatedSpinner = () => {
 	const spinValue = useRef(new Animated.Value(0)).current;

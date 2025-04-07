@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 	},
 	graph: {
 		width: Platform.OS !== "web" ? width - 32 : "98%",
-		height: Platform.OS !== "web" ? height * 0.6 : 600,
+		height: Platform.OS !== "web" ? height * 0.57 : 600,
 		borderRadius: 8,
 	},
 	button: {

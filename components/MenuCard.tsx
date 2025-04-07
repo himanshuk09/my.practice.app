@@ -1,15 +1,15 @@
 import React, { memo } from "react";
-import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
 import { View, Text, Pressable, Platform } from "react-native";
+import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
+import { useDispatch } from "react-redux";
+import { router } from "expo-router";
 import Portfolio from "@/components/SVG/Portfolio";
 import Prices from "@/components/SVG/Prices";
 import PFC from "@/components/SVG/PFC";
 import Load from "@/components/SVG/Load";
 import Settings from "@/components/SVG/Settings";
-import { i18n } from "@/localization/localConfig";
-import { router } from "expo-router";
-import Signals from "./SVG/Signals";
-import { useDispatch } from "react-redux";
+import { i18n } from "@/localization/config";
+import Signals from "@/components/SVG/Signals";
 import { activeLoading } from "@/store/navigationSlice";
 
 interface MenuCardProps {

@@ -1,7 +1,60 @@
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { Platform } from "react-native";
 type ChartUpdateType = "series" | "options" | "chart";
+
 export const updateApexChart = (
+	type: ChartUpdateType,
+	webViewRef: any,
+	iframeRef: any,
+	data?: any,
+	options?: any
+) => {
+	if (Platform.OS === "web") {
+		const iframe = iframeRef.current;
+		if (iframe && iframe?.contentWindow) {
+			switch (type) {
+				case "series":
+					iframe.contentWindow.updateChartSeries?.(data);
+
+					break;
+				case "options":
+					iframe.contentWindow.updateChartOptions?.(data);
+					break;
+				case "chart":
+					iframe.contentWindow.updateChart?.(data, options);
+
+					break;
+				default:
+					console.error("Invalid chart update type");
+					return;
+			}
+		} else {
+			console.error("Iframe contentWindow is not accessible.");
+		}
+	} else {
+		let jsCommand = "";
+		switch (type) {
+			case "series":
+				jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
+				break;
+			case "options":
+				jsCommand = `updateChartOptions(${JSON.stringify(data)});`;
+				break;
+			case "chart":
+				jsCommand = `updateChart(${JSON.stringify(
+					data
+				)}, ${JSON.stringify(options || {})});`;
+
+				break;
+			default:
+				console.error("Invalid chart update type");
+				return;
+		}
+
+		(webViewRef.current as any)?.injectJavaScript(jsCommand);
+	}
+};
+export const updateApexChart1 = (
 	type: ChartUpdateType,
 	webViewRef: any,
 	iframeRef: any,
@@ -14,7 +67,7 @@ export const updateApexChart = (
 		if (iframe && iframe?.contentWindow) {
 			switch (type) {
 				case "series":
-					if (title !== undefined) {
+					if (options !== undefined) {
 						iframe.contentWindow.updateChartSeries?.(
 							title,
 							data
@@ -48,8 +101,8 @@ export const updateApexChart = (
 		let jsCommand = "";
 		switch (type) {
 			case "series":
-				if (title !== undefined) {
-					jsCommand = `updateChartSeries(${JSON.stringify(title)}, ${JSON.stringify(data)});`;
+				if (options !== undefined) {
+					jsCommand = `updateChartSeries(${JSON.stringify(options)}, ${JSON.stringify(data)});`;
 				} else {
 					jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
 				}
@@ -66,6 +119,7 @@ export const updateApexChart = (
 					jsCommand = `updateChart(${JSON.stringify(
 						data
 					)}, ${JSON.stringify(options || {})});`;
+					console.log("inside");
 				}
 
 				break;
@@ -83,7 +137,10 @@ export const updateEmptyChart = (
 	chartType?: any
 ) => {
 	let options = {
-		chart: {},
+		chart: {
+			series: [],
+			// animations: { enabled: false },
+		},
 		noData: {
 			text: chartType == "donut" ? "NA" : i18n.t("Data_not_available"),
 		},
@@ -127,6 +184,11 @@ export const updateEmptyChart = (
 			},
 		},
 	};
-	updateApexChart("options", webViewRef, iframeRef, options);
-	updateApexChart("series", webViewRef, iframeRef, []);
+
+	updateApexChart("chart", webViewRef, iframeRef, [], options);
+
+	// if (chartType == "donut" || chartType == "area" || Platform.OS === "web") {
+	// 	updateApexChart("series", webViewRef, iframeRef, []);
+	// 	updateApexChart("options", webViewRef, iframeRef, options);
+	// } else updateApexChart("chart", webViewRef, iframeRef, [], options);
 };

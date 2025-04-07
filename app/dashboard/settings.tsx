@@ -1,3 +1,14 @@
+import { st } from "@/utils/Styles";
+import { Href, useRouter } from "expo-router";
+import { i18n } from "@/localization/config";
+import React, { useEffect, useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import { AppDispatch, RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLocale } from "@/store/languageSlice";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useIsFocused } from "@react-navigation/native";
+import CustomSwitch from "@/components/CustomSwitch";
 import {
 	View,
 	Text,
@@ -5,26 +16,17 @@ import {
 	TouchableOpacity,
 	StatusBar,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Picker } from "@react-native-picker/picker";
-import { AppDispatch, RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { updateLocale } from "@/store/languageSlice";
-import { i18n } from "@/localization/localConfig";
-import { Href, useRouter } from "expo-router";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { useIsFocused } from "@react-navigation/native";
-import CustomSwitch from "@/components/CustomSwitch";
-import { st } from "@/utils/Styles";
 
 const Settings = () => {
-	const { locale } = useSelector((state: RootState) => state.language);
-	const [selectedLanguage, setSelectedLanguage] = useState(locale);
 	const router = useRouter();
-	const dispatch: AppDispatch = useDispatch();
 	const isFocused = useIsFocused();
-	const [isNotificationEnabled, setIsNotificationEnabled] = useState(true);
-	const [isSignalsEnabled, setIsSignalsEnabled] = useState(true);
+	const dispatch: AppDispatch = useDispatch();
+	const { locale } = useSelector((state: RootState) => state.language);
+
+	const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
+	const [isNotificationEnabled, setIsNotificationEnabled] =
+		useState<boolean>(true);
+	const [isSignalsEnabled, setIsSignalsEnabled] = useState<boolean>(true);
 
 	useEffect(() => {
 		let timer = setTimeout(() => dispatch(inActiveLoading()), 0);

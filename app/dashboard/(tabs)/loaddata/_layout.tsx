@@ -27,7 +27,7 @@ const LoaddataLayout = () => {
 				options={{
 					headerShown:
 						Platform.OS === "web" ? true : !isLandscape,
-					animation: "slide_from_right",
+					animation: "fade",
 					header: ({ navigation }) => (
 						<StackHeader
 							navigation={navigation}

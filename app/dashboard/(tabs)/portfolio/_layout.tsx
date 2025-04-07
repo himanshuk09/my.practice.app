@@ -18,7 +18,7 @@ const PortfolioLayout = () => {
 				name="[id]"
 				options={{
 					headerShown: true,
-					animation: "slide_from_right",
+					animation: "fade",
 					header: ({ navigation }) => (
 						<StackHeader
 							navigation={navigation}

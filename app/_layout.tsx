@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
-import RootLayout from "./RootLayout";
 import { Provider } from "react-redux";
-import { store } from "@/store/store";
-import AppLoader from "./AppLoader";
-import NavigationWatcher from "./NavigationWatcher";
-import * as SplashScreen from "expo-splash-screen";
-import * as ScreenOrientation from "expo-screen-orientation";
-import Drawer from "@/components/Drawer";
-import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
-import toastConfig from "@/components/ToastConfig";
-import Toast from "react-native-toast-message";
 import { Platform } from "react-native";
 import { Href, usePathname, useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SplashScreen from "expo-splash-screen";
+import * as ScreenOrientation from "expo-screen-orientation";
+import AppLoader from "./AppLoader";
+import RootLayout from "./RootLayout";
+import NavigationWatcher from "./NavigationWatcher";
+import SwipeDetectionWrapper from "./SwipeDetectionWrapper";
+import { store } from "@/store/store";
+import Drawer from "@/components/Drawer";
+import toastConfig from "@/components/ToastConfig";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,7 +24,6 @@ SplashScreen.setOptions({
 const Layout = () => {
 	const router = useRouter();
 	const pathname = usePathname();
-
 	useEffect(() => {
 		let timer = setTimeout(() => {
 			SplashScreen.hideAsync();
@@ -51,6 +50,7 @@ const Layout = () => {
 	useEffect(() => {
 		const checkAuth = async () => {
 			const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+
 			if (isLoggedIn !== "true") {
 				router.replace("/" as Href);
 			}

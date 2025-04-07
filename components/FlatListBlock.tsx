@@ -26,17 +26,17 @@ const FlatListBlock = ({
 	NavigateTo,
 	renderType,
 }: any) => {
-	const dispatch = useDispatch();
 	const router = useRouter();
-	const flatListRef = useRef<any>(null);
-	const currentYear = new Date().getFullYear();
-	const ITEM_HEIGHT = Platform.OS === "web" ? 83 : 72.8;
+	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
-	const [isRefreshing, setIsRefreshing] = useState(false);
-
 	const currentRoute = usePathname(); // Provides the current route path
+	const flatListRef = useRef<any>(null);
 	const previousRouteRef = useRef<string | null>(null);
+	const ITEM_HEIGHT = Platform.OS === "web" ? 83 : 72.8;
+	const currentYear = new Date().getFullYear();
+	const [isRefreshing, setIsRefreshing] = useState(false);
 	const previousRoute: any = previousRouteRef.current;
+
 	const ListItem = memo(({ item, router }: any) => (
 		<TouchableOpacity
 			key={item.id}

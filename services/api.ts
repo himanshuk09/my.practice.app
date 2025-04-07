@@ -8,7 +8,6 @@ export const checkInternetConnection = async (): Promise<boolean> => {
 	try {
 		const netInfo = await NetInfo.fetch();
 		if (!netInfo.isConnected) {
-			console.log("No internet connection. Skipping API call.");
 			Toast.show({
 				type: "download",
 				text1: "No Internet Connection",

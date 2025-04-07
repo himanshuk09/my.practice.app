@@ -25,9 +25,10 @@ const LoadData = () => {
 	const [loadDataSromList, setLoadDataSromList] = useState<MeterArray>([]);
 	const onRefresh = async () => {
 		setIsRefreshing(true);
-		setTimeout(() => {
-			setIsRefreshing(false);
-		}, 2000);
+		const resLoadDataList = await getLoadDataList();
+		setLoadDataGasList(resLoadDataList?.gas || []);
+		setLoadDataSromList(resLoadDataList?.strom || []);
+		setIsRefreshing(false);
 	};
 	const data: DataItem[] = [
 		{ id: "1", data: loadDataGasList, title: "Gas" },
@@ -61,12 +62,9 @@ const LoadData = () => {
 	useEffect(() => {
 		const fetchLoadDataList = async () => {
 			if (!isOnline) {
-				console.log("offline");
-
 				return;
 			} else {
 				try {
-					console.log("inside on offline");
 					const resLoadDataList = await getLoadDataList();
 					setLoadDataGasList(resLoadDataList?.gas || []);
 					setLoadDataSromList(resLoadDataList?.strom || []);
@@ -75,9 +73,9 @@ const LoadData = () => {
 				}
 			}
 		};
+
 		fetchLoadDataList();
 	}, [isOnline]);
-	console.log("isOnline", isOnline);
 
 	useLayoutEffect(() => {
 		dispatch(inActiveLoading());

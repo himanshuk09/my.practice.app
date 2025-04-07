@@ -270,7 +270,7 @@ const ShimmerFlatListBlock = () => {
 		<View>
 			<ShimmerHeader />
 			<FlatList
-				data={[...Array(4).keys()].map((index) => ({
+				data={[...Array(3).keys()].map((index) => ({
 					id: index,
 					title: `Shimmer ${index}`,
 					unit: 0,

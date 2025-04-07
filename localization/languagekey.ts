@@ -58,7 +58,7 @@ export const TranslationKeys: Translations | any = {
 		language: "Language",
 		notifications: "Notifications",
 		save: "save",
-		cancel: "cancel",
+		cancel: "CANCEL",
 		send: "send",
 		show_notifications: "Show Notifications",
 		how_is_your_experience_with_our_app_so_far:
@@ -123,7 +123,7 @@ export const TranslationKeys: Translations | any = {
 		From: "From",
 		To: "To",
 		Value_Range: "Value Range",
-		Cancel: "Cancel",
+		Cancel: "CANCEL",
 		OK: "OK",
 		select: "Select",
 		today: "Today",

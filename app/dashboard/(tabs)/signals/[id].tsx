@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import CustomSwitch from "@/components/CustomSwitch";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { RootState } from "@/store/store";
 import { StatusBar } from "react-native";
 import { fetchDataByToggle } from "@/services/auth.services";
@@ -21,13 +21,13 @@ import { st } from "@/utils/Styles";
 import { ChartShimmer } from "@/components/ChartShimmer";
 import SignalSettings from "@/components/SignalSettings";
 const SignalDetails = () => {
-	const [modalVisible, setModalVisible] = useState(false);
-	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
-	const { id } = useLocalSearchParams();
-	const [signalDetail, setSignalDetails] = useState<any>([]);
-	const [isEnabled, setIsEnabled] = useState(true);
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
+	const { id } = useLocalSearchParams();
+	const [isEnabled, setIsEnabled] = useState<boolean>(true);
+	const [modalVisible, setModalVisible] = useState<boolean>(false);
+	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
+	const [signalDetail, setSignalDetails] = useState<any>([]);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
@@ -52,25 +52,7 @@ const SignalDetails = () => {
 	useEffect(() => {
 		dispatch(inActiveLoading());
 	}, [isFocused]);
-	// Request permissions on app start
-	// useEffect(() => {
-	// 	Notifications.requestPermissionsAsync();
-	// }, []);
 
-	// // Function to trigger notification after 5 seconds
-	// const scheduleNotification = async () => {
-	// 	await Notifications.scheduleNotificationAsync({
-	// 		content: {
-	// 			title: "Hello! 🚀",
-	// 			body: "This is a test notification after 5 seconds.",
-	// 		},
-	// 		trigger: {
-	// 			type: Notifications.SchedulableTriggerInputTypes
-	// 				.TIME_INTERVAL,
-	// 			seconds: 2,
-	// 		},
-	// 	});
-	// };
 	return (
 		<SafeAreaView className="flex-1 bg-white ">
 			<StatusBar

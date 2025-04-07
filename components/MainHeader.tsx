@@ -1,10 +1,10 @@
-import { toggleDrawer } from "@/store/drawerSlice";
-import { Entypo } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import React from "react";
 import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
-import { useDispatch } from "react-redux";
 import Logo from "./SVG/Logo";
+import { useRouter } from "expo-router";
+import { useDispatch } from "react-redux";
+import { Entypo } from "@expo/vector-icons";
+import { toggleDrawer } from "@/store/drawerSlice";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 const Header = React.memo(({ navigation }: any) => {

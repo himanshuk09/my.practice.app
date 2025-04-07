@@ -1,14 +1,8 @@
-import {
-	View,
-	StyleSheet,
-	TouchableOpacity,
-	Animated,
-	Platform,
-} from "react-native";
-import { FontAwesome5, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import WebView from "react-native-webview";
+import { useEffect, useState } from "react";
+import { FontAwesome5, Octicons } from "@expo/vector-icons";
+import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 
 type FloatingActionMenuProps = {
 	webViewRef: React.RefObject<WebView | any>;
@@ -18,38 +12,13 @@ type FloatingActionMenuProps = {
 };
 export default function FloatingActionMenu({
 	webViewRef,
-	showToggle = false,
 	captureWebView,
 	isTooltipEnabled,
 }: FloatingActionMenuProps) {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isZoomIn, setIsZoomIn] = useState(true);
-	const [animation] = useState(new Animated.Value(0));
 	const [tooltip, setTooltip] = useState<boolean | any>(false);
 	const [tooltipLabel, setTooltipLabel] = useState<any>(null);
 	const [pressedItem, setPressedItem] = useState<any>(null);
-	const toggleMenu = () => {
-		const toValue = isMenuOpen ? 0 : 1;
-
-		Animated.timing(animation, {
-			toValue,
-			duration: 100,
-			useNativeDriver: Platform.OS !== "web",
-		}).start();
-
-		setIsMenuOpen(!isMenuOpen);
-	};
-
-	const menuOpacity = animation.interpolate({
-		inputRange: [0, 1],
-		outputRange: [0, 1],
-	});
-
-	const menuTranslateX = animation.interpolate({
-		inputRange: [0, 1],
-		outputRange: [100, 0], // Slide menu items into view from right to left
-	});
-
 	const menuItems = [
 		{
 			icon: isZoomIn ? "search-plus" : "search-minus",
@@ -113,99 +82,7 @@ export default function FloatingActionMenu({
 	useEffect(() => {
 		setTooltip(isTooltipEnabled);
 	}, [isTooltipEnabled]);
-	return showToggle ? (
-		<View style={styles.container}>
-			{/* Floating Action Button */}
-			<TouchableOpacity style={styles.fab} onPress={toggleMenu}>
-				<MaterialIcons
-					name={isMenuOpen ? "close" : "add"}
-					size={20}
-					color="white"
-				/>
-			</TouchableOpacity>
-
-			{/* Menu Items */}
-			{isMenuOpen && (
-				<Animated.View
-					style={[
-						styles.menuItemsContainer,
-						{
-							opacity: menuOpacity,
-							transform: [{ translateX: menuTranslateX }],
-						},
-						{ right: 32 },
-					]}
-				>
-					{menuItems.map((item: any, index) => (
-						<View style={styles.menuItem} key={index}>
-							<TouchableOpacity
-								style={styles.menuIcon}
-								onPress={() => {
-									if (item.label === "Download") {
-										item?.action();
-									} else {
-										(
-											webViewRef?.current as any
-										)?.injectJavaScript(
-											item.action
-										);
-									}
-									if (
-										item.action ===
-										`toggleMarkers()`
-									) {
-										setTooltip(!tooltip);
-									}
-									if (
-										item.action ===
-										`toggleZoomAndSelection()`
-									) {
-										setIsZoomIn(!isZoomIn);
-									}
-									setPressedItem(
-										pressedItem === item.label
-											? null
-											: item.label
-									);
-								}}
-								onLongPress={() => {
-									// Show the tooltip label on long press
-									setTooltipLabel(item?.label);
-								}}
-							>
-								{item.label !== "Marker" ? (
-									<FontAwesome5
-										name={item.icon}
-										size={item.size}
-										color={item.color}
-									/>
-								) : (
-									<Octicons
-										name={item.icon}
-										size={item.size}
-										color={item.color}
-										style={{
-											transform: [
-												{
-													rotate: "-25deg",
-												},
-											],
-											marginTop: 2,
-										}}
-									/>
-								)}
-								{tooltipLabel === item.label && (
-									<Text style={styles.tooltipText}>
-										{item.label}
-									</Text>
-								)}
-							</TouchableOpacity>
-						</View>
-					))}
-				</Animated.View>
-			)}
-		</View>
-	) : (
+	return (
 		<View style={styles.container}>
 			<View style={[styles.menuItemsContainer, { right: 5 }]}>
 				{menuItems.map((item: any, index) => (

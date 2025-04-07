@@ -17,14 +17,14 @@ import {
 	FontAwesome6,
 } from "@expo/vector-icons";
 import { Href, usePathname, useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { i18n } from "@/localization/localConfig";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, setInitialState } from "@/store/authSlice";
 import * as Linking from "expo-linking";
+import * as ScreenOrientation from "expo-screen-orientation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { i18n } from "@/localization/config";
+import { logout, setInitialState } from "@/store/authSlice";
 import { closeDrawer } from "@/store/drawerSlice";
 import { RootState } from "@/store/store";
-import * as ScreenOrientation from "expo-screen-orientation";
 import { setOrientation } from "@/store/chartSlice";
 // Helper Components
 const Submenu = memo(
@@ -69,12 +69,12 @@ const Submenu = memo(
 	}
 );
 const CustomDrawer = memo(() => {
-	const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
-	const [isPressed, setIsPressed] = useState(false);
 	const dispatch = useDispatch();
 	const pathnames = usePathname();
 	const router = useRouter();
 	const pathname = usePathname();
+	const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
+	const [isPressed, setIsPressed] = useState(false);
 	const toggleSubmenu = (key: string) => {
 		setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
 	};

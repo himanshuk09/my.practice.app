@@ -1,8 +1,8 @@
 import React from "react";
-import { View, PanResponder, StyleSheet } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import { usePathname } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
+import { View, PanResponder, StyleSheet } from "react-native";
+import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import { RootState } from "@/store/store";
 type SwipeDetectionWrapperProps = {
 	children: React.ReactNode;
@@ -27,13 +27,13 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 	};
 	const debounceToggleDrawer = () => {
 		debounceAction(() => {
-			console.log("Left swipe detected!");
+			//console.log("Left swipe detected!");
 			dispatch(toggleDrawer());
 		});
 	};
 	const debounceCloseDrawer = () => {
 		debounceAction(() => {
-			console.log("Right to left swipe detected, closing drawer!");
+			//console.log("Right to left swipe detected, closing drawer!");
 			dispatch(closeDrawer());
 		});
 	};

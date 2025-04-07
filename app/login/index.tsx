@@ -9,30 +9,31 @@ import {
 	StatusBar,
 	Platform,
 } from "react-native";
-import { Href, Redirect, useRouter } from "expo-router";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/store/authSlice";
-import { i18n } from "@/localization/localConfig";
-import Logo from "@/components/SVG/Logo";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { Href, Redirect, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { setUser } from "@/store/authSlice";
+import { i18n } from "@/localization/config";
+import Logo from "@/components/SVG/Logo";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginUser } from "@/services/auth.services";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const SignIn: React.FC = () => {
-	const isOnline = useNetworkStatus();
-	const [userName, setUserName] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
-	const [hidePassword, setHidePassword] = useState<boolean>(true);
-	const [errorMessage, setErrorMessage] = useState<string>("");
 	const router = useRouter();
 	const dispatch = useDispatch();
+	const isOnline = useNetworkStatus();
 	const [isAuth, setIsAuth] = useState<boolean>();
+	const [userName, setUserName] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
+	const [errorMessage, setErrorMessage] = useState<string>("");
+	const [hidePassword, setHidePassword] = useState<boolean>(true);
 	const [isUserNameFocused, setIsUserNameFocused] = useState(false);
 	const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
 	const validateInput = (userName: string, password: string): string => {
 		if (userName.trim() === "" && password.trim() === "") {
 			return "Please_enter_your_username_and_password";
@@ -234,6 +235,7 @@ const SignIn: React.FC = () => {
 									position: "absolute",
 									right: 13,
 									top: 10,
+									zIndex: 100,
 								}}
 								activeOpacity={0.8}
 							>

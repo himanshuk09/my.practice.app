@@ -6,12 +6,9 @@ import {
 	StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-
 import CustomSwitch from "@/components/CustomSwitch";
-import { i18n } from "@/localization/localConfig";
-
+import { i18n } from "@/localization/config";
 import { st } from "@/utils/Styles";
-
 import StackHeader from "@/components/StackHeader";
 import { ChartLoaderPNG } from "@/components/Loader";
 const Card = ({ title, data }: any) => {
@@ -95,7 +92,7 @@ const SignalSettings = ({
 	}, []);
 	return (
 		<View
-			className={`"h-full w-full absolute flex-1 bg-white `}
+			className={`h-full w-full absolute flex-1 bg-white `}
 			style={StyleSheet.absoluteFill}
 		>
 			<StackHeader
@@ -128,7 +125,7 @@ const SignalSettings = ({
 					height: "100%",
 				}}
 			>
-				{cards?.length === 0 ? (
+				{!cards || cards?.length === 0 ? (
 					<View
 						className="items-center  justify-center "
 						style={{
@@ -153,7 +150,7 @@ const SignalSettings = ({
 							index.toString()
 						}
 						scrollEnabled={true}
-						className="bg-slate-50 overflow-scroll  p-2"
+						className="bg-slate-50 overflow-scroll px-2"
 						contentContainerStyle={{ paddingTop: 4 }}
 						showsHorizontalScrollIndicator={false}
 						showsVerticalScrollIndicator={false}

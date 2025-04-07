@@ -1,4 +1,11 @@
+import { st } from "@/utils/Styles";
+import StackHeader from "./StackHeader";
+import { ChartLoaderPNG } from "./Loader";
 import { useEffect, useState } from "react";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { i18n } from "@/localization/config";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
+import { saveDealsCSV, saveDealsCSVWeb } from "./fileDownloaders/saveCSVFile";
 import {
 	View,
 	Platform,
@@ -6,14 +13,8 @@ import {
 	TouchableOpacity,
 	Text,
 	StyleSheet,
+	RefreshControl,
 } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { i18n } from "@/localization/localConfig";
-import { st } from "@/utils/Styles";
-import { saveDealsCSV, saveDealsCSVWeb } from "./fileDownloaders/saveCSVFile";
-import StackHeader from "./StackHeader";
-import { ChartLoaderPNG } from "./Loader";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const Card = ({ title, deals }: any) => {
 	return (
@@ -92,14 +93,23 @@ const Card = ({ title, deals }: any) => {
 		</View>
 	);
 };
-const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
+const Transactions = ({
+	cards,
+	setModalVisible,
+	modalVisible,
+	title,
+	onRefresh,
+	isRefreshing,
+}: any) => {
 	const [loading, setLoadig] = useState<any>(true);
 	const isOnline = useNetworkStatus();
+
 	useEffect(() => {
 		setTimeout(() => {
 			setLoadig(false);
-		}, 1000);
+		}, 500);
 	}, []);
+
 	return (
 		<View className="flex-1  " style={StyleSheet.absoluteFill}>
 			<StackHeader
@@ -146,7 +156,7 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 					height: "100%",
 				}}
 			>
-				{cards?.length === 0 ? (
+				{!cards || cards?.length === 0 ? (
 					<View
 						className="items-center justify-center"
 						style={{
@@ -177,15 +187,22 @@ const Transactions = ({ cards, setModalVisible, modalVisible, title }: any) => {
 						nestedScrollEnabled={true}
 						scrollEnabled={true}
 						initialNumToRender={10}
-						maxToRenderPerBatch={5}
+						maxToRenderPerBatch={10}
 						style={{
 							flex: 1,
 							marginBottom: 5,
 						}}
+						refreshControl={
+							<RefreshControl
+								refreshing={isRefreshing}
+								onRefresh={onRefresh}
+								colors={["#9E9B9B"]} // Optional: Set colors for the refresh indicator
+							/>
+						}
 					/>
 				)}
 				<TouchableOpacity
-					className={`bg-primary  mx-2  py-3 flex justify-center items-center rounded-sm    
+					className={`bg-primary  mx-2 mb-2 py-3 flex justify-center items-center rounded-sm    
 						${loading || cards?.length === 0 ? "absolute bottom-1 left-0 right-0 " : ""}}`}
 					onPress={() => setModalVisible(!modalVisible)}
 				>

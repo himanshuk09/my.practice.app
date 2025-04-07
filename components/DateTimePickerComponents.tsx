@@ -2,7 +2,7 @@ import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import React, { useCallback, useState } from "react";
 import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/en";
 import "dayjs/locale/de";
 import "dayjs/locale/es";
@@ -10,8 +10,22 @@ import "dayjs/locale/fr";
 import "dayjs/locale/tr";
 import "dayjs/locale/en-in";
 import { useSelector } from "react-redux";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 
+type DateTimePickerComponentsProps = {
+	title?: String;
+	timePicker?: boolean | undefined;
+	pickerMode?: ModeType;
+	open?: Boolean;
+	setOpen?: any;
+	setSingleDate?: any;
+	defaultDate?: DateType;
+	initialView?: "day" | "month" | "year" | "time";
+	setSelectedStartDate?: any;
+	setSelectedEndDate?: any;
+	rangeDate?: any;
+	setRangeDate?: any;
+};
 const DateTimePickerComponents = ({
 	title = "Select",
 	timePicker = true,
@@ -25,7 +39,7 @@ const DateTimePickerComponents = ({
 	setSelectedEndDate,
 	rangeDate,
 	setRangeDate,
-}: any) => {
+}: DateTimePickerComponentsProps) => {
 	const [mode] = useState<ModeType>(pickerMode);
 	const [date, setDate] = useState<DateType | undefined>(defaultDate);
 	const [range, setRange] = React.useState<{
@@ -82,7 +96,7 @@ const DateTimePickerComponents = ({
 				startDate={range?.startDate} //range picker start date
 				endDate={range?.endDate} //range picker end date
 				dates={dates} //multiple date
-				initialView={initialView}
+				initialView={initialView} //day or time
 				firstDayOfWeek={1}
 				height={300}
 				// minDate={dayjs().startOf('day')}

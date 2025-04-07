@@ -7,8 +7,8 @@ import {
 	Platform,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { st } from "@/utils/Styles";
 import { ShimmerAccordion } from "./ShimmerEffect";
 
@@ -19,9 +19,10 @@ const AccordionFlatlist = ({
 	scrollToIndex,
 	index,
 }: any) => {
-	const [expanded, setExpanded] = useState<number | null>(null);
-	const animations = useRef<any>({}).current;
 	const router = useRouter();
+	const animations = useRef<any>({}).current;
+	const [expanded, setExpanded] = useState<number | null>(null);
+
 	data?.forEach((item: any) => {
 		if (!animations[item?.MeterId]) {
 			animations[item?.MeterId] = new Animated.Value(0);

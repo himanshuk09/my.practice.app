@@ -1,19 +1,12 @@
 import { View, FlatList, SafeAreaView, StatusBar } from "react-native";
 import "nativewind";
 import MenuCard from "@/components/MenuCard";
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { DashboardCardsList } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 
-interface MenuItem {
-	id: number;
-	title: string;
-	icon: string;
-	notificationCount: number;
-	route: any;
-}
 const Dashboard: React.FC = () => {
 	const isFocused = useIsFocused();
 	const dispatch = useDispatch();

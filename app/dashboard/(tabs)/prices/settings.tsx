@@ -7,7 +7,7 @@ import {
 	Image,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { useRouter } from "expo-router";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";

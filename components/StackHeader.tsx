@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Platform } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { i18n } from "@/localization/localConfig";
 import { useRouter } from "expo-router";
+import { i18n } from "@/localization/config";
+import { MaterialIcons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 
 const StackHeader = ({ title, closed = false, setModalVisible }: any) => {
 	const router = useRouter();

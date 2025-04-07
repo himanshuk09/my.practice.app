@@ -10,13 +10,14 @@ import { Portfolioprops, PortfolioArray } from "@/types/type";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const Portfolio: React.FC = () => {
-	const [gasList, setGasList] = useState<PortfolioArray>([]);
-	const [stromList, setStromList] = useState<PortfolioArray>([]);
-	const isOnline = useNetworkStatus();
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
+	const isOnline = useNetworkStatus();
 	let NavigateTo = "dashboard/portfolio";
 	const { height } = useWindowDimensions();
+	const [gasList, setGasList] = useState<PortfolioArray>([]);
+	const [stromList, setStromList] = useState<PortfolioArray>([]);
+
 	useEffect(() => {
 		const fetchDetails = async () => {
 			if (!isOnline) return;

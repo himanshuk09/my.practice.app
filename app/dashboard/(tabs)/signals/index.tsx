@@ -8,12 +8,12 @@ import { useIsFocused } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 
 const Signals = () => {
-	const [isRefreshing, setIsRefreshing] = useState(false);
-	const [signalsGas, setSignalsGas] = useState<any>();
-	const [signalsStrom, setSignalsStrom] = useState<any>();
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	let NavigateTo = "dashboard/signals";
+	const [isRefreshing, setIsRefreshing] = useState(false);
+	const [signalsGas, setSignalsGas] = useState<any>();
+	const [signalsStrom, setSignalsStrom] = useState<any>();
 	const onRefresh = async () => {
 		setIsRefreshing(true);
 		// Simulate a network request or refresh data logic

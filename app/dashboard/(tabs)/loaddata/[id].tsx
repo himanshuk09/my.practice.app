@@ -1,10 +1,17 @@
-import { View, Text, SafeAreaView, Platform, StatusBar } from "react-native";
+import {
+	View,
+	Text,
+	SafeAreaView,
+	Platform,
+	StatusBar,
+	KeyboardAvoidingView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { AccordionData } from "@/constants/constantData";
 import { useSelector } from "react-redux";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { RootState } from "@/store/store";
@@ -18,9 +25,9 @@ import { stringChartData } from "@/constants/stringChartData";
 import { st } from "@/utils/Styles";
 
 const LoadDataDetails = () => {
-	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
-	const [loadDetail, setloadDetails] = useState<any>([]);
 	const { id } = useLocalSearchParams();
+	const [loadDetail, setloadDetails] = useState<any>([]);
+	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
@@ -37,7 +44,7 @@ const LoadDataDetails = () => {
 		const filteredItem = AccordionData.find((item: any) =>
 			item.details.some((detail: any) => detail.id === Number(id))
 		);
-
+		console.log("id", id);
 		if (filteredItem) {
 			const selectedDetail = filteredItem.details.find(
 				(detail: any) => detail.id === Number(id)
@@ -72,7 +79,7 @@ const LoadDataDetails = () => {
 							style={[st.headerShadow, st.bottomShadow]}
 						>
 							<View
-								className="flex-col py-1"
+								className="flex-col p-1"
 								style={{
 									width:
 										Platform.OS === "web"
@@ -83,22 +90,23 @@ const LoadDataDetails = () => {
 								<Text className="text-sm font-semibold text-mainCardHeaderText break-words">
 									{loadDetail?.channel}
 								</Text>
-								<View className="flex-row justify-items-start">
-									<Text className="text-mainCardHeaderText text-md">
+
+								<View className="flex-row justify-self-start">
+									<Text className="text-mainCardHeaderText text-md min-w-[80px]">
 										{i18n.t("Energy")}:{" "}
 									</Text>
-									<Text className="text-mainCardHeaderText text-sm ml-5">
+									<Text className="text-mainCardHeaderText text-sm ml-2">
 										{new Intl.NumberFormat("en", {
 											useGrouping: true,
 										}).format(30319)}{" "}
 										kWh
 									</Text>
 								</View>
-								<View className="flex-row justify-items-start  ">
-									<Text className="text-mainCardHeaderText text-md">
+								<View className="flex-row justify-items-start">
+									<Text className="text-mainCardHeaderText text-md min-w-[80px]">
 										{i18n.t("Average")}:{" "}
 									</Text>
-									<Text className="text-mainCardHeaderText text-sm ml-5">
+									<Text className="text-mainCardHeaderText text-sm ml-2">
 										30,319 kWh
 									</Text>
 								</View>
@@ -130,7 +138,7 @@ const LoadDataDetails = () => {
 						showPeriodOfTime={true}
 						showValueRange={true}
 						fetchChartData={fetchChartData}
-						yaxisunit={"€/MWh"}
+						yaxisunit="kWh"
 						isChartLoaded={isChartLoaded}
 						setIsChartLoaded={setIsChartLoaded}
 					/>

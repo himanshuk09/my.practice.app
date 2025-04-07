@@ -7,7 +7,7 @@ import {
 	RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { i18n } from "@/localization/localConfig";
+import { i18n } from "@/localization/config";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";

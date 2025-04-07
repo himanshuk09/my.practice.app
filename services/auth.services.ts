@@ -20,7 +20,6 @@ const loginUser = async (payload: loginPayloadProps) => {
 
 		const { access_token, UserId, cultureId, clientId, ApiApkVersion } =
 			response?.data;
-		console.log(response);
 
 		// Store token
 		await AsyncStorage.multiSet([
