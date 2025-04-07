@@ -8,6 +8,9 @@ import {
 	Pressable,
 	StatusBar,
 	Platform,
+	KeyboardAvoidingView,
+	ScrollView,
+	TouchableWithoutFeedback,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { Href, Redirect, useRouter } from "expo-router";
@@ -33,7 +36,6 @@ const SignIn: React.FC = () => {
 	const [hidePassword, setHidePassword] = useState<boolean>(true);
 	const [isUserNameFocused, setIsUserNameFocused] = useState(false);
 	const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-
 	const validateInput = (userName: string, password: string): string => {
 		if (userName.trim() === "" && password.trim() === "") {
 			return "Please_enter_your_username_and_password";
@@ -88,7 +90,9 @@ const SignIn: React.FC = () => {
 					});
 				}, 1000);
 			} else {
-				setErrorMessage("Login failed. Please try again.");
+				setErrorMessage(
+					"Login_failed_Please_check_your_credentials"
+				);
 				Toast.show({
 					type: "error",
 					text1: "Login failed. Please try again.",
@@ -129,7 +133,6 @@ const SignIn: React.FC = () => {
 		};
 		checkAuth();
 	}, []);
-
 	return isAuth ? (
 		<Redirect href={"/dashboard"} />
 	) : (
@@ -141,235 +144,293 @@ const SignIn: React.FC = () => {
 				showHideTransition={"slide"}
 				networkActivityIndicatorVisible
 			/>
-
-			<View className="flex-1 justify-center items-center">
-				<View className="w-11/12 max-w-md p-5">
-					<View className="items-center mb-5 w-full">
-						<Logo />
-					</View>
-					{/**Error Handler */}
-					<View className="mb-5">
-						{errorMessage ? (
-							<Text className="text-red-500 mb-2 font-semibold text-center">
-								{errorMessage ==
-								"Login failed. Please try again."
-									? "Login failed. Please try again."
-									: i18n.t(errorMessage)}
-							</Text>
-						) : null}
-
-						{/** Username Feild*/}
-						<View className="relative">
-							<TextInput
-								key={"username_input"}
-								className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 outline-none  rounded-md  text-lg "} `}
-								style={{
-									paddingLeft: 12,
-									paddingRight: 12,
-									paddingVertical: 10,
-									backgroundColor: "#E5E7EB",
-									borderColor: errorMessage
-										? "#EF4444" // Red border for error
-										: isUserNameFocused
-											? "#3B82F6" // Blue border on focus
-											: "#D1D5DB", // Default gray border
-									borderWidth: 1,
-									borderRadius: 2,
-									fontSize: 16,
-									marginBottom: 15,
-									color: "#808080",
-									textDecorationLine: "none",
-
-									...(Platform.OS !== "web"
-										? {
-												shadowColor:
+			<KeyboardAvoidingView
+				style={{ flex: 1 }}
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+			>
+				<TouchableWithoutFeedback
+					onPress={() => {
+						if (Platform.OS !== "web") {
+							Keyboard.dismiss();
+						}
+					}}
+				>
+					<ScrollView
+						contentContainerStyle={{ flexGrow: 1 }}
+						keyboardShouldPersistTaps="handled"
+					>
+						<View className="flex-1 justify-center items-center">
+							<View className="w-11/12 max-w-md p-5">
+								<View className="items-center mb-10 w-full">
+									<Logo />
+								</View>
+								{/**Error Handler */}
+								<View className="mb-5">
+									{/** Username Feild*/}
+									<View className="relative">
+										<TextInput
+											id="username" // ✅ Useful for form autofill
+											value={userName}
+											key={"username_input"}
+											autoCapitalize="none"
+											autoComplete="username" // ✅ Enables username autofill
+											placeholderTextColor="#808080"
+											placeholder={i18n.t(
+												"username"
+											)}
+											textContentType="username"
+											onFocus={() =>
+												setIsUserNameFocused(
+													true
+												)
+											}
+											onBlur={() =>
+												setIsUserNameFocused(
+													false
+												)
+											}
+											onChangeText={(text) => {
+												setUserName(text);
+												if (
+													errorMessage !==
+													""
+												)
+													setErrorMessage(
+														""
+													);
+											}}
+											className={`pr-10 pl-3 py-3 w-full rounded-sm text-lg ${Platform.OS === "web" && " placeholder-[#808080]  p-3 outline-none  rounded-md  text-lg "}`}
+											style={{
+												backgroundColor:
+													"#E5E7EB",
+												borderColor:
 													errorMessage
-														? "#FCA5A5" // Red shadow for error
+														? "#EF4444" // Red border for error
 														: isUserNameFocused
-															? "#3B82F6" // Blue shadow on focus
-															: "transparent",
-												shadowOffset: {
-													width: 0,
-													height: 1,
-												},
-												shadowOpacity:
-													errorMessage ||
-													isUserNameFocused
-														? 0.8
-														: 0,
-												shadowRadius:
-													errorMessage ||
-													isUserNameFocused
-														? 10
-														: 0,
-												elevation:
-													errorMessage ||
-													isUserNameFocused
-														? 4
-														: 0, // Android shadow
+															? "#3B82F6" // Blue border on focus
+															: "#D1D5DB", // Default gray border
+												borderWidth: 1,
+												marginBottom: 15,
+												color: "#808080",
+												textDecorationLine:
+													"none",
+
+												...(Platform.OS !==
+												"web"
+													? {
+															shadowColor:
+																errorMessage
+																	? "#FCA5A5" // Red shadow for error
+																	: isUserNameFocused
+																		? "#3B82F6" // Blue shadow on focus
+																		: "transparent",
+															shadowOffset:
+																{
+																	width: 0,
+																	height: 1,
+																},
+															shadowOpacity:
+																errorMessage ||
+																isUserNameFocused
+																	? 0.8
+																	: 0,
+															shadowRadius:
+																errorMessage ||
+																isUserNameFocused
+																	? 10
+																	: 0,
+															elevation:
+																errorMessage ||
+																isUserNameFocused
+																	? 4
+																	: 0, // Android shadow
+														}
+													: null),
+											}}
+										/>
+
+										<TouchableOpacity
+											style={{
+												position:
+													"absolute",
+												right: 13,
+												top: 10,
+												zIndex: 100,
+											}}
+											activeOpacity={0.8}
+										>
+											<FontAwesome
+												name="user"
+												size={26}
+												color="#6b7280"
+												style={{
+													zIndex: 100,
+												}}
+											/>
+										</TouchableOpacity>
+									</View>
+
+									{/**Password Feild */}
+									<View className="relative">
+										<TextInput
+											id="password"
+											value={password}
+											autoCapitalize="none"
+											key={"password_input"}
+											textContentType="password"
+											placeholderTextColor="#808080"
+											placeholder={i18n.t(
+												"password"
+											)}
+											secureTextEntry={
+												hidePassword
 											}
-										: null),
-								}}
-								onFocus={() =>
-									setIsUserNameFocused(true)
-								}
-								onBlur={() =>
-									setIsUserNameFocused(false)
-								}
-								placeholderTextColor="#808080"
-								placeholder={i18n.t("username")}
-								textContentType="username"
-								value={userName}
-								onChangeText={(text) => {
-									setUserName(text);
-									if (errorMessage !== "")
-										setErrorMessage("");
-								}}
-								autoCapitalize="none"
-								autoComplete="username" // ✅ Enables username autofill
-								id="username" // ✅ Useful for form autofill
-							/>
-
-							<TouchableOpacity
-								style={{
-									position: "absolute",
-									right: 13,
-									top: 10,
-									zIndex: 100,
-								}}
-								activeOpacity={0.8}
-							>
-								<FontAwesome
-									name="user"
-									size={26}
-									color="#6b7280"
-									style={{ zIndex: 100 }}
-								/>
-							</TouchableOpacity>
-						</View>
-
-						{/**Password Feild */}
-						<View className="relative">
-							<TextInput
-								key={"password_input"}
-								className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 rounded-md outline-none text-lg "} `}
-								style={{
-									paddingLeft: 12,
-									paddingRight: 12,
-									paddingVertical: 10,
-									backgroundColor: "#E5E7EB",
-									borderColor: errorMessage
-										? "#EF4444" // Red border for error
-										: isPasswordFocused
-											? "#3B82F6" // Blue border on focus
-											: "#D1D5DB", // Default gray border
-									borderWidth: 1,
-									borderRadius: 2,
-									fontSize: 16,
-									marginBottom: 15,
-									color: "#808080",
-									textDecorationLine: "none",
-									zIndex: 0,
-
-									// Shadow Handling
-									...(Platform.OS !== "web"
-										? {
-												shadowColor:
+											autoComplete="current-password" // ✅ Enables password autofill
+											onChangeText={(text) => {
+												setPassword(text);
+												if (
+													errorMessage !==
+													""
+												)
+													setErrorMessage(
+														""
+													);
+											}}
+											onFocus={() =>
+												setIsPasswordFocused(
+													true
+												)
+											}
+											onBlur={() =>
+												setIsPasswordFocused(
+													false
+												)
+											}
+											className={`pr-10 pl-3 py-3 w-full rounded-sm text-lg ${Platform.OS === "web" && "p-3 outline-none  rounded-md  text-lg "}`}
+											style={{
+												backgroundColor:
+													"#E5E7EB",
+												borderColor:
 													errorMessage
-														? "#FCA5A5" // Red shadow for error
+														? "#EF4444" // Red border for error
 														: isPasswordFocused
-															? "#3B82F6" // Blue shadow on focus
-															: "transparent",
-												shadowOffset: {
-													width: 0,
-													height: 1,
-												},
-												shadowOpacity:
-													errorMessage ||
-													isPasswordFocused
-														? 0.8
-														: 0,
-												shadowRadius:
-													errorMessage ||
-													isPasswordFocused
-														? 100
-														: 0,
-												elevation:
-													errorMessage ||
-													isPasswordFocused
-														? 9
-														: 0, // Android shadow
+															? "#3B82F6" // Blue border on focus
+															: "#D1D5DB", // Default gray border
+												borderWidth: 1,
+												borderRadius: 2,
+												marginBottom: 5,
+												color: "#808080",
+												textDecorationLine:
+													"none",
+												zIndex: 0,
+												// Shadow Handling
+												...(Platform.OS !==
+												"web"
+													? {
+															shadowColor:
+																errorMessage
+																	? "#FCA5A5" // Red shadow for error
+																	: isPasswordFocused
+																		? "#3B82F6" // Blue shadow on focus
+																		: "transparent",
+															shadowOffset:
+																{
+																	width: 0,
+																	height: 1,
+																},
+															shadowOpacity:
+																errorMessage ||
+																isPasswordFocused
+																	? 0.8
+																	: 0,
+															shadowRadius:
+																errorMessage ||
+																isPasswordFocused
+																	? 100
+																	: 0,
+															elevation:
+																errorMessage ||
+																isPasswordFocused
+																	? 9
+																	: 0, // Android shadow
+														}
+													: null),
+											}}
+										/>
+
+										<TouchableOpacity
+											activeOpacity={0.5}
+											style={{
+												position:
+													"absolute",
+												right: 13,
+												top: 10,
+												zIndex: 100,
+											}}
+											onPress={() =>
+												setHidePassword(
+													!hidePassword
+												)
 											}
-										: null),
-								}}
-								onFocus={() =>
-									setIsPasswordFocused(true)
-								}
-								onBlur={() =>
-									setIsPasswordFocused(false)
-								}
-								placeholder={i18n.t("password")}
-								placeholderTextColor="#808080"
-								secureTextEntry={hidePassword}
-								value={password}
-								textContentType="password"
-								onChangeText={(text) => {
-									setPassword(text);
-									if (errorMessage !== "")
-										setErrorMessage("");
-								}}
-								autoCapitalize="none"
-								autoComplete="current-password" // ✅ Enables password autofill
-								id="password"
-							/>
+										>
+											<FontAwesome
+												name={
+													hidePassword
+														? "lock"
+														: "unlock-alt"
+												}
+												size={26}
+												color="#6b7280"
+											/>
+										</TouchableOpacity>
+									</View>
+									{errorMessage ? (
+										<Text className="text-red-500  font-normal text-left text-sm">
+											{errorMessage ==
+											"Login failed. Please try again."
+												? "Login failed. Please try again."
+												: i18n.t(
+														errorMessage
+													)}
+										</Text>
+									) : null}
 
-							<TouchableOpacity
-								activeOpacity={0.5}
-								style={{
-									position: "absolute",
-									right: 13,
-									top: 10,
-									zIndex: 100,
-								}}
-								onPress={() =>
-									setHidePassword(!hidePassword)
-								}
-							>
-								<FontAwesome
-									name={
-										hidePassword
-											? "lock"
-											: "unlock-alt"
-									}
-									size={26}
-									color="#6b7280"
-								/>
-							</TouchableOpacity>
+									{/**Login Button */}
+									<TouchableOpacity
+										className="mt-9 p-3 rounded-full items-center bg-primary"
+										onPress={handleSubmit}
+									>
+										<Text className="text-white font-semibold text-lg uppercase">
+											{i18n.t("login")}
+										</Text>
+									</TouchableOpacity>
+									{/** Forget password screen redirector */}
+									<Pressable
+										onPress={() => {
+											if (
+												Keyboard.isVisible()
+											) {
+												Keyboard.dismiss();
+											}
+											router.replace(
+												`/login/forgotpassword`
+											);
+										}}
+										className="mx-auto my-5  p-4"
+									>
+										<Text className="text-red-600 capitalize underline text-center text-sm">
+											{i18n.t(
+												"forgotyourpassword"
+											)}
+										</Text>
+									</Pressable>
+								</View>
+							</View>
 						</View>
-
-						{/**Login Button */}
-						<TouchableOpacity
-							className=" p-4 rounded-full items-center bg-primary"
-							onPress={handleSubmit}
-						>
-							<Text className="text-white font-semibold text-md uppercase">
-								{i18n.t("login")}
-							</Text>
-						</TouchableOpacity>
-						{/** Forget password screen redirector */}
-						<Pressable
-							onPress={() =>
-								router.replace(`/login/forgotpassword`)
-							}
-							className="mx-auto my-5  p-4"
-						>
-							<Text className="text-red-600 capitalize underline text-center text-sm">
-								{i18n.t("forgotyourpassword")}
-							</Text>
-						</Pressable>
-					</View>
-				</View>
-			</View>
+					</ScrollView>
+				</TouchableWithoutFeedback>
+			</KeyboardAvoidingView>
 		</SafeAreaView>
 	);
 };

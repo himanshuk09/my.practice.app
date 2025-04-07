@@ -8,6 +8,8 @@ import {
 	Platform,
 	ScrollView,
 	StatusBar,
+	Keyboard,
+	TouchableWithoutFeedback,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -27,9 +29,158 @@ const ContactUs = () => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
 	return (
+		<TouchableWithoutFeedback
+			onPress={() => {
+				if (Platform.OS !== "web") {
+					Keyboard.dismiss();
+				}
+			}}
+		>
+			<View style={{ flex: 1, backgroundColor: "white" }}>
+				<StatusBar
+					barStyle="dark-content"
+					backgroundColor="#C3C3C3"
+					animated
+					showHideTransition="slide"
+				/>
+
+				<View className="top-0 w-full z-50 p-3 bg-primary h-20">
+					<Text className="text-xl font-semibold text-white capitalize">
+						{i18n.t("contactus")}
+					</Text>
+				</View>
+
+				<ScrollView
+					className="flex-1"
+					contentContainerStyle={{ padding: 15 }}
+					keyboardShouldPersistTaps="handled"
+					nestedScrollEnabled
+					showsVerticalScrollIndicator={false}
+				>
+					{/* Name */}
+					<View className="w-full p-2 relative mb-1">
+						<TextInput
+							className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 rounded-sm text-lg"
+							placeholder={i18n.t("name")}
+							value={name}
+							onChangeText={setName}
+							autoCapitalize="words"
+						/>
+						<FontAwesome
+							style={{
+								position: "absolute",
+								right: 20,
+								top: 20,
+							}}
+							name="user"
+							size={20}
+							color="#6b7280"
+						/>
+					</View>
+					{/* Phone Field */}
+					<View className="w-full p-2 relative mb-1">
+						<TextInput
+							className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 rounded-sm text-lg"
+							placeholder={i18n.t("phone")}
+							value={phone}
+							onChangeText={setPhone}
+							keyboardType="phone-pad"
+						/>
+						<FontAwesome
+							style={{
+								position: "absolute",
+								right: 20,
+								top: 20,
+							}}
+							name="phone"
+							size={20}
+							color="#6b7280"
+						/>
+					</View>
+					{/* Email Field */}
+					<View className="w-full p-2 relative mb-1">
+						<TextInput
+							className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 rounded-sm text-lg"
+							placeholder={i18n.t("email")}
+							value={email}
+							onChangeText={setEmail}
+							keyboardType="email-address"
+							autoCapitalize="none"
+						/>
+						<FontAwesome
+							style={{
+								position: "absolute",
+								right: 20,
+								top: 20,
+							}}
+							name="envelope"
+							size={20}
+							color="#6b7280"
+						/>
+					</View>
+
+					{/* Message Field */}
+					<View className="w-full p-2 relative">
+						<TextInput
+							className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 rounded-sm text-lg h-40"
+							placeholder={i18n.t("message")}
+							value={message}
+							onChangeText={setMessage}
+							multiline={true}
+							numberOfLines={6}
+							keyboardType="numbers-and-punctuation"
+							textAlignVertical="top"
+						/>
+						<FontAwesome
+							style={{
+								position: "absolute",
+								right: 20,
+								top: 20,
+							}}
+							name="pencil"
+							size={20}
+							color="#6b7280"
+						/>
+					</View>
+				</ScrollView>
+
+				{/* Footer (won't move!) */}
+				<View className="w-full flex flex-row justify-evenly border-t-2 border-primary">
+					<TouchableOpacity
+						className="items-center p-5 w-[50%] bg-white"
+						onPress={() => router.back()}
+					>
+						<Text className="text-center text-primary font-normal uppercase bg-white">
+							{i18n.t("cancel")}
+						</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						className="items-center p-5 w-[50%] bg-primary"
+						onPress={() => {
+							console.log("Message sent:", {
+								name,
+								phone,
+								email,
+								message,
+							});
+							alert("Message sent successfully!");
+						}}
+					>
+						<Text className="text-center text-white uppercase font-normal">
+							{i18n.t("send")}
+						</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</TouchableWithoutFeedback>
+	);
+
+	return (
 		<KeyboardAvoidingView
 			style={{ flex: 1, backgroundColor: "white" }}
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			keyboardVerticalOffset={Platform.select({ ios: 60, android: 0 })}
 		>
 			<StatusBar
 				barStyle="dark-content"

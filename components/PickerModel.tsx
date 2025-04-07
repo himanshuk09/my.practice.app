@@ -100,7 +100,7 @@ const PickerModel = ({
 				: Platform.OS === "web"
 					? 210
 					: 200, // Collapse on keyboard open, expand otherwise
-			duration: 500,
+			duration: 200,
 			easing: Easing.inOut(Easing.linear),
 			useNativeDriver: false, // Native driver doesn't support height animation
 		}).start();
@@ -501,7 +501,13 @@ const PickerModel = ({
 					<View className="flex-row justify-end my-3 ">
 						<Pressable
 							className="px-6 py-2 mr-4"
-							onPress={() => setModalVisible(false)}
+							onPress={() => {
+								if (Keyboard.isVisible()) {
+									setKeyboardVisible(false);
+									Keyboard.dismiss();
+								}
+								setModalVisible(false);
+							}}
 						>
 							<Text className="text-chartText  font-medium text-base">
 								{i18n.t("Cancel")}

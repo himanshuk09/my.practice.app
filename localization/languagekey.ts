@@ -101,6 +101,8 @@ export const TranslationKeys: Translations | any = {
 			"Enter your registered email address to reset your password.",
 		"Login failed. Please try again.": "Login failed. Please try again.",
 		portfolio_overview: "Portfolio Overview",
+		Login_failed_Please_check_your_credentials:
+			"Login failed.Please check your credentials.",
 		PFC_Details: "PFC Details",
 		Prices_Setting: "Prices Settings",
 		Prices_Details: "Prices Details",
@@ -373,6 +375,8 @@ export const TranslationKeys: Translations | any = {
 		"Login failed. Please try again.":
 			"Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
 		portfolio_overview: "Portfolio Übersicht",
+		Login_failed_Please_check_your_credentials:
+			"Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldeinformationen.",
 		Low_Soft: "Tief Weich",
 		Low_Hard: "Tief Hart",
 		Negative: "Negieren",

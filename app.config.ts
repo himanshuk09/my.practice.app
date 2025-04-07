@@ -58,6 +58,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			"READ_EXTERNAL_STORAGE",
 			"MANAGE_EXTERNAL_STORAGE",
 		],
+		softwareKeyboardLayoutMode: "pan",
 	},
 	web: {
 		bundler: "metro",

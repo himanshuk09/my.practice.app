@@ -7,6 +7,10 @@ import {
 	Pressable,
 	StatusBar,
 	Platform,
+	Keyboard,
+	KeyboardAvoidingView,
+	ScrollView,
+	TouchableWithoutFeedback,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Href, Redirect, useRouter } from "expo-router";
@@ -37,11 +41,11 @@ const Forgotpassword = () => {
 			return () => clearInterval(interval);
 		}
 	}, [email]);
+	const checkAuth = async () => {
+		const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+		setIsAuth(isLoggedIn === "true");
+	};
 	useEffect(() => {
-		const checkAuth = async () => {
-			const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-			setIsAuth(isLoggedIn === "true");
-		};
 		checkAuth();
 	}, []);
 
@@ -56,119 +60,163 @@ const Forgotpassword = () => {
 				showHideTransition={"slide"}
 				networkActivityIndicatorVisible
 			/>
-			<View className="flex-1 justify-center items-center bg-white">
-				<View className="w-11/12 max-w-md p-5">
-					<View className="items-center mb-10 w-full">
-						<Logo />
-					</View>
+			<KeyboardAvoidingView
+				style={{ flex: 1 }}
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+			>
+				<TouchableWithoutFeedback
+					onPress={() => {
+						if (Platform.OS !== "web") {
+							Keyboard.dismiss();
+						}
+					}}
+				>
+					<ScrollView
+						contentContainerStyle={{ flexGrow: 1 }}
+						keyboardShouldPersistTaps="handled"
+					>
+						<View className="flex-1 justify-center items-center bg-white">
+							<View className="w-11/12 max-w-md p-5">
+								<View className="items-center mb-10 w-full">
+									<Logo />
+								</View>
 
-					<View className="mb-5">
-						<Text className="text-[15px] mb-5 text-gray-400 font-bold">
-							{i18n.t(
-								"Enter_your_registered_email_address_to_reset_your_password"
-							)}
-						</Text>
-						{errorMessage ? (
-							<Text className="text-red-500 mb-2 font-semibold text-center">
-								{errorMessage}
-							</Text>
-						) : null}
-						<View className="relative">
-							<TextInput
-								className={`${Platform.OS === "web" && "bg-gray-200 border  placeholder-[#808080] border-gray-300 p-3 focus:outline-none  rounded-sm  text-lg "} `}
-								style={{
-									paddingLeft: 12,
-									paddingRight: 12,
-									paddingVertical: 10,
-									backgroundColor: "#E5E7EB",
-									borderColor: errorMessage
-										? "#EF4444" // Red border for error
-										: isEmailFocused
-											? "#3B82F6" // Blue border on focus
-											: "#D1D5DB", // Default gray border
-									borderWidth: 1,
-									borderRadius: 2,
-									fontSize: 16,
-									marginBottom: 15,
-									color: "#808080",
-									textDecorationLine: "none",
+								<View className="mb-5">
+									<Text className="text-[15px] mb-5 text-gray-400 font-bold">
+										{i18n.t(
+											"Enter_your_registered_email_address_to_reset_your_password"
+										)}
+									</Text>
 
-									// Shadow Handling
-									...(Platform.OS !== "web"
-										? {
-												shadowColor:
-													errorMessage
-														? "#FCA5A5" // Red shadow for error
-														: isEmailFocused
-															? "#3B82F6" // Blue shadow on focus
-															: "transparent",
-												shadowOffset: {
-													width: 0,
-													height: 1,
-												},
-												shadowOpacity:
-													errorMessage ||
-													isEmailFocused
-														? 0.8
-														: 0,
-												shadowRadius:
-													errorMessage ||
-													isEmailFocused
-														? 100
-														: 0,
-												elevation:
-													errorMessage ||
-													isEmailFocused
-														? 9
-														: 0, // Android shadow
+									<View className="relative">
+										<TextInput
+											autoCapitalize="none"
+											keyboardAppearance="default"
+											placeholder={i18n.t(
+												"email"
+											)}
+											placeholderTextColor="#808080"
+											textContentType="emailAddress"
+											value={email}
+											onFocus={() =>
+												setIsEmailFocused(
+													true
+												)
 											}
-										: null),
-								}}
-								onFocus={() => setIsEmailFocused(true)}
-								onBlur={() => setIsEmailFocused(false)}
-								placeholder={i18n.t("email")}
-								placeholderTextColor="#808080"
-								textContentType="emailAddress"
-								value={email}
-								onChangeText={(text) => {
-									setEmail(text);
-									if (errorMessage !== "")
-										setErrorMessage("");
-								}}
-								keyboardAppearance="default"
-								autoCapitalize="none"
-							/>
-							<Foundation
-								style={{
-									position: "absolute",
-									right: 13,
-									top: 11,
-								}}
-								name="mail"
-								size={26}
-								color="#6b7280"
-							/>
+											onBlur={() =>
+												setIsEmailFocused(
+													false
+												)
+											}
+											onChangeText={(text) => {
+												setEmail(text);
+												if (
+													errorMessage !==
+													""
+												)
+													setErrorMessage(
+														""
+													);
+											}}
+											className={`pr-10 pl-3 py-3 w-full rounded-sm text-lg ${Platform.OS === "web" && " placeholder-[#808080]  p-3 outline-none  rounded-md  text-lg "}`}
+											style={{
+												backgroundColor:
+													"#E5E7EB",
+												borderColor:
+													errorMessage
+														? "#EF4444" // Red border for error
+														: isEmailFocused
+															? "#3B82F6" // Blue border on focus
+															: "#D1D5DB", // Default gray border
+												borderWidth: 1,
+												marginBottom: 5,
+												color: "#808080",
+												textDecorationLine:
+													"none",
+
+												...(Platform.OS !==
+												"web"
+													? {
+															shadowColor:
+																errorMessage
+																	? "#FCA5A5" // Red shadow for error
+																	: isEmailFocused
+																		? "#3B82F6" // Blue shadow on focus
+																		: "transparent",
+															shadowOffset:
+																{
+																	width: 0,
+																	height: 1,
+																},
+															shadowOpacity:
+																errorMessage ||
+																isEmailFocused
+																	? 0.8
+																	: 0,
+															shadowRadius:
+																errorMessage ||
+																isEmailFocused
+																	? 10
+																	: 0,
+															elevation:
+																errorMessage ||
+																isEmailFocused
+																	? 4
+																	: 0, // Android shadow
+														}
+													: null),
+											}}
+										/>
+										<Foundation
+											style={{
+												position:
+													"absolute",
+												right: 13,
+												top: 11,
+											}}
+											name="mail"
+											size={26}
+											color="#6b7280"
+										/>
+									</View>
+									{errorMessage ? (
+										<Text className="text-red-500  font-normal text-left text-sm">
+											{errorMessage}
+										</Text>
+									) : null}
+									<TouchableOpacity
+										className="bg-primary p-3 mt-9 rounded-full items-center"
+										onPress={checkAuth}
+									>
+										<Text className="text-white text-lg font-semibold  uppercase">
+											{i18n.t("send")}
+										</Text>
+									</TouchableOpacity>
+
+									<Pressable
+										onPress={() => {
+											if (
+												Keyboard.isVisible()
+											) {
+												Keyboard.dismiss();
+											}
+											router.replace(
+												`/login` as Href
+											);
+										}}
+										className="mx-auto my-5  p-4"
+									>
+										<Text className="text-red-600 capitalize underline text-center text-sm">
+											{i18n.t("login")}
+										</Text>
+									</Pressable>
+								</View>
+							</View>
 						</View>
-
-						<TouchableOpacity className="bg-primary p-3 rounded-full items-center">
-							<Text className="text-white text-lg font-semibold  uppercase">
-								{i18n.t("send")}
-							</Text>
-						</TouchableOpacity>
-
-						<Pressable
-							onPress={() =>
-								router.replace(`/login` as Href)
-							}
-							className="mx-auto my-5  p-4"
-						>
-							<Text className="text-red-600 capitalize underline text-center text-sm">
-								{i18n.t("login")}
-							</Text>
-						</Pressable>
-					</View>
-				</View>
-			</View>
+					</ScrollView>
+				</TouchableWithoutFeedback>
+			</KeyboardAvoidingView>
 		</SafeAreaView>
 	);
 };
