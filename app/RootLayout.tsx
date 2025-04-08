@@ -1,16 +1,18 @@
 import "../global.css";
 import "react-native-reanimated";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppState } from "react-native";
 import { useDispatch } from "react-redux";
 import { Stack, useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useInitAuth } from "@/hooks/useInitAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 const RootLayout = () => {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const [isAuth, setIsAuth] = useState<boolean>();
 	const [appState, setAppState] = useState(AppState.currentState);
+	const { session, loading } = useAuth();
 	// useEffect(() => {
 	//     const handleAppStateChange = (nextAppState: any) => {
 	//         if (
@@ -33,14 +35,8 @@ const RootLayout = () => {
 	//         subscription.remove();
 	//     };
 	// }, [appState]);
-	useEffect(() => {
-		const checkAuth = async () => {
-			const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-			setIsAuth(isLoggedIn === "true");
-		};
-		checkAuth();
-	}, []);
 
+	useInitAuth();
 	return (
 		<Stack
 			screenOptions={{

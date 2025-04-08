@@ -45,7 +45,7 @@ const PortfolioOverView = () => {
 	const dispatch = useDispatch();
 	const isOnline = useNetworkStatus();
 	const { id } = useLocalSearchParams();
-	const locale = useSelector((state: RootState) => state.language.locale);
+	const locale = useSelector((state: RootState) => state.culture.locale);
 	const donutwebViewRef = useRef<WebView | null>(null);
 	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null);
 	const areaWebViewRef = useRef<WebView | null>(null);

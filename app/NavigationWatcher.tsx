@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BackHandler, Alert } from "react-native";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { useRouter, useSegments } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setInitialState } from "@/store/authSlice";
-import { updateLocale } from "@/store/languageSlice";
+
 import { closeDrawer } from "@/store/drawerSlice";
 import { activeLoading } from "@/store/navigationSlice";
 import { RootState } from "@/store/store";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
+
+import { useAuth } from "@/hooks/useAuth";
 
 type NavigationWatcherProps = {
 	children: React.ReactNode;
@@ -17,31 +16,13 @@ type NavigationWatcherProps = {
 const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 	const store = useStore();
 	const router = useRouter();
+	const { session } = useAuth();
 	const dispatch = useDispatch();
 	const segments = useSegments();
-	const isOnline = useNetworkStatus();
 	const currentPath = "/" + segments.join("/");
 	const history = useSelector(
 		(state: RootState) => state.navigation.history
 	);
-	const [shouldExitApp, setShouldExitApp] = useState(false);
-	// Fetch user login status and initialize app
-	const fetchUserLoginStatus = async () => {
-		try {
-			const value = await AsyncStorage.getItem("isLoggedIn");
-			const language =
-				await AsyncStorage.getItem("languagePreference");
-			setShouldExitApp(value === "true");
-			dispatch(updateLocale(language || "en"));
-			if (value === "true") {
-				dispatch(setInitialState(true));
-			} else {
-				dispatch(setInitialState(false));
-			}
-		} catch (error) {
-			console.error("Error fetching user login status:", error);
-		}
-	};
 
 	useEffect(() => {
 		const backAction = () => {
@@ -55,7 +36,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 
 			// Handle exit confirmation on /dashboard
 			if (currentPath === "/dashboard") {
-				if (shouldExitApp) {
+				if (session) {
 					Alert.alert(
 						"Exit App",
 						"Are you sure you want to exit?",
@@ -111,7 +92,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 			return true;
 		};
 
-		fetchUserLoginStatus();
 		// checkInternetConnection();
 		const backHandler = BackHandler.addEventListener(
 			"hardwareBackPress",
@@ -121,7 +101,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 		return () => {
 			backHandler.remove();
 		};
-	}, [currentPath, history, shouldExitApp, dispatch, router, segments]);
+	}, [currentPath, history, session, dispatch, router, segments]);
 
 	return children;
 };

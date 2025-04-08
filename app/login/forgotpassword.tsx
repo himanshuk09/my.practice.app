@@ -13,8 +13,7 @@ import {
 	TouchableWithoutFeedback,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Href, Redirect, useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Href, useRouter } from "expo-router";
 import Logo from "@/components/SVG/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
 import { i18n } from "@/localization/config";
@@ -22,7 +21,6 @@ const Forgotpassword = () => {
 	const router = useRouter();
 	let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const [email, setEmail] = useState<string>("");
-	const [isAuth, setIsAuth] = useState<boolean>();
 	const [errorMessage, setErrorMessage] = useState<string>("");
 	const [isEmailFocused, setIsEmailFocused] = useState(false);
 	const validateEmail = (text: string) => {
@@ -41,17 +39,8 @@ const Forgotpassword = () => {
 			return () => clearInterval(interval);
 		}
 	}, [email]);
-	const checkAuth = async () => {
-		const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-		setIsAuth(isLoggedIn === "true");
-	};
-	useEffect(() => {
-		checkAuth();
-	}, []);
 
-	return isAuth ? (
-		<Redirect href={"/dashboard"} />
-	) : (
+	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar
 				barStyle="dark-content"
@@ -185,10 +174,7 @@ const Forgotpassword = () => {
 											{errorMessage}
 										</Text>
 									) : null}
-									<TouchableOpacity
-										className="bg-primary p-3 mt-9 rounded-full items-center"
-										onPress={checkAuth}
-									>
+									<TouchableOpacity className="bg-primary p-3 mt-9 rounded-full items-center">
 										<Text className="text-white text-lg font-semibold  uppercase">
 											{i18n.t("send")}
 										</Text>

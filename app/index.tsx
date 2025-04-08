@@ -1,19 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { Redirect } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Index() {
-	const [isAuth, setIsAuth] = useState<boolean>();
+export default function Home() {
+	const { session } = useAuth();
 
-	useEffect(() => {
-		const checkAuth = async () => {
-			const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-			setIsAuth(isLoggedIn === "true");
-		};
-		checkAuth();
-	}, []);
-
-	return isAuth ? (
+	return session ? (
 		<Redirect href="/dashboard" />
 	) : (
 		<Redirect href="/login" />

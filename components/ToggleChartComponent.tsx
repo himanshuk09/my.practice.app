@@ -53,7 +53,7 @@ const ToggleChartComponent = ({
 	const webViewRef = useRef<WebView | any>(null);
 	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
 	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-	const locale = useSelector((state: any) => state.language.locale);
+	const locale = useSelector((state: any) => state.culture.locale);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);

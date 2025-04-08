@@ -14,6 +14,7 @@ const Dashboard: React.FC = () => {
 	useLayoutEffect(() => {
 		dispatch(inActiveLoading());
 	}, [isFocused]);
+
 	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar

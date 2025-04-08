@@ -2,10 +2,11 @@ import "react-native-reanimated";
 import React from "react";
 import { Stack } from "expo-router";
 import Header from "@/components/MainHeader";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const DashboardLayout = () => {
 	return (
-		<>
+		<ProtectedRoute>
 			<Stack
 				screenOptions={{
 					headerShown: false,
@@ -45,7 +46,7 @@ const DashboardLayout = () => {
 					}}
 				/>
 			</Stack>
-		</>
+		</ProtectedRoute>
 	);
 };
 

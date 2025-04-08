@@ -22,10 +22,10 @@ import * as Linking from "expo-linking";
 import * as ScreenOrientation from "expo-screen-orientation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { i18n } from "@/localization/config";
-import { logout, setInitialState } from "@/store/authSlice";
 import { closeDrawer } from "@/store/drawerSlice";
 import { RootState } from "@/store/store";
 import { setOrientation } from "@/store/chartSlice";
+import { useAuth } from "@/hooks/useAuth";
 // Helper Components
 const Submenu = memo(
 	({
@@ -73,6 +73,7 @@ const CustomDrawer = memo(() => {
 	const pathnames = usePathname();
 	const router = useRouter();
 	const pathname = usePathname();
+	const { setSessionValue } = useAuth();
 	const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
 	const [isPressed, setIsPressed] = useState(false);
 	const toggleSubmenu = (key: string) => {
@@ -231,17 +232,14 @@ const CustomDrawer = memo(() => {
 
 	const clearStorageAndNavigate = async (router: any) => {
 		try {
-			// await AsyncStorage.removeItem("isLoggedIn");
-			// await AsyncStorage.removeItem("token");
 			await AsyncStorage.multiRemove([
-				"isLoggedIn",
+				"session",
 				"token",
 				"UserId",
 				"ApkVersion",
 			]);
 			router.push("/");
-			dispatch(logout());
-			dispatch(setInitialState(false));
+			setSessionValue(false);
 		} catch (error) {
 			console.error(
 				"Error clearing AsyncStorage or navigating:",

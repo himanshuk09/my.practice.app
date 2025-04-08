@@ -55,7 +55,7 @@ const PickerModel = ({
 	setSelectedEndDate,
 	handleRangeDataFilter,
 }: PickerModelProps) => {
-	const { locale } = useSelector((state: RootState) => state.language);
+	const { locale } = useSelector((state: RootState) => state.culture);
 	const animationHeight = useRef(new Animated.Value(0)).current;
 	const [isKeyboardVisible, setKeyboardVisible] = useState<Boolean>(false);
 	const [pickerInitialView, setPickerInitaialView] =

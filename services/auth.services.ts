@@ -74,7 +74,7 @@ const fetchDataByToggle = async (tab: any) => {
 export const logout = async () => {
 	try {
 		// Remove token and user data from AsyncStorage
-		await AsyncStorage.removeItem("authToken");
+		await AsyncStorage.removeItem("token");
 		await AsyncStorage.removeItem("user");
 		return { success: true };
 	} catch (error) {

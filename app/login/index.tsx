@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
 	View,
 	TextInput,
@@ -13,23 +13,22 @@ import {
 	TouchableWithoutFeedback,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { Href, Redirect, useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { setUser } from "@/store/authSlice";
 import { i18n } from "@/localization/config";
 import Logo from "@/components/SVG/Logo";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginUser } from "@/services/auth.services";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
+import { useAuth } from "@/hooks/useAuth";
 
 const SignIn: React.FC = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const isOnline = useNetworkStatus();
-	const [isAuth, setIsAuth] = useState<boolean>();
+	const { setSessionValue } = useAuth();
 	const [userName, setUserName] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
@@ -51,10 +50,12 @@ const SignIn: React.FC = () => {
 		}
 		return ""; // No error
 	};
+
 	const validateUserName = (username: string): boolean => {
 		const regex = /^[a-zA-Z0-9]+$/;
 		return regex.test(username);
 	};
+
 	const handleSubmit = async (): Promise<void> => {
 		// Validate input
 		const validationError = validateInput(userName, password);
@@ -78,7 +79,7 @@ const SignIn: React.FC = () => {
 			const response = await loginUser(payload);
 
 			if (response?.success) {
-				dispatch(setUser(response?.clientId));
+				setSessionValue(true);
 				router.push("/dashboard" as Href);
 				setTimeout(() => {
 					Toast.show({
@@ -126,16 +127,8 @@ const SignIn: React.FC = () => {
 			dispatch(inActiveLoading());
 		}
 	};
-	useEffect(() => {
-		const checkAuth = async () => {
-			const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-			setIsAuth(isLoggedIn === "true");
-		};
-		checkAuth();
-	}, []);
-	return isAuth ? (
-		<Redirect href={"/dashboard"} />
-	) : (
+
+	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar
 				barStyle="dark-content"

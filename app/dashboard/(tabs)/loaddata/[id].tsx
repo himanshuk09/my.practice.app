@@ -1,11 +1,4 @@
-import {
-	View,
-	Text,
-	SafeAreaView,
-	Platform,
-	StatusBar,
-	KeyboardAvoidingView,
-} from "react-native";
+import { View, Text, SafeAreaView, Platform, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { AccordionData } from "@/constants/constantData";
@@ -44,7 +37,7 @@ const LoadDataDetails = () => {
 		const filteredItem = AccordionData.find((item: any) =>
 			item.details.some((detail: any) => detail.id === Number(id))
 		);
-		console.log("id", id);
+
 		if (filteredItem) {
 			const selectedDetail = filteredItem.details.find(
 				(detail: any) => detail.id === Number(id)

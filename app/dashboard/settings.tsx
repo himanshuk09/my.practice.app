@@ -21,7 +21,7 @@ const Settings = () => {
 	const router = useRouter();
 	const isFocused = useIsFocused();
 	const dispatch: AppDispatch = useDispatch();
-	const { locale } = useSelector((state: RootState) => state.language);
+	const { locale } = useSelector((state: RootState) => state.culture);
 
 	const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
 	const [isNotificationEnabled, setIsNotificationEnabled] =

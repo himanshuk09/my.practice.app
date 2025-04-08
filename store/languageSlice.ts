@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 import { i18n } from "../localization/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { store } from "./store";
 
 interface LanguageState {
 	isEnglish: boolean;
@@ -15,7 +13,7 @@ const initialState: LanguageState = {
 };
 
 const languageSlice = createSlice({
-	name: "language",
+	name: "culture",
 	initialState,
 	reducers: {
 		toggleLanguages(state) {
@@ -24,7 +22,7 @@ const languageSlice = createSlice({
 			i18n.locale = state.locale;
 		},
 		updateLocale(state, action: PayloadAction<string>) {
-			AsyncStorage.setItem("languagePreference", action.payload);
+			AsyncStorage.setItem("culture", action.payload);
 			state.locale = action.payload;
 			state.isEnglish = action.payload === "en";
 			i18n.locale = action.payload; // Update the i18n locale

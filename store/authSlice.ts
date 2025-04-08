@@ -1,30 +1,43 @@
-import { createSlice } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Initialize state based on AsyncStorage
-const initialState = {
-	value: false,
+interface AuthStatePro {
+	loading: boolean;
+	session: boolean;
+	user: any;
+}
+
+const initialState: AuthStatePro = {
+	loading: false,
+	session: false,
 	user: null,
 };
 
-const authSlice = createSlice({
+const authSlicePro = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
-		setUser: (state, action) => {
-			state.value = true;
+		setLoading: (state, action: PayloadAction<boolean>) => {
+			state.loading = action.payload;
+		},
+		setSession: (state, action: PayloadAction<boolean>) => {
+			state.session = action.payload;
+			AsyncStorage.setItem("session", action?.payload.toString());
+		},
+		setUser: (state, action: PayloadAction<any>) => {
 			state.user = action.payload;
-			AsyncStorage.setItem("isLoggedIn", "true");
 		},
-		logout: (state) => {
-			state.value = false;
+		signIn: (state, action: PayloadAction<any>) => {
+			state.session = true;
+			state.user = action.payload;
 		},
-		setInitialState: (state, action) => {
-			state.value = action.payload;
+		signOut: (state) => {
+			state.session = false;
+			state.user = null;
 		},
 	},
 });
 
-export const { setUser, logout, setInitialState } = authSlice.actions;
-
-export default authSlice.reducer;
+export const { setLoading, setSession, setUser, signIn, signOut } =
+	authSlicePro.actions;
+export default authSlicePro.reducer;

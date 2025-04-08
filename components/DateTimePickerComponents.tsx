@@ -47,7 +47,7 @@ const DateTimePickerComponents = ({
 		endDate: DateType;
 	}>(rangeDate);
 	const [dates, setDates] = useState<DateType[] | undefined>();
-	const locale = useSelector((state: any) => state.language.locale);
+	const locale = useSelector((state: any) => state.culture.locale);
 
 	const onChange = useCallback(
 		(params: any) => {
