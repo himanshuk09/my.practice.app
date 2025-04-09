@@ -1,17 +1,17 @@
-import { configureStore } from "@reduxjs/toolkit";
-
+import authReducer from "./authSlice";
+import drawerReducer from "./drawerSlice";
+import orientationReducer from "./chartSlice";
 import languageReducer from "./languageSlice";
 import navigationReducer from "./navigationSlice";
-import orientationReducer from "./chartSlice";
-import drawerReducer from "./drawerSlice";
-import authReducer from "./authSlice";
+import { configureStore } from "@reduxjs/toolkit";
+
 export const store = configureStore({
 	reducer: {
 		auth: authReducer,
+		drawer: drawerReducer,
 		culture: languageReducer,
 		navigation: navigationReducer,
 		orientation: orientationReducer,
-		drawer: drawerReducer,
 	},
 	devTools: true,
 });

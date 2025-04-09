@@ -31,13 +31,6 @@ const Imprint = () => {
 	const isFocused = useIsFocused();
 	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-	const onRefresh = async () => {
-		setIsRefreshing(true);
-		// Simulate a network request or refresh data logic
-		setTimeout(() => {
-			setIsRefreshing(false);
-		}, 2000);
-	};
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
@@ -65,7 +58,7 @@ const Imprint = () => {
 				refreshControl={
 					<RefreshControl
 						refreshing={isRefreshing}
-						onRefresh={onRefresh}
+						onRefresh={() => setIsRefreshing(false)}
 						colors={["#e31837"]}
 					/>
 				}

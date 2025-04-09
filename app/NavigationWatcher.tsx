@@ -92,7 +92,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 			return true;
 		};
 
-		// checkInternetConnection();
 		const backHandler = BackHandler.addEventListener(
 			"hardwareBackPress",
 			backAction
@@ -101,7 +100,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 		return () => {
 			backHandler.remove();
 		};
-	}, [currentPath, history, session, dispatch, router, segments]);
+	}, [currentPath, session, dispatch, router, segments]);
 
 	return children;
 };

@@ -12,7 +12,6 @@ import {
 	SafeAreaView,
 	StatusBar,
 	Platform,
-	Easing,
 } from "react-native";
 import { useDispatch } from "react-redux";
 interface CustomTabBarProps {

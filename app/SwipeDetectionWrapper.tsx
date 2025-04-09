@@ -7,6 +7,7 @@ import { RootState } from "@/store/store";
 type SwipeDetectionWrapperProps = {
 	children: React.ReactNode;
 };
+
 const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 	children,
 }) => {

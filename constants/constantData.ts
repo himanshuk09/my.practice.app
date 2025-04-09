@@ -596,7 +596,6 @@ export const AccordionData2 = [
 		],
 	},
 ];
-
 export const PFCGas = [
 	{
 		id: 1,

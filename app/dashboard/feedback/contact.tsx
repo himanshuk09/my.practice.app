@@ -11,12 +11,12 @@ import {
 	Keyboard,
 	TouchableWithoutFeedback,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
 import { useRouter } from "expo-router";
 import { i18n } from "@/localization/config";
-import { useDispatch } from "react-redux";
-import { inActiveLoading } from "@/store/navigationSlice";
+import { FontAwesome } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 const ContactUs = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();

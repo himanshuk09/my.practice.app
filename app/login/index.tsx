@@ -248,7 +248,11 @@ const SignIn: React.FC = () => {
 												position:
 													"absolute",
 												right: 13,
-												top: 10,
+												top:
+													Platform.OS ===
+													"web"
+														? 15
+														: 11,
 												zIndex: 100,
 											}}
 											activeOpacity={0.8}
@@ -358,7 +362,11 @@ const SignIn: React.FC = () => {
 												position:
 													"absolute",
 												right: 13,
-												top: 10,
+												top:
+													Platform.OS ===
+													"web"
+														? 15
+														: 11,
 												zIndex: 100,
 											}}
 											onPress={() =>
@@ -380,12 +388,7 @@ const SignIn: React.FC = () => {
 									</View>
 									{errorMessage ? (
 										<Text className="text-red-500  font-normal text-left text-sm">
-											{errorMessage ==
-											"Login failed. Please try again."
-												? "Login failed. Please try again."
-												: i18n.t(
-														errorMessage
-													)}
+											{i18n.t(errorMessage)}
 										</Text>
 									) : null}
 

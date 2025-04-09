@@ -1,8 +1,9 @@
-import { i18n } from "@/localization/config";
-import { inActiveLoading } from "@/store/navigationSlice";
 import { RootState } from "@/store/store";
-import { useIsFocused } from "@react-navigation/native";
+import { i18n } from "@/localization/config";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 import {
 	RefreshControl,
 	SafeAreaView,
@@ -11,7 +12,6 @@ import {
 	Text,
 	View,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 
 const TermsAndConditionsScreen = () => {
 	const dispatch = useDispatch();
@@ -19,12 +19,6 @@ const TermsAndConditionsScreen = () => {
 	const locale = useSelector((state: RootState) => state.culture.locale);
 	const [isRefreshing, setIsRefreshing] = useState(false);
 
-	const onRefresh = async () => {
-		setIsRefreshing(true);
-		setTimeout(() => {
-			setIsRefreshing(false);
-		}, 2000);
-	};
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
@@ -52,7 +46,7 @@ const TermsAndConditionsScreen = () => {
 				refreshControl={
 					<RefreshControl
 						refreshing={isRefreshing}
-						onRefresh={onRefresh}
+						onRefresh={() => setIsRefreshing(false)}
 						colors={["#e31837"]} // Optional: Set colors for the refresh indicator
 					/>
 				}

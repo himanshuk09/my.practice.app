@@ -85,6 +85,7 @@ export const TranslationKeys: Translations | any = {
 		View_Signal_Settings: "View Signal Settings",
 		View_Signal_Chart: "View Signal Chart",
 		Load_Data_Details: "Load Data Details",
+		Traded_Transaction: "handelsgeschafte",
 		View_Deals: "View Deals",
 		View_Portfolio: "View Portfolio",
 		Please_enter_your_username_and_password:
@@ -103,6 +104,8 @@ export const TranslationKeys: Translations | any = {
 		portfolio_overview: "Portfolio Overview",
 		Login_failed_Please_check_your_credentials:
 			"Login failed.Please check your credentials.",
+		Please_enter_a_valid_email_address:
+			"Please enter a valid email address",
 		PFC_Details: "PFC Details",
 		Prices_Setting: "Prices Settings",
 		Prices_Details: "Prices Details",
@@ -353,6 +356,7 @@ export const TranslationKeys: Translations | any = {
 		View_Signal_Settings: "Signaleinstellungen anzeigen",
 		View_Signal_Chart: "Signaldiagramm anzeigen",
 		Load_Data_Details: "Details Lastdaten",
+		Traded_Transaction: "Traded Transaction",
 		View_Deals: "Deals Anzeigen",
 		View_Portfolio: "Portfolio anzeigen",
 		PFC_Details: " Details PFC",
@@ -377,6 +381,8 @@ export const TranslationKeys: Translations | any = {
 		portfolio_overview: "Portfolio Übersicht",
 		Login_failed_Please_check_your_credentials:
 			"Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldeinformationen.",
+		Please_enter_a_valid_email_address:
+			"Bitte geben Sie eine gültige E-Mail-Adresse ein",
 		Low_Soft: "Tief Weich",
 		Low_Hard: "Tief Hart",
 		Negative: "Negieren",

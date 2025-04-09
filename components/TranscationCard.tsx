@@ -123,7 +123,7 @@ const Transactions = ({
 						{title}
 					</Text>
 					<Text className="text-md font-medium text-mainCardHeaderText">
-						Trade Transaction
+						{i18n.t("Traded_Transaction")}
 					</Text>
 				</View>
 
@@ -164,7 +164,7 @@ const Transactions = ({
 						}}
 					>
 						<Text className="text-md font-medium text-mainCardHeaderText">
-							Data Not Available
+							{i18n.t("Data_not_available")}
 						</Text>
 					</View>
 				) : loading ? (

@@ -19,13 +19,6 @@ const PrivacyAndPolicy = () => {
 	const locale = useSelector((state: RootState) => state.culture.locale);
 	const [isRefreshing, setIsRefreshing] = useState(false);
 
-	const onRefresh = async () => {
-		setIsRefreshing(true);
-		// Simulate a network request or refresh data logic
-		setTimeout(() => {
-			setIsRefreshing(false);
-		}, 2000);
-	};
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
@@ -53,7 +46,7 @@ const PrivacyAndPolicy = () => {
 				refreshControl={
 					<RefreshControl
 						refreshing={isRefreshing}
-						onRefresh={onRefresh}
+						onRefresh={() => setIsRefreshing(false)}
 						colors={["#e31837"]} // Optional: Set colors for the refresh indicator
 					/>
 				}

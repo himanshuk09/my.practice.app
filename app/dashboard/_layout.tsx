@@ -4,7 +4,7 @@ import { Stack } from "expo-router";
 import Header from "@/components/MainHeader";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-const DashboardLayout = () => {
+const LegalNotesLayout = () => {
 	return (
 		<ProtectedRoute>
 			<Stack
@@ -50,4 +50,4 @@ const DashboardLayout = () => {
 	);
 };
 
-export default DashboardLayout;
+export default LegalNotesLayout;

@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect, useRef } from "react";
-import { Platform, TouchableOpacity, BackHandler } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+import * as ScreenOrientation from "expo-screen-orientation";
 import { RootState } from "@/store/store";
-import { setOrientation } from "@/store/chartSlice";
-import { MaterialIcons } from "@expo/vector-icons";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 import WebView from "react-native-webview";
 import ViewShot from "react-native-view-shot";
 import Toast from "react-native-toast-message";
-import * as MediaLibrary from "expo-media-library";
-import * as FileSystem from "expo-file-system";
-import * as ScreenOrientation from "expo-screen-orientation";
+import { MaterialIcons } from "@expo/vector-icons";
+import { setOrientation } from "@/store/chartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect, useRef } from "react";
+import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
+import { Platform, TouchableOpacity, BackHandler } from "react-native";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 type ChartComponentProps = {
 	webViewRef: React.RefObject<WebView | any>;

@@ -27,7 +27,7 @@ const Forgotpassword = () => {
 		if (emailRegex.test(text)) {
 			setErrorMessage("");
 		} else {
-			setErrorMessage("Please enter a valid email address");
+			setErrorMessage("Please_enter_a_valid_email_address");
 		}
 	};
 
@@ -162,7 +162,11 @@ const Forgotpassword = () => {
 												position:
 													"absolute",
 												right: 13,
-												top: 11,
+												top:
+													Platform.OS ===
+													"web"
+														? 15
+														: 11,
 											}}
 											name="mail"
 											size={26}
@@ -171,7 +175,7 @@ const Forgotpassword = () => {
 									</View>
 									{errorMessage ? (
 										<Text className="text-red-500  font-normal text-left text-sm">
-											{errorMessage}
+											{i18n.t(errorMessage)}
 										</Text>
 									) : null}
 									<TouchableOpacity className="bg-primary p-3 mt-9 rounded-full items-center">

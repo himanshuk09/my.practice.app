@@ -1,40 +1,39 @@
 import "../global.css";
 import "react-native-reanimated";
-import { useState } from "react";
-import { AppState } from "react-native";
+import { useEffect, useState } from "react";
+import { AppState, Platform } from "react-native";
 import { useDispatch } from "react-redux";
-import { Stack, useRouter } from "expo-router";
+import { Href, Stack, useRouter } from "expo-router";
 import { useInitAuth } from "@/hooks/useInitAuth";
-import { useAuth } from "@/hooks/useAuth";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 const RootLayout = () => {
-	const dispatch = useDispatch();
 	const router = useRouter();
-	const [isAuth, setIsAuth] = useState<boolean>();
+	const dispatch = useDispatch();
 	const [appState, setAppState] = useState(AppState.currentState);
-	const { session, loading } = useAuth();
-	// useEffect(() => {
-	//     const handleAppStateChange = (nextAppState: any) => {
-	//         if (
-	//             appState.match(/inactive|background/) &&
-	//             nextAppState === "active"
-	//         ) {
-	//             dispatch(activeLoading());
-	//             setTimeout(() => {
-	//                 dispatch(inActiveLoading());
-	//                 router.push("/dashboard" as Href);
-	//             }, 2000);
-	//         }
-	//         setAppState(nextAppState);
-	//     };
-	//     const subscription = AppState.addEventListener(
-	//         "change",
-	//         handleAppStateChange
-	//     );
-	//     return () => {
-	//         subscription.remove();
-	//     };
-	// }, [appState]);
+	useEffect(() => {
+		if (Platform.OS === "web") return; // ❌ Don't apply on web
+		const handleAppStateChange = (nextAppState: any) => {
+			if (
+				appState.match(/inactive|background/) &&
+				nextAppState === "active"
+			) {
+				dispatch(activeLoading());
+				setTimeout(() => {
+					dispatch(inActiveLoading());
+					// router.push("/dashboard" as Href);
+				}, 1000);
+			}
+			setAppState(nextAppState);
+		};
+		const subscription = AppState.addEventListener(
+			"change",
+			handleAppStateChange
+		);
+		return () => {
+			subscription.remove();
+		};
+	}, [appState]);
 
 	useInitAuth();
 	return (

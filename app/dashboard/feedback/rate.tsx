@@ -10,13 +10,13 @@ import {
 	Keyboard,
 	TouchableWithoutFeedback,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { i18n } from "@/localization/config";
-import { inActiveLoading } from "@/store/navigationSlice";
 import { useDispatch } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
+import { i18n } from "@/localization/config";
+import { FontAwesome } from "@expo/vector-icons";
 import RatingStars from "@/components/RatingStars";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 
 const Rate = () => {
 	const router = useRouter();

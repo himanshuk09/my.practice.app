@@ -72,7 +72,7 @@ api.interceptors.response.use(
 				"Access Denied: You do not have permission to perform this action."
 			);
 		} else if (error.response && error.response.status === 500) {
-			console.log("Server error, please try again later");
+			//console.log("Server error, please try again later");
 		} else {
 			// Handle other errors (network issues, etc.)
 			console.log("API Error:", error.message);

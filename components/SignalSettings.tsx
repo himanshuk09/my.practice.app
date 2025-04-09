@@ -132,7 +132,7 @@ const SignalSettings = ({
 							height: "90%",
 						}}
 					>
-						<Text>Data Not Available</Text>
+						<Text>{i18n.t("Data_not_available")}</Text>
 					</View>
 				) : loading ? (
 					<ChartLoaderPNG />

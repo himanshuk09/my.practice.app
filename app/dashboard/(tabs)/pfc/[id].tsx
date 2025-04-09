@@ -24,6 +24,8 @@ const PFCDetails = () => {
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
+	const locale = useSelector((state: RootState) => state.culture.locale);
+
 	const getCurrentUTCDateTime = () => {
 		const now = new Date();
 		// Extract UTC components
@@ -34,7 +36,9 @@ const PFCDetails = () => {
 		const minutes = String(now.getUTCMinutes()).padStart(2, "0");
 
 		// Format as DD/MM/YYYY HH:mm
-		return `${day}/${month}/${year} ${hours}:${minutes}`;
+		return locale === "en"
+			? `${day}/${month}/${year} ${hours}:${minutes}`
+			: `${day}.${month}.${year} ${hours}:${minutes}`;
 	};
 	const fetchChartData = async (tab: string) => {
 		try {

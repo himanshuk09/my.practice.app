@@ -3,15 +3,10 @@
 @tailwind utilities;
 
 @media (pointer: coarse) {
-  .horizontal-list {
-    flex-grow: 0 !important;
-  }
+	.horizontal-list {
+		flex-grow: 0 !important;
+	}
 }
 #chart {
-  background: transparent;
+	background: transparent;
 }
-/* @media (pointer: coarse) {
-  .r-flexGrow-16y2uox {
-    flex-grow: 0 !important; 
-  }
-}  */

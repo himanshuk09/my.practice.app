@@ -1,7 +1,7 @@
-import Header from "@/components/MainHeader";
 import { Stack } from "expo-router";
+import Header from "@/components/MainHeader";
 
-const LoaddataLayout = () => {
+const FeedBackLayout = () => {
 	return (
 		<Stack>
 			<Stack.Screen
@@ -27,4 +27,4 @@ const LoaddataLayout = () => {
 		</Stack>
 	);
 };
-export default LoaddataLayout;
+export default FeedBackLayout;

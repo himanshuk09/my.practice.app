@@ -5,6 +5,8 @@ import {
 	SafeAreaView,
 	StatusBar,
 	ListRenderItem,
+	View,
+	Text,
 } from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
@@ -14,6 +16,7 @@ import { getPFCList } from "@/services/pfc.services";
 import { PriceForwardCurveArray } from "@/types/type";
 import { AppDispatch } from "@/store/store";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
+import { i18n } from "@/localization/config";
 interface CombinedData {
 	type: "header";
 	title: string;
@@ -24,6 +27,7 @@ const PFC = () => {
 	let NavigateTo = "dashboard/pfc";
 	const isOnline = useNetworkStatus();
 	const dispatch = useDispatch<AppDispatch>();
+	const [error, setError] = useState(false);
 	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 	const [pfcGasList, setPFCGasList] = useState<PriceForwardCurveArray>([]);
 	const [pfcStromList, setPFCStromList] = useState<PriceForwardCurveArray>(
@@ -49,13 +53,6 @@ const PFC = () => {
 		return null;
 	};
 
-	const onRefresh = async () => {
-		setIsRefreshing(true);
-		let responsePFCList = await getPFCList();
-		setPFCGasList(responsePFCList?.gas);
-		setPFCStromList(responsePFCList?.strom);
-		setIsRefreshing(false);
-	};
 	useEffect(() => {
 		dispatch(inActiveLoading());
 	}, [isFocused]);
@@ -66,10 +63,19 @@ const PFC = () => {
 			} else {
 				try {
 					let responsePFCList = await getPFCList();
-					setPFCGasList(responsePFCList?.gas);
-					setPFCStromList(responsePFCList?.strom);
+					if (
+						responsePFCList?.gas.length === 0 ||
+						responsePFCList?.strom.length === 0
+					) {
+						setError(true);
+					} else {
+						setPFCGasList(responsePFCList?.gas);
+						setPFCStromList(responsePFCList?.strom);
+						setError(false);
+					}
 				} catch (error) {
 					console.log("Error fetching PFC list:", error);
+				} finally {
 				}
 			}
 		};
@@ -84,20 +90,35 @@ const PFC = () => {
 				showHideTransition={"slide"}
 				networkActivityIndicatorVisible
 			/>
-			<FlatList
-				data={combinedData}
-				renderItem={renderItem}
-				keyExtractor={(item, index) => `${item.title}-${index}`}
-				showsVerticalScrollIndicator={false}
-				showsHorizontalScrollIndicator={false}
-				refreshControl={
-					<RefreshControl
-						refreshing={isRefreshing}
-						onRefresh={onRefresh}
-						colors={["#e31837"]}
-					/>
-				}
-			/>
+			{error ? (
+				<View
+					className="items-center justify-center "
+					style={{
+						height: "90%",
+					}}
+				>
+					<Text className="text-md font-medium text-mainCardHeaderText">
+						{i18n.t("Data_not_available")}
+					</Text>
+				</View>
+			) : (
+				<FlatList
+					data={combinedData}
+					renderItem={renderItem}
+					keyExtractor={(item, index) =>
+						`${item.title}-${index}`
+					}
+					showsVerticalScrollIndicator={false}
+					showsHorizontalScrollIndicator={false}
+					refreshControl={
+						<RefreshControl
+							refreshing={isRefreshing}
+							onRefresh={() => setIsRefreshing(false)}
+							colors={["#e31837"]}
+						/>
+					}
+				/>
+			)}
 		</SafeAreaView>
 	);
 };

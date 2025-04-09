@@ -24,7 +24,7 @@ const LoadDataDetails = () => {
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-
+	const locale = useSelector((state: RootState) => state.culture.locale);
 	const fetchChartData = async (tab: string) => {
 		try {
 			return fetchDataByToggle(tab);
@@ -89,9 +89,12 @@ const LoadDataDetails = () => {
 										{i18n.t("Energy")}:{" "}
 									</Text>
 									<Text className="text-mainCardHeaderText text-sm ml-2">
-										{new Intl.NumberFormat("en", {
-											useGrouping: true,
-										}).format(30319)}{" "}
+										{new Intl.NumberFormat(
+											locale,
+											{
+												useGrouping: true,
+											}
+										).format(30319)}{" "}
 										kWh
 									</Text>
 								</View>

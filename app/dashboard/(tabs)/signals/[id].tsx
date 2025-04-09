@@ -89,7 +89,7 @@ const SignalDetails = () => {
 								</View>
 								<View className="flex-row justify-center items-center">
 									<Text className="  mr-2 text-md font-normal text-mainCardHeaderText ">
-										Notification
+										{i18n.t("notifications")}
 									</Text>
 									<CustomSwitch
 										isEnabled={isEnabled}

@@ -13,4 +13,4 @@ i18n.locale = deviceLocale;
 
 i18n.enableFallback = true;
 
-export { i18n, englishIN, germany, englishUS };
+export { i18n };
