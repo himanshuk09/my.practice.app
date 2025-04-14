@@ -5,14 +5,14 @@ const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 
 const getUniqueIdentifier = () => {
 	if (IS_DEV) {
-		return "com.himanshukhade.eec.dev";
+		return "com.enexion.eec.dev";
 	}
 
 	if (IS_PREVIEW) {
-		return "com.himanshukhade.eec.preview";
+		return "com.enexion.eec.preview";
 	}
 
-	return "com.himanshukhade.eec";
+	return "com.enexion.eec";
 };
 
 const getAppName = () => {
@@ -30,7 +30,7 @@ const getAppName = () => {
 export default ({ config }: ConfigContext): ExpoConfig => ({
 	...config,
 	name: getAppName(),
-	slug: "eec",
+	slug: "eec-cockpit",
 	version: "1.0.0",
 	orientation: "portrait",
 	icon: "./assets/icons/ios-light.png",
@@ -102,8 +102,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			origin: false,
 		},
 		eas: {
-			projectId: "261c7cd7-9be9-4634-81da-49c109f43d68",
-		},
+			projectId: "ccdfe2b9-660f-4bf0-8feb-2edaebc5e910"
+		  }
 	},
 
 	owner: "himanshukhade",
