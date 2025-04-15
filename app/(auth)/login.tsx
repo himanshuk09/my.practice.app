@@ -13,22 +13,18 @@ import {
       TouchableWithoutFeedback,
       ActivityIndicator,
 } from "react-native";
-import { useDispatch } from "react-redux";
 import { Href, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { i18n } from "@/localization/config";
 import Logo from "@/components/SVG/Logo";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { loginUser } from "@/services/auth.services";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { useAuth } from "@/hooks/useAuth";
-import { Entypo } from "@expo/vector-icons";
 
 const SignIn: React.FC = () => {
       const router = useRouter();
-      const dispatch = useDispatch();
       const isOnline = useNetworkStatus();
       const { setSessionValue } = useAuth();
       const [ loading, setLoading ] = useState<boolean>( false )
@@ -69,7 +65,6 @@ const SignIn: React.FC = () => {
             setErrorMessage( "" );
             try {
                   Keyboard.dismiss();
-                  //dispatch(activeLoading());
                   setLoading( true )
                   if ( !isOnline ) {
                         setErrorMessage( "No_Internet_Connection" );
@@ -128,7 +123,6 @@ const SignIn: React.FC = () => {
                         );
                   }
             } finally {
-                  dispatch( inActiveLoading() );
                   setLoading( false )
             }
       };
@@ -404,7 +398,7 @@ const SignIn: React.FC = () => {
                                                       >
                                                             { loading
                                                                   ?
-                                                                  ( <ActivityIndicator size={ 30 } color={ "white" } /> ) :
+                                                                  ( <ActivityIndicator size={ 25 } color={ "white" } /> ) :
                                                                   (
                                                                         <Text className="text-white font-medium text-xl uppercase">
                                                                               { i18n.t( "login" ) }
@@ -420,7 +414,7 @@ const SignIn: React.FC = () => {
                                                                         Keyboard.dismiss();
                                                                   }
                                                                   router.replace(
-                                                                        `/login/forgotpassword`
+                                                                        `/(auth)/forgot-password`
                                                                   );
                                                             } }
                                                             className="mx-auto my-5  p-4"

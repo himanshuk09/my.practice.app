@@ -10,7 +10,7 @@ import {
 import { stringChartData } from "@/constants/stringChartData";
 import { loginPayloadProps, AuthResponse } from "@/types/apiTypes";
 
-//Login
+
 const loginUser = async (payload: loginPayloadProps) => {
 	try {
 		const response = await api.post<AuthResponse>("/token", {

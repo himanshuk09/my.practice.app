@@ -102,7 +102,6 @@ const PortfolioOverView = () => {
 				areaWebViewRef.current.injectJavaScript(updateLocaleScript);
 			}
 			if (donutwebViewRef?.current) {
-				console.log("inside", locale);
 				let updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
 				donutwebViewRef?.current.injectJavaScript(
 					updateLocaleScript

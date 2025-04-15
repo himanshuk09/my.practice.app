@@ -7,6 +7,6 @@ export default function Home() {
 	return session ? (
 		<Redirect href="/dashboard" />
 	) : (
-		<Redirect href="/login" />
+		<Redirect href="/(auth)/login" />
 	);
 }

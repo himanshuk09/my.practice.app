@@ -55,7 +55,7 @@ const RootLayout = () => {
 				}}
 			/>
 			<Stack.Screen
-				name="login"
+				name="(auth)"
 				options={{
 					headerShown: false,
 					animation: "slide_from_right",

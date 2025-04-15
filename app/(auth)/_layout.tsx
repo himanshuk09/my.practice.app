@@ -1,4 +1,3 @@
-// app/login/_layout.tsx
 import PublicAuthRoute from "@/components/PublicAuthRoute";
 import { Stack } from "expo-router";
 
@@ -15,7 +14,7 @@ const LoginLayout = () => {
 				}}
 			>
 				<Stack.Screen
-					name="index"
+					name="login"
 					options={{
 						headerShown: false,
 						animation: "slide_from_left",
@@ -23,7 +22,7 @@ const LoginLayout = () => {
 					}}
 				/>
 				<Stack.Screen
-					name="forgotpassword"
+					name="forgot-password"
 					options={{
 						headerShown: false,
 						animation: "slide_from_right",

@@ -14,7 +14,7 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 	const dispatch = useDispatch();
 	const pathname = usePathname();
 	const isLoginRoute =
-		pathname === "/login" || pathname === "/login/forgotpassword";
+		pathname === "/(auth)/login" || pathname === "/(auth)/forgot-password";
 	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 	const isDrawerOpen = useSelector(
 		(state: RootState) => state.drawer.isDrawerOpen

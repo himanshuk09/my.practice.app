@@ -57,11 +57,11 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 			}
 
 			// Handle navigation for other paths
-			if (currentPath === "/login/forgotpassword") {
-				router.replace("/login");
+			if (currentPath === "/(auth)/forgot-password") {
+				router.replace("/(auth)/login");
 				return true;
 			}
-			if (currentPath === "/login") {
+			if (currentPath === "/(auth)/login") {
 				BackHandler.exitApp();
 				return true;
 			}

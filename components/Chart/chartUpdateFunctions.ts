@@ -119,7 +119,7 @@ export const updateApexChart1 = (
 					jsCommand = `updateChart(${JSON.stringify(
 						data
 					)}, ${JSON.stringify(options || {})});`;
-					console.log("inside");
+					
 				}
 
 				break;

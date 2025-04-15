@@ -192,7 +192,7 @@ const Forgotpassword = () => {
 												Keyboard.dismiss();
 											}
 											router.replace(
-												`/login` as Href
+												`/(auth)/login` as Href
 											);
 										}}
 										className="mx-auto my-5  p-4"
