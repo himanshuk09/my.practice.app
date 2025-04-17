@@ -187,15 +187,11 @@ const toastConfig: any = {
 						{text1}
 					</Text>
 					{text2 ? (
-						<Text className="text-sm text-white">
-							{text2}
-						</Text>
+						<Text className="text-sm text-white">{text2}</Text>
 					) : null}
 				</View>
 
-				{props?.spinner && Platform.OS !== "web" && (
-					<AnimatedSpinner />
-				)}
+				{props?.spinner && Platform.OS !== "web" && <AnimatedSpinner />}
 			</View>
 			<View className="mx-3 flex-row gap-3">
 				{props?.fileUri && (
@@ -247,10 +243,7 @@ const toastConfig: any = {
 								props?.type === "csv" ||
 								props?.type === "pdf"
 							) {
-								shareFile(
-									props.fileName,
-									props?.fileUri
-								);
+								shareFile(props.fileName, props?.fileUri);
 							} else {
 								sharePNGFile(props.fileName);
 							}

@@ -365,8 +365,7 @@ export const TranslationKeys: Translations | any = {
 		Signals_Details: "Details Signal",
 		Please_enter_your_username_and_password:
 			"Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein.",
-		Please_enter_your_username:
-			"Bitte geben Sie Ihren Benutzernamen ein.",
+		Please_enter_your_username: "Bitte geben Sie Ihren Benutzernamen ein.",
 		Please_enter_your_password: "Bitte geben Sie Ihr Passwort ein.",
 		Username_should_not_contain_special_characters:
 			"Der Benutzername sollte keine Sonderzeichen enthalten.",
@@ -429,8 +428,7 @@ export const TranslationKeys: Translations | any = {
 		},
 		termsAndConditions: {
 			terms: "Allgemeine Geschäftsbedingungen (AGB)",
-			contractPartiesAndObject:
-				"Vertragsparteien und Vertragsgegenstand",
+			contractPartiesAndObject: "Vertragsparteien und Vertragsgegenstand",
 			term: "Vertragslaufzeit",
 			scope: "Anwendungsbereich",
 			services: "Leistungsumfang",

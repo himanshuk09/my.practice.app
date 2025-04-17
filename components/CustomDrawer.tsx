@@ -102,13 +102,7 @@ const CustomDrawer = memo(() => {
 		{
 			label: "portfolio",
 			route: "/dashboard/(tabs)/portfolio",
-			icon: (
-				<Ionicons
-					name="briefcase-sharp"
-					size={20}
-					color="#9a9b9f"
-				/>
-			),
+			icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
 		},
 		{
 			label: "settings",
@@ -134,9 +128,7 @@ const CustomDrawer = memo(() => {
 		{
 			label: "marketinfo",
 			key: "marketInfo",
-			icon: (
-				<FontAwesome name="bar-chart-o" size={20} color="#9a9b9f" />
-			),
+			icon: <FontAwesome name="bar-chart-o" size={20} color="#9a9b9f" />,
 			items: [
 				{ label: "prices", route: "/dashboard/(tabs)/prices" },
 				{ label: "pfc", route: "/dashboard/(tabs)/pfc" },
@@ -148,15 +140,9 @@ const CustomDrawer = memo(() => {
 			label: "consumption",
 			key: "consumption",
 			icon: (
-				<Ionicons
-					name="speedometer-sharp"
-					size={24}
-					color="#9a9b9f"
-				/>
+				<Ionicons name="speedometer-sharp" size={24} color="#9a9b9f" />
 			),
-			items: [
-				{ label: "loaddata", route: "/dashboard/(tabs)/loaddata" },
-			],
+			items: [{ label: "loaddata", route: "/dashboard/(tabs)/loaddata" }],
 			height: Platform.OS === "web" ? 52 : 45,
 		},
 		{
@@ -164,13 +150,7 @@ const CustomDrawer = memo(() => {
 			key: "",
 			items: [],
 			route: "/dashboard/(tabs)/portfolio",
-			icon: (
-				<Ionicons
-					name="briefcase-sharp"
-					size={20}
-					color="#9a9b9f"
-				/>
-			),
+			icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
 		},
 		{
 			label: "settings",
@@ -206,11 +186,7 @@ const CustomDrawer = memo(() => {
 			label: "imprintLegalNotes",
 			key: "legalNotes",
 			icon: (
-				<FontAwesome6
-					name="scale-balanced"
-					size={24}
-					color="#9a9b9f"
-				/>
+				<FontAwesome6 name="scale-balanced" size={24} color="#9a9b9f" />
 			),
 			items: [
 				{
@@ -241,10 +217,7 @@ const CustomDrawer = memo(() => {
 			router.push("/");
 			setSessionValue(false);
 		} catch (error) {
-			console.error(
-				"Error clearing AsyncStorage or navigating:",
-				error
-			);
+			console.error("Error clearing AsyncStorage or navigating:", error);
 		}
 	};
 	const handleLogout = () => {
@@ -316,16 +289,12 @@ const CustomDrawer = memo(() => {
 							<TouchableOpacity
 								activeOpacity={0.6}
 								className={`flex-row items-center  p-5   break-words  `}
-								onPress={() =>
-									toggleSubmenu(submenu?.key)
-								}
+								onPress={() => toggleSubmenu(submenu?.key)}
 							>
 								{submenu?.icon}
 								<Text
 									className={`text-lg font-semibold ml-4 text-chartText  flex-1 break-words `}
-									onPress={() =>
-										toggleSubmenu(submenu?.key)
-									}
+									onPress={() => toggleSubmenu(submenu?.key)}
 								>
 									{i18n.t(submenu?.label)}
 								</Text>
@@ -338,9 +307,7 @@ const CustomDrawer = memo(() => {
 									}
 									size={18}
 									color="#9a9b9f"
-									onPress={() =>
-										toggleSubmenu(submenu?.key)
-									}
+									onPress={() => toggleSubmenu(submenu?.key)}
 								/>
 							</TouchableOpacity>
 						) : (
@@ -357,20 +324,15 @@ const CustomDrawer = memo(() => {
 											? "bg-primary"
 											: "bg-transparent"
 									} `}
-									onPress={() =>
-										navigationToRoute(submenu)
-									}
+									onPress={() => navigationToRoute(submenu)}
 								>
 									{React.cloneElement(
 										submenu?.icon,
-										getTextAndIconStyle(
-											submenu?.route
-										)
+										getTextAndIconStyle(submenu?.route)
 									)}
 									<Text
 										className={`text-lg font-semibold ml-4 bg-yellow text-chartText  ${
-											submenu?.label ===
-											"portfolio"
+											submenu?.label === "portfolio"
 												? "uppercase"
 												: "capitalize"
 										}`}
@@ -387,9 +349,7 @@ const CustomDrawer = memo(() => {
 						{/* Render submenu if items are present */}
 						{hasItems && (
 							<Submenu
-								isVisible={
-									activeSubmenu === submenu?.key
-								}
+								isVisible={activeSubmenu === submenu?.key}
 								height={submenu?.height}
 							>
 								{submenu?.items.map(
@@ -406,9 +366,7 @@ const CustomDrawer = memo(() => {
 													: "bg-transparent"
 											}`}
 											onPress={() =>
-												navigationToRoute(
-													item
-												)
+												navigationToRoute(item)
 											}
 										>
 											<Text
@@ -417,9 +375,7 @@ const CustomDrawer = memo(() => {
 													item?.route
 												)}
 											>
-												{i18n.t(
-													item?.label
-												)}
+												{i18n.t(item?.label)}
 											</Text>
 										</TouchableOpacity>
 									)

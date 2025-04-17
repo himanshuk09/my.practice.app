@@ -37,13 +37,7 @@ const LoadData = () => {
 			animated: true,
 		});
 	};
-	const renderItem = ({
-		item,
-		index,
-	}: {
-		item: DataItem;
-		index: number;
-	}) => (
+	const renderItem = ({ item, index }: { item: DataItem; index: number }) => (
 		<AccordionFlatlist
 			data={item?.data}
 			title={item?.title}

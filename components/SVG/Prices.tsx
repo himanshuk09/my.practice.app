@@ -47,11 +47,7 @@ const Prices = (props: SvgProps) => (
 					transform="translate(0.009 42.863)"
 				/>
 			</G>
-			<G
-				id="Group_316"
-				data-name="Group 316"
-				transform="translate(0 4)"
-			>
+			<G id="Group_316" data-name="Group 316" transform="translate(0 4)">
 				<Path
 					id="Path_145"
 					data-name="Path 145"

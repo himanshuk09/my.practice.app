@@ -24,8 +24,7 @@ const PFCLayout = () => {
 			<Stack.Screen
 				name="[id]"
 				options={{
-					headerShown:
-						Platform.OS === "web" ? true : !isLandscape,
+					headerShown: Platform.OS === "web" ? true : !isLandscape,
 					animation: "slide_from_right",
 					header: ({ navigation }) => (
 						<StackHeader

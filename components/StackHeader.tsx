@@ -23,11 +23,7 @@ const StackHeader = ({ title, closed = false, setModalVisible }: any) => {
 				}}
 				className="w-7 ml-3"
 			>
-				<MaterialIcons
-					name="arrow-back"
-					size={27}
-					color="#9a9b9f"
-				/>
+				<MaterialIcons name="arrow-back" size={27} color="#9a9b9f" />
 			</TouchableOpacity>
 			<Text className="ml-2 font-semibold text-xl text-chartText">
 				{i18n.t(title)}

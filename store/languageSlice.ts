@@ -3,7 +3,7 @@ import { i18n } from "../localization/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface LanguageState {
-	locale: string;
+	locale: string | "en" | "de";
 }
 
 const initialState: LanguageState = {

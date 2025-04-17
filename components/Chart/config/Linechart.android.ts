@@ -1,1136 +1,1079 @@
-const webviewLineHtmlContent = `
-<!DOCTYPE html>
+const webviewLineHtmlContent = `<!DOCTYPE html>
 <html lang="en">
-      <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-            <title>Simple Apex Chart</title>
-            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-            <style>
-                  * {
-                        margin: 0;
-                        padding: 0;
-                        box-sizing: border-box;
-                  }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+        <title>Line Apex Chart for Webview</title>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-                  body {
-                        height: 100vh;
-                        position: relative;
-                  }
+            body {
+                height: 100vh;
+                position: relative;
+            }
 
-                  #chart {
-                        position: absolute;
-                        width: 99%;
-                        touch-action: none;
-                  }
+            #chart {
+                position: absolute;
+                width: 99%;
+                touch-action: none;
+            }
 
-                  .apexcharts-element-hidden {
-                        opacity: 1 !important;
-                        visibility: visible !important;
-                  }
-            </style>
-      </head>
+            .apexcharts-element-hidden {
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+        </style>
+    </head>
 
-      <body>
-            <div id="chart"></div>
-            <script>
-
-            function sendMsgToReactNative (action=null,values=null,reason=null,isZoomed=null){
-                  window.ReactNativeWebView.postMessage(JSON.stringify({
+    <body>
+        <div id="chart"></div>
+        <script>
+            function sendMsgToReactNative(action = null, values = null, reason = null, isZoomed = null) {
+                window.ReactNativeWebView.postMessage(
+                    JSON.stringify({
                         action,
                         values,
                         reason,
-                        isZoomed
-                  }))
+                        isZoomed,
+                    })
+                );
             }
 
-
-
-                  let chart;
-                  function toggleMarkers() {
-                        // Start loader
-                        sendMsgToReactNative("startLoader");
-                        const currentSize = chart.w.config.markers.size;
-                        const newSize = currentSize === 0 ? 2 : 0;
-                        sendMsgToReactNative("tooltip", currentSize === 0 ? true : false);
-                        // Update chart options
-                        chart.updateOptions({
-                              markers: {
-                                    size: newSize,
-                              },
-                              chart: {
-                                    toolbar: {
-                                          tools: {
-                                                customIcons: [
-                                                      {
-                                                            icon: newSize === 0 ? '<span class="apexcharts-custom-icon" >🔘</span>' : '<span class="apexcharts-custom-icon">🔴</span>',
-                                                            title: "Toggle Markers",
-                                                            index: -2,
-                                                            class: "custom-icon-class custom-icon",
-                                                            click: toggleMarkers, // Reassign to the same function
-                                                      },
-                                                      {
-                                                            icon: '<span class="apexcharts-custom-icon">💾</span>',
-                                                            index: -1,
-                                                            title: "Download Chart",
-                                                            class: "custom-download-icon",
-                                                            click: exportChart,
-                                                      },
-                                                ],
-                                          },
+            let chart;
+            function toggleMarkers() {
+                // Start loader
+                sendMsgToReactNative("startLoader");
+                const currentSize = chart.w.config.markers.size;
+                const newSize = currentSize === 0 ? 2 : 0;
+                sendMsgToReactNative("tooltip", currentSize === 0 ? true : false);
+                // Update chart options
+                chart.updateOptions({
+                    markers: {
+                        size: newSize,
+                    },
+                    chart: {
+                        toolbar: {
+                            tools: {
+                                customIcons: [
+                                    {
+                                        icon: newSize === 0 ? '<span class="apexcharts-custom-icon" >🔘</span>' : '<span class="apexcharts-custom-icon">🔴</span>',
+                                        title: "Toggle Markers",
+                                        index: -2,
+                                        class: "custom-icon-class custom-icon",
+                                        click: toggleMarkers, // Reassign to the same function
                                     },
-                              },
-                        });
-
-                        // Stop loader after chart update
-                        sendMsgToReactNative("stopLoader");
-                  }
-
-                 
-
-                  const options = {
-                        series: [{ name: "Energy Use", data: [] }],
-                        chart: {
-                              type: "line",
-                              height: "285",
-                              background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
-                              stacked: false,
-                              selection: { enabled: true },
-                              zoom: {
-                                    type: "x",
-                                    enabled: true,
-                                    autoScaleYaxis: true,
-                                    zoomedArea: {
-                                          opacity: 0.1,                 // Optional: change opacity of the zoomed area
-                                          strokeColor: "#fff",          // Optional: change stroke color of zoom area
+                                    {
+                                        icon: '<span class="apexcharts-custom-icon">💾</span>',
+                                        index: -1,
+                                        title: "Download Chart",
+                                        class: "custom-download-icon",
+                                        click: exportChart,
                                     },
-                              },
-                              pan: {
-                                    enabled: true,
-                                    type: "xy",
-                                    threshold: 0,
-                              },
-                              offsetX: 0,
-                              offsetY: 20,
-                              animations: {
-                                    enabled: false,                    
-                                    easing: "easeOutQuad",             
-                                    speed: 800,                         
-                                    dynamicAnimation: {
-                                          enabled: true, 
-                                          speed: 600, 
-                                    },
-                                    animategradually: {
-                                          enabled: true, 
-                                          delay: 1000, 
-                                    },
-                                    initialAnimation: {
-                                          enabled: true, 
-                                          speed: 1000, 
-                                    },
-                              },
-                              toolbar: {
-                                    show: false,
-                                    offsetX: 0,
-                                    offsetY: 0,
-                                    autoSelected: "zoom",
-                                    tools: {
-                                          download: true,
-                                          reset: true,
-                                          zoomin: true,
-                                          zoomout: true,
-                                          zoom: true,
-                                          pan: true,
-                                          selection: true,
-                                          customIcons: [
-                                                {
-                                                      icon: '<span class="apexcharts-custom-icon">🔘</span>',
-                                                      title: "Toggle Markers",
-                                                      index: -2,
-                                                      class: "custom-icon-class custom-icon",
-                                                      click: toggleMarkers,
-                                                },
-                                                {
-                                                      icon: '<span class="apexcharts-custom-icon">💾</span>',
-                                                      index: -1,
-                                                      title: "Download Chart",
-                                                      class: "custom-download-icon",
-                                                      click: exportChart,
-                                                },
-                                          ],
-                                    },
-                                    export: {
-                                          csv: true,
-                                          png: true,
-                                          svg: true,
-                                    },
-                              },
-
-                              events: {
-                                    dataURI: function (event, chartContext, config) {
-                                          window.ReactNativeWebView.postMessage(
-                                                JSON.stringify({
-                                                      type: "dataURI",
-                                                      dataURI: config.dataURI,
-                                                })
-                                          );
-                                    },
-
-                                    animationEnd: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("animationEnd");
-                                    },
-
-                                    mouseMove: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("mouseMove");
-                                    },
-
-                                    mouseLeave: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("mouseLeave");
-                                    },
-
-                                    click: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("click");
-                                    },
-
-                                    legendClick: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("legendClick");
-                                    },
-
-                                    markerClick: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("markerClick");
-                                    },
-
-                                    xAxisLabelClick: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative( "xAxisLabelClick");
-                                    },
-
-                                    selection: function (chartContext, { xaxis, yaxis }) {
-                                          const currentMin = chart.w.globals.minX;
-                                          const currentMax = chart.w.globals.maxX;
-
-                                          const zoomAmount = (currentMax - currentMin) * 0.3;
-
-                                          // Ensure the new zoomed range stays within the series bounds
-                                          const newMinX = Math.max(
-                                                currentMin - zoomAmount,
-                                                chart.w.globals.seriesX[0][0] // Series minimum
-                                          );
-                                          const newMaxX = Math.min(
-                                                currentMax + zoomAmount,
-                                                chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
-                                          );
-
-                                          // Update chart options
-                                          chart.updateOptions({
-                                                xaxis: {
-                                                      min: newMinX,
-                                                      max: newMaxX,
-                                                },
-                                          });
-                                    },
-
-                                    dataPointMouseEnter: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative( "dataPointMouseEnter");
-                                    },
-
-                                    dataPointMouseLeave: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative( "dataPointMouseLeave");
-                                    },
-
-                                    scrolled: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("scrolled");
-                                    },
-
-                                    beforeZoom: function (chartContext, { xaxis, yaxis }) {
-                                          // Access the chart's series data
-                                          const seriesMin = chartContext.w.globals.seriesX[0][0]; // Minimum x-value in the dataset
-                                          const seriesMax = chartContext.w.globals.seriesX[0][chartContext.w.globals.seriesX[0].length - 1]; // Maximum x-value in the dataset
-
-                                          const minDistanceBetweenPoints = chartContext.w.globals.seriesX[0][1] - chartContext.w.globals.seriesX[0][0]; // Distance between two consecutive points
-
-                                          // Ensure at least one point is visible in the zoomed range
-                                          const newMinX = Math.max(xaxis.min, seriesMin);
-                                          const newMaxX = Math.min(xaxis.max, seriesMax);
-
-                                          if (newMaxX - newMinX < minDistanceBetweenPoints) {
-                                                // Prevent zooming if no point would be visible
-                                                sendMsgToReactNative("Zoom Prevented",null, "No data points visible");
-                                                return {
-                                                      xaxis: {
-                                                            min: chartContext.w.globals.minX,
-                                                            max: chartContext.w.globals.maxX,
-                                                      },
-                                                      yaxis,
-                                                };
-                                          }
-
-                                          // Post zoom start event
-                                          window.ReactNativeWebView.postMessage(
-                                                JSON.stringify({
-                                                      action: "Zoom Start",
-                                                      newRange: {
-                                                            min: newMinX,
-                                                            max: newMaxX,
-                                                      },
-                                                })
-                                          );
-
-                                          // Allow zooming with validated values
-                                          return {
-                                                xaxis: {
-                                                      min: newMinX,
-                                                      max: newMaxX,
-                                                },
-                                                yaxis,
-                                          };
-                                    },
-
-                                    beforeResetZoom: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("beforeResetZoom");
-                                    },
-
-                                    zoomed: function (chartContext, { xaxis, yaxis }) {
-                                          sendMsgToReactNative("chartZoomed",null,null,true);
-                                          sendMsgToReactNative("Zoomed");
-                                    },
-
-                                    beforeMount: function (chartContext) {
-                                          sendMsgToReactNative("beforeMount");
-                                    },
-
-                                    mounted: function (chartContext) {
-                                          sendMsgToReactNative("mounted");
-                                          highlightMinAndMax(chartContext);
-                                          document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => {}, { passive: true });
-                                    },
-
-                                    dataPointSelection: function (event, chartContext, config) {
-                                          sendMsgToReactNative("dataPointSelection");
-                                    },
-
-                                    updated: function (chartContext) {
-                                          sendMsgToReactNative("Chart updated");
-                                          highlightMinAndMax(chartContext);
-                                    },
-                              },
+                                ],
+                            },
                         },
+                    },
+                });
+
+                // Stop loader after chart update
+                sendMsgToReactNative("stopLoader");
+            }
+
+            const options = {
+                series: [{ name: "Energy Use", data: [] }],
+                chart: {
+                    type: "line",
+                    height: "285",
+                    background: "url('https://i.ibb.co/HdCGLJn/default-large-chart.png') no-repeat center center",
+                    stacked: false,
+                    selection: { enabled: true },
+                    zoom: {
+                        type: "x",
+                        enabled: true,
+                        autoScaleYaxis: true,
+                        zoomedArea: {
+                            opacity: 0.1, // Optional: change opacity of the zoomed area
+                            strokeColor: "#fff", // Optional: change stroke color of zoom area
+                        },
+                    },
+                    pan: {
+                        enabled: true,
+                        type: "xy",
+                        threshold: 0,
+                    },
+                    offsetX: 0,
+                    offsetY: 20,
+                    animations: {
+                        enabled: true,
+                        easing: "easeinout", // smoother easing for large sets
+                        speed: 1000, // slightly slower for less jitter
+                        animateGradually: {
+                            enabled: true,
+                            delay: 150, // shorter delay so points appear faster
+                        },
+                        dynamicAnimation: {
+                            enabled: true,
+                            speed: 1000, // sync speed with general animation
+                        },
+                        initialAnimation: {
+                            enabled: true,
+                            speed: 1200, // smooth initial load for big data
+                        },
+                    },
+                    toolbar: {
+                        show: false,
+                        offsetX: 0,
+                        offsetY: 0,
+                        autoSelected: "zoom",
+                        tools: {
+                            download: true,
+                            reset: true,
+                            zoomin: true,
+                            zoomout: true,
+                            zoom: true,
+                            pan: true,
+                            selection: true,
+                            customIcons: [
+                                {
+                                    icon: '<span class="apexcharts-custom-icon">🔘</span>',
+                                    title: "Toggle Markers",
+                                    index: -2,
+                                    class: "custom-icon-class custom-icon",
+                                    click: toggleMarkers,
+                                },
+                                {
+                                    icon: '<span class="apexcharts-custom-icon">💾</span>',
+                                    index: -1,
+                                    title: "Download Chart",
+                                    class: "custom-download-icon",
+                                    click: exportChart,
+                                },
+                            ],
+                        },
+                        export: {
+                            csv: true,
+                            png: true,
+                            svg: true,
+                        },
+                    },
+
+                    events: {
+                        dataURI: function (event, chartContext, config) {
+                            window.ReactNativeWebView.postMessage(
+                                JSON.stringify({
+                                    type: "dataURI",
+                                    dataURI: config.dataURI,
+                                })
+                            );
+                        },
+
+                        animationEnd: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("animationEnd");
+                        },
+
+                        mouseMove: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("mouseMove");
+                        },
+
+                        mouseLeave: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("mouseLeave");
+                        },
+
+                        click: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("click");
+                        },
+
+                        legendClick: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("legendClick");
+                        },
+
+                        markerClick: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("markerClick");
+                        },
+
+                        xAxisLabelClick: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("xAxisLabelClick");
+                        },
+
+                        selection: function (chartContext, { xaxis, yaxis }) {
+                            const currentMin = chart.w.globals.minX;
+                            const currentMax = chart.w.globals.maxX;
+
+                            const zoomAmount = (currentMax - currentMin) * 0.3;
+
+                            // Ensure the new zoomed range stays within the series bounds
+                            const newMinX = Math.max(
+                                currentMin - zoomAmount,
+                                chart.w.globals.seriesX[0][0] // Series minimum
+                            );
+                            const newMaxX = Math.min(
+                                currentMax + zoomAmount,
+                                chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+                            );
+
+                            // Update chart options
+                            chart.updateOptions({
+                                xaxis: {
+                                    min: newMinX,
+                                    max: newMaxX,
+                                },
+                            });
+                        },
+
+                        dataPointMouseEnter: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("dataPointMouseEnter");
+                        },
+
+                        dataPointMouseLeave: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("dataPointMouseLeave");
+                        },
+
+                        scrolled: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("scrolled");
+                        },
+
+                        beforeZoom: function (chartContext, { xaxis, yaxis }) {
+                            // Access the chart's series data
+                            const seriesMin = chartContext.w.globals.seriesX[0][0]; // Minimum x-value in the dataset
+                            const seriesMax = chartContext.w.globals.seriesX[0][chartContext.w.globals.seriesX[0].length - 1]; // Maximum x-value in the dataset
+
+                            const minDistanceBetweenPoints = chartContext.w.globals.seriesX[0][1] - chartContext.w.globals.seriesX[0][0]; // Distance between two consecutive points
+
+                            // Ensure at least one point is visible in the zoomed range
+                            const newMinX = Math.max(xaxis.min, seriesMin);
+                            const newMaxX = Math.min(xaxis.max, seriesMax);
+
+                            if (newMaxX - newMinX < minDistanceBetweenPoints) {
+                                // Prevent zooming if no point would be visible
+                                sendMsgToReactNative("Zoom Prevented", null, "No data points visible");
+                                return {
+                                    xaxis: {
+                                        min: chartContext.w.globals.minX,
+                                        max: chartContext.w.globals.maxX,
+                                    },
+                                    yaxis,
+                                };
+                            }
+
+                            // Post zoom start event
+                            window.ReactNativeWebView.postMessage(
+                                JSON.stringify({
+                                    action: "Zoom Start",
+                                    newRange: {
+                                        min: newMinX,
+                                        max: newMaxX,
+                                    },
+                                })
+                            );
+
+                            // Allow zooming with validated values
+                            return {
+                                xaxis: {
+                                    min: newMinX,
+                                    max: newMaxX,
+                                },
+                                yaxis,
+                            };
+                        },
+
+                        beforeResetZoom: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("beforeResetZoom");
+                        },
+
+                        zoomed: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToReactNative("chartZoomed", null, null, true);
+                            sendMsgToReactNative("Zoomed");
+                        },
+
+                        beforeMount: function (chartContext) {
+                            sendMsgToReactNative("beforeMount");
+                        },
+
+                        mounted: function (chartContext) {
+                            sendMsgToReactNative("mounted");
+                            highlightMinAndMax(chartContext);
+                            document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => {}, { passive: true });
+                        },
+
+                        dataPointSelection: function (event, chartContext, config) {
+                            sendMsgToReactNative("dataPointSelection");
+                        },
+
+                        updated: function (chartContext) {
+                            sendMsgToReactNative("Chart updated");
+                            highlightMinAndMax(chartContext);
+                        },
+                    },
+                },
+                stroke: {
+                    curve: "straight",
+                    width: 2,
+                    lineCap: "square",
+                    colors: undefined,
+                    dashArray: 0,
+                },
+                noData: {
+                    text: "",
+                    align: "center",
+                    verticalAlign: "middle",
+                    offsetX: 0,
+                    offsetY: -40,
+                    style: {
+                        color: "#898a8c",
+                        fontSize: "20px",
+                        fontFamily: "Helvetica, Arial, sans-serif",
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                grid: {
+                    show: true,
+                    borderColor: "#ccc",
+                    strokeDashArray: 0,
+                    position: "back",
+                    // row: {
+                    // 	colors: ["#e5e5e5", "transparent"],
+                    // 	opacity: 0.2,
+                    // },
+                    // column: {
+                    // 	colors: ["#f8f8f8", "transparent"],
+                    // 	opacity: 0.2,
+                    // },
+                    xaxis: {
+                        lines: {
+                            show: false,
+                        },
+                    },
+                    yaxis: {
+                        lines: {
+                            show: true,
+                        },
+                    },
+                    padding: {
+                        // top: -20,
+                        // right:10,
+                        // bottom: -5,
+                        // left:0,
+                    },
+                },
+                markers: {
+                    size: 0,
+                    colors: "#e31837",
+                    strokeColors: "black",
+                    strokeWidth: 1,
+                    strokeOpacity: 0.2,
+                    strokeDashArray: 0,
+                    fillOpacity: 2,
+                    discrete: [],
+                    shape: "circle",
+                    offsetX: 0,
+                    offsetY: 0,
+                    onClick: undefined,
+                    onDblClick: undefined,
+                    showNullDataPoints: false,
+                    hover: {
+                        size: undefined,
+                        sizeOffset: 3,
+                    },
+                },
+
+                xaxis: {
+                    type: "datetime",
+                    tickAmount: 4,
+                    title: {
+                        text: "Date / Time",
+                        style: {
+                            fontSize: "12px",
+                            fontFamily: "Helvetica, Arial, sans-serif",
+                        },
+                    },
+                    labels: {
+                        show: true,
+                        rotate: 0,
+                        rotateAlways: true,
+                        textAnchor: "start",
+                        hideOverlappingLabels: false,
+                        showDuplicates: false,
+                        trim: false,
+                        maxHeight: 120,
+                        offsetX: 5,
+                        offsetY: 10,
+                        style: {
+                            fontSize: "8px",
+                            fontFamily: "Helvetica, Arial, sans-serif",
+                            fontWeight: 500,
+                            //cssClass: 'apexcharts-xaxis-label',
+                        },
+                        formatter: (value) => {
+                            const date = new Date(value);
+                            return date.toLocaleString("en-IN", {
+                                year: "numeric",
+                                month: "short",
+                                day: "2-digit",
+                                // timeZone: "Europe/Berlin",
+                            });
+                        },
+                    },
+                    // axisBorder: {
+                    // 	show: true,
+                    // 	color: "#78909C",
+                    // 	height: 1,
+                    // 	width: "100%",
+                    // 	offsetX: 0,
+                    // 	offsetY: 0,
+                    // },
+                    axisTicks: {
+                        show: true,
+                        borderType: "solid",
+                        color: "#e5e5e5",
+                        height: 6,
+                        offsetX: 0,
+                        offsetY: 0,
+                    },
+                    crosshairs: {
+                        show: false,
+                        width: 0,
+                        position: "back",
+                        opacity: 0.9,
                         stroke: {
-                              curve: "straight",
-                              width: 1.5,
-                        },
-                        noData: {
-                              text: "",
-                              align: "center",
-                              verticalAlign: "middle",
-                              offsetX: 0,
-                              offsetY: -40,
-                              style: {
-                                    color: "#898a8c",
-                                    fontSize: "20px",
-                                    fontFamily: "Helvetica, Arial, sans-serif",
-                              },
-                        },
-                        dataLabels: {
-                              enabled: false,
-                        },
-
-                        // grid: {
-                        // 	show: true,
-                        // 	borderColor: "#ccc",
-                        // 	strokeDashArray: 0,
-                        // 	position: "back",
-                        // 	row: {
-                        // 		colors: ["#e5e5e5", "transparent"],
-                        // 		opacity: 0.2,
-                        // 	},
-                        // 	column: {
-                        // 		colors: ["#f8f8f8", "transparent"],
-                        // 		opacity: 0.2,
-                        // 	},
-                        // 	xaxis: {
-                        // 		lines: {
-                        // 			show: true,
-                        // 		},
-                        // 	},
-                        // 	yaxis: {
-                        // 		lines: {
-                        // 			show: true,
-                        // 		},
-                        // 	},
-                        // 	padding: {
-                        // 		// top: -20,
-                        // 		// right:10,
-                        // 		// bottom: -5,
-                        // 		// left:0,
-                        // 	},
-                        // },
-
-                        markers: {
-                              size: 0,
-                              colors: "#e31837",
-                              strokeColors: "black",
-                              strokeWidth: 1,
-                              strokeOpacity: 0.2,
-                              strokeDashArray: 0,
-                              fillOpacity: 2,
-                              discrete: [],
-                              shape: "circle",
-                              offsetX: 0,
-                              offsetY: 0,
-                              onClick: undefined,
-                              onDblClick: undefined,
-                              showNullDataPoints: false,
-                              hover: {
-                                    size: undefined,
-                                    sizeOffset: 3,
-                              },
-                        },
-
-                        xaxis: {
-                              type: "datetime",
-                              tickAmount: 5,
-                              title: {
-                                    text: "Date / Time",
-                                    style: {
-                                          fontSize: "12px",
-                                          fontFamily: "Helvetica, Arial, sans-serif",
-                                    },
-                              },
-                              labels: {
-                                    show: true,
-                                    rotate: 0,
-                                    rotateAlways: true,
-                                    textAnchor: "start",
-                                    hideOverlappingLabels: false,
-                                    showDuplicates: false,
-                                    trim: false,
-                                    maxHeight: 120,
-                                    offsetX: 5,
-                                    offsetY: 10,
-                                    style: {
-                                          fontSize: "8px",
-                                          fontFamily: "Helvetica, Arial, sans-serif",
-                                          fontWeight: 300,
-                                          // cssClass: 'apexcharts-xaxis-label',
-                                    },
-
-                                    formatter: (value) => {
-                                          const date = new Date(value);
-                                          return date.toLocaleString("en-IN", {
-                                                year: "numeric",
-                                                month: "short",
-                                                day: "2-digit",
-                                                // timeZone: "Europe/Berlin",
-                                          });
-                                    },
-                              },
-                              // axisBorder: {
-                              // 	show: true,
-                              // 	color: "#78909C",
-                              // 	height: 1,
-                              // 	width: "100%",
-                              // 	offsetX: 0,
-                              // 	offsetY: 0,
-                              // },
-                              axisTicks: {
-                                    show: true,
-                                    borderType: "solid",
-                                    color: "#e5e5e5",
-                                    height: 6,
-                                    offsetX: 0,
-                                    offsetY: 0,
-                              },
-                              crosshairs: {
-                                    show: false,
-                                    width: 0,
-                                    position: "back",
-                                    opacity: 0.9,
-                                    stroke: {
-                                          color: "#b6b6b6",
-                                          width: 0,
-                                          dashArray: 1,
-                                    },
-                                    fill: {
-                                          type: "solid",
-                                          color: "#B1B9C4",
-                                          gradient: {
-                                                colorFrom: "#D8E3F0",
-                                                colorTo: "#BED1E6",
-                                                stops: [0, 100],
-                                                opacityFrom: 0.4,
-                                                opacityTo: 0.5,
-                                          },
-                                    },
-                                    dropShadow: {
-                                          enabled: false,
-                                          top: 0,
-                                          left: 0,
-                                          blur: 0,
-                                          opacity: 0.4,
-                                    },
-                              },
-                        },
-
-                        yaxis: {
-                              title: {
-                                    text: "kWh",
-                                    rotate: -90,
-                                    offsetX: 0,
-                                    offsetY: 0,
-                                    style: {
-                                          color: "undefined",
-                                          fontSize: "12px",
-                                          fontFamily: "Helvetica, Arial, sans-serif",
-                                          fontWeight: 600,
-                                          cssClass: "apexcharts-yaxis-title",
-                                    },
-                              },
-                              labels: {
-                                    show: true,
-                                    minWidth: 0,
-                                    maxWidth: 160,
-                                    style: {
-                                          fontSize: "8px",
-                                          fontFamily: "Helvetica, Arial, sans-serif",
-                                          fontWeight: 300,
-                                    },
-                                    offsetX: 0, //y axis labels
-                                    offsetY: 0,
-                                    formatter: (value) =>
-                                          new Intl.NumberFormat("en-EN", {
-                                                maximumFractionDigits: 3,
-                                          }).format(value),
-                              },
-                              // 	axisBorder: {
-                              // 		show: true,
-                              // 		color: "#78909C",
-                              // 		height: "100%",
-                              // 		width:1,
-                              // 		offsetX: -1,
-                              // 		offsetY: 0,
-                              // 	},
-                              axisTicks: {
-                                    show: true,
-                                    borderType: "solid",
-                                    color: "#e5e5e5",
-                                    width: 3,
-                                    offsetX: 0,
-                                    offsetY: 0,
-                              },
-                        },
-
-                        annotations: {
-                              points: [],
-                        },
-
-                        tooltip: {
-                              enabled: true,
-                              shared: false,
-                              intersect: false,
-                              hideEmptySeries: true,
-                              fillSeriesColor: false,
-                              offsetX: 10,
-                              offsetY: 10,
-                              style: {
-                                    fontSize: "10px",
-                                    fontFamily: "Arial, sans-serif",
-                                    background: "#333",
-                                    color: "#fff",
-                                    borderRadius: "10px",
-                                    padding: "1px",
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                              },
-                              onDatasetHover: {
-                                    highlightDataSeries: true,
-                              },
-                              y: {
-                                    formatter: (value) =>
-                                          new Intl.NumberFormat("en-IN", {
-                                                maximumFractionDigits: 3,
-                                          }).format(value) + " kWh",
-                              },
-                              x: {
-                                    show: true,
-                                    formatter: (value) => {
-                                          const date = new Date(value);
-                                          return date.toLocaleString("en-IN", {
-                                                year: "numeric",
-                                                month: "short",
-                                                day: "2-digit",
-                                                hour: "2-digit",
-                                                minute: "2-digit",
-                                                hour12: false,
-                                                // timeZone: "Europe/Berlin",
-                                          });
-                                    },
-                              },
-                              marker: {
-                                    show: true,
-                                    radius: 1, // Adjust this value to change the size of the hover circle
-                              },
-                              fixed: {
-                                    enabled: false,
-                                    position: "topRight",
-                                    offsetX: 0,
-                                    offsetY: 0,
-                              },
+                            color: "#b6b6b6",
+                            width: 0,
+                            dashArray: 1,
                         },
                         fill: {
-                              colors: ["#e31837"],
-                              gradient: {
-                                    shadeIntensity: 1,
-                                    inverseColors: false,
-                                    opacityFrom: 0.5,
-                                    opacityTo: 0.9,
-                              },
+                            type: "solid",
+                            color: "#B1B9C4",
+                            gradient: {
+                                colorFrom: "#D8E3F0",
+                                colorTo: "#BED1E6",
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
+                            },
                         },
-                        //this working in portrait and by default in landscape
-                        responsive: [
-                              {
-                                    breakpoint: 480,
-                                    options: {
-                                          chart: {
-                                                height: "95%",
-                                                background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
-                                          },
-                                    },
-                              },
-                        ],
-                  };
+                        dropShadow: {
+                            enabled: false,
+                            top: 0,
+                            left: 0,
+                            blur: 0,
+                            opacity: 0.4,
+                        },
+                    },
+                },
 
-                 
-                  // Export the chart as a PNG image
-                  async function exportChart() {
-                        try {
-                              const dataURI = await chart.dataURI(); // Get Base64 of chart
-                              sendMsgToReactNative(dataURI.imgURI); // Send to React Native
-                        } catch (error) {
-                              console.error("Error exporting chart:", error);
-                        }
-                  }
+                yaxis: {
+                    show: true,
+                    tickAmount: 10,
+                    title: {
+                        text: "kWh",
+                        rotate: -90,
+                        offsetX: 0,
+                        offsetY: 0,
+                        style: {
+                            color: "undefined",
+                            fontSize: "12px",
+                            fontFamily: "Helvetica, Arial, sans-serif",
+                            fontWeight: 700,
+                            cssClass: "apexcharts-yaxis-title",
+                        },
+                    },
+                    labels: {
+                        show: true,
+                        minWidth: 0,
+                        maxWidth: 160,
+                        style: {
+                            fontSize: "8px",
+                            fontFamily: "Helvetica, Arial, sans-serif",
+                            fontWeight: 400,
+                        },
+                        offsetX: 0, //y axis labels
+                        offsetY: 0,
+                        formatter: (value) =>
+                            new Intl.NumberFormat("en-EN", {
+                                maximumFractionDigits: 3,
+                            }).format(value),
+                    },
+                    // 	axisBorder: {
+                    // 		show: true,
+                    // 		color: "#78909C",
+                    // 		height: "100%",
+                    // 		width:1,
+                    // 		offsetX: -1,
+                    // 		offsetY: 0,
+                    // 	},
+                    axisTicks: {
+                        show: true,
+                        borderType: "solid",
+                        color: "#e5e5e5",
+                        width: 3,
+                        offsetX: 0,
+                        offsetY: 0,
+                    },
+                },
 
-                  // Bind the button to trigger export
-                  window.exportChart = exportChart;
+                annotations: {
+                    points: [],
+                },
 
-                  function updateChart(filteredData, updatedOptions, title = "Energy Use") {
-                        chart.updateOptions({
-                              series: [{ name: title, data: filteredData }],
-                              ...updatedOptions,
-                        });
-                        sendMsgToReactNative("update Chart",[title, filteredData[0]] );
-                        if (chart.w.config.series.length === 1) {
-                              sendMsgToReactNative("Empty",chart.w.config.series.length);
-                        }
-                  }
+                tooltip: {
+                    enabled: true,
+                    shared: false,
+                    intersect: false,
+                    hideEmptySeries: true,
+                    fillSeriesColor: false,
+                    offsetX: 10,
+                    offsetY: 10,
+                    style: {
+                        fontSize: "10px",
+                        fontFamily: "Arial, sans-serif",
+                        background: "#333",
+                        color: "#fff",
+                        borderRadius: "10px",
+                        padding: "1px",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                    },
+                    onDatasetHover: {
+                        highlightDataSeries: true,
+                    },
+                    y: {
+                        formatter: (value) =>
+                            new Intl.NumberFormat("en-IN", {
+                                maximumFractionDigits: 3,
+                            }).format(value) + " kWh",
+                    },
+                    x: {
+                        show: true,
+                        formatter: (value) => {
+                            const date = new Date(value);
+                            return date.toLocaleString("en-IN", {
+                                year: "numeric",
+                                month: "short",
+                                day: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                                // timeZone: "Europe/Berlin",
+                            });
+                        },
+                    },
+                    marker: {
+                        show: true,
+                        radius: 1, // Adjust this value to change the size of the hover circle
+                    },
+                    fixed: {
+                        enabled: false,
+                        position: "topRight",
+                        offsetX: 0,
+                        offsetY: 0,
+                    },
+                },
+                fill: {
+                    colors: ["#e31837"],
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: false,
+                        opacityFrom: 0.5,
+                        opacityTo: 0.9,
+                    },
+                },
+                //this working in portrait and by default in landscape
+                responsive: [
+                    {
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                height: "95%",
+                                background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
+                            },
+                        },
+                    },
+                ],
+            };
 
-                  function updateChartSeries(filteredData,title = "Energy Use") {
-                        chart.updateSeries([{ name: title, data: filteredData }], true);
-                        sendMsgToReactNative("updateChartSeries",
-                                 title
-                              
-                        );
-                  }
+            // Export the chart as a PNG image
+            async function exportChart() {
+                try {
+                    const dataURI = await chart.dataURI(); // Get Base64 of chart
+                    sendMsgToReactNative(dataURI.imgURI); // Send to React Native
+                } catch (error) {
+                    console.error("Error exporting chart:", error);
+                }
+            }
 
-                  function updateChartOptions(updatedOptions) {
-                        chart.updateOptions(updatedOptions);
-                        // Send a message indicating the update has finished
-                        sendMsgToReactNative("updateChartOptions");
-                  }
+            // Bind the button to trigger export
+            window.exportChart = exportChart;
 
-                  function resetChartSeries() {
-                        chart.resetSeries();
-                        sendMsgToReactNative("resetChartSeries");
-                  }
+            function updateChart(filteredData, updatedOptions, title = "Energy Use") {
+                chart.updateOptions({
+                    series: [{ name: title, data: filteredData }],
+                    ...updatedOptions,
+                });
+                sendMsgToReactNative("update Chart", [title, filteredData[0]]);
+            }
 
-                  function appendChartData(data) {
-                        chart.appendData(data);
-                  }
+            function updateChartSeries(filteredData, title = "Energy Use") {
+                chart.updateSeries([{ name: title, data: filteredData }], true);
+                sendMsgToReactNative("updateChartSeries", title);
+            }
 
-                  function updateLocale(newLocale, yAxisTitle) {
-                        
-                        const xaxisTitle = newLocale === "de" ? "Datum / Uhrzeit" : "Date / Time";
-                        
-                        sendMsgToReactNative("updateLocale1");
+            function updateChartOptions(updatedOptions) {
+                chart.updateOptions(updatedOptions);
+                // Send a message indicating the update has finished
+                sendMsgToReactNative("updateChartOptions");
+            }
 
-                        chart.updateOptions({
-                              chart: {
+            function resetChartSeries() {
+                chart.resetSeries();
+                sendMsgToReactNative("resetChartSeries");
+            }
+
+            function appendChartData(data) {
+                chart.appendData(data);
+            }
+
+            function updateLocale(newLocale, yAxisTitle) {
+                let yValues = chart.w.config.series[0].data.map((point) => point.y);
+                let maxY = Math.max(...yValues);
+                const minY = Math.min(...yValues);
+                // Find indices of max and min values
+                let maxIndex = yValues.indexOf(maxY);
+                let minIndex = yValues.indexOf(minY);
+                let currentSeries = chart.w.config.series;
+                currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy consumption: ";
+                let MAX = newLocale === "de" ? "  Maximal" : "  Maximum";
+                let MIN = newLocale === "de" ? "  Minimum" : "  Minimum";
+
+                sendMsgToReactNative("updateLocale");
+
+                chart.updateOptions({
+                    series: currentSeries,
+                    chart: {
+                        background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: (value) => {
+                                const formatter = new Intl.NumberFormat(newLocale === "de" ? "de-DE" : "en-IN", { maximumFractionDigits: 2 });
+                                return formatter.format(value) + " " + yAxisTitle;
+                            },
+                        },
+                        x: {
+                            show: true,
+                            formatter: (value, { series, seriesIndex, dataPointIndex, w }) => {
+                                const date = new Date(value);
+                                const formattedDate = date.toLocaleString(newLocale === "de" ? "de-DE" : "en-IN", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "2-digit",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: false,
+                                });
+                                if (dataPointIndex === maxIndex) return formattedDate + MAX;
+                                if (dataPointIndex === minIndex) return formattedDate + MIN;
+                                return formattedDate;
+                            },
+                        },
+                    },
+                    xaxis: {
+                        tickAmount: 4,
+                        title: {
+                            text: newLocale === "de" ? "Datum / Uhrzeit" : "Date / Time",
+                            style: {
+                                fontSize: "12px",
+                                fontFamily: "Helvetica, Arial, sans-serif",
+                            },
+                            offsetX: -25,
+                            offsetY: 0,
+                        },
+                        labels: {
+                            show: true,
+                            //   formatter: (value) => {
+                            //         const date = new Date(value);
+                            //         return date.toLocaleString(newLocale === "de" ? "de-DE" : "en-IN", {
+                            //               year: "numeric",
+                            //               month: "short",
+                            //               day: "2-digit",
+                            //               timeZone: "Europe/Berlin",
+                            //         });
+                            //   },
+                        },
+                        axisTicks: {
+                            show: true,
+                        },
+                    },
+                    yaxis: {
+                        tickAmount: 10,
+                        title: {
+                            text: yAxisTitle,
+                            rotate: -90,
+                            offsetX: 0,
+                            offsetY: 0,
+                            style: {
+                                color: "undefined",
+                                fontSize: "12px",
+                                fontFamily: "Helvetica, Arial, sans-serif",
+                                fontWeight: 700,
+                                cssClass: "apexcharts-yaxis-title",
+                            },
+                        },
+                        labels: {
+                            show: true,
+                            minWidth: 0,
+                            maxWidth: 160,
+                            style: {
+                                fontSize: "8px",
+                                fontFamily: "Helvetica, Arial, sans-serif",
+                                fontWeight: 500,
+                            },
+                            formatter: (value) => {
+                                const locale = newLocale === "de" ? "de-DE" : "en-IN";
+                                return new Intl.NumberFormat(locale, {
+                                    maximumFractionDigits: 3,
+                                }).format(value);
+                            },
+                        },
+                    },
+                    responsive: [
+                        {
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    height: "95%",
                                     background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
-                              },
-                              tooltip: {
-                                    y: {
-                                          formatter: (value) => {
-                                                const formatter = new Intl.NumberFormat(newLocale === "de" ? "de-DE" : "en-IN", { maximumFractionDigits: 2 });
-                                                return formatter.format(value) + " " + yAxisTitle;
-                                          },
-                                    },
-                                    x: {
-                                          show: true,
-                                          formatter: (value) => {
-                                                const date = new Date(value);
-                                                return date.toLocaleString(newLocale === "de" ? "de-DE" : "en-IN", {
-                                                      year: "numeric",
-                                                      month: "short",
-                                                      day: "2-digit",
-                                                      hour: "2-digit",
-                                                      minute: "2-digit",
-                                                      hour12: false,
-                                                      // timeZone: "Europe/Berlin",
-                                                });
-                                          },
-                                    },
-                              },
-                              xaxis: {
-                                    tickAmount: 4,
-                                    title: {
-                                          text: newLocale === "de" ? "Datum / Uhrzeit" : "Date / Time",
-                                          style: {
-                                                fontSize: "12px",
-                                                fontFamily: "Helvetica, Arial, sans-serif",
-                                          },
-                                    },
-                                    labels: {
-                                          show: true,
-                                          formatter: (value) => {
-                                                const date = new Date(value);
-                                                return date.toLocaleString(newLocale === "de" ? "de-DE" : "en-IN", {
-                                                      year: "numeric",
-                                                      month: "short",
-                                                      day: "2-digit",
-                                                      timeZone: "Europe/Berlin",
-                                                });
-                                          },
-                                    },
-                                    axisTicks: {
-                                          show: true,
-                                    },
-                              },
-                              yaxis: {
-                                    title: {
-                                          text: yAxisTitle,
-                                          rotate: -90,
-                                          offsetX: 0,
-                                          offsetY: 0,
-                                          style: {
-                                                color: "undefined",
-                                                fontSize: "12px",
-                                                fontFamily: "Helvetica, Arial, sans-serif",
-                                                fontWeight: 700,
-                                                cssClass: "apexcharts-yaxis-title",
-                                          },
-                                    },
-                                    labels: {
-                                          show: true,
-                                          minWidth: 0,
-                                          maxWidth: 160,
-                                          style: {
-                                                fontSize: "8px",
-                                                fontFamily: "Helvetica, Arial, sans-serif",
-                                                fontWeight: 300,
-                                          },
-                                          formatter: (value) => {
-                                                const locale = newLocale === "de" ? "de-DE" : "en-IN";
-                                                return new Intl.NumberFormat(locale, {
-                                                      maximumFractionDigits: 3,
-                                                }).format(value);
-                                          },
-                                    },
-                              },
-                              responsive: [
-                                    {
-                                          breakpoint: 480,
-                                          options: {
-                                                chart: {
-                                                      height: "95%",
-                                                      background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
-                                                },
-                                          },
-                                    },
-                              ],
-                        });
-                  }
+                                },
+                            },
+                        },
+                    ],
+                });
 
-                  function updateFormate(type, locale) {
-                        sendMsgToReactNative("updateFormate");
+                sendMsgToReactNative("abc", abc);
+            }
 
-                        let newLocale = locale === "de" ? "de-DE" : "en-EN";
+            function updateFormate(type, locale) {
+                sendMsgToReactNative("updateFormate");
+                let newLocale = locale === "de" ? "de-DE" : "en-EN";
 
-                        chart.updateOptions({
-                              xaxis: {
-                                    labels: {
-                                          formatter: (value) => {
-                                                const xAxisData = chart.w.globals.initialSeries[0].data;
-                                                const index = chart.w.globals.labels.indexOf(value);
-                                                const date = new Date(value);
-                                                let formatOptions = {};
-                                                switch (type) {
-                                                      case "Day":
-                                                            if (index === 0) {
-                                                                  formatOptions = {
-                                                                        day: "2-digit",
-                                                                        month: "short",
-                                                                        year: "2-digit",
-                                                                        // hour: "2-digit",
-                                                                        // minute: "2-digit",
-                                                                        // timeZone: "Europe/Berlin",
-                                                                  };
-                                                            } else {
-                                                                  formatOptions = {
-                                                                        hour: "2-digit",
-                                                                        minute: "2-digit",
-                                                                        // timeZone: "Europe/Berlin",
-                                                                  };
-                                                            }
-                                                            break;
-                                                      case "Week":
-                                                      case "Month":
-                                                            formatOptions = {
-                                                                  year: "numeric",
-                                                                  month: "short",
-                                                                  day: "2-digit",
-                                                                  // timeZone: "Europe/Berlin",
-                                                            };
-                                                            break;
-                                                      default:
-                                                            formatOptions = {
-                                                                  year: "numeric",
-                                                                  month: "short",
-                                                                  // timeZone: "Europe/Berlin",
-                                                            };
-                                                            break;
-                                                }
+                chart.updateOptions({
+                    xaxis: {
+                        labels: {
+                            formatter: (value) => {
+                                const xAxisData = chart.w.globals.initialSeries[0].data;
+                                const index = chart.w.globals.labels.indexOf(value);
+                                const date = new Date(value);
+                                let formatOptions = {};
+                                switch (type) {
+                                    case "Day":
+                                        if (index === 0) {
+                                            formatOptions = {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "2-digit",
+                                                // hour: "2-digit",
+                                                // minute: "2-digit",
+                                                // timeZone: "Europe/Berlin",
+                                            };
+                                        } else {
+                                            formatOptions = {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                // timeZone: "Europe/Berlin",
+                                            };
+                                        }
+                                        break;
+                                    case "Week":
+                                    case "Month":
+                                        formatOptions = {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "2-digit",
+                                            // timeZone: "Europe/Berlin",
+                                        };
+                                        break;
+                                    default:
+                                        formatOptions = {
+                                            year: "numeric",
+                                            month: "short",
+                                            // timeZone: "Europe/Berlin",
+                                        };
+                                        break;
+                                }
 
-                                                return date.toLocaleString(newLocale, formatOptions);
-                                          },
-                                    },
-                              },
-                        });
-                  }
+                                return date.toLocaleString(newLocale, formatOptions);
+                            },
+                        },
+                    },
+                });
+            }
 
-                  window.zoomIn = function () {
-                        if (chart?.w?.globals) {
-                              sendMsgToReactNative("Zoom Start");
+            window.zoomIn = function () {
+                if (chart?.w?.globals) {
+                    sendMsgToReactNative("Zoom Start");
 
-                              const currentMin = chart.w.globals.minX;
-                              const currentMax = chart.w.globals.maxX;
-                              const zoomAmount = (currentMax - currentMin) * 0.1;
+                    const currentMin = chart.w.globals.minX;
+                    const currentMax = chart.w.globals.maxX;
+                    const zoomAmount = (currentMax - currentMin) * 0.1;
 
-                              // Ensure the new zoomed range stays within the series bounds
-                              const newMinX = Math.max(
-                                    currentMin + zoomAmount,
-                                    chart.w.globals.seriesX[0][0] // Series minimum
-                              );
-                              const newMaxX = Math.min(
-                                    currentMax - zoomAmount,
-                                    chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
-                              );
+                    // Ensure the new zoomed range stays within the series bounds
+                    const newMinX = Math.max(
+                        currentMin + zoomAmount,
+                        chart.w.globals.seriesX[0][0] // Series minimum
+                    );
+                    const newMaxX = Math.min(
+                        currentMax - zoomAmount,
+                        chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+                    );
 
-                              // Update chart options
-                              chart.updateOptions(
-                                    {
-                                          xaxis: {
-                                                min: newMinX,
-                                                max: newMaxX,
-                                          },
-                                    },
-                                    true,
-                                    true
-                              );
-                        } else {
-                              console.warn("Zoom In action skipped: chart or required properties not available.");
+                    // Update chart options
+                    chart.updateOptions(
+                        {
+                            xaxis: {
+                                min: newMinX,
+                                max: newMaxX,
+                            },
+                        },
+                        true,
+                        true
+                    );
+                } else {
+                    console.warn("Zoom In action skipped: chart or required properties not available.");
+                }
+            };
+
+            window.zoomOut = function () {
+                if (chart?.w?.globals) {
+                    sendMsgToReactNative("Zoomed");
+
+                    const currentMin = chart.w.globals.minX;
+                    const currentMax = chart.w.globals.maxX;
+                    const zoomAmount = (currentMax - currentMin) * 0.1;
+
+                    // Ensure the new zoomed range stays within the series bounds
+                    const newMinX = Math.max(
+                        currentMin - zoomAmount,
+                        chart.w.globals.seriesX[0][0] // Series minimum
+                    );
+                    const newMaxX = Math.min(
+                        currentMax + zoomAmount,
+                        chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
+                    );
+
+                    // Update chart options
+                    chart.updateOptions({
+                        xaxis: {
+                            min: newMinX,
+                            max: newMaxX,
+                        },
+                    });
+                } else {
+                    console.warn("Zoom Out action skipped: chart or required properties not available.");
+                }
+            };
+
+            window.customPanLeft = function () {
+                const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
+
+                // Calculate the new min and max X values for the pan
+                const newMinX = Math.max(chart.w.globals.minX - moveFactor, chart.w.globals.seriesX[0][0]); // Prevent going past the series minimum
+                const newMaxX = Math.max(chart.w.globals.maxX - moveFactor, chart.w.globals.seriesX[0][0] + (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series minimum
+
+                // Update chart options to apply the pan
+                chart.updateOptions({
+                    xaxis: {
+                        min: newMinX,
+                        max: newMaxX,
+                    },
+                }); // false, false to not animate the chart and not update the series
+            };
+
+            window.customPanRight = function () {
+                const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
+
+                // Calculate the new min and max X values for the pan
+
+                // Prevent going past the series maximum
+                const newMinX = Math.min(chart.w.globals.minX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] - (chart.w.globals.maxX - chart.w.globals.minX));
+                // Prevent going past the series maximum
+                const newMaxX = Math.min(chart.w.globals.maxX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1]);
+
+                // Update chart options to apply the pan
+                chart.updateOptions({
+                    xaxis: {
+                        min: newMinX,
+                        max: newMaxX,
+                    },
+                }); // false, false to not animate the chart and not update the series
+            };
+
+            window.resetZoom = function () {
+                // Dynamically access the series and x-axis data from the chart instance
+                const seriesData = chart.w.config.series[0].data;
+
+                if (seriesData.length > 0) {
+                    const initialMinX = seriesData[0][0]; // First x-axis value
+                    const initialMaxX = seriesData[seriesData.length - 1][0]; // Last x-axis value
+
+                    //for y
+                    const yValues = seriesData.map((point) => point.y);
+                    const minY = Math.min(...yValues);
+                    const maxY = Math.max(...yValues);
+                    const padding = (maxY - minY) * 0.1;
+
+                    chart.updateOptions({
+                        xaxis: {
+                            min: initialMinX,
+                            max: initialMaxX,
+                        },
+                    });
+                } else {
+                    console.error("Series data is empty, unable to reset zoom.");
+                }
+            };
+
+            function highlightMinAndMax(chartInstance) {
+                const seriesData = chartInstance.w.config.series[0].data;
+
+                // Check if seriesData is an array and has valid data
+                if (!Array.isArray(seriesData) || seriesData.length === 0) {
+                    // console.log('Invalid or empty series data');
+                    return;
+                }
+
+                // { x, y } format
+                if (seriesData[0].x !== undefined && seriesData[0].y !== undefined) {
+                    const minPoint = seriesData.reduce(
+                        (min, point) => {
+                            return point.y < min.y ? point : min;
+                        },
+                        { x: Infinity, y: Infinity }
+                    );
+
+                    const maxPoint = seriesData.reduce(
+                        (max, point) => {
+                            return point.y > max.y ? point : max;
+                        },
+                        { x: -Infinity, y: -Infinity }
+                    );
+
+                    // Add annotations to the chart
+                    chartInstance.clearAnnotations();
+                    chartInstance.addPointAnnotation({
+                        x: new Date(minPoint.x).getTime(),
+                        y: minPoint.y,
+                        marker: {
+                            size: 3,
+                            fillColor: "#e31837",
+                            strokeColor: "#ffffff",
+                            strokeWidth: 1,
+                        },
+                        label: {
+                            text: "Min",
+                            style: {
+                                color: "#ff0000",
+                                fontSize: "5px",
+                            },
+                        },
+                    });
+
+                    chartInstance.addPointAnnotation({
+                        x: new Date(maxPoint.x).getTime(),
+                        y: maxPoint.y,
+                        marker: {
+                            size: 3,
+                            fillColor: "#e31837",
+                            strokeColor: "#ffffff",
+                            strokeWidth: 1,
+                        },
+                        label: {
+                            text: "Max",
+                            style: {
+                                color: "#ff0000",
+                                fontSize: "5px",
+                            },
+                        },
+                    });
+
+                    sendMsgToReactNative("highLightedMaxMin", {
+                        minX: minPoint.x,
+                        minY: minPoint.y,
+                        maxX: maxPoint.x,
+                        maxY: maxPoint.y,
+                    });
+                } else {
+                    console.warn("Invalid data format in series");
+                }
+            }
+
+            function toggleModes() {
+                if (chart.w.globals.zoomEnabled) {
+                    // Switch to Pan mode
+                    chart.w.globals.zoomEnabled = false;
+                    chart.w.globals.panEnabled = true;
+                    chart.w.globals.selectionEnabled = false;
+                } else if (chart.w.globals.panEnabled) {
+                    // Switch to Selection mode
+                    chart.w.globals.zoomEnabled = false;
+                    chart.w.globals.panEnabled = false;
+                    chart.w.globals.selectionEnabled = true;
+                } else if (chart.w.globals.selectionEnabled) {
+                    // Switch to Zoom mode
+                    chart.w.globals.zoomEnabled = true;
+                    chart.w.globals.panEnabled = false;
+                    chart.w.globals.selectionEnabled = false;
+                } else {
+                    // Default to Zoom mode if no mode is enabled
+                    chart.w.globals.zoomEnabled = true;
+                    chart.w.globals.panEnabled = false;
+                    chart.w.globals.selectionEnabled = false;
+                }
+            }
+
+            window.toggleZoomAndSelection = () => {
+                if (chart.w.globals.zoomEnabled) {
+                    // Switch to Selection mode
+                    chart.w.globals.zoomEnabled = false;
+                    chart.w.globals.selectionEnabled = true;
+                } else if (chart.w.globals.selectionEnabled) {
+                    // Switch to Zoom mode
+                    chart.w.globals.zoomEnabled = true;
+                    chart.w.globals.selectionEnabled = false;
+                } else {
+                    // Default to Zoom mode if neither is enabled
+                    chart.w.globals.zoomEnabled = true;
+                    chart.w.globals.selectionEnabled = false;
+                }
+            };
+
+            (function () {
+                var originalAddEventListener = EventTarget.prototype.addEventListener;
+                EventTarget.prototype.addEventListener = function (type, listener, options) {
+                    if (type === "touchstart" || type === "touchmove") {
+                        options = options || {};
+                        if (typeof options === "object") {
+                            options.passive = true;
                         }
-                  };
+                    }
+                    return originalAddEventListener.call(this, type, listener, options);
+                };
+            })();
 
-                  window.zoomOut = function () {
-                        if (chart?.w?.globals) {
-                              sendMsgToReactNative("Zoomed");
-
-                              const currentMin = chart.w.globals.minX;
-                              const currentMax = chart.w.globals.maxX;
-                              const zoomAmount = (currentMax - currentMin) * 0.1;
-
-                              // Ensure the new zoomed range stays within the series bounds
-                              const newMinX = Math.max(
-                                    currentMin - zoomAmount,
-                                    chart.w.globals.seriesX[0][0] // Series minimum
-                              );
-                              const newMaxX = Math.min(
-                                    currentMax + zoomAmount,
-                                    chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
-                              );
-
-                              // Update chart options
-                              chart.updateOptions({
-                                    xaxis: {
-                                          min: newMinX,
-                                          max: newMaxX,
-                                    },
-                              });
-                        } else {
-                              console.warn("Zoom Out action skipped: chart or required properties not available.");
-                        }
-                  };
-
-                  window.customPanLeft = function () {
-                        const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
-
-                        // Calculate the new min and max X values for the pan
-                        const newMinX = Math.max(chart.w.globals.minX - moveFactor, chart.w.globals.seriesX[0][0]); // Prevent going past the series minimum
-                        const newMaxX = Math.max(chart.w.globals.maxX - moveFactor, chart.w.globals.seriesX[0][0] + (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series minimum
-
-                        // Update chart options to apply the pan
-                        chart.updateOptions({
-                              xaxis: {
-                                    min: newMinX,
-                                    max: newMaxX,
-                              },
-                        }); // false, false to not animate the chart and not update the series
-                  };
-
-                  window.customPanRight = function () {
-                        const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.3;
-
-                        // Calculate the new min and max X values for the pan
-
-                        // Prevent going past the series maximum
-                        const newMinX = Math.min(chart.w.globals.minX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] - (chart.w.globals.maxX - chart.w.globals.minX));
-                        // Prevent going past the series maximum
-                        const newMaxX = Math.min(chart.w.globals.maxX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1]);
-
-                        // Update chart options to apply the pan
-                        chart.updateOptions({
-                              xaxis: {
-                                    min: newMinX,
-                                    max: newMaxX,
-                              },
-                        }); // false, false to not animate the chart and not update the series
-                  };
-
-                  window.resetZoom = function () {
-                        // Dynamically access the series and x-axis data from the chart instance
-                        const seriesData = chart.w.config.series[0].data;
-
-                        if (seriesData.length > 0) {
-                              const initialMinX = seriesData[0][0]; // First x-axis value
-                              const initialMaxX = seriesData[seriesData.length - 1][0]; // Last x-axis value
-
-                              chart.updateOptions({
-                                    xaxis: {
-                                          min: initialMinX,
-                                          max: initialMaxX,
-                                    },
-                              });
-                        } else {
-                              console.error("Series data is empty, unable to reset zoom.");
-                        }
-                  };
-
-                  function highlightMinAndMax(chartInstance) {
-                        const seriesData = chartInstance.w.config.series[0].data;
-
-                        // Check if seriesData is an array and has valid data
-                        if (!Array.isArray(seriesData) || seriesData.length === 0) {
-                              // console.log('Invalid or empty series data');
-                              return;
-                        }
-
-                        // For each data point, make sure the structure is valid (either [x, y] or { x, y })
-                        if (Array.isArray(seriesData[0])) {
-                              // [x, y] format
-                              const minPoint = seriesData.reduce(
-                                    (min, point) => {
-                                          return point[1] < min[1] ? point : min;
-                                    },
-                                    [Infinity, Infinity]
-                              );
-
-                              const maxPoint = seriesData.reduce(
-                                    (max, point) => {
-                                          return point[1] > max[1] ? point : max;
-                                    },
-                                    [-Infinity, -Infinity]
-                              );
-
-                              // Add annotations to the chart
-                              chartInstance.clearAnnotations();
-                              chartInstance.addPointAnnotation({
-                                    x: minPoint[0],
-                                    y: minPoint[1],
-                                    marker: {
-                                          size: 8,
-                                          fillColor: "#ff0000",
-                                          strokeColor: "#ffffff",
-                                          strokeWidth: 2,
-                                    },
-                                    label: {
-                                          text: "Min",
-                                          style: {
-                                                color: "#ff0000",
-                                                fontSize: "12px",
-                                          },
-                                    },
-                              });
-
-                              chartInstance.addPointAnnotation({
-                                    x: maxPoint[0],
-                                    y: maxPoint[1],
-                                    marker: {
-                                          size: 8,
-                                          fillColor: "#00ff00",
-                                          strokeColor: "#ffffff",
-                                          strokeWidth: 2,
-                                    },
-                                    label: {
-                                          text: "Max",
-                                          style: {
-                                                color: "#00ff00",
-                                                fontSize: "12px",
-                                          },
-                                    },
-                              });
-                              sendMsgToReactNative("highLightedMaxMin",{
-                                    minX:minPoint.x,minY:minPoint.y,maxX:maxPoint.x,maxY:maxPoint.y
-                              });
-
-                        } else if (seriesData[0].x !== undefined && seriesData[0].y !== undefined) {
-                              // { x, y } format
-                              const minPoint = seriesData.reduce(
-                                    (min, point) => {
-                                          return point.y < min.y ? point : min;
-                                    },
-                                    { x: Infinity, y: Infinity }
-                              );
-
-                              const maxPoint = seriesData.reduce(
-                                    (max, point) => {
-                                          return point.y > max.y ? point : max;
-                                    },
-                                    { x: -Infinity, y: -Infinity }
-                              );
-
-                              // Add annotations to the chart
-                              chartInstance.clearAnnotations();
-                              chartInstance.addPointAnnotation({
-                                    x: minPoint.x,
-                                    y: minPoint.y,
-                                    marker: {
-                                          size: 3,
-                                          fillColor: "#e31837",
-                                          strokeColor: "#ffffff",
-                                          strokeWidth: 1,
-                                    },
-                                    label: {
-                                          text: "Min",
-                                          style: {
-                                                color: "#ff0000",
-                                                fontSize: "5px",
-                                          },
-                                    },
-                              });
-
-                              chartInstance.addPointAnnotation({
-                                    x: maxPoint.x,
-                                    y: maxPoint.y,
-                                    marker: {
-                                          size: 3,
-                                          fillColor: "#e31837",
-                                          strokeColor: "#ffffff",
-                                          strokeWidth: 1,
-                                    },
-                                    label: {
-                                          text: "Max",
-                                          style: {
-                                                color: "#ff0000",
-                                                fontSize: "5px",
-                                          },
-                                    },
-                              });
-                              sendMsgToReactNative("highLightedMaxMin",{
-                                    minX:minPoint.x,minY:minPoint.y,maxX:maxPoint.x,maxY:maxPoint.y
-                              });
-
-                        } else {
-                              console.warn("Invalid data format in series");
-                        }
-                  }
-
-
-                  
-                  function toggleModes() {
-                        if (chart.w.globals.zoomEnabled) {
-                              // Switch to Pan mode
-                              chart.w.globals.zoomEnabled = false;
-                              chart.w.globals.panEnabled = true;
-                              chart.w.globals.selectionEnabled = false;
-                        } else if (chart.w.globals.panEnabled) {
-                              // Switch to Selection mode
-                              chart.w.globals.zoomEnabled = false;
-                              chart.w.globals.panEnabled = false;
-                              chart.w.globals.selectionEnabled = true;
-                        } else if (chart.w.globals.selectionEnabled) {
-                              // Switch to Zoom mode
-                              chart.w.globals.zoomEnabled = true;
-                              chart.w.globals.panEnabled = false;
-                              chart.w.globals.selectionEnabled = false;
-                        } else {
-                              // Default to Zoom mode if no mode is enabled
-                              chart.w.globals.zoomEnabled = true;
-                              chart.w.globals.panEnabled = false;
-                              chart.w.globals.selectionEnabled = false;
-                        }
-                  }
-
-                  window.toggleZoomAndSelection = () => {
-                        if (chart.w.globals.zoomEnabled) {
-                              // Switch to Selection mode
-                              chart.w.globals.zoomEnabled = false;
-                              chart.w.globals.selectionEnabled = true;
-                        } else if (chart.w.globals.selectionEnabled) {
-                              // Switch to Zoom mode
-                              chart.w.globals.zoomEnabled = true;
-                              chart.w.globals.selectionEnabled = false;
-                        } else {
-                              // Default to Zoom mode if neither is enabled
-                              chart.w.globals.zoomEnabled = true;
-                              chart.w.globals.selectionEnabled = false;
-                        }
-                  };
-
-             
-
-                  function ResetData() {
-                        chart.resetSeries();
-                  }
-
-                 
-                  (function () {
-                        var originalAddEventListener = EventTarget.prototype.addEventListener;
-                        EventTarget.prototype.addEventListener = function (type, listener, options) {
-                              if (type === "touchstart" || type === "touchmove") {
-                                    options = options || {};
-                                    if (typeof options === "object") {
-                                          options.passive = true;
-                                    }
-                              }
-                              return originalAddEventListener.call(this, type, listener, options);
-                        };
-                  })();
-
-
-
-
-                  chart = new ApexCharts(document.querySelector("#chart"), options);
-                  chart.render()
-                        .then(() => {
-                              chart.w.globals.isTouchDevice = false;
-                        })
-                        .catch((error) => {
-                              console.error("Chart failed to render:", error);
-                        });
-
-
-
-            </script>
-      </body>
+            chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart
+                .render()
+                .then(() => {
+                    chart.w.globals.isTouchDevice = false;
+                })
+                .catch((error) => {
+                    console.error("Chart failed to render:", error);
+                });
+        </script>
+    </body>
 </html>
 `;
 

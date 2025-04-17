@@ -68,10 +68,7 @@ export const updateApexChart1 = (
 			switch (type) {
 				case "series":
 					if (options !== undefined) {
-						iframe.contentWindow.updateChartSeries?.(
-							title,
-							data
-						);
+						iframe.contentWindow.updateChartSeries?.(title, data);
 					} else {
 						iframe.contentWindow.updateChartSeries?.(data);
 					}
@@ -119,7 +116,6 @@ export const updateApexChart1 = (
 					jsCommand = `updateChart(${JSON.stringify(
 						data
 					)}, ${JSON.stringify(options || {})});`;
-					
 				}
 
 				break;

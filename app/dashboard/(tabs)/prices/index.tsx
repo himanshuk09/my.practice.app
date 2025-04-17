@@ -39,9 +39,7 @@ const Prices = () => {
 			}}
 		>
 			<View className="flex flex-row items-center justify-start">
-				<Text className="text-listText mr-2 text-sm">
-					{item.title}
-				</Text>
+				<Text className="text-listText mr-2 text-sm">{item.title}</Text>
 			</View>
 			<View className="flex flex-row items-center justify-start">
 				<Text className="font-sans font-extralight text-listText text-xs ">
@@ -68,8 +66,7 @@ const Prices = () => {
 				style={{
 					margin: 1,
 					transform:
-						item.indicator === "up" ||
-						item.indicator === "down"
+						item.indicator === "up" || item.indicator === "down"
 							? [{ rotate: "45deg" }]
 							: [],
 				}}
@@ -143,21 +140,17 @@ const Prices = () => {
 					<FlatList
 						data={
 							prices?.length <= 0
-								? [...Array(10).keys()].map(
-										(index) => ({
-											id: index,
-											title: `Shimmer ${index}`,
-											unit: 0,
-											indicator: "Loading",
-											route: "",
-										})
-									)
+								? [...Array(10).keys()].map((index) => ({
+										id: index,
+										title: `Shimmer ${index}`,
+										unit: 0,
+										indicator: "Loading",
+										route: "",
+									}))
 								: prices
 						}
 						renderItem={renderItem}
-						keyExtractor={(item: any, index) =>
-							index.toString()
-						}
+						keyExtractor={(item: any, index) => index.toString()}
 						contentContainerStyle={{ paddingTop: 4 }}
 						showsHorizontalScrollIndicator={false}
 						showsVerticalScrollIndicator={false}

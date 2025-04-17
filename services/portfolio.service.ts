@@ -20,9 +20,8 @@ const formatePortfolioDetails = (response: any) => {
 		(name) => ({
 			name: name,
 			data:
-				ResponseMonthlyList?.[name]?.map(
-					(item: any) => item.Value
-				) || [],
+				ResponseMonthlyList?.[name]?.map((item: any) => item.Value) ||
+				[],
 		})
 	);
 
@@ -47,10 +46,9 @@ const formatePortfolioDetails = (response: any) => {
 		(ResponseOpenCloseList?.[0]?.CloseLoad || 0);
 	const [openPercentage, closedPercentage] = totalLoad
 		? [
-				(
-					(ResponseOpenCloseList[0].OpenLoad / totalLoad) *
-					100
-				).toFixed(2),
+				((ResponseOpenCloseList[0].OpenLoad / totalLoad) * 100).toFixed(
+					2
+				),
 				(
 					(ResponseOpenCloseList[0].CloseLoad / totalLoad) *
 					100
@@ -107,9 +105,7 @@ const getPortfolioDetails = async (payload: any) => {
 				],
 			};
 		}
-		const filteredPortfolioDetails = formatePortfolioDetails(
-			response.data
-		);
+		const filteredPortfolioDetails = formatePortfolioDetails(response.data);
 		return filteredPortfolioDetails;
 	} catch (error) {
 		console.log(

@@ -8,9 +8,7 @@ function setCookie(key: string, value: string, days = 7) {
 }
 
 function getCookie(key: string): string | null {
-	const match = document.cookie.match(
-		"(^|;)\\s*" + key + "\\s*=\\s*([^;]+)"
-	);
+	const match = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
 	return match ? decodeURIComponent(match.pop() as string) : null;
 }
 
@@ -36,16 +34,13 @@ export function useSecureStorage(): UseSecureStorage {
 		[]
 	);
 
-	const getItem = useCallback(
-		async (key: string): Promise<string | null> => {
-			if (Platform.OS === "web") {
-				return getCookie(key);
-			} else {
-				return await SecureStore.getItemAsync(key);
-			}
-		},
-		[]
-	);
+	const getItem = useCallback(async (key: string): Promise<string | null> => {
+		if (Platform.OS === "web") {
+			return getCookie(key);
+		} else {
+			return await SecureStore.getItemAsync(key);
+		}
+	}, []);
 
 	const deleteItem = useCallback(async (key: string): Promise<void> => {
 		if (Platform.OS === "web") {

@@ -12,7 +12,7 @@ import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import { getPFCList } from "@/services/pfc.services";
+import { getPFCList } from "@/services/pfc.service";
 import { PriceForwardCurveArray } from "@/types/type";
 import { AppDispatch } from "@/store/store";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
@@ -105,9 +105,7 @@ const PFC = () => {
 				<FlatList
 					data={combinedData}
 					renderItem={renderItem}
-					keyExtractor={(item, index) =>
-						`${item.title}-${index}`
-					}
+					keyExtractor={(item, index) => `${item.title}-${index}`}
 					showsVerticalScrollIndicator={false}
 					showsHorizontalScrollIndicator={false}
 					refreshControl={

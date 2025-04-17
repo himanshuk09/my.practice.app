@@ -63,8 +63,7 @@ const AccordionFlatlist = ({
 					Platform.select({
 						ios: baseValue + 20,
 						android: baseValue,
-					}) ??
-					(Platform.OS === "web" ? baseValue : baseValue + 40),
+					}) ?? (Platform.OS === "web" ? baseValue : baseValue + 40),
 				duration: 100,
 				useNativeDriver: false,
 			}).start(() => setExpanded(id));
@@ -79,10 +78,7 @@ const AccordionFlatlist = ({
 			<View>
 				<TouchableOpacity
 					onPress={() => {
-						toggleExpand(
-							item?.MeterId,
-							item?.ChannelList?.length
-						);
+						toggleExpand(item?.MeterId, item?.ChannelList?.length);
 						scrollToIndex(index);
 					}}
 					style={st.boxShadow}
@@ -119,10 +115,20 @@ const AccordionFlatlist = ({
 												pathname: `/dashboard/(tabs)/loaddata/[id]`,
 												params: {
 													id: encodeURIComponent(
-														JSON.stringify(
-															1
-														)
+														JSON.stringify({
+															ClientId:
+																item?.ClientId,
+															MeterId:
+																item?.MeterId,
+															EnergyType:
+																item?.EnergyType,
+															ChannelId:
+																channels?.ChannelId,
+															UnitId: channels?.UnitId,
+															TimeFrame: "Week",
+														})
 													),
+													title: channels?.ChanelName,
 												},
 											})
 										);

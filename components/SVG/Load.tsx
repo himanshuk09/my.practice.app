@@ -14,11 +14,7 @@ const Load = (props: SvgProps) => (
 				/>
 			</ClipPath>
 		</Defs>
-		<G
-			id="Group_322"
-			data-name="Group 322"
-			transform="translate(9344 243)"
-		>
+		<G id="Group_322" data-name="Group 322" transform="translate(9344 243)">
 			<G id="Group_318" data-name="Group 318">
 				<Path
 					id="Path_146"

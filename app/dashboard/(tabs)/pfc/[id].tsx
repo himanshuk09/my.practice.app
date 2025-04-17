@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
-import { fetchDataByToggle } from "@/services/auth.services";
+import { fetchDataByToggle } from "@/services/auth.service";
 import {
 	saveCSVToFileWeb,
 	saveCSVToFileString,
@@ -94,9 +94,7 @@ const PFCDetails = () => {
 									color="#e11935"
 									onPress={() => {
 										if (Platform.OS === "web") {
-											saveCSVToFileWeb(
-												cockpitChartData
-											);
+											saveCSVToFileWeb(cockpitChartData);
 										} else {
 											saveCSVToFileString(
 												stringChartData
@@ -109,7 +107,6 @@ const PFCDetails = () => {
 					)}
 					<ToggleChartComponent
 						showRangePicker={false}
-						showPeriodOfTime={true}
 						showValueRange={false}
 						visibleTabs={visibleTabs}
 						fetchChartData={fetchChartData}

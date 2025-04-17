@@ -63,9 +63,7 @@ const PortfolioOverView = () => {
 			openData: [],
 			message: "",
 		});
-	const [portfolioDeals, setPortfolioDeals] = useState<TradeDetailsArray>(
-		[]
-	);
+	const [portfolioDeals, setPortfolioDeals] = useState<TradeDetailsArray>([]);
 	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 	const { height: screenHeight } = Dimensions.get("window");
 	const onMessage = async (event: WebViewMessageEvent) => {
@@ -91,9 +89,7 @@ const PortfolioOverView = () => {
 				donutIFrameRef?.current &&
 				donutIFrameRef?.current?.contentWindow
 			) {
-				donutIFrameRef?.current?.contentWindow?.updateLocale?.(
-					locale
-				);
+				donutIFrameRef?.current?.contentWindow?.updateLocale?.(locale);
 			}
 		} else {
 			if (areaWebViewRef?.current) {
@@ -103,9 +99,7 @@ const PortfolioOverView = () => {
 			}
 			if (donutwebViewRef?.current) {
 				let updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
-				donutwebViewRef?.current.injectJavaScript(
-					updateLocaleScript
-				);
+				donutwebViewRef?.current.injectJavaScript(updateLocaleScript);
 			}
 		}
 	};
@@ -179,10 +173,7 @@ const PortfolioOverView = () => {
 
 					setPortfolioDetails(responsePortfolioDetails);
 				} catch (error) {
-					console.log(
-						"Error fetching portfolio details:",
-						error
-					);
+					console.log("Error fetching portfolio details:", error);
 				} finally {
 					dispatch(inActiveLoading());
 				}
@@ -285,27 +276,19 @@ const PortfolioOverView = () => {
 									showToggleOrientation={false}
 									showToolbar={false}
 									iFrameWidth="50%"
-									setIsChartLoaded={
-										setIsDonutChartLoaded
-									}
+									setIsChartLoaded={setIsDonutChartLoaded}
 								/>
 
 								<View
 									className={`flex-col justify-start w-[33%] md:w-[10%]`}
 								>
 									<DataDisplay
-										data={
-											portfolioDetails
-												?.closedData[0]
-										}
+										data={portfolioDetails?.closedData[0]}
 										title={"Closed"}
 										locale={locale}
 									/>
 									<DataDisplay
-										data={
-											portfolioDetails
-												?.openData[0]
-										}
+										data={portfolioDetails?.openData[0]}
 										title={"Open"}
 										locale={locale}
 									/>
@@ -314,18 +297,14 @@ const PortfolioOverView = () => {
 									className="ml-7 mt-3 "
 									style={{
 										marginRight:
-											Platform.OS === "web"
-												? "10%"
-												: 20,
+											Platform.OS === "web" ? "10%" : 20,
 									}}
 								>
 									<FontAwesome5
 										name="file-download"
 										size={25}
 										color="#ef4444"
-										onPress={
-											exportPortfolioReport
-										}
+										onPress={exportPortfolioReport}
 									/>
 								</View>
 							</View>
@@ -338,26 +317,19 @@ const PortfolioOverView = () => {
 											? screenHeight * 0.6
 											: screenHeight * 0.61,
 									paddingTop:
-										Platform.OS !== "web"
-											? 15
-											: undefined,
+										Platform.OS !== "web" ? 15 : undefined,
 									padding: 3,
 								}}
 							>
 								<ChartComponent
 									isChartEmpty={
-										portfolioDetails?.message ===
-										"no data"
+										portfolioDetails?.message === "no data"
 									}
 									webViewRef={areaWebViewRef}
 									iFrameRef={areaIFrameRef}
 									onMessage={onMessage}
-									webViewhtmlContent={
-										webviewAreaHtmlContent
-									}
-									iFramehtmlContent={
-										iframeAreaHtmlContent
-									}
+									webViewhtmlContent={webviewAreaHtmlContent}
+									iFramehtmlContent={iframeAreaHtmlContent}
 									showToggleOrientation={false}
 									setIsChartLoaded={setIsChartLoaded}
 								/>

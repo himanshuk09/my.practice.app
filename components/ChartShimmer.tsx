@@ -45,14 +45,9 @@ const ChartShimmer = () => {
 
 			{/* Tabs */}
 			<View style={styles.tabs}>
-				{["Day", "Week", "Month", "Quarter", "Year"].map(
-					(_, index) => (
-						<ShimmerPlaceholder
-							key={index}
-							style={styles.tab}
-						/>
-					)
-				)}
+				{["Day", "Week", "Month", "Quarter", "Year"].map((_, index) => (
+					<ShimmerPlaceholder key={index} style={styles.tab} />
+				))}
 			</View>
 
 			{/* Graph Placeholder */}
@@ -74,7 +69,16 @@ const PortFolioChartShimmer = () => {
 		</View>
 	);
 };
-
+const ChartGraphSimmer = () => {
+	return (
+		<View
+			style={[styles.container, StyleSheet.absoluteFill, { margin: 1 }]}
+			className="absolute top-0 left-0 right-0 -bottom-1 justify-center items-center bg-[#ffffffda] z-50"
+		>
+			<ShimmerPlaceholder style={styles.graph} />
+		</View>
+	);
+};
 const styles = StyleSheet.create({
 	container: { flex: 1, padding: 16, backgroundColor: "#fff", margin: 1 },
 	header: {
@@ -97,8 +101,8 @@ const styles = StyleSheet.create({
 		borderRadius: 1,
 	},
 	graph: {
-		width: Platform.OS !== "web" ? width - 32 : "98%",
-		height: Platform.OS !== "web" ? height * 0.57 : 600,
+		width: Platform.OS !== "web" ? width - 30 : "100%",
+		height: Platform.OS !== "web" ? height * 0.6 : "100%",
 		borderRadius: 8,
 	},
 	button: {
@@ -127,4 +131,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export { ChartShimmer, PortFolioChartShimmer };
+export { ChartShimmer, PortFolioChartShimmer, ChartGraphSimmer };

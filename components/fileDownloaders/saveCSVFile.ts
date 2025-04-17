@@ -19,11 +19,11 @@ const splitTimeStrring = (timestampStr: string) => {
 		formattedTime: `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}:00`,
 	};
 };
-// for  web
+// for  web timestamp
 const saveCSVToFileWeb = (jsonData: any[]) => {
 	const headers = ["Date", "Time", "[kwh]"];
 	const rows = jsonData.map((item) => {
-		const { formattedDate, formattedTime } = splitTimestamp(item.x); // Split timestamp
+		const { formattedDate, formattedTime } = splitTimeStrring(item.x); // Split timestamp
 		return [formattedDate, formattedTime, item.y].join(","); // Combine into CSV row
 	});
 
@@ -63,12 +63,11 @@ const saveCSVToFile = async (jsonData: any[]) => {
 		}
 
 		// Create the file
-		const fileUri =
-			await FileSystem.StorageAccessFramework.createFileAsync(
-				permissions.directoryUri,
-				fileName,
-				"text/csv" // Use text/csv instead of application/csv
-			);
+		const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+			permissions.directoryUri,
+			fileName,
+			"text/csv" // Use text/csv instead of application/csv
+		);
 
 		// Write the file
 		await FileSystem.writeAsStringAsync(fileUri, csvContent, {
@@ -130,12 +129,11 @@ const saveCSVToFileString = async (jsonData: any[]) => {
 		}
 
 		// Create the file
-		const fileUri =
-			await FileSystem.StorageAccessFramework.createFileAsync(
-				savedDirectoryUri,
-				fileName,
-				"text/csv"
-			);
+		const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+			savedDirectoryUri,
+			fileName,
+			"text/csv"
+		);
 
 		// Write the file
 		await FileSystem.writeAsStringAsync(fileUri, csvContent, {
@@ -191,12 +189,11 @@ const shareBase64AsPDF = async (base64: string, fileName = "document.pdf") => {
 		}
 
 		// Create the file
-		const fileUri =
-			await FileSystem.StorageAccessFramework.createFileAsync(
-				savedDirectoryUri,
-				fileName,
-				"application/pdf"
-			);
+		const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+			savedDirectoryUri,
+			fileName,
+			"application/pdf"
+		);
 
 		// Write the Base64 data to the file
 		await FileSystem.writeAsStringAsync(fileUri, base64, {
@@ -316,12 +313,11 @@ const saveDealsCSV = async (jsonData: any, fileName = "trades.csv") => {
 		const csvContent = convertDealsToCSV(jsonData);
 
 		// Create the file in the chosen directory
-		const fileUri =
-			await FileSystem.StorageAccessFramework.createFileAsync(
-				savedDirectoryUri,
-				fileName,
-				"text/csv"
-			);
+		const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+			savedDirectoryUri,
+			fileName,
+			"text/csv"
+		);
 
 		// Write CSV content to the file
 		await FileSystem.writeAsStringAsync(fileUri, csvContent, {

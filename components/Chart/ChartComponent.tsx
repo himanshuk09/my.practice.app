@@ -233,7 +233,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 				setMaxMinValues(values ? values : "0");
 			}
 
-			//console.log(`Message from ${source} iframe:`, event.data);
+			console.log(`Message from ${source} iframe:`, event.data);
 		};
 
 		window.addEventListener("message", receiveMessage);
@@ -313,23 +313,21 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 							// startInLoadingState
 						/>
 					</ViewShot>
-					{showToggleOrientation && (
+					{showToggleOrientation && !isChartEmpty && (
 						<TouchableOpacity
 							style={{
 								position: "absolute",
 								bottom: 10,
 								right: 20,
-								zIndex: 1000,
+								zIndex: 48,
 							}}
 							onPress={toggleOrientation}
 						>
 							<MaterialIcons
 								name={
-									isLandscape
-										? "zoom-in-map"
-										: "zoom-out-map"
+									isLandscape ? "zoom-in-map" : "zoom-out-map"
 								}
-								size={24}
+								size={20}
 								color="gray"
 							/>
 						</TouchableOpacity>

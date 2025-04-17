@@ -26,17 +26,13 @@ const Card = ({ title, data }: any) => {
 						<Text className=" text-sm text-gray-600">
 							{i18n.t("Low_Soft")}:
 						</Text>
-						<Text className="text-gray-500">
-							{data.lowSoft}
-						</Text>
+						<Text className="text-gray-500">{data.lowSoft}</Text>
 					</View>
 					<View className="flex-row justify-between">
 						<Text className="text-sm text-gray-600">
 							{i18n.t("Low_Hard")}
 						</Text>
-						<Text className="text-gray-500">
-							{data.lowHard}
-						</Text>
+						<Text className="text-gray-500">{data.lowHard}</Text>
 					</View>
 					<View className="flex-row justify-between">
 						<Text className="text-sm text-gray-600">
@@ -52,17 +48,13 @@ const Card = ({ title, data }: any) => {
 						<Text className="text-sm text-gray-600">
 							{i18n.t("High_Soft")}:
 						</Text>
-						<Text className="text-gray-500">
-							{data.highSoft}
-						</Text>
+						<Text className="text-gray-500">{data.highSoft}</Text>
 					</View>
 					<View className="flex-row justify-between">
 						<Text className="text-sm text-gray-600">
 							{i18n.t("High_Hard")}:
 						</Text>
-						<Text className="text-gray-500">
-							{data.highHard}
-						</Text>
+						<Text className="text-gray-500">{data.highHard}</Text>
 					</View>
 					<View className="flex-row justify-between">
 						<Text className="text-sm text-gray-600">
@@ -146,9 +138,7 @@ const SignalSettings = ({
 								data={item.data}
 							/>
 						)}
-						keyExtractor={(item: any, index) =>
-							index.toString()
-						}
+						keyExtractor={(item: any, index) => index.toString()}
 						scrollEnabled={true}
 						className="bg-slate-50 overflow-scroll px-2"
 						contentContainerStyle={{ paddingTop: 4 }}

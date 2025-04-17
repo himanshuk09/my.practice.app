@@ -52,10 +52,7 @@ const ShimmerPrices = () => {
 			<View style={styles.iconPlaceholder} />
 
 			<Animated.View
-				style={[
-					styles.shimmerOverlay,
-					{ transform: [{ translateX }] },
-				]}
+				style={[styles.shimmerOverlay, { transform: [{ translateX }] }]}
 			/>
 		</TouchableOpacity>
 	);
@@ -196,10 +193,7 @@ const ShimmerAccordionListCard = () => {
 			</View>
 			<View style={styles.iconPlaceholder} />
 			<Animated.View
-				style={[
-					styles.shimmerOverlay,
-					{ transform: [{ translateX }] },
-				]}
+				style={[styles.shimmerOverlay, { transform: [{ translateX }] }]}
 			/>
 		</TouchableOpacity>
 	);
@@ -257,10 +251,7 @@ const ShimmerListCard = () => {
 			</View>
 
 			<Animated.View
-				style={[
-					styles.shimmerOverlay,
-					{ transform: [{ translateX }] },
-				]}
+				style={[styles.shimmerOverlay, { transform: [{ translateX }] }]}
 			/>
 		</TouchableOpacity>
 	);
@@ -323,10 +314,7 @@ const ShimmerScreenHeader = () => {
 			</View>
 			<View style={styles.iconPlaceholder} />
 			<Animated.View
-				style={[
-					styles.shimmerOverlay,
-					{ transform: [{ translateX }] },
-				]}
+				style={[styles.shimmerOverlay, { transform: [{ translateX }] }]}
 			/>
 		</View>
 	);

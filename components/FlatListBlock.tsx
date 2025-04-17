@@ -112,9 +112,7 @@ const FlatListBlock = ({
 					className="mr-1 mt-[0.4rem]"
 				/>
 			)}
-			<Text className="text-listText text-sm">
-				{item?.PortfolioName}
-			</Text>
+			<Text className="text-listText text-sm">{item?.PortfolioName}</Text>
 		</TouchableOpacity>
 	));
 
@@ -216,9 +214,7 @@ const FlatListBlock = ({
 				windowSize={40} // Reduce the number of items kept in memory
 				maxToRenderPerBatch={40} // Render 10 items per batch
 				updateCellsBatchingPeriod={50} // Batch updates to reduce re-renders
-				removeClippedSubviews={
-					Platform.OS === "android" ? false : true
-				}
+				removeClippedSubviews={Platform.OS === "android" ? false : true}
 			/>
 		</View>
 	);

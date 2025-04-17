@@ -64,9 +64,7 @@ const Rate = () => {
 					showsVerticalScrollIndicator={false}
 				>
 					<Text className="font-extrabold text-md text-slate-400 text-center mb-5">
-						{i18n.t(
-							"how_is_your_experience_with_our_app_so_far"
-						)}
+						{i18n.t("how_is_your_experience_with_our_app_so_far")}
 					</Text>
 
 					<RatingStars maxStars={5} />

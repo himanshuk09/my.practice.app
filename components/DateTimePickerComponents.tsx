@@ -55,13 +55,14 @@ const DateTimePickerComponents = ({
 				setDate(params.date);
 				setSingleDate(params.date);
 			} else if (mode === "range") {
-				console.log("called");
 				setRange(params);
 				setRangeDate(params);
+
 				// Only update start date if it has changed
 				setSelectedStartDate((prev: any) =>
 					params?.startDate !== prev ? params?.startDate : prev
 				);
+
 				// Only update end date if it has changed
 				setSelectedEndDate((prev: any) =>
 					params?.endDate !== prev ? params?.endDate : prev
@@ -86,7 +87,7 @@ const DateTimePickerComponents = ({
 					className="m-1"
 					onPress={() => setOpen(!open)}
 				>
-					<AntDesign name="close" size={15} color="#E63757" />
+					<AntDesign name="close" size={20} color="#E63757" />
 				</TouchableOpacity>
 			</View>
 			<DateTimePicker
@@ -157,10 +158,7 @@ const DateTimePickerComponents = ({
 							{date && (
 								<Pressable
 									onPress={() => {
-										setTimeout(
-											() => setOpen(false),
-											100
-										);
+										setTimeout(() => setOpen(false), 100);
 									}}
 									accessibilityRole="button"
 									accessibilityLabel="select"
@@ -229,10 +227,7 @@ const DateTimePickerComponents = ({
 						{range && (
 							<Pressable
 								onPress={() => {
-									setTimeout(
-										() => setOpen(false),
-										100
-									);
+									setTimeout(() => setOpen(false), 100);
 								}}
 								accessibilityRole="button"
 								accessibilityLabel="select"

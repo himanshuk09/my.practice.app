@@ -15,6 +15,7 @@ export default function FloatingActionMenu({
 	setActiveTab,
 	visibleTabs,
 	setLoading,
+	timeoutRef,
 }: any) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [animation] = useState(new Animated.Value(0));
@@ -45,6 +46,19 @@ export default function FloatingActionMenu({
 	const formatTabLabel = (tab: string) => {
 		if (tab === "Year_3") return "Y3";
 		return tab.charAt(0); // Take the first letter of the tab
+	};
+	const startLoading = () => {
+		setLoading(true);
+
+		// Clear any existing timeout
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+
+		timeoutRef.current = setTimeout(() => {
+			setLoading(false);
+			timeoutRef.current = null;
+		}, 2000);
 	};
 	return (
 		<View style={styles.container}>
@@ -79,7 +93,6 @@ export default function FloatingActionMenu({
 								]}
 								onPress={() => {
 									setActiveTab(tab);
-									setLoading(true);
 								}}
 							>
 								<Text

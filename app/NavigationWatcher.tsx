@@ -20,9 +20,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 	const dispatch = useDispatch();
 	const segments = useSegments();
 	const currentPath = "/" + segments.join("/");
-	const history = useSelector(
-		(state: RootState) => state.navigation.history
-	);
+	const history = useSelector((state: RootState) => state.navigation.history);
 
 	useEffect(() => {
 		const backAction = () => {

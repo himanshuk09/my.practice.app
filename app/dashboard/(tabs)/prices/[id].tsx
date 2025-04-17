@@ -8,7 +8,7 @@ import { useIsFocused } from "@react-navigation/native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
-import { fetchDataByToggle } from "@/services/auth.services";
+import { fetchDataByToggle } from "@/services/auth.service";
 import { st } from "@/utils/Styles";
 import {
 	saveCSVToFileWeb,
@@ -103,9 +103,7 @@ const PricesDetails = () => {
 									color="#e31837"
 									onPress={() => {
 										if (Platform.OS === "web") {
-											saveCSVToFileWeb(
-												cockpitChartData
-											);
+											saveCSVToFileWeb(cockpitChartData);
 										} else {
 											saveCSVToFileString(
 												stringChartData
@@ -118,7 +116,6 @@ const PricesDetails = () => {
 					)}
 					<ToggleChartComponent
 						showRangePicker={true}
-						showPeriodOfTime={true}
 						showValueRange={false}
 						fetchChartData={fetchChartData}
 						isChartLoaded={isChartLoaded}

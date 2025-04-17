@@ -102,8 +102,7 @@ export default function FloatingActionMenu({
 									setTooltip(!tooltip);
 								}
 								if (
-									item.action ===
-									`toggleZoomAndSelection()`
+									item.action === `toggleZoomAndSelection()`
 								) {
 									setIsZoomIn(!isZoomIn);
 								}
@@ -131,9 +130,7 @@ export default function FloatingActionMenu({
 									size={item.size}
 									color={item.color}
 									style={{
-										transform: [
-											{ rotate: "-25deg" },
-										],
+										transform: [{ rotate: "-25deg" }],
 										marginTop: 2,
 									}}
 								/>
@@ -158,7 +155,7 @@ const styles = StyleSheet.create({
 		right: 10,
 		paddingTop: 3,
 		paddingRight: 5,
-		zIndex: 1000,
+		zIndex: 49,
 	},
 	fab: {
 		backgroundColor: "#e31837",

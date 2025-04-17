@@ -10,7 +10,6 @@ import {
 import { stringChartData } from "@/constants/stringChartData";
 import { loginPayloadProps, AuthResponse } from "@/types/apiTypes";
 
-
 const loginUser = async (payload: loginPayloadProps) => {
 	try {
 		const response = await api.post<AuthResponse>("/token", {
@@ -38,9 +37,7 @@ const loginUser = async (payload: loginPayloadProps) => {
 			success: false,
 			message: "Authentication failed. Please check your credentials.",
 			error:
-				error instanceof Error
-					? error.message
-					: JSON.stringify(error),
+				error instanceof Error ? error.message : JSON.stringify(error),
 		};
 	}
 };

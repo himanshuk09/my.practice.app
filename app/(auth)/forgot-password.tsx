@@ -82,50 +82,35 @@ const Forgotpassword = () => {
 										<TextInput
 											autoCapitalize="none"
 											keyboardAppearance="default"
-											placeholder={i18n.t(
-												"email"
-											)}
+											placeholder={i18n.t("email")}
 											placeholderTextColor="#808080"
 											textContentType="emailAddress"
 											value={email}
 											onFocus={() =>
-												setIsEmailFocused(
-													true
-												)
+												setIsEmailFocused(true)
 											}
 											onBlur={() =>
-												setIsEmailFocused(
-													false
-												)
+												setIsEmailFocused(false)
 											}
 											onChangeText={(text) => {
 												setEmail(text);
-												if (
-													errorMessage !==
-													""
-												)
-													setErrorMessage(
-														""
-													);
+												if (errorMessage !== "")
+													setErrorMessage("");
 											}}
 											className={`pr-10 pl-3 py-3 w-full rounded-sm text-lg ${Platform.OS === "web" && " placeholder-[#808080]  p-3 outline-none  rounded-md  text-lg "}`}
 											style={{
-												backgroundColor:
-													"#E5E7EB",
-												borderColor:
-													errorMessage
-														? "#EF4444" // Red border for error
-														: isEmailFocused
-															? "#3B82F6" // Blue border on focus
-															: "#D1D5DB", // Default gray border
+												backgroundColor: "#E5E7EB",
+												borderColor: errorMessage
+													? "#EF4444" // Red border for error
+													: isEmailFocused
+														? "#3B82F6" // Blue border on focus
+														: "#D1D5DB", // Default gray border
 												borderWidth: 1,
 												marginBottom: 5,
 												color: "#808080",
-												textDecorationLine:
-													"none",
+												textDecorationLine: "none",
 
-												...(Platform.OS !==
-												"web"
+												...(Platform.OS !== "web"
 													? {
 															shadowColor:
 																errorMessage
@@ -133,11 +118,10 @@ const Forgotpassword = () => {
 																	: isEmailFocused
 																		? "#3B82F6" // Blue shadow on focus
 																		: "transparent",
-															shadowOffset:
-																{
-																	width: 0,
-																	height: 1,
-																},
+															shadowOffset: {
+																width: 0,
+																height: 1,
+															},
 															shadowOpacity:
 																errorMessage ||
 																isEmailFocused
@@ -159,12 +143,10 @@ const Forgotpassword = () => {
 										/>
 										<Foundation
 											style={{
-												position:
-													"absolute",
+												position: "absolute",
 												right: 13,
 												top:
-													Platform.OS ===
-													"web"
+													Platform.OS === "web"
 														? 15
 														: 11,
 											}}
@@ -186,9 +168,7 @@ const Forgotpassword = () => {
 
 									<Pressable
 										onPress={() => {
-											if (
-												Keyboard.isVisible()
-											) {
+											if (Keyboard.isVisible()) {
 												Keyboard.dismiss();
 											}
 											router.replace(

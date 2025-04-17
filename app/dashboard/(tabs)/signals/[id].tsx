@@ -16,7 +16,7 @@ import CustomSwitch from "@/components/CustomSwitch";
 import { i18n } from "@/localization/config";
 import { RootState } from "@/store/store";
 import { StatusBar } from "react-native";
-import { fetchDataByToggle } from "@/services/auth.services";
+import { fetchDataByToggle } from "@/services/auth.service";
 import { st } from "@/utils/Styles";
 import { ChartShimmer } from "@/components/ChartShimmer";
 import SignalSettings from "@/components/SignalSettings";
@@ -77,10 +77,7 @@ const SignalDetails = () => {
 						{!isLandscape && (
 							<View
 								className="flex justify-between bg-white flex-row  m-1  h-20 px-3 pl-5  "
-								style={[
-									st.headerShadow,
-									st.bottomShadow,
-								]}
+								style={[st.headerShadow, st.bottomShadow]}
 							>
 								<View className="justify-center items-center">
 									<Text className="text-xl font-medium text-mainCardHeaderText">
@@ -138,9 +135,7 @@ const SignalDetails = () => {
 						<TouchableOpacity
 							className={`bg-[#e31836]  bottom-0  h-12 py-3 mx-5 rounded-sm my-2   
 						`}
-							onPress={() =>
-								setModalVisible(!modalVisible)
-							}
+							onPress={() => setModalVisible(!modalVisible)}
 						>
 							<Text className="text-white text-center text-base font-medium uppercase">
 								{i18n.t("View_Signal_Settings")}

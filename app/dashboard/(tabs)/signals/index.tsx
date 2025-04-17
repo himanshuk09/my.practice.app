@@ -74,9 +74,7 @@ const Signals = () => {
 					data={combinedData}
 					renderItem={renderItem}
 					className=" overflow-scroll"
-					keyExtractor={(item, index) =>
-						`${item.title}-${index}`
-					}
+					keyExtractor={(item, index) => `${item.title}-${index}`}
 					showsVerticalScrollIndicator={false}
 					showsHorizontalScrollIndicator={false}
 					refreshControl={

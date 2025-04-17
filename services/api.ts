@@ -61,9 +61,7 @@ api.interceptors.response.use(
 	async (error) => {
 		if (error.response && error.response.status === 401) {
 			// 401 indicates token is invalid (expired or not matching)
-			console.log(
-				"Token expired or Unauthorized, please log in again"
-			);
+			console.log("Token expired or Unauthorized, please log in again");
 			await AsyncStorage.removeItem("token"); // Clear token
 			router.replace("/"); // Redirect to login screen
 		} else if (error.response && error.response.status === 403) {

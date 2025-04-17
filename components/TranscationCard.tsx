@@ -136,15 +136,9 @@ const Transactions = ({
 							if (!isOnline || cards?.length === 0) return;
 							setModalVisible(!modalVisible);
 							if (Platform.OS === "web") {
-								saveDealsCSVWeb(
-									cards,
-									`${title}_deals.csv`
-								);
+								saveDealsCSVWeb(cards, `${title}_deals.csv`);
 							} else {
-								saveDealsCSV(
-									cards,
-									`${title}_deals.csv`
-								);
+								saveDealsCSV(cards, `${title}_deals.csv`);
 							}
 						}}
 					/>
@@ -175,15 +169,9 @@ const Transactions = ({
 						showsVerticalScrollIndicator={false}
 						data={cards}
 						renderItem={({ item, index }) => (
-							<Card
-								key={index}
-								title={item.title}
-								deals={item}
-							/>
+							<Card key={index} title={item.title} deals={item} />
 						)}
-						keyExtractor={(item: any, index) =>
-							index.toString()
-						}
+						keyExtractor={(item: any, index) => index.toString()}
 						nestedScrollEnabled={true}
 						scrollEnabled={true}
 						initialNumToRender={10}

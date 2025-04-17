@@ -15,9 +15,7 @@ const navigationSlice = createSlice({
 	initialState,
 	reducers: {
 		addRouteToHistory: (state, action) => {
-			if (
-				state.history[state.history?.length - 1] !== action.payload
-			) {
+			if (state.history[state.history?.length - 1] !== action.payload) {
 				state.history.push(action.payload);
 			}
 		},

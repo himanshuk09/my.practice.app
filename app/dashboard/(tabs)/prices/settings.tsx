@@ -85,8 +85,7 @@ const PricesSettings = () => {
 			>
 				<Text
 					className={`w-fit my-3 text-md font-normal mr-2 ${
-						selectedValue === option &&
-						"text-gray-900 font-bold"
+						selectedValue === option && "text-gray-900 font-bold"
 					}`}
 				>
 					{option}
@@ -145,9 +144,7 @@ const PricesSettings = () => {
 				</Text>
 				<Picker
 					selectedValue={selectedPlace}
-					onValueChange={(newValue) =>
-						setSelectedPlace(newValue)
-					}
+					onValueChange={(newValue) => setSelectedPlace(newValue)}
 					className="w-full p-3 border-b-2 bg-transparent rounded-sm"
 				>
 					<Picker.Item

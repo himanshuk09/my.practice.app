@@ -34,9 +34,10 @@ const Portfolio: React.FC = () => {
 			else {
 				try {
 					const response: any = await getPortfolioList();
+					console.log("response", response);
 					if (
 						response?.gas.length === 0 ||
-						response?.strom === 0
+						response?.strom.length === 0
 					) {
 						setError(true);
 					} else {
@@ -57,7 +58,7 @@ const Portfolio: React.FC = () => {
 		dispatch(inActiveLoading());
 	}, [isFocused]);
 	return (
-		<SafeAreaView>
+		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar
 				barStyle="dark-content"
 				backgroundColor="#C3C3C3"
@@ -81,9 +82,7 @@ const Portfolio: React.FC = () => {
 					<FlatListBlock
 						title="Gas"
 						items={gasList || []}
-						height={
-							Platform.OS === "web" ? height * 0.45 : "50%"
-						}
+						height={Platform.OS === "web" ? height * 0.45 : "50%"}
 						NavigateTo={NavigateTo}
 						renderType={"Portfolio"}
 						keyExtractor={(item: Portfolioprops) =>
@@ -93,9 +92,7 @@ const Portfolio: React.FC = () => {
 					<FlatListBlock
 						title="Power"
 						items={stromList || []}
-						height={
-							Platform.OS === "web" ? height * 0.45 : "50%"
-						}
+						height={Platform.OS === "web" ? height * 0.45 : "50%"}
 						NavigateTo={NavigateTo}
 						renderType={"Portfolio"}
 						keyExtractor={(item: Portfolioprops) =>

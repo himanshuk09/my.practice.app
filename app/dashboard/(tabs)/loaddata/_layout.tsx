@@ -25,8 +25,7 @@ const LoaddataLayout = () => {
 			<Stack.Screen
 				name="[id]"
 				options={{
-					headerShown:
-						Platform.OS === "web" ? true : !isLandscape,
+					headerShown: Platform.OS === "web" ? true : !isLandscape,
 					animation: "fade",
 					header: ({ navigation }) => (
 						<StackHeader

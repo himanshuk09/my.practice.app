@@ -24,11 +24,7 @@ const Portfolio = (props: any) => (
 				/>
 			</ClipPath>
 		</Defs>
-		<G
-			id="Group_312"
-			data-name="Group 312"
-			transform="translate(9166 370)"
-		>
+		<G id="Group_312" data-name="Group 312" transform="translate(9166 370)">
 			<G id="Group_311" data-name="Group 311" className="cls-2">
 				<G id="Group_306" data-name="Group 306">
 					<Path

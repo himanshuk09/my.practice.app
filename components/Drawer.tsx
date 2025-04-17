@@ -16,9 +16,7 @@ import { activeLoading } from "@/store/navigationSlice";
 const Drawer = ({ drawerWidth = 280 }: any) => {
 	const dispatch = useDispatch();
 	let debounceTimeout: any = null;
-	const isDrawerOpen = useSelector(
-		(state: any) => state.drawer.isDrawerOpen
-	);
+	const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
 	const translateX = React.useRef(new Animated.Value(-drawerWidth)).current;
 	React.useEffect(() => {
 		Animated.timing(translateX, {
@@ -91,10 +89,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 
 			{/* Overlay */}
 			{isDrawerOpen && (
-				<Pressable
-					onPress={handleCloseDrawer}
-					style={styles.overlay}
-				>
+				<Pressable onPress={handleCloseDrawer} style={styles.overlay}>
 					<View />
 				</Pressable>
 			)}
