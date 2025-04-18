@@ -18,11 +18,11 @@ const RootLayout = () => {
 				appState.match(/inactive|background/) &&
 				nextAppState === "active"
 			) {
-				dispatch(activeLoading());
-				setTimeout(() => {
-					dispatch(inActiveLoading());
-					// router.push("/dashboard" as Href);
-				}, 1000);
+				// dispatch(activeLoading());
+				// setTimeout(() => {
+				// 	dispatch(inActiveLoading());
+				// 	// router.push("/dashboard" as Href);
+				// }, 1000);
 			}
 			setAppState(nextAppState);
 		};
@@ -34,7 +34,6 @@ const RootLayout = () => {
 			subscription.remove();
 		};
 	}, [appState]);
-
 	useInitAuth();
 	return (
 		<Stack

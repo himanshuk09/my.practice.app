@@ -1,61 +1,61 @@
-import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import { PFCGas, PFCStrom } from "@/constants/constantData";
-import { useSelector } from "react-redux";
-import ToggleChartComponent from "@/components/ToggleChartComponent";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { RootState } from "@/store/store";
-import { fetchDataByToggle } from "@/services/auth.service";
+import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native"
+import React, { useEffect, useState } from "react"
+import { useLocalSearchParams } from "expo-router"
+import { PFCGas, PFCStrom } from "@/constants/constantData"
+import { useSelector } from "react-redux"
+import ToggleChartComponent from "@/components/ToggleChartComponent"
+import { FontAwesome5 } from "@expo/vector-icons"
+import { RootState } from "@/store/store"
+import { fetchDataByToggle } from "@/services/auth.service"
 import {
 	saveCSVToFileWeb,
 	saveCSVToFileString,
-} from "@/components/fileDownloaders/saveCSVFile";
-import { cockpitChartData } from "@/constants/cockpitchart";
-import { ChartShimmer } from "@/components/ChartShimmer";
-import { stringChartData } from "@/constants/stringChartData";
-import { st } from "@/utils/Styles";
+} from "@/components/exportcsv/exportToFiles"
+import { cockpitChartData } from "@/constants/cockpitchart"
+import { ChartShimmer } from "@/components/ChartShimmer"
+import { stringChartData } from "@/constants/stringChartData"
+import { st } from "@/utils/Styles"
 
 const PFCDetails = () => {
-	const { id } = useLocalSearchParams();
-	let visibleTabs = ["Week", "Month", "Quarter", "Year", "Year_3"];
-	const [pfcDetails, setPfcDetails] = useState<any>([]);
-	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
+	const { id } = useLocalSearchParams()
+	let visibleTabs = ["Week", "Month", "Quarter", "Year", "Year_3"]
+	const [pfcDetails, setPfcDetails] = useState<any>([])
+	const [isChartLoaded, setIsChartLoaded] = useState<any>(false)
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
-	);
-	const locale = useSelector((state: RootState) => state.culture.locale);
+	)
+	const locale = useSelector((state: RootState) => state.culture.locale)
 
 	const getCurrentUTCDateTime = () => {
-		const now = new Date();
+		const now = new Date()
 		// Extract UTC components
-		const day = String(now.getUTCDate()).padStart(2, "0");
-		const month = String(now.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
-		const year = now.getUTCFullYear();
-		const hours = String(now.getUTCHours()).padStart(2, "0");
-		const minutes = String(now.getUTCMinutes()).padStart(2, "0");
+		const day = String(now.getUTCDate()).padStart(2, "0")
+		const month = String(now.getUTCMonth() + 1).padStart(2, "0") // Months are zero-based
+		const year = now.getUTCFullYear()
+		const hours = String(now.getUTCHours()).padStart(2, "0")
+		const minutes = String(now.getUTCMinutes()).padStart(2, "0")
 
 		// Format as DD/MM/YYYY HH:mm
 		return locale === "en"
 			? `${day}/${month}/${year} ${hours}:${minutes}`
-			: `${day}.${month}.${year} ${hours}:${minutes}`;
-	};
+			: `${day}.${month}.${year} ${hours}:${minutes}`
+	}
 	const fetchChartData = async (tab: string) => {
 		try {
-			return fetchDataByToggle(tab);
+			return fetchDataByToggle(tab)
 		} catch (error) {
-			console.error("Error fetching data:", error);
-			return null;
+			console.error("Error fetching data:", error)
+			return null
 		}
-	};
+	}
 	useEffect(() => {
 		const filteredItem =
 			PFCGas.find((item: any) => item.id === Number(id)) ||
-			PFCStrom.find((item: any) => item.id === Number(id));
+			PFCStrom.find((item: any) => item.id === Number(id))
 		setTimeout(() => {
-			setPfcDetails(filteredItem);
-		}, 1000);
-	}, [id]);
+			setPfcDetails(filteredItem)
+		}, 1000)
+	}, [id])
 
 	return (
 		<SafeAreaView className="flex-1 ">
@@ -94,11 +94,9 @@ const PFCDetails = () => {
 									color="#e11935"
 									onPress={() => {
 										if (Platform.OS === "web") {
-											saveCSVToFileWeb(cockpitChartData);
+											saveCSVToFileWeb(cockpitChartData)
 										} else {
-											saveCSVToFileString(
-												stringChartData
-											);
+											saveCSVToFileString(stringChartData)
 										}
 									}}
 								/>
@@ -116,7 +114,7 @@ const PFCDetails = () => {
 				</View>
 			)}
 		</SafeAreaView>
-	);
-};
+	)
+}
 
-export default PFCDetails;
+export default PFCDetails

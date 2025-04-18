@@ -113,7 +113,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                         easing: "easeinout", // smoother easing for large sets
                         speed: 1000, // slightly slower for less jitter
                         animateGradually: {
-                            enabled: true,
+                            enabled: false,
                             delay: 150, // shorter delay so points appear faster
                         },
                         dynamicAnimation: {
@@ -382,7 +382,6 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                         sizeOffset: 3,
                     },
                 },
-
                 xaxis: {
                     type: "datetime",
                     tickAmount: 4,
@@ -416,18 +415,17 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                                 year: "numeric",
                                 month: "short",
                                 day: "2-digit",
-                                // timeZone: "Europe/Berlin",
                             });
                         },
                     },
-                    // axisBorder: {
-                    // 	show: true,
-                    // 	color: "#78909C",
-                    // 	height: 1,
-                    // 	width: "100%",
-                    // 	offsetX: 0,
-                    // 	offsetY: 0,
-                    // },
+                    axisBorder: {
+                    	show: false,
+                    	color: "#78909C",
+                    	height: 1,
+                    	width: "100%",
+                    	offsetX: 0,
+                    	offsetY: 0,
+                    },
                     axisTicks: {
                         show: true,
                         borderType: "solid",
@@ -468,8 +466,6 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                 },
 
                 yaxis: {
-                    show: true,
-                    tickAmount: 10,
                     title: {
                         text: "kWh",
                         rotate: -90,
@@ -499,14 +495,14 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                                 maximumFractionDigits: 3,
                             }).format(value),
                     },
-                    // 	axisBorder: {
-                    // 		show: true,
-                    // 		color: "#78909C",
-                    // 		height: "100%",
-                    // 		width:1,
-                    // 		offsetX: -1,
-                    // 		offsetY: 0,
-                    // 	},
+                    	axisBorder: {
+                    		show: false,
+                    		color: "#78909C",
+                    		height: "100%",
+                    		width:1,
+                    		offsetX: -1,
+                    		offsetY: 0,
+                    	},
                     axisTicks: {
                         show: true,
                         borderType: "solid",
@@ -575,12 +571,8 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                 },
                 fill: {
                     colors: ["#e31837"],
-                    gradient: {
-                        shadeIntensity: 1,
-                        inverseColors: false,
-                        opacityFrom: 0.5,
-                        opacityTo: 0.9,
-                    },
+					opacity: 1,
+ 					type: 'solid',
                 },
                 //this working in portrait and by default in landscape
                 responsive: [
@@ -638,12 +630,16 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
             }
 
             function updateLocale(newLocale, yAxisTitle) {
+
+				// tooltip min/max 
                 let yValues = chart.w.config.series[0].data.map((point) => point.y);
                 let maxY = Math.max(...yValues);
                 const minY = Math.min(...yValues);
                 // Find indices of max and min values
                 let maxIndex = yValues.indexOf(maxY);
                 let minIndex = yValues.indexOf(minY);
+
+				// title based on locale
                 let currentSeries = chart.w.config.series;
                 currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy consumption: ";
                 let MAX = newLocale === "de" ? "  Maximal" : "  Maximum";
@@ -694,22 +690,19 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                         },
                         labels: {
                             show: true,
-                            //   formatter: (value) => {
-                            //         const date = new Date(value);
-                            //         return date.toLocaleString(newLocale === "de" ? "de-DE" : "en-IN", {
-                            //               year: "numeric",
-                            //               month: "short",
-                            //               day: "2-digit",
-                            //               timeZone: "Europe/Berlin",
-                            //         });
-                            //   },
                         },
                         axisTicks: {
                             show: true,
                         },
                     },
                     yaxis: {
-                        tickAmount: 10,
+						min: function(min) {
+								return min - (min * 0.5); // 1% buffer
+							},
+						max: function(max) {
+							return max + (max * 0.1); // 1% buffer
+						},
+						forceNiceScale: true ,
                         title: {
                             text: yAxisTitle,
                             rotate: -90,
@@ -735,7 +728,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                             formatter: (value) => {
                                 const locale = newLocale === "de" ? "de-DE" : "en-IN";
                                 return new Intl.NumberFormat(locale, {
-                                    maximumFractionDigits: 3,
+                                    maximumFractionDigits:2,
                                 }).format(value);
                             },
                         },
@@ -752,8 +745,6 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                         },
                     ],
                 });
-
-                sendMsgToReactNative("abc", abc);
             }
 
             function updateFormate(type, locale) {

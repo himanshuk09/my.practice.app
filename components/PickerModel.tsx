@@ -21,6 +21,7 @@ import { RootState } from "@/store/store";
 import { i18n } from "@/localization/config";
 import { DateType } from "react-native-ui-datepicker";
 type initialViewProps = "day" | "month" | "year" | "time";
+
 interface PickerModelProps {
 	maxMinValues?: any;
 	setMaxMinValues?: any;
@@ -38,6 +39,25 @@ interface PickerModelProps {
 	>;
 	handleRangeDataFilter?: any;
 }
+
+const formatNumber = (value: number, locale: string): string => {
+	return new Intl.NumberFormat(locale, {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 10,
+	}).format(value);
+};
+const parseNumber = (
+	value: string | number | null | undefined | any,
+	locale: string
+): number => {
+	if (value === null || value === undefined || value === 0) {
+		return 0;
+	}
+	const normalized =
+		locale === "de" ? value?.replace(/\./g, "").replace(",", ".") : value;
+	return parseFloat(normalized);
+};
+
 const PickerModel = ({
 	maxMinValues,
 	setMaxMinValues,
@@ -51,8 +71,12 @@ const PickerModel = ({
 	setSelectedEndDate,
 	handleRangeDataFilter,
 }: PickerModelProps) => {
-	const { locale } = useSelector((state: RootState) => state.culture);
+	const [dateError, setDateError] = useState<boolean>(false);
+	const [minMaxError, setMinMaxError] = useState<boolean>(false);
+	const [dateErrorText, setDateErrorText] = useState<string>("");
+	const [minMaxErrorText, setMinMaxErrorText] = useState<string>("");
 	const animationHeight = useRef(new Animated.Value(0)).current;
+	const { locale } = useSelector((state: RootState) => state.culture);
 	const [isKeyboardVisible, setKeyboardVisible] = useState<Boolean>(false);
 	const [pickerInitialView, setPickerInitaialView] =
 		useState<initialViewProps>("day");
@@ -64,9 +88,92 @@ const PickerModel = ({
 	const [openEndDate, setOpenEndDate] = useState<Boolean>(false);
 	const [openRangeDataPicker, setOpenRangeDatePicker] =
 		useState<Boolean>(false);
-	const [dateError, setDateError] = useState<boolean>(false);
-	const [minMaxError, setMinMaxError] = useState<boolean>(false);
 
+	const validateMinMax = (minInput: any, maxInput: any): boolean => {
+		const min = parseNumber(maxMinValues.minY, locale);
+		const max = parseNumber(maxMinValues.maxY, locale);
+
+		if (minInput === "" || maxInput === "") {
+			setMinMaxError(true);
+			setMinMaxErrorText("Both_min_and_max_are_required");
+			return false;
+		}
+
+		if (
+			min === null ||
+			max === null ||
+			min === undefined ||
+			max === undefined
+		) {
+			setMinMaxError(true);
+			setMinMaxErrorText("Values_cannot_be_empty");
+			return false;
+		}
+		if (max < min) {
+			setMinMaxError(true);
+			setMinMaxErrorText("Max_value_must_be_greater_than_min");
+			return false;
+		}
+
+		setMinMaxError(false);
+		setMinMaxErrorText(""); // Clear previous errors
+		return true;
+	};
+
+	const validateStartEndDate = (
+		selectedStartDate: string | Date,
+		selectedEndDate: string | Date
+	): boolean => {
+		const isStartDateValid = dayjs(selectedStartDate).isValid();
+		const isEndDateValid = dayjs(selectedEndDate).isValid();
+		if (selectedStartDate === "" || selectedEndDate === "") {
+			setDateError(false);
+			return true;
+		}
+		if (!isStartDateValid || !isEndDateValid) {
+			setDateError(true);
+			setDateErrorText("Please_enter_valid_start_and_end_dates");
+			return false;
+		}
+
+		if (dayjs(selectedStartDate).isAfter(dayjs(selectedEndDate))) {
+			setDateError(true);
+			setDateErrorText("The_end_date_must_be_later_than_start_date.");
+			return false;
+		}
+
+		setDateError(false);
+		setDateErrorText("");
+		return true;
+	};
+
+	const handleInputChange = (text: string, key: any) => {
+		let isValid = false;
+		let isEng = locale === "en";
+		if (isEng) {
+			// Allow only digits and one dot, no commas
+			isValid = /^-?\d*(\.\d*)?$/.test(text);
+		} else {
+			// Allow only digits and one comma, no dots
+			isValid = /^-?\d*(,\d*)?$/.test(text);
+		}
+
+		if (isValid || text === "" || text === "-") {
+			setMaxMinValues((prev: any) => ({
+				...prev,
+				[key]: text,
+			}));
+		}
+	};
+	const handleBlur = (key: any, value: any) => {
+		const parsed = parseNumber(value, locale);
+		if (!isNaN(parsed)) {
+			setMaxMinValues((prev: any) => ({
+				...prev,
+				[key]: formatNumber(parsed, locale),
+			}));
+		}
+	};
 	// Monitor keyboard visibility
 	useEffect(() => {
 		const keyboardShowListener = Keyboard.addListener(
@@ -87,7 +194,7 @@ const PickerModel = ({
 	// Animate height based on keyboard visibility
 	useEffect(() => {
 		Animated.timing(animationHeight, {
-			toValue: isKeyboardVisible ? 0 : Platform.OS === "web" ? 210 : 157, // Collapse on keyboard open, expand otherwise
+			toValue: isKeyboardVisible ? 0 : Platform.OS === "web" ? 185 : 165, // Collapse on keyboard open, expand otherwise
 			duration: 200,
 			easing: Easing.inOut(Easing.linear),
 			useNativeDriver: false, // Native driver doesn't support height animation
@@ -107,288 +214,269 @@ const PickerModel = ({
 				<View
 					className={`bg-white mx-3 ${Platform.OS === "web" && "w-80"}`}
 				>
-					{/* Period of Time */}
+					{/* Period of Time Header*/}
+					<View className="flex-row justify-between p-3 bg-[#ebebeb] pl-5">
+						<Text
+							className="text-chartText font-bold text-lg "
+							onPress={() => {
+								setKeyboardVisible(false);
+								Keyboard.dismiss();
+							}}
+						>
+							{i18n.t("Period_of_Time")}
+						</Text>
+						<TouchableOpacity
+							className="m-1"
+							onPress={() => {
+								setModalVisible(!modalVisible);
+								setDateError(false);
+								setMinMaxError(false);
+							}}
+						>
+							<AntDesign
+								name="close"
+								className="font-bold"
+								size={23}
+								color="#E63757"
+							/>
+						</TouchableOpacity>
+					</View>
+
 					{showRangePicker ? (
-						<View>
-							<View className="flex-row justify-between pl-5 p-3 bg-[#ebebeb]">
-								<Text className="text-chartText font-bold text-lg ">
-									{i18n.t("Period_of_Time")}
-								</Text>
-								<TouchableOpacity
-									className="m-1"
-									onPress={() =>
-										setModalVisible(!modalVisible)
-									}
-								>
-									<AntDesign
-										name="close"
-										className="font-bold"
-										size={23}
-										color="#E63757"
-									/>
-								</TouchableOpacity>
-							</View>
-							<View className="p-5">
-								<View className="flex-row justify-between items-center mb-2">
-									<View className="flex-1 mr-2">
-										<Text className=" text-chartText  mb-1 font-semibold">
-											{i18n.t("From")}
+						<View className="p-5">
+							<View className="flex-row justify-between items-center mb-2">
+								<View className="flex-1 mr-2">
+									<Text className=" text-chartText  mb-1 font-semibold">
+										{i18n.t("From")}
+									</Text>
+									<Pressable
+										className=" bg-cardBg w-[50%]  px-2 py-3 flex-row justify-between"
+										onPress={() =>
+											setOpenRangeDatePicker(
+												!openRangeDataPicker
+											)
+										}
+									>
+										<Text className="text-slate-600">
+											{rangeDate.startDate
+												? dayjs(rangeDate.startDate)
+														.locale(locale)
+														.format(
+															locale === "en"
+																? "DD/MM/YYYY"
+																: "DD.MM.YYYY"
+														)
+												: dayjs()
+														.locale(locale)
+														.format(
+															locale === "en"
+																? "DD/MM/YYYY"
+																: "DD.MM.YYYY"
+														)}
 										</Text>
-										<Pressable
-											className=" bg-cardBg w-[50%]  px-2 py-3 flex-row justify-between"
-											onPress={() =>
-												setOpenRangeDatePicker(
-													!openRangeDataPicker
-												)
-											}
-										>
-											<Text className="text-slate-600">
-												{rangeDate.startDate
-													? dayjs(rangeDate.startDate)
-															.locale(locale)
-															.format(
-																locale === "en"
-																	? "DD/MM/YYYY"
-																	: "DD.MM.YYYY"
-															)
-													: dayjs()
-															.locale(locale)
-															.format(
-																locale === "en"
-																	? "DD/MM/YYYY"
-																	: "DD.MM.YYYY"
-															)}
-											</Text>
-											<FontAwesome
-												name="calendar"
-												size={18}
-												color="#808080"
-											/>
-										</Pressable>
-									</View>
+										<FontAwesome
+											name="calendar"
+											size={18}
+											color="#808080"
+										/>
+									</Pressable>
 								</View>
-								<View className="flex-row justify-between items-center ">
-									<View className="flex-1 mr-2">
-										<Text className="text-chartText mb-1">
-											{i18n.t("To")}
+							</View>
+							<View className="flex-row justify-between items-center ">
+								<View className="flex-1 mr-2">
+									<Text className="text-chartText mb-1">
+										{i18n.t("To")}
+									</Text>
+									<Pressable
+										className=" bg-cardBg w-[50%] px-2 py-3 flex-row justify-between"
+										onPress={() =>
+											setOpenRangeDatePicker(
+												!openRangeDataPicker
+											)
+										}
+									>
+										<Text className="text-slate-600">
+											{rangeDate.endDate
+												? dayjs(rangeDate.endDate)
+														.locale(locale)
+														.format(
+															locale === "en"
+																? "DD/MM/YYYY"
+																: "DD.MM.YYYY"
+														)
+												: dayjs()
+														.locale(locale)
+														.format(
+															locale === "en"
+																? "DD/MM/YYYY"
+																: "DD.MM.YYYY"
+														)}
 										</Text>
-										<Pressable
-											className=" bg-cardBg w-[50%] px-2 py-3 flex-row justify-between"
-											onPress={() =>
-												setOpenRangeDatePicker(
-													!openRangeDataPicker
-												)
-											}
-										>
-											<Text className="text-slate-600">
-												{rangeDate.endDate
-													? dayjs(rangeDate.endDate)
-															.locale(locale)
-															.format(
-																locale === "en"
-																	? "DD/MM/YYYY"
-																	: "DD.MM.YYYY"
-															)
-													: dayjs()
-															.locale(locale)
-															.format(
-																locale === "en"
-																	? "DD/MM/YYYY"
-																	: "DD.MM.YYYY"
-															)}
-											</Text>
-											<FontAwesome
-												name="calendar"
-												size={18}
-												color="#808080"
-											/>
-										</Pressable>
-									</View>
+										<FontAwesome
+											name="calendar"
+											size={18}
+											color="#808080"
+										/>
+									</Pressable>
 								</View>
 							</View>
 						</View>
 					) : (
-						<>
-							{/* date time picker */}
-							<View className="flex-row justify-between p-3 bg-[#ebebeb] pl-5">
-								<Text
-									className="text-chartText font-bold text-lg "
-									onPress={() => {
-										setKeyboardVisible(false);
-										Keyboard.dismiss();
-									}}
-								>
-									{i18n.t("Period_of_Time")}
-								</Text>
-								<TouchableOpacity
-									className="m-1"
-									onPress={() =>
-										setModalVisible(!modalVisible)
-									}
-								>
-									<AntDesign
-										name="close"
-										className="font-bold"
-										size={23}
-										color="#E63757"
-									/>
-								</TouchableOpacity>
+						<Animated.View
+							style={{
+								overflow: "hidden",
+								height: animationHeight, // Controlled by animation
+								// marginBottom: 5,
+							}}
+							className="mx-4"
+						>
+							<View className="flex-row justify-between items-center m-2">
+								<View className="flex-1 mr-2">
+									<Text className=" text-chartText  mb-1 font-semibold">
+										{i18n.t("From")}
+									</Text>
+									<Pressable
+										className=" bg-cardBg  p-3 flex-row justify-between"
+										onPress={() => {
+											setOpenStartDate(!openStartDate);
+											setPickerInitaialView("day");
+										}}
+									>
+										<Text className="text-slate-700">
+											{dayjs(selectedStartDate).isValid()
+												? dayjs(selectedStartDate)
+														.locale(locale)
+														.format(
+															locale === "en"
+																? "DD/MM/YYYY"
+																: "DD.MM.YYYY"
+														)
+												: locale === "en"
+													? "-- / -- /----"
+													: "-- . -- . ----"}
+											{/* dayjs()
+														.locale(locale)
+														.format(
+															locale === "en"
+																? "DD/MM/YYYY"
+																: "DD.MM.YYYY"
+														) */}
+										</Text>
+										<FontAwesome
+											name="calendar"
+											size={18}
+											color="#808080"
+										/>
+									</Pressable>
+								</View>
+								<View className="flex-1 ml-2">
+									<Text className="text-gray-400 mb-1">
+										{" "}
+										{""}
+									</Text>
+									<Pressable
+										className="bg-cardBg  p-3 flex-row justify-between"
+										onPress={() => {
+											setOpenStartDate(!openStartDate);
+											setPickerInitaialView("time");
+										}}
+									>
+										<Text className="text-slate-700">
+											{dayjs(selectedStartDate).isValid()
+												? dayjs(selectedStartDate)
+														.locale("en")
+														.format("HH:mm")
+												: "-- : --"}
+											{/* dayjs()
+														.locale("en")
+														.format("HH:mm") */}
+										</Text>
+										<Ionicons
+											name="alarm"
+											size={20}
+											color="#808080"
+										/>
+									</Pressable>
+								</View>
 							</View>
-							<Animated.View
-								style={{
-									overflow: "hidden",
-									height: animationHeight, // Controlled by animation
-									// marginBottom: 5,
-								}}
-								className="mx-4 "
-							>
-								<View className="flex-row justify-between items-center m-2">
-									<View className="flex-1 mr-2">
-										<Text className=" text-chartText  mb-1 font-semibold">
-											{i18n.t("From")}
+							<View className="flex-row justify-between items-center mx-2 ">
+								<View className="flex-1 mr-2">
+									<Text className=" text-chartText  mb-1 font-semibold">
+										{i18n.t("To")}
+									</Text>
+									<Pressable
+										className="bg-cardBg  p-3 flex-row justify-between"
+										onPress={() => {
+											setOpenEndDate(!openEndDate);
+											setPickerInitaialView("day");
+										}}
+									>
+										<Text className="text-slate-700">
+											{dayjs(selectedEndDate).isValid()
+												? dayjs(selectedEndDate)
+														.locale(locale)
+														.format(
+															locale === "en"
+																? "DD/MM/YYYY"
+																: "DD.MM.YYYY"
+														)
+												: locale === "en"
+													? "-- / -- /----"
+													: "-- . -- . ----"}
+											{/* dayjs()
+														.locale(locale)
+														.format(
+															locale === "en"
+																? "DD/MM/YYYY"
+																: "DD.MM.YYYY"
+														) */}
 										</Text>
-										<Pressable
-											className=" bg-cardBg  p-3 flex-row justify-between"
-											onPress={() => {
-												setOpenStartDate(
-													!openStartDate
-												);
-												setPickerInitaialView("day");
-											}}
-										>
-											<Text className="text-slate-700">
-												{selectedStartDate
-													? dayjs(selectedStartDate)
-															.locale(locale)
-															.format(
-																locale === "en"
-																	? "DD/MM/YYYY"
-																	: "DD.MM.YYYY"
-															)
-													: dayjs()
-															.locale(locale)
-															.format(
-																locale === "en"
-																	? "DD/MM/YYYY"
-																	: "DD.MM.YYYY"
-															)}
-											</Text>
-											<FontAwesome
-												name="calendar"
-												size={18}
-												color="#808080"
-											/>
-										</Pressable>
-									</View>
-									<View className="flex-1 ml-2">
-										<Text className="text-gray-400 mb-1">
-											{" "}
-											{""}
-										</Text>
-										<Pressable
-											className="bg-cardBg  p-3 flex-row justify-between"
-											onPress={() => {
-												setOpenStartDate(
-													!openStartDate
-												);
-												setPickerInitaialView("time");
-											}}
-										>
-											<Text className="text-slate-700">
-												{selectedStartDate
-													? dayjs(selectedStartDate)
-															.locale("en")
-															.format("HH:mm")
-													: dayjs()
-															.locale("en")
-															.format("HH:mm")}
-											</Text>
-											<Ionicons
-												name="alarm"
-												size={20}
-												color="#808080"
-											/>
-										</Pressable>
-									</View>
+										<FontAwesome
+											name="calendar"
+											size={18}
+											color="#808080"
+										/>
+									</Pressable>
 								</View>
-								<View className="flex-row justify-between items-center mx-2 ">
-									<View className="flex-1 mr-2">
-										<Text className=" text-chartText  mb-1 font-semibold">
-											{i18n.t("To")}
+								<View className="flex-1 ml-2">
+									<Text className="text-gray-400 mb-1">
+										{""}{" "}
+									</Text>
+									<Pressable
+										className="bg-cardBg  p-3 flex-row justify-between"
+										onPress={() => {
+											setOpenStartDate(!openStartDate);
+											setPickerInitaialView("time");
+										}}
+									>
+										<Text className="text-slate-700">
+											{dayjs(selectedEndDate).isValid()
+												? dayjs(selectedEndDate)
+														.locale("en")
+														.format("HH:mm")
+												: "-- : --"}
+											{/* dayjs()
+														.locale("en")
+														.format("HH:mm") */}
 										</Text>
-										<Pressable
-											className="bg-cardBg  p-3 flex-row justify-between"
-											onPress={() => {
-												setOpenEndDate(!openEndDate);
-												setPickerInitaialView("day");
-											}}
-										>
-											<Text className="text-slate-700">
-												{selectedEndDate
-													? dayjs(selectedEndDate)
-															.locale(locale)
-															.format(
-																locale === "en"
-																	? "DD/MM/YYYY"
-																	: "DD.MM.YYYY"
-															)
-													: dayjs()
-															.locale(locale)
-															.format(
-																locale === "en"
-																	? "DD/MM/YYYY"
-																	: "DD.MM.YYYY"
-															)}
-											</Text>
-											<FontAwesome
-												name="calendar"
-												size={18}
-												color="#808080"
-											/>
-										</Pressable>
-									</View>
-									<View className="flex-1 ml-2">
-										<Text className="text-gray-400 mb-1">
-											{""}{" "}
-										</Text>
-										<Pressable
-											className="bg-cardBg  p-3 flex-row justify-between"
-											onPress={() => {
-												setOpenStartDate(
-													!openStartDate
-												);
-												setPickerInitaialView("time");
-											}}
-										>
-											<Text className="text-slate-700">
-												{selectedEndDate
-													? dayjs(selectedEndDate)
-															.locale("en")
-															.format("HH:mm")
-													: dayjs()
-															.locale("en")
-															.format("HH:mm")}
-											</Text>
 
-											<Ionicons
-												name="alarm"
-												size={20}
-												color="#808080"
-											/>
-										</Pressable>
-									</View>
+										<Ionicons
+											name="alarm"
+											size={20}
+											color="#808080"
+										/>
+									</Pressable>
 								</View>
+							</View>
 
-								{dateError && (
-									<View className="mx-2 ">
-										<Text className="text-sm text-red-600">
-											The end date must be later than
-											start date.
-										</Text>
-									</View>
-								)}
-							</Animated.View>
-						</>
+							{dateError && (
+								<View className="mx-2 mb-1">
+									<Text className="text-sm text-red-600">
+										{dateErrorText}
+									</Text>
+								</View>
+							)}
+						</Animated.View>
 					)}
 
 					{/* Value Range */}
@@ -412,27 +500,15 @@ const PickerModel = ({
 											}}
 											keyboardType="numeric"
 											value={maxMinValues.minY.toString()}
-											onChangeText={(newText) => {
-												const isGerman =
-													locale === "de";
-
-												// Allow digits, and either a comma (German) or dot (English)
-												const allowedPattern = isGerman
-													? /^[0-9]*[,]?[0-9]*$/
-													: /^[0-9]*[.]?[0-9]*$/;
-
-												if (
-													allowedPattern.test(newText)
-												) {
-													setMaxMinValues(
-														(prev: any) => ({
-															...prev,
-															minY: newText,
-														})
-													);
-												}
-											}}
-											//onBlur={handleBlur}
+											onChangeText={(text) =>
+												handleInputChange(text, "minY")
+											}
+											onBlur={() =>
+												handleBlur(
+													"minY",
+													maxMinValues.minY
+												)
+											}
 											placeholderTextColor="#9a9b9f"
 											placeholder={
 												locale === "de"
@@ -441,7 +517,7 @@ const PickerModel = ({
 											}
 											maxLength={10}
 										/>
-										<Text className="z-50 w-10 absolute top-3 right-2 font-bold size-6 text-chartText ">
+										<Text className="z-50 w-10 absolute top-3 right-2 font-light size-6 text-slate-600">
 											kWh
 										</Text>
 									</View>
@@ -459,26 +535,15 @@ const PickerModel = ({
 											}}
 											keyboardType="numeric"
 											value={maxMinValues.maxY.toString()}
-											onChangeText={(newText) => {
-												const isGerman =
-													locale === "de";
-
-												// Allow digits, and either a comma (German) or dot (English)
-												const allowedPattern = isGerman
-													? /^[0-9]*[,]?[0-9]*$/
-													: /^[0-9]*[.]?[0-9]*$/;
-
-												if (
-													allowedPattern.test(newText)
-												) {
-													setMaxMinValues(
-														(prev: any) => ({
-															...prev,
-															maxY: newText,
-														})
-													);
-												}
-											}}
+											onChangeText={(text) =>
+												handleInputChange(text, "maxY")
+											}
+											onBlur={() =>
+												handleBlur(
+													"maxY",
+													maxMinValues.maxY
+												)
+											}
 											placeholderTextColor="#9a9b9f"
 											placeholder={
 												locale === "de"
@@ -487,7 +552,7 @@ const PickerModel = ({
 											}
 											maxLength={10}
 										/>
-										<Text className="z-50 w-10 absolute top-3 right-2 font-bold size-6 text-chartText ">
+										<Text className="z-50 w-10 absolute top-3 right-2 font-light size-6 text-slate-600 ">
 											kWh
 										</Text>
 									</View>
@@ -495,8 +560,7 @@ const PickerModel = ({
 								{minMaxError && (
 									<View className="mx-2">
 										<Text className="text-sm text-red-600">
-											Max value must be greater than min
-											value.
+											{minMaxErrorText}
 										</Text>
 									</View>
 								)}
@@ -513,6 +577,8 @@ const PickerModel = ({
 									setKeyboardVisible(false);
 									Keyboard.dismiss();
 								}
+								setDateError(false);
+								setMinMaxError(false);
 								setModalVisible(false);
 							}}
 						>
@@ -523,19 +589,32 @@ const PickerModel = ({
 						<Pressable
 							className="px-4 py-2 mr-4"
 							onPress={() => {
+								// Check if either start or end date is invalid or start > end
 								if (
-									dayjs(selectedStartDate) >
-									dayjs(selectedEndDate)
+									!validateStartEndDate(
+										selectedStartDate,
+										selectedEndDate
+									)
 								) {
-									setDateError(true);
 									return;
 								}
-								setDateError(false);
-								if (maxMinValues.maxY < maxMinValues.minY) {
-									setMinMaxError(true);
+								if (
+									!validateMinMax(
+										maxMinValues.minY,
+										maxMinValues.maxY
+									)
+								) {
+									// Validate min/max numbers
 									return;
 								}
-								setMinMaxError(false);
+
+								if (
+									selectedStartDate === "" ||
+									selectedEndDate === ""
+								) {
+									setModalVisible(false);
+									return;
+								}
 								handleRangeDataFilter();
 								setTimeout(() => {
 									setModalVisible(false);
@@ -552,8 +631,8 @@ const PickerModel = ({
 
 			{openStartDate && (
 				<Pressable
-					className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] "
-					onPress={() => setOpenStartDate(false)}
+					className="absolute z-50 inset-0 flex flex-row justify-center items-center m-auto bg-[#0a0a0aa8] "
+					// onPress={() => setOpenStartDate(false)}
 				>
 					<DateTimePickerComponents
 						title="Select_Start_Date"
@@ -569,7 +648,7 @@ const PickerModel = ({
 			{openEndDate && (
 				<Pressable
 					className="absolute z-50 inset-0 flex flex-row justify-center  items-center m-auto bg-[#0a0a0aa8] "
-					onPress={() => setOpenEndDate(false)}
+					// onPress={() => setOpenEndDate(false)}
 				>
 					<DateTimePickerComponents
 						title="Select_End_Date"

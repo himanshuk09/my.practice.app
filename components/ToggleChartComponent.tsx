@@ -106,10 +106,9 @@ const ToggleChartComponent = ({
 			case "Chart updated":
 				if (LoaderTimeoutRef.current)
 					clearTimeout(LoaderTimeoutRef.current);
-				LoaderTimeoutRef.current = setTimeout(
-					() => setLoading(false),
-					500
-				);
+				LoaderTimeoutRef.current = setTimeout(() => {
+					setLoading(false);
+				}, 500);
 				break;
 
 			case "startLoader":
@@ -150,7 +149,7 @@ const ToggleChartComponent = ({
 			setIsChartEmpty(true);
 			setTimeout(() => {
 				setLoading(false);
-			}, 1000);
+			}, 500);
 			return;
 		}
 
@@ -165,15 +164,15 @@ const ToggleChartComponent = ({
 		// ["Year", "Quarter", "Year_3"].includes(activeTab) ||
 		// ["Year", "Quarter", "Year_3"].includes(previousTab)
 
-		if (isChartZoomed) {
-			webViewRef?.current?.injectJavaScript("window.resetZoom(); true;");
-			setIschartZoomed(false);
-			if (!isYearlyView) setLoading(true);
-		}
+		// if (isChartZoomed) {
+		// 	webViewRef?.current?.injectJavaScript("window.resetZoom(); true;");
+		// 	setIschartZoomed(false);
+		// 	if (!isYearlyView) setLoading(true);
+		// }
 
 		const chartOptions = {
-			// chart: { animations: { enabled: !isYearlyView } },
-			// grid: { show: true },
+			chart: { animations: { enabled: !isYearlyView } },
+			grid: { show: true },
 		};
 
 		updateApexChart("series", webViewRef, iFrameRef, filteredData);
@@ -212,6 +211,7 @@ const ToggleChartComponent = ({
 	//its used to handle custom data
 	const handleRangeDataFilter = async () => {
 		setActiveTab("");
+		setLoading(true);
 		fetchData({
 			TimeFrame: 6,
 			MinValue: maxMinValues?.minY,
@@ -228,14 +228,10 @@ const ToggleChartComponent = ({
 					activeTab,
 					rangePayload
 				);
-				// setChart(false)
-				// updateChartData(chartConfig)
-
 				if (chartConfig?.data?.length > 0) {
 					updateChartData(chartConfig?.data);
 					updateLocale();
 					setPreviousTab(activeTab);
-					setShowChart(true);
 					setSelectedStartDate(
 						convertDateTime(chartConfig?.data[0]?.x)
 					);
@@ -246,15 +242,18 @@ const ToggleChartComponent = ({
 					);
 					setMaxMinValues({
 						minX: 0,
-						minY: chartConfig?.MinValue,
+						minY: new Intl.NumberFormat(locale, {
+							useGrouping: true,
+						}).format(chartConfig?.MinValue),
 						maxX: 0,
-						maxY: chartConfig?.MaxValue,
+						maxY: new Intl.NumberFormat(locale, {
+							useGrouping: true,
+						}).format(chartConfig?.MaxValue),
 					});
 				} else {
 					updateChartData([]);
-					setShowChart(true);
-					setSelectedStartDate(dayjs());
-					setSelectedEndDate(dayjs());
+					setSelectedStartDate("");
+					setSelectedEndDate("");
 					setMaxMinValues({
 						minX: 0,
 						minY: 0,
@@ -262,6 +261,7 @@ const ToggleChartComponent = ({
 						maxY: 0,
 					});
 				}
+				setShowChart(true);
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}
@@ -285,13 +285,6 @@ const ToggleChartComponent = ({
 		}
 	}, [locale, isChartLoaded]);
 
-	useEffect(() => {
-		if (!isLoading && timeoutRef.current) {
-			clearTimeout(timeoutRef.current);
-			timeoutRef.current = null;
-		}
-	}, [isLoading]);
-
 	return (
 		<View className="flex-1  bg-white">
 			{isLoading && <ChartLoaderPNG />}
@@ -302,7 +295,6 @@ const ToggleChartComponent = ({
 					setActiveTab={setActiveTab}
 					visibleTabs={visibleTabs}
 					setLoading={setLoading}
-					timeoutRef={timeoutRef}
 				/>
 			) : (
 				<FloatingActionMenu
@@ -310,7 +302,6 @@ const ToggleChartComponent = ({
 					setActiveTab={setActiveTab}
 					visibleTabs={visibleTabs}
 					setLoading={setLoading}
-					timeoutRef={timeoutRef}
 				/>
 			)}
 			{/* Chart  */}
@@ -335,7 +326,7 @@ const ToggleChartComponent = ({
 			{!isLandscape && !isSignaleScreen && (
 				<>
 					<TouchableOpacity
-						className="bg-[#e31836] py-2 mx-5 rounded-sm my-2"
+						className="bg-[#e31836] py-3 mx-5 rounded-sm my-2"
 						onPress={() => setModalVisible(!modalVisible)}
 						disabled={!showchart}
 					>

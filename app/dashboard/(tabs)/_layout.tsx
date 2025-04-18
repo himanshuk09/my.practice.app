@@ -39,16 +39,14 @@ const CustomTabBar = ({
 		const scrollToFocusedTab = () => {
 			const focusedTabRef = tabRefs.current[state.index];
 			if (focusedTabRef) {
-				focusedTabRef.measure(
-					(x, y, width, height, pageX, pageY) => {
-						if (scrollViewRef.current) {
-							scrollViewRef.current.scrollTo({
-								x: Math.max(0, pageX - 50),
-								animated: true,
-							});
-						}
+				focusedTabRef.measure((x, y, width, height, pageX, pageY) => {
+					if (scrollViewRef.current) {
+						scrollViewRef.current.scrollTo({
+							x: Math.max(0, pageX - 50),
+							animated: true,
+						});
 					}
-				);
+				});
 			}
 			state.routes.forEach((_: any, index: any) => {
 				Animated.timing(animatedValues[index], {
@@ -96,9 +94,7 @@ const CustomTabBar = ({
 					return (
 						<Animated.View
 							key={route.key}
-							ref={(el: any) =>
-								(tabRefs.current[index] = el)
-							}
+							ref={(el: any) => (tabRefs.current[index] = el)}
 							style={{
 								transform: [
 									{
@@ -120,10 +116,7 @@ const CustomTabBar = ({
 											: "text-inactiveText"
 									}`}
 								>
-									{i18n.t(
-										options.tabBarLabel ||
-											route.name
-									)}
+									{i18n.t(options.tabBarLabel || route.name)}
 								</Text>
 								{notificationCount > 0 && (
 									<View
@@ -224,7 +217,9 @@ const TabNavigatorLayout = () => {
 				/>
 				<Tabs.Screen
 					name="portfolio"
-					options={{ title: i18n.t("portfolio") }}
+					options={{
+						title: i18n.t("portfolio"),
+					}}
 				/>
 			</Tabs>
 		</SafeAreaView>

@@ -1,11 +1,14 @@
-import { st } from "@/utils/Styles";
-import StackHeader from "./StackHeader";
-import { ChartLoaderPNG } from "./Loader";
-import { useEffect, useState } from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { i18n } from "@/localization/config";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
-import { saveDealsCSV, saveDealsCSVWeb } from "./fileDownloaders/saveCSVFile";
+import { st } from "@/utils/Styles"
+import StackHeader from "./StackHeader"
+import { ChartLoaderPNG } from "./Loader"
+import { useEffect, useState } from "react"
+import { FontAwesome5 } from "@expo/vector-icons"
+import { i18n } from "@/localization/config"
+import useNetworkStatus from "@/hooks/useNetworkStatus"
+import {
+	exportDealsToCSV,
+	exportDealsToCSVWeb,
+} from "./exportcsv/exportToFiles"
 import {
 	View,
 	Platform,
@@ -14,7 +17,7 @@ import {
 	Text,
 	StyleSheet,
 	RefreshControl,
-} from "react-native";
+} from "react-native"
 
 const Card = ({ title, deals }: any) => {
 	return (
@@ -91,8 +94,8 @@ const Card = ({ title, deals }: any) => {
 				</View>
 			</View>
 		</View>
-	);
-};
+	)
+}
 const Transactions = ({
 	cards,
 	setModalVisible,
@@ -101,14 +104,14 @@ const Transactions = ({
 	onRefresh,
 	isRefreshing,
 }: any) => {
-	const [loading, setLoadig] = useState<any>(true);
-	const isOnline = useNetworkStatus();
+	const [loading, setLoadig] = useState<any>(true)
+	const isOnline = useNetworkStatus()
 
 	useEffect(() => {
 		setTimeout(() => {
-			setLoadig(false);
-		}, 500);
-	}, []);
+			setLoadig(false)
+		}, 500)
+	}, [])
 
 	return (
 		<View className="flex-1  " style={StyleSheet.absoluteFill}>
@@ -133,12 +136,12 @@ const Transactions = ({
 						size={25}
 						color="#ef4444"
 						onPress={() => {
-							if (!isOnline || cards?.length === 0) return;
-							setModalVisible(!modalVisible);
+							if (!isOnline || cards?.length === 0) return
+							setModalVisible(!modalVisible)
 							if (Platform.OS === "web") {
-								saveDealsCSVWeb(cards, `${title}_deals.csv`);
+								exportDealsToCSVWeb(cards, `${title}_deals.csv`)
 							} else {
-								saveDealsCSV(cards, `${title}_deals.csv`);
+								exportDealsToCSV(cards, `${title}_deals.csv`)
 							}
 						}}
 					/>
@@ -200,18 +203,18 @@ const Transactions = ({
 				</TouchableOpacity>
 			</View>
 		</View>
-	);
-};
+	)
+}
 
 const DataRow = ({
 	value,
 	unit,
 	locale,
 }: {
-	label?: string;
-	value: any;
-	unit: string;
-	locale?: string;
+	label?: string
+	value: any
+	unit: string
+	locale?: string
 }) => (
 	<View className="flex-row w-full">
 		<Text className="text-chartText text-xs font-normal flex-1 text-right">
@@ -221,17 +224,17 @@ const DataRow = ({
 			{unit}
 		</Text>
 	</View>
-);
+)
 export const DataDisplay = ({
 	data,
 	title,
 	locale,
 }: {
-	data: any;
-	title: string;
-	locale?: string;
+	data: any
+	title: string
+	locale?: string
 }) => {
-	if (!data) return null; // Prevents rendering if data is missing
+	if (!data) return null // Prevents rendering if data is missing
 
 	return (
 		<View className="flex p-1 bg-white">
@@ -259,7 +262,7 @@ export const DataDisplay = ({
 				locale={locale}
 			/>
 		</View>
-	);
-};
+	)
+}
 
-export default Transactions;
+export default Transactions

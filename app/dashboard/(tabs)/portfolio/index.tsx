@@ -17,6 +17,7 @@ import { Portfolioprops, PortfolioArray } from "@/types/type";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { i18n } from "@/localization/config";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 
 const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();
@@ -34,7 +35,6 @@ const Portfolio: React.FC = () => {
 			else {
 				try {
 					const response: any = await getPortfolioList();
-					console.log("response", response);
 					if (
 						response?.gas.length === 0 ||
 						response?.strom.length === 0

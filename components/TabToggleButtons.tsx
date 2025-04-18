@@ -12,23 +12,10 @@ interface TabToggleButtonsProps {
 }
 
 const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
-	({ activeTab, setActiveTab, visibleTabs, setLoading, timeoutRef }) => {
+	({ activeTab, setActiveTab, visibleTabs }) => {
 		const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
 		const tabs = visibleTabs || allTabs;
 
-		const startLoading = () => {
-			setLoading(true);
-
-			// Clear any existing timeout
-			if (timeoutRef.current) {
-				clearTimeout(timeoutRef.current);
-			}
-
-			timeoutRef.current = setTimeout(() => {
-				setLoading(false);
-				timeoutRef.current = null;
-			}, 2000);
-		};
 		return (
 			<View className="flex-row justify-between  w-full">
 				{tabs.map((tab: any) => (

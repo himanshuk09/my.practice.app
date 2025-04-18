@@ -144,6 +144,7 @@ export const updateEmptyChart = (
 			show: true,
 		},
 		xaxis: {
+			show: false,
 			tickAmount: 0,
 			labels: {
 				show: false,
@@ -162,6 +163,7 @@ export const updateEmptyChart = (
 			},
 		},
 		yaxis: {
+			show: false,
 			labels: {
 				show: false,
 			},
@@ -173,6 +175,7 @@ export const updateEmptyChart = (
 			},
 		},
 		title: {
+			show: false,
 			text: "",
 			align: "center",
 			style: {
@@ -182,9 +185,4 @@ export const updateEmptyChart = (
 	};
 
 	updateApexChart("chart", webViewRef, iframeRef, [], options);
-
-	// if (chartType == "donut" || chartType == "area" || Platform.OS === "web") {
-	// 	updateApexChart("series", webViewRef, iframeRef, []);
-	// 	updateApexChart("options", webViewRef, iframeRef, options);
-	// } else updateApexChart("chart", webViewRef, iframeRef, [], options);
 };

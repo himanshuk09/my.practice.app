@@ -1,34 +1,34 @@
-import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
-import * as ScreenOrientation from "expo-screen-orientation";
-import { RootState } from "@/store/store";
-import WebView from "react-native-webview";
-import ViewShot from "react-native-view-shot";
-import Toast from "react-native-toast-message";
-import { MaterialIcons } from "@expo/vector-icons";
-import { setOrientation } from "@/store/chartSlice";
-import { useDispatch, useSelector } from "react-redux";
-import React, { useCallback, useEffect, useRef } from "react";
-import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
-import { Platform, TouchableOpacity, BackHandler } from "react-native";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import * as FileSystem from "expo-file-system"
+import * as MediaLibrary from "expo-media-library"
+import * as ScreenOrientation from "expo-screen-orientation"
+import { RootState } from "@/store/store"
+import WebView from "react-native-webview"
+import ViewShot from "react-native-view-shot"
+import Toast from "react-native-toast-message"
+import { MaterialIcons } from "@expo/vector-icons"
+import { setOrientation } from "@/store/chartSlice"
+import { useDispatch, useSelector } from "react-redux"
+import React, { useCallback, useEffect, useRef } from "react"
+import ToolBarFloatingActionMenu from "@/components/ToolBarFAB"
+import { Platform, TouchableOpacity, BackHandler } from "react-native"
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice"
 
 type ChartComponentProps = {
-	webViewRef: React.RefObject<WebView | any>;
-	iFrameRef: React.RefObject<HTMLIFrameElement | any>;
-	webViewhtmlContent: any;
-	iFramehtmlContent: any;
-	onMessage?: (event: any) => void;
-	activeTab?: string;
-	showToggleOrientation?: boolean;
-	showToolbar?: boolean;
-	iFrameWidth?: string | number | undefined;
-	setLoading?: any;
-	isTooltipEnabled?: boolean;
-	isChartEmpty?: boolean;
-	setIsChartLoaded?: any;
-	setMaxMinValues?: any;
-};
+	webViewRef: React.RefObject<WebView | any>
+	iFrameRef: React.RefObject<HTMLIFrameElement | any>
+	webViewhtmlContent: any
+	iFramehtmlContent: any
+	onMessage?: (event: any) => void
+	activeTab?: string
+	showToggleOrientation?: boolean
+	showToolbar?: boolean
+	iFrameWidth?: string | number | undefined
+	setLoading?: any
+	isTooltipEnabled?: boolean
+	isChartEmpty?: boolean
+	setIsChartLoaded?: any
+	setMaxMinValues?: any
+}
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
 	webViewRef,
@@ -46,28 +46,28 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 	setIsChartLoaded,
 	setMaxMinValues,
 }) => {
-	const dispatch = useDispatch();
-	const viewShotRef = useRef<any>(null);
+	const dispatch = useDispatch()
+	const viewShotRef = useRef<any>(null)
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
-	);
-	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	)
+	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
 	const toggleOrientation = async () => {
 		if (Platform.OS != "web") {
-			dispatch(activeLoading());
+			dispatch(activeLoading())
 			if (isLandscape) {
 				await ScreenOrientation.lockAsync(
 					ScreenOrientation.OrientationLock.PORTRAIT
-				);
+				)
 			} else {
 				await ScreenOrientation.lockAsync(
 					ScreenOrientation.OrientationLock.LANDSCAPE
-				);
+				)
 			}
 
 			setTimeout(() => {
-				(webViewRef?.current as any)?.injectJavaScript(
+				;(webViewRef?.current as any)?.injectJavaScript(
 					`updateChartOptions(${JSON.stringify({
 						chart: {
 							height: 285,
@@ -86,18 +86,18 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 							},
 						},
 					})});`
-				);
-			}, 500);
+				)
+			}, 500)
 			setTimeout(() => {
-				dispatch(inActiveLoading());
-			}, 2000);
-			dispatch(setOrientation(!isLandscape));
+				dispatch(inActiveLoading())
+			}, 2000)
+			dispatch(setOrientation(!isLandscape))
 		}
-	};
+	}
 
 	const captureWebView = useCallback(async () => {
 		try {
-			const { status } = await MediaLibrary.requestPermissionsAsync();
+			const { status } = await MediaLibrary.requestPermissionsAsync()
 			if (status !== "granted") {
 				Toast.show({
 					type: "download",
@@ -106,30 +106,30 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 					position: "bottom",
 					bottomOffset: 0,
 					visibilityTime: 3000,
-				});
-				return;
+				})
+				return
 			}
 
 			// Capture WebView
-			const uri = await viewShotRef?.current?.capture();
+			const uri = await viewShotRef?.current?.capture()
 
 			// Fix 1: Use cacheDirectory instead of documentDirectory
 			const fileName = `cockpit_chart_${new Date()
 				.toISOString()
-				.replace(/[:.]/g, "-")}.png`;
+				.replace(/[:.]/g, "-")}.png`
 
 			// Fix 2: Generate correct file path
-			const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
+			const fileUri = `${FileSystem.cacheDirectory}${fileName}`
 
 			// Fix 3: Use copyAsync instead of moveAsync (more reliable)
 			await FileSystem.copyAsync({
 				from: uri,
 				to: fileUri,
-			});
+			})
 
 			// Save to gallery
-			const asset = await MediaLibrary.createAssetAsync(fileUri);
-			await MediaLibrary.createAlbumAsync("cockpit", asset, false);
+			const asset = await MediaLibrary.createAssetAsync(fileUri)
+			await MediaLibrary.createAlbumAsync("cockpit", asset, false)
 
 			// Show toast
 			Toast.show({
@@ -140,7 +140,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 				bottomOffset: 0,
 				visibilityTime: 3000,
 				props: { fileUri: fileUri, fileName: fileUri, type: "png" }, // Pass the correct URI
-			});
+			})
 		} catch (error) {
 			Toast.show({
 				type: "download",
@@ -149,96 +149,96 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 				position: "bottom",
 				bottomOffset: 0,
 				visibilityTime: 3000,
-			});
+			})
 		}
-	}, []);
+	}, [])
 
 	useEffect(() => {
 		const handleBackPress = () => {
 			if (isLandscape) {
 				ScreenOrientation.lockAsync(
 					ScreenOrientation.OrientationLock.PORTRAIT
-				);
-				dispatch(setOrientation(false));
-				return true;
+				)
+				dispatch(setOrientation(false))
+				return true
 			}
-			return false;
-		};
+			return false
+		}
 
 		// Add the back button listener
-		BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+		BackHandler.addEventListener("hardwareBackPress", handleBackPress)
 
 		// Cleanup on unmount
 		return () => {
 			BackHandler.removeEventListener(
 				"hardwareBackPress",
 				handleBackPress
-			);
-		};
-	}, [isLandscape, dispatch]);
+			)
+		}
+	}, [isLandscape, dispatch])
 
 	useEffect(() => {
-		if (Platform.OS !== "web") return;
+		if (Platform.OS !== "web") return
 
 		const handleChartUpdate = () => {
-			setLoading(true);
-		};
+			setLoading(true)
+		}
 
 		const handleChartUpdated = () => {
 			if (LoaderTimeoutRef?.current) {
-				clearTimeout(LoaderTimeoutRef.current);
+				clearTimeout(LoaderTimeoutRef.current)
 			}
 			LoaderTimeoutRef.current = setTimeout(() => {
-				setLoading(false);
-			}, 1000);
-		};
+				setLoading(false)
+			}, 1000)
+		}
 
 		const handleLoaderAction = (shouldStart: boolean) => {
 			if (shouldStart) {
-				setLoading(true);
+				setLoading(true)
 			} else {
-				setTimeout(() => setLoading(false), 2000);
+				setTimeout(() => setLoading(false), 2000)
 			}
-		};
+		}
 
 		const receiveMessage = (event: MessageEvent) => {
-			const { message, source, values } = event?.data;
-			if (source === "react-devtools-bridge") return;
+			const { message, source, values } = event?.data
+			if (source === "react-devtools-bridge") return
 
-			const isYearTab = activeTab === "Year" || activeTab === "Year_3";
+			const isYearTab = activeTab === "Year" || activeTab === "Year_3"
 
 			// Handle chart updates
 			if (
 				message === "updateChartSeries" ||
 				message === "updateChartOptions"
 			) {
-				handleChartUpdate();
+				handleChartUpdate()
 			} else if (message === "Chart updated") {
-				handleChartUpdated();
+				handleChartUpdated()
 			}
 			// Handle loader actions
 			else if (
 				message === "startLoader" ||
 				(isYearTab && message === "Zoom Start")
 			) {
-				handleLoaderAction(true);
+				handleLoaderAction(true)
 			} else if (
 				message === "stopLoader" ||
 				(isYearTab && message === "Zoomed")
 			) {
-				handleLoaderAction(false);
+				handleLoaderAction(false)
 			}
 			// Handle max/min values
 			else if (message === "highLightedMaxMin") {
-				setMaxMinValues(values ? values : "0");
+				setMaxMinValues(values ? values : "0")
 			}
 
-			console.log(`Message from ${source} iframe:`, event.data);
-		};
+			//console.log(`Message from ${source} iframe:`, event.data);
+		}
 
-		window.addEventListener("message", receiveMessage);
-		return () => window.removeEventListener("message", receiveMessage);
-	}, [activeTab]);
+		window.addEventListener("message", receiveMessage)
+		return () => window.removeEventListener("message", receiveMessage)
+	}, [activeTab])
 
 	return (
 		<>
@@ -268,19 +268,19 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 							onLoadStart={() => {}}
 							onLoad={() => {}}
 							onLoadEnd={() => {
-								setIsChartLoaded(true);
+								setIsChartLoaded(true)
 							}}
 							onMessage={onMessage}
 							onFileDownload={({ nativeEvent }: any) => {
-								const { downloadUrl } = nativeEvent;
+								const { downloadUrl } = nativeEvent
 							}}
 							onHttpError={(syntheticEvent) => {
 								const { statusCode } =
-									syntheticEvent.nativeEvent;
+									syntheticEvent.nativeEvent
 								console.log(
 									"HTTP error status code",
 									statusCode
-								);
+								)
 							}}
 							containerStyle={{
 								overflow: "hidden",
@@ -349,7 +349,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 				/>
 			)}
 		</>
-	);
-};
+	)
+}
 
-export default ChartComponent;
+export default ChartComponent

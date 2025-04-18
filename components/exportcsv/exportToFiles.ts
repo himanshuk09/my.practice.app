@@ -23,7 +23,7 @@ const splitTimeStrring = (timestampStr: string) => {
 const saveCSVToFileWeb = (jsonData: any[]) => {
 	const headers = ["Date", "Time", "[kwh]"];
 	const rows = jsonData.map((item) => {
-		const { formattedDate, formattedTime } = splitTimeStrring(item.x); // Split timestamp
+		const { formattedDate, formattedTime } = splitTimeSeriesString(item.x); // Split timestamp
 		return [formattedDate, formattedTime, item.y].join(","); // Combine into CSV row
 	});
 
@@ -162,8 +162,11 @@ const saveCSVToFileString = async (jsonData: any[]) => {
 		});
 	}
 };
-// base64 to pdf
-const shareBase64AsPDF = async (base64: string, fileName = "document.pdf") => {
+
+// .....................//
+
+// base64 to pdf for portfolio screen
+const exportBase64ToPDF = async (base64: string, fileName = "document.pdf") => {
 	try {
 		if (base64 === "") {
 			return;
@@ -223,7 +226,7 @@ const shareBase64AsPDF = async (base64: string, fileName = "document.pdf") => {
 		});
 	}
 };
-const saveBase64AsPDFWeb = (base64: string, fileName = "document.pdf") => {
+const exportBase64ToPDFWeb = (base64: string, fileName = "document.pdf") => {
 	try {
 		if (!base64) return;
 
@@ -259,6 +262,7 @@ const saveBase64AsPDFWeb = (base64: string, fileName = "document.pdf") => {
 		console.error("Error saving PDF:", error);
 	}
 };
+// deals list to csv
 const convertDealsToCSV = (data: any) => {
 	const headers = [
 		"Date",
@@ -295,7 +299,7 @@ const convertDealsToCSV = (data: any) => {
 	);
 };
 
-const saveDealsCSV = async (jsonData: any, fileName = "trades.csv") => {
+const exportDealsToCSV = async (data: any, fileName = "trades.csv") => {
 	try {
 		let savedDirectoryUri = await AsyncStorage.getItem(DIRECTORY_URI_KEY);
 
@@ -310,7 +314,7 @@ const saveDealsCSV = async (jsonData: any, fileName = "trades.csv") => {
 			await AsyncStorage.setItem(DIRECTORY_URI_KEY, savedDirectoryUri);
 		}
 
-		const csvContent = convertDealsToCSV(jsonData);
+		const csvContent = convertDealsToCSV(data);
 
 		// Create the file in the chosen directory
 		const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
@@ -345,9 +349,9 @@ const saveDealsCSV = async (jsonData: any, fileName = "trades.csv") => {
 	}
 };
 
-const saveDealsCSVWeb = async (jsonData: any, fileName = "trades.csv") => {
+const exportDealsToCSVWeb = async (data: any, fileName = "trades.csv") => {
 	try {
-		const csvContent = convertDealsToCSV(jsonData);
+		const csvContent = convertDealsToCSV(data);
 		const blob = new Blob([csvContent], { type: "text/csv" });
 
 		// Create a URL for the Blob
@@ -373,12 +377,115 @@ const saveDealsCSVWeb = async (jsonData: any, fileName = "trades.csv") => {
 	}
 };
 
+//new function after added load data api to convert timeseries to csv
+const splitTimeSeriesString = (timeseries: string) => {
+	// Input format: "mm/dd/yyyy hh:mm"
+	const [datePart, timePart] = timeseries.split(" ");
+	const [month, day, year] = datePart.split("/"); // Changed order to match input format
+	const [hours, minutes] = timePart.split(":");
+
+	return {
+		formattedDate: `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`, // yyyy-mm-dd
+		formattedTime: `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}:00`, // hh:mm:ss
+	};
+};
+
+const exportTimeseriesToCSV = async (data: any[]) => {
+	const headers = ["Date", "Time", "[kwh]"];
+
+	const rows = data.map((item) => {
+		// Ensure the input is in expected format (mm/dd/yyyy hh:mm)
+		if (!/^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(item.x)) {
+			console.warn(`Unexpected date format: ${item.x}`);
+		}
+
+		const { formattedDate, formattedTime } = splitTimeSeriesString(item.x);
+		return [formattedDate, formattedTime, item.y].join(",");
+	});
+
+	const csvContent = [headers.join(","), ...rows].join("\n");
+	const fileName = "cockpit.csv";
+
+	try {
+		// Retrieve saved directory URI from AsyncStorage
+		let savedDirectoryUri = await AsyncStorage.getItem(DIRECTORY_URI_KEY);
+
+		// If no saved directory, ask for permission
+		if (!savedDirectoryUri) {
+			const permissions =
+				await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+			if (!permissions.granted) {
+				Toast.show({
+					type: "download",
+					text1: "Permission Denied",
+					text2: "Storage access not granted!",
+					position: "bottom",
+					bottomOffset: 0,
+					visibilityTime: 5000,
+				});
+				return;
+			}
+			savedDirectoryUri = permissions.directoryUri;
+			await AsyncStorage.setItem(DIRECTORY_URI_KEY, savedDirectoryUri);
+		}
+
+		// Create and write the file
+		const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+			savedDirectoryUri,
+			fileName,
+			"text/csv"
+		);
+
+		await FileSystem.writeAsStringAsync(fileUri, csvContent, {
+			encoding: FileSystem.EncodingType.UTF8,
+		});
+
+		Toast.show({
+			type: "download",
+			text1: "File Saved",
+			text2: "Tap to open the file.",
+			position: "bottom",
+			bottomOffset: 0,
+			visibilityTime: 5000,
+			props: { fileUri, fileName, type: "csv" },
+		});
+	} catch (error) {
+		console.error("Error:", error);
+		Toast.show({
+			type: "download",
+			text1: "Failed to Save File",
+			text2: "An error occurred while saving.",
+			position: "bottom",
+			bottomOffset: 0,
+			visibilityTime: 5000,
+		});
+	}
+};
+const exportTimeseriesToCSVForWeb = (data: any[]) => {
+	const headers = ["Date", "Time", "[kwh]"];
+	const rows = data.map((item) => {
+		const { formattedDate, formattedTime } = splitTimeSeriesString(item.x); // Split timestamp
+		return [formattedDate, formattedTime, item.y].join(","); // Combine into CSV row
+	});
+
+	const csvContent = [headers.join(","), ...rows].join("\n");
+
+	const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+	const link = document.createElement("a");
+	const url = URL.createObjectURL(blob);
+	link.href = url;
+	link.download = "cockpit.csv";
+	link.click();
+	URL.revokeObjectURL(url);
+};
 export {
 	saveCSVToFileWeb,
 	saveCSVToFile,
 	saveCSVToFileString,
-	shareBase64AsPDF,
-	saveBase64AsPDFWeb,
-	saveDealsCSV,
-	saveDealsCSVWeb,
+	exportBase64ToPDF,
+	exportBase64ToPDFWeb,
+	exportDealsToCSV,
+	exportDealsToCSVWeb,
+	exportTimeseriesToCSV,
+	exportTimeseriesToCSVForWeb,
 };

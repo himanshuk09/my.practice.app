@@ -1,4 +1,10 @@
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import {
+	View,
+	Text,
+	Pressable,
+	TouchableOpacity,
+	Platform,
+} from "react-native";
 import React, { useCallback, useState } from "react";
 import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -41,7 +47,9 @@ const DateTimePickerComponents = ({
 	setRangeDate,
 }: DateTimePickerComponentsProps) => {
 	const [mode] = useState<ModeType>(pickerMode);
-	const [date, setDate] = useState<DateType | undefined>(defaultDate);
+	const [date, setDate] = useState<DateType | undefined>(
+		dayjs(defaultDate).isValid() ? defaultDate : dayjs()
+	);
 	const [range, setRange] = React.useState<{
 		startDate: DateType;
 		endDate: DateType;
@@ -77,9 +85,9 @@ const DateTimePickerComponents = ({
 	if (!open) return null;
 	return (
 		<Pressable
-			className={`w-80 -z-0 bg-[#fff] p-1 rounded-sm  md:mt-9 md:ml-5  shadow-lg`}
+			className={`${Platform.OS === "web" ? "w-80" : "w-[23rem]"} mx-1 -z-0 bg-[#fff] p-1 rounded-md  md:mt-9 md:ml-5  shadow-lg`}
 		>
-			<View className="flex flex-row items-start justify-between">
+			<View className="flex flex-row items-start my-2 justify-between">
 				<Text className="text-slate-90000 font-bold my-1 ml-1">
 					{i18n.t(title)}
 				</Text>
@@ -87,7 +95,7 @@ const DateTimePickerComponents = ({
 					className="m-1"
 					onPress={() => setOpen(!open)}
 				>
-					<AntDesign name="close" size={20} color="#E63757" />
+					<AntDesign name="close" size={22} color="#E63757" />
 				</TouchableOpacity>
 			</View>
 			<DateTimePicker
@@ -120,7 +128,7 @@ const DateTimePickerComponents = ({
 				}}
 			/>
 
-			<View className="px-3 pb-2 relative">
+			<View className="px-3 pb-4 relative">
 				{mode === "single" ? (
 					<View className=" flex-col items-start justify-between">
 						<View className="w-full items-center">
@@ -174,7 +182,7 @@ const DateTimePickerComponents = ({
 					</View>
 				) : mode === "range" ? (
 					<View style={{ gap: 3 }}>
-						<View className="flex flex-row">
+						<View className="flex flex-row mt-5">
 							<Text
 								style={{
 									marginRight: 5,
@@ -199,7 +207,7 @@ const DateTimePickerComponents = ({
 									: "..."}
 							</Text>
 						</View>
-						<View className="flex flex-row">
+						<View className="flex flex-row mb-5">
 							<Text
 								style={{
 									marginRight: 5,

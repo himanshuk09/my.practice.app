@@ -30,7 +30,7 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
                     stacked: false,
                     zoom: { type: "x", enabled: true, autoScaleYaxis: true },
                     animations: {
-                        enabled: false,
+                        enabled: true,
                         easing: "linear",
                         speed: 500,
                         dynamicAnimation: {
@@ -834,6 +834,6 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
         </script>
     </body>
 </html>
-`;
+`
 
-export default iframeLineHtmlContent;
+export default iframeLineHtmlContent

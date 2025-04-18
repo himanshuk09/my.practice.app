@@ -1,5 +1,5 @@
 import { st } from "@/utils/Styles";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
@@ -9,34 +9,48 @@ import { getLoadDataTS } from "@/services/loaddata.service";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { View, Text, SafeAreaView, Platform, StatusBar } from "react-native";
 import {
-	saveCSVToFileString,
-	saveCSVToFileWeb,
-} from "@/components/fileDownloaders/saveCSVFile";
+	exportTimeseriesToCSV,
+	exportTimeseriesToCSVForWeb,
+} from "@/components/exportcsv/exportToFiles";
+import useTabDataCache from "@/hooks/useTabDataCache";
 
 const LoadDataDetails = () => {
 	const { id, title } = useLocalSearchParams();
-	const [loadDetail, setloadDetails] = useState<any>([]);
+	const [loadDetail, setloadDetails] = useState<any>({});
 	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
 	const locale = useSelector((state: RootState) => state.culture.locale);
+	const { fetchWithCache } = useTabDataCache();
+	// const fetchChartData = async (tab: string, payload: any) => {
+	// 	try {
+	// 		let fullPayload = {
+	// 			...JSON.parse(decodeURIComponent(id as string)),
+	// 			TimeFrame: tab,
+	// 			...payload,
+	// 		};
+	// 		const response: any = await getLoadDataTS(fullPayload);
+	// 		setloadDetails(response);
+	// 		return response;
+	// 	} catch (error) {
+	// 		console.error("Error fetching data:", error);
+	// 		return null;
+	// 	}
+	// };
 
-	const fetchChartData = async (tab: string, payload: any) => {
-		try {
+	const fetchChartData = useCallback(
+		async (tab: string, payload: any) => {
 			let fullPayload = {
 				...JSON.parse(decodeURIComponent(id as string)),
 				TimeFrame: tab,
 				...payload,
 			};
-			const response: any = await getLoadDataTS(fullPayload);
-			setloadDetails(response);
-			return response;
-		} catch (error) {
-			console.error("Error fetching data:", error);
-			return null;
-		}
-	};
+			const data = await fetchWithCache(fullPayload, getLoadDataTS);
+			return data;
+		},
+		[fetchWithCache, id]
+	);
 
 	return (
 		<SafeAreaView className="flex-1 ">
@@ -95,9 +109,11 @@ const LoadDataDetails = () => {
 								color="#e31837"
 								onPress={() => {
 									if (Platform.OS === "web") {
-										saveCSVToFileWeb(loadDetail?.data);
+										exportTimeseriesToCSVForWeb(
+											loadDetail?.data
+										);
 									} else {
-										saveCSVToFileString(loadDetail?.data);
+										exportTimeseriesToCSV(loadDetail?.data);
 									}
 								}}
 							/>
