@@ -23,6 +23,7 @@ const Forgotpassword = () => {
 	const [email, setEmail] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
 	const [isEmailFocused, setIsEmailFocused] = useState(false);
+
 	const validateEmail = (text: string) => {
 		if (emailRegex.test(text)) {
 			setErrorMessage("");

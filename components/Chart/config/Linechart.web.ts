@@ -92,6 +92,9 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
                                 yaxis,
                             };
                         },
+						animationEnd: function (chartContext, { xaxis, yaxis }) {
+                            sendMsgToWeb("animationEnd")
+                        },
                     },
 
                     toolbar: {
@@ -515,6 +518,9 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
             chart.render();
 
             function updateChart(filteredData, updatedOptions, title = "Energy Use") {
+				if(filteredData.length===0){
+						sendMsgToWeb("Empty Series")
+				}					
                 chart.updateSeries([{ name: title, data: filteredData }]);
                 chart.updateOptions(updatedOptions);
                 if (chart.w.config.series.length === 1) {
@@ -523,6 +529,9 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
             }
 
             function updateChartSeries(filteredData, title = "Energy Use") {
+				if(filteredData.length===0){
+					sendMsgToWeb("Empty Series")
+				}
                 chart.updateSeries([{ name: title, data: filteredData }]);
             }
 
@@ -834,6 +843,6 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
         </script>
     </body>
 </html>
-`
+`;
 
-export default iframeLineHtmlContent
+export default iframeLineHtmlContent;

@@ -35,7 +35,7 @@ const Rate = () => {
 				}
 			}}
 		>
-			<>
+			<React.Fragment>
 				<StatusBar
 					barStyle="dark-content"
 					backgroundColor="#C3C3C3"
@@ -122,7 +122,7 @@ const Rate = () => {
 						</Text>
 					</TouchableOpacity>
 				</View>
-			</>
+			</React.Fragment>
 		</TouchableWithoutFeedback>
 	);
 };

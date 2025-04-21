@@ -72,7 +72,11 @@ const PortFolioChartShimmer = () => {
 const ChartGraphSimmer = () => {
 	return (
 		<View
-			style={[styles.container, StyleSheet.absoluteFill, { margin: 1 }]}
+			style={[
+				styles.container,
+				StyleSheet.absoluteFill,
+				{ margin: 1, zIndex: 100 },
+			]}
 			className="absolute top-0 left-0 right-0 -bottom-1 justify-center items-center bg-[#ffffffda] z-50"
 		>
 			<ShimmerPlaceholder style={styles.graph} />

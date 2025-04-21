@@ -21,6 +21,26 @@ import iframeLineHtmlContent from "@/components/Chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/Chart/config/Linechart.android";
 
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
+
+const formatNumber = (value: number, locale: string): string => {
+	return new Intl.NumberFormat(locale, {
+		useGrouping: false,
+		// minimumFractionDigits: 0,
+		maximumFractionDigits: 2,
+	}).format(value);
+};
+const parseNumber = (
+	value: string | number | null | undefined | any,
+	locale: string
+): number => {
+	if (value === null || value === undefined || value === 0) {
+		return 0;
+	}
+	const normalized =
+		locale === "de" ? value?.replace(/\./g, "").replace(",", ".") : value;
+	return parseFloat(normalized);
+};
+
 type ToggleChartComponentProps = {
 	isSignaleScreen?: boolean;
 	bottonTitle?: string;
@@ -108,7 +128,7 @@ const ToggleChartComponent = ({
 					clearTimeout(LoaderTimeoutRef.current);
 				LoaderTimeoutRef.current = setTimeout(() => {
 					setLoading(false);
-				}, 500);
+				}, 300);
 				break;
 
 			case "startLoader":
@@ -130,6 +150,12 @@ const ToggleChartComponent = ({
 			case "highLightedMaxMin":
 				//setMaxMinValues(values)
 				break;
+			case "animationEnd":
+				setShowChart(true);
+				break;
+			case "Empty Series":
+				setShowChart(true);
+				break;
 			default:
 				break;
 		}
@@ -139,7 +165,7 @@ const ToggleChartComponent = ({
 		// 	values,
 		// 	reason,
 		// 	isZoomed
-		// )
+		// );
 	};
 
 	// its used to update chart options and series based on data
@@ -211,11 +237,16 @@ const ToggleChartComponent = ({
 	//its used to handle custom data
 	const handleRangeDataFilter = async () => {
 		setActiveTab("");
-		setLoading(true);
 		fetchData({
 			TimeFrame: 6,
-			MinValue: maxMinValues?.minY,
-			MaxValue: maxMinValues?.maxY,
+			MinValue: formatNumber(
+				parseNumber(maxMinValues?.minY, locale),
+				"en"
+			),
+			MaxValue: formatNumber(
+				parseNumber(maxMinValues?.maxY, locale),
+				"en"
+			),
 			StartDate: formatDateTime(dayjs(selectedStartDate)),
 			EndDate: formatDateTime(dayjs(selectedEndDate)),
 		});
@@ -230,8 +261,8 @@ const ToggleChartComponent = ({
 				);
 				if (chartConfig?.data?.length > 0) {
 					updateChartData(chartConfig?.data);
-					updateLocale();
 					setPreviousTab(activeTab);
+					updateLocale();
 					setSelectedStartDate(
 						convertDateTime(chartConfig?.data[0]?.x)
 					);
@@ -243,11 +274,15 @@ const ToggleChartComponent = ({
 					setMaxMinValues({
 						minX: 0,
 						minY: new Intl.NumberFormat(locale, {
-							useGrouping: true,
+							useGrouping: false,
+							// minimumFractionDigits: 0,
+							maximumFractionDigits: 2,
 						}).format(chartConfig?.MinValue),
 						maxX: 0,
 						maxY: new Intl.NumberFormat(locale, {
-							useGrouping: true,
+							useGrouping: false,
+							// minimumFractionDigits: 0,
+							maximumFractionDigits: 2,
 						}).format(chartConfig?.MaxValue),
 					});
 				} else {
@@ -261,7 +296,7 @@ const ToggleChartComponent = ({
 						maxY: 0,
 					});
 				}
-				setShowChart(true);
+				// setShowChart(true);
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}
@@ -287,13 +322,12 @@ const ToggleChartComponent = ({
 
 	return (
 		<View className="flex-1  bg-white">
-			{isLoading && <ChartLoaderPNG />}
-
 			{!isLandscape ? (
 				<TabToggleButtons
 					activeTab={activeTab}
 					setActiveTab={setActiveTab}
 					visibleTabs={visibleTabs}
+					isLoading={isLoading}
 					setLoading={setLoading}
 				/>
 			) : (
@@ -301,12 +335,14 @@ const ToggleChartComponent = ({
 					activeTab={activeTab}
 					setActiveTab={setActiveTab}
 					visibleTabs={visibleTabs}
+					isLoading={isLoading}
 					setLoading={setLoading}
 				/>
 			)}
 			{/* Chart  */}
 			<View className="flex-1  border-gray-300">
 				{!showchart && <ChartGraphSimmer />}
+				{isLoading && <ChartLoaderPNG />}
 				<ChartComponent
 					isChartEmpty={isChartEmpty}
 					webViewRef={webViewRef}
@@ -315,6 +351,7 @@ const ToggleChartComponent = ({
 					activeTab={activeTab}
 					webViewhtmlContent={webviewLineHtmlContent}
 					iFramehtmlContent={iframeLineHtmlContent}
+					setShowChart={setShowChart}
 					setLoading={setLoading} // for web
 					isTooltipEnabled={isTooltipEnabled}
 					setIsChartLoaded={setIsChartLoaded}
@@ -324,7 +361,7 @@ const ToggleChartComponent = ({
 
 			{/* Bottom Button */}
 			{!isLandscape && !isSignaleScreen && (
-				<>
+				<React.Fragment>
 					<TouchableOpacity
 						className="bg-[#e31836] py-3 mx-5 rounded-sm my-2"
 						onPress={() => setModalVisible(!modalVisible)}
@@ -347,7 +384,7 @@ const ToggleChartComponent = ({
 						setSelectedEndDate={setSelectedEndDate}
 						handleRangeDataFilter={handleRangeDataFilter}
 					/>
-				</>
+				</React.Fragment>
 			)}
 		</View>
 	);

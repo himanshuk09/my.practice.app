@@ -1,6 +1,6 @@
 import { st } from "@/utils/Styles";
-import { Href, useRouter } from "expo-router";
 import { i18n } from "@/localization/config";
+import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { AppDispatch, RootState } from "@/store/store";

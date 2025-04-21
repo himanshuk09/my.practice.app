@@ -45,6 +45,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
             }
 
             let chart;
+			var activeTab;
             function toggleMarkers() {
                 // Start loader
                 sendMsgToReactNative("startLoader");
@@ -113,7 +114,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                         easing: "easeinout", // smoother easing for large sets
                         speed: 1000, // slightly slower for less jitter
                         animateGradually: {
-                            enabled: false,
+                            enabled: true,
                             delay: 150, // shorter delay so points appear faster
                         },
                         dynamicAnimation: {
@@ -121,7 +122,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                             speed: 1000, // sync speed with general animation
                         },
                         initialAnimation: {
-                            enabled: true,
+                            enabled: false,
                             speed: 1200, // smooth initial load for big data
                         },
                     },
@@ -602,6 +603,9 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
             window.exportChart = exportChart;
 
             function updateChart(filteredData, updatedOptions, title = "Energy Use") {
+				if(filteredData.length===0){
+					sendMsgToReactNative("Empty Series")
+				}
                 chart.updateOptions({
                     series: [{ name: title, data: filteredData }],
                     ...updatedOptions,
@@ -610,6 +614,9 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
             }
 
             function updateChartSeries(filteredData, title = "Energy Use") {
+				if(filteredData.length===0){
+					sendMsgToReactNative("Empty Series")
+				}
                 chart.updateSeries([{ name: title, data: filteredData }], true);
                 sendMsgToReactNative("updateChartSeries", title);
             }
@@ -748,9 +755,13 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
             }
 
             function updateFormate(type, locale) {
-                sendMsgToReactNative("updateFormate");
+                sendMsgToReactNative("updateFormate",type);
                 let newLocale = locale === "de" ? "de-DE" : "en-EN";
+				// Determine formatting mode based on activeTab
+				const formatType = type === activeTab ? "default" : type;
 
+				// ✅ Update activeTab AFTER deciding formatType
+				activeTab = type;
                 chart.updateOptions({
                     xaxis: {
                         labels: {
@@ -759,7 +770,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                                 const index = chart.w.globals.labels.indexOf(value);
                                 const date = new Date(value);
                                 let formatOptions = {};
-                                switch (type) {
+                                switch (formatType) {
                                     case "Day":
                                         if (index === 0) {
                                             formatOptions = {
@@ -787,6 +798,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                                             // timeZone: "Europe/Berlin",
                                         };
                                         break;
+									case "default":
                                     default:
                                         formatOptions = {
                                             year: "numeric",
@@ -795,7 +807,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                                         };
                                         break;
                                 }
-
+								
                                 return date.toLocaleString(newLocale, formatOptions);
                             },
                         },

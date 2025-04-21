@@ -1,7 +1,8 @@
 import { useAuth } from "@/hooks/useAuth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
-import { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
+import { View } from "react-native";
 
 type ProtectedRouteProps = {
 	children: ReactNode;
@@ -36,5 +37,5 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 	}
 
 	// If session is true or the effect hasn't redirected yet, render children
-	return <>{children}</>;
+	return <React.Fragment>{children}</React.Fragment>;
 }

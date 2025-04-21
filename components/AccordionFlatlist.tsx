@@ -155,7 +155,7 @@ const AccordionFlatlist = ({
 	return data?.length <= 0 ? (
 		<ShimmerAccordion />
 	) : (
-		<>
+		<React.Fragment>
 			<View className="w-full  p-3 bg-primary">
 				<Text className="flex justify-start font-normal  py-2 p-3  items-center mb-4  h-14 text-xl rounded-sm text-white">
 					{title}
@@ -171,7 +171,7 @@ const AccordionFlatlist = ({
 					padding: 10,
 				}}
 			/>
-		</>
+		</React.Fragment>
 	);
 };
 

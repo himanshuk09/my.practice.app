@@ -42,6 +42,7 @@ interface PickerModelProps {
 
 const formatNumber = (value: number, locale: string): string => {
 	return new Intl.NumberFormat(locale, {
+		useGrouping: false,
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 10,
 	}).format(value);
@@ -56,6 +57,17 @@ const parseNumber = (
 	const normalized =
 		locale === "de" ? value?.replace(/\./g, "").replace(",", ".") : value;
 	return parseFloat(normalized);
+};
+const displayNumber = (value: string | number, locale: string): string => {
+	const parsedValue =
+		typeof value === "string" ? parseFloat(value.replace(",", ".")) : value;
+
+	if (isNaN(parsedValue)) return "";
+
+	return new Intl.NumberFormat(locale, {
+		useGrouping: false,
+		maximumFractionDigits: 2,
+	}).format(parsedValue);
 };
 
 const PickerModel = ({
@@ -174,6 +186,7 @@ const PickerModel = ({
 			}));
 		}
 	};
+
 	// Monitor keyboard visibility
 	useEffect(() => {
 		const keyboardShowListener = Keyboard.addListener(
@@ -499,6 +512,10 @@ const PickerModel = ({
 												padding: 10,
 											}}
 											keyboardType="numeric"
+											// value={displayNumber(
+											// 	maxMinValues?.minY,
+											// 	locale
+											// )}
 											value={maxMinValues.minY.toString()}
 											onChangeText={(text) =>
 												handleInputChange(text, "minY")
@@ -534,6 +551,10 @@ const PickerModel = ({
 												padding: 10,
 											}}
 											keyboardType="numeric"
+											// value={displayNumber(
+											// 	maxMinValues?.maxY,
+											// 	locale
+											// )}
 											value={maxMinValues.maxY.toString()}
 											onChangeText={(text) =>
 												handleInputChange(text, "maxY")

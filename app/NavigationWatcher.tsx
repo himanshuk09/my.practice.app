@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import { BackHandler, Alert } from "react-native";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import { useDispatch, useStore } from "react-redux";
 import { useRouter, useSegments } from "expo-router";
-
 import { closeDrawer } from "@/store/drawerSlice";
 import { activeLoading } from "@/store/navigationSlice";
-import { RootState } from "@/store/store";
 
 import { useAuth } from "@/hooks/useAuth";
 
@@ -20,7 +18,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 	const dispatch = useDispatch();
 	const segments = useSegments();
 	const currentPath = "/" + segments.join("/");
-	const history = useSelector((state: RootState) => state.navigation.history);
 
 	useEffect(() => {
 		const backAction = () => {
@@ -80,12 +77,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 				return true;
 			}
 
-			// // Only go back if there is a valid previous screen
-			// if (history.length !== 0) {
-			// 	router.back();
-			// } else {
-			// 	router.replace("/dashboard"); // Or navigate to a default screen if no history
-			// }
 			router.back();
 			return true;
 		};

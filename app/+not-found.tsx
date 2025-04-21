@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function NotFoundScreen() {
 	return (
-		<>
+		<React.Fragment>
 			<Stack.Screen options={{ title: "Page Not Found" }} />
 			<View style={styles.container}>
 				{/* Replace the require path with your image asset if necessary */}
@@ -32,7 +32,7 @@ export default function NotFoundScreen() {
 					</Pressable>
 				</Link>
 			</View>
-		</>
+		</React.Fragment>
 	);
 }
 

@@ -86,14 +86,14 @@ const PrivacyAndPolicy = () => {
 						{i18n.t("privacyAndPolicy.h1s1p1")}
 					</Text>
 					{locale === "de" && (
-						<>
+						<React.Fragment>
 							<Text className="text-[#4b4b4e] py-2 text-md font-normal">
 								{i18n.t("privacyAndPolicy.h1s1p2")}
 							</Text>
 							<Text className="text-[#4b4b4e] py-2 text-md font-normal">
 								{i18n.t("privacyAndPolicy.h1s1p3")}
 							</Text>
-						</>
+						</React.Fragment>
 					)}
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
 						{i18n.t("privacyAndPolicy.h1p3")}

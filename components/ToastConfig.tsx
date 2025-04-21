@@ -57,6 +57,14 @@ const openCSVFile = async (fileUri: string) => {
 		}
 	} catch (error) {
 		console.error("Failed to open file:", error);
+		Toast.show({
+			type: "error",
+			text1: "Cannot Open CSV",
+			text2: "Make sure a CSV viewer is installed.",
+			position: "bottom",
+			bottomOffset: 0,
+			visibilityTime: 3000,
+		});
 	}
 };
 const openPNGFile = async (fileUri: string) => {
@@ -131,6 +139,14 @@ const sharePNGFile = async (fileName: string) => {
 		}
 	} catch (error) {
 		console.error("Failed to share file:", error);
+		Toast.show({
+			type: "error",
+			text1: "Failed to Share PNG",
+			text2: "Ensure your device supports sharing.",
+			position: "bottom",
+			bottomOffset: 0,
+			visibilityTime: 3000,
+		});
 	}
 };
 

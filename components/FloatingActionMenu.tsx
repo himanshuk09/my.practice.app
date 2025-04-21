@@ -14,6 +14,7 @@ export default function FloatingActionMenu({
 	activeTab,
 	setActiveTab,
 	visibleTabs,
+	isLoading,
 }: any) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [animation] = useState(new Animated.Value(0));
@@ -80,6 +81,7 @@ export default function FloatingActionMenu({
 								onPress={() => {
 									setActiveTab(tab);
 								}}
+								disabled={isLoading}
 							>
 								<Text
 									style={[

@@ -70,7 +70,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 		onPanResponderRelease: () => true,
 	});
 	return (
-		<>
+		<React.Fragment>
 			<View
 				{...panResponder.panHandlers}
 				style={[StyleSheet.absoluteFill]}
@@ -93,7 +93,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 					<View />
 				</Pressable>
 			)}
-		</>
+		</React.Fragment>
 	);
 };
 const styles = StyleSheet.create({

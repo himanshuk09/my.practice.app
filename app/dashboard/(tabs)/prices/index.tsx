@@ -104,7 +104,7 @@ const Prices = () => {
 					</Text>
 				</View>
 			) : (
-				<>
+				<React.Fragment>
 					{prices?.length <= 0 ? (
 						<ShimmerPricesHeader />
 					) : (
@@ -162,7 +162,7 @@ const Prices = () => {
 							/>
 						}
 					/>
-				</>
+				</React.Fragment>
 			)}
 		</SafeAreaView>
 	);

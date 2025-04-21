@@ -34,6 +34,7 @@ const SignIn: React.FC = () => {
 	const [hidePassword, setHidePassword] = useState<boolean>(true);
 	const [isUserNameFocused, setIsUserNameFocused] = useState(false);
 	const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
 	const validateInput = (userName: string, password: string): string => {
 		if (userName.trim() === "" && password.trim() === "") {
 			return "Please_enter_your_username_and_password";

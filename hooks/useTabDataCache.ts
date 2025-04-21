@@ -95,3 +95,22 @@ const useTabDataCache = () => {
 };
 
 export default useTabDataCache;
+
+// cacheManager.ts
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { clearImageCache } from 'expo-image';
+// import * as FileSystem from 'expo-file-system';
+// import { Alert } from 'react-native';
+
+// export const clearAllApplicationCache = async () => {
+//   try {
+//     await AsyncStorage.clear();
+//     await clearImageCache();
+//     await FileSystem.deleteAsync(FileSystem.cacheDirectory, { idempotent: true });
+
+//     Alert.alert('Success', 'All application cache has been cleared');
+//   } catch (error) {
+//     Alert.alert('Error', 'Failed to clear some cache');
+//     console.error('Cache clearing error:', error);
+//   }
+// };

@@ -3,49 +3,54 @@ import React from "react";
 import { Stack } from "expo-router";
 import Header from "@/components/MainHeader";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Drawer from "@/components/Drawer";
+import SwipeDetectionWrapper from "@/app/SwipeDetectionWrapper";
 
 const LegalNotesLayout = () => {
 	return (
 		<ProtectedRoute>
-			<Stack
-				screenOptions={{
-					headerShown: false,
-					gestureEnabled: true,
-					gestureDirection: "vertical",
-					contentStyle: { backgroundColor: "white" },
-					statusBarAnimation: "slide",
-				}}
-			>
-				<Stack.Screen
-					name="index"
-					options={{
-						headerShown: true,
-						animation: "slide_from_left",
-
-						header: ({ navigation }) => (
-							<Header navigation={navigation} />
-						),
-					}}
-				/>
-				<Stack.Screen
-					name="(tabs)"
-					options={{
+			<Drawer drawerWidth={290} />
+			<SwipeDetectionWrapper>
+				<Stack
+					screenOptions={{
 						headerShown: false,
-						animation: "slide_from_right",
+						gestureEnabled: true,
+						gestureDirection: "vertical",
+						contentStyle: { backgroundColor: "white" },
+						statusBarAnimation: "slide",
 					}}
-				/>
-				<Stack.Screen
-					name="settings"
-					options={{
-						headerShown: true,
-						animation: "slide_from_right",
+				>
+					<Stack.Screen
+						name="index"
+						options={{
+							headerShown: true,
+							animation: "slide_from_left",
 
-						header: ({ navigation }) => (
-							<Header navigation={navigation} />
-						),
-					}}
-				/>
-			</Stack>
+							header: ({ navigation }) => (
+								<Header navigation={navigation} />
+							),
+						}}
+					/>
+					<Stack.Screen
+						name="(tabs)"
+						options={{
+							headerShown: false,
+							animation: "slide_from_right",
+						}}
+					/>
+					<Stack.Screen
+						name="settings"
+						options={{
+							headerShown: true,
+							animation: "slide_from_right",
+
+							header: ({ navigation }) => (
+								<Header navigation={navigation} />
+							),
+						}}
+					/>
+				</Stack>
+			</SwipeDetectionWrapper>
 		</ProtectedRoute>
 	);
 };

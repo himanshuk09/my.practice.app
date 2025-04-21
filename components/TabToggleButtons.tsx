@@ -9,10 +9,11 @@ interface TabToggleButtonsProps {
 	visibleTabs: any;
 	setLoading?: any;
 	timeoutRef?: any;
+	isLoading?: boolean;
 }
 
 const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
-	({ activeTab, setActiveTab, visibleTabs }) => {
+	({ activeTab, setActiveTab, visibleTabs, isLoading }) => {
 		const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
 		const tabs = visibleTabs || allTabs;
 
@@ -23,13 +24,13 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 						key={tab}
 						onPress={() => {
 							setActiveTab(tab);
-							// startLoading()
 						}}
 						className={`flex-1 py-3 text-center rounded-sm h-14 ${
 							activeTab === tab
 								? "border-b-4 border-primary bg-white "
 								: "bg-gray-100  "
 						}`}
+						disabled={isLoading}
 						style={st.tabShadow}
 					>
 						<Text

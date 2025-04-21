@@ -67,7 +67,7 @@ const SignalDetails = () => {
 					<ChartShimmer />
 				</View>
 			) : (
-				<>
+				<React.Fragment>
 					<View
 						className={`flex-1 
 					 "bg-white"
@@ -142,7 +142,7 @@ const SignalDetails = () => {
 							</Text>
 						</TouchableOpacity>
 					)}
-				</>
+				</React.Fragment>
 			)}
 		</SafeAreaView>
 	);

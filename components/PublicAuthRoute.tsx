@@ -1,7 +1,8 @@
 // components/PublicAuthRoute.tsx
 import { useAuth } from "@/hooks/useAuth";
 import { Redirect, Slot } from "expo-router";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
+import { View } from "react-native";
 
 type PublicAuthRouteProps = {
 	children: ReactNode;
@@ -15,5 +16,5 @@ export default function PublicAuthRoute({ children }: PublicAuthRouteProps) {
 		return <Redirect href="/dashboard" />;
 	}
 
-	return <>{children}</>;
+	return <React.Fragment>{children}</React.Fragment>;
 }

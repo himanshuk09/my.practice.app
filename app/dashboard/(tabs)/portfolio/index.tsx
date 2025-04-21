@@ -78,7 +78,7 @@ const Portfolio: React.FC = () => {
 					</Text>
 				</View>
 			) : (
-				<>
+				<React.Fragment>
 					<FlatListBlock
 						title="Gas"
 						items={gasList || []}
@@ -99,7 +99,7 @@ const Portfolio: React.FC = () => {
 							item?.PortfolioId.toString()
 						}
 					/>
-				</>
+				</React.Fragment>
 			)}
 		</SafeAreaView>
 	);

@@ -5,17 +5,17 @@ import {
 	Platform,
 	Easing,
 	StyleSheet,
-} from "react-native"
-import React, { useEffect, useRef } from "react"
+} from "react-native";
+import React, { useEffect, useRef } from "react";
 
 const CircularLoaderDefault = () => (
 	<View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#f5f5f5ed] z-50">
 		<ActivityIndicator size={70} color="#E31837" />
 	</View>
-)
+);
 
 const LoaderPNG = () => {
-	const rotation = useRef(new Animated.Value(0)).current
+	const rotation = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
 		const startRotation = () => {
@@ -26,16 +26,16 @@ const LoaderPNG = () => {
 					useNativeDriver: Platform.OS !== "web",
 					easing: Easing.linear,
 				})
-			).start()
-		}
+			).start();
+		};
 
-		startRotation()
-	}, [rotation])
+		startRotation();
+	}, [rotation]);
 
 	const rotate = rotation.interpolate({
 		inputRange: [0, 1],
 		outputRange: ["0deg", "360deg"],
-	})
+	});
 
 	return (
 		<View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#fffffff1] z-50">
@@ -44,11 +44,11 @@ const LoaderPNG = () => {
 				style={[{ width: 64, height: 64 }, { transform: [{ rotate }] }]}
 			/>
 		</View>
-	)
-}
+	);
+};
 
 export const ChartLoaderPNG = () => {
-	const rotation = useRef(new Animated.Value(0)).current
+	const rotation = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
 		const startRotation = () => {
@@ -59,20 +59,20 @@ export const ChartLoaderPNG = () => {
 					useNativeDriver: Platform.OS !== "web",
 					easing: Easing.linear,
 				})
-			).start()
-		}
+			).start();
+		};
 
-		startRotation()
-	}, [rotation])
+		startRotation();
+	}, [rotation]);
 
 	const rotate = rotation.interpolate({
 		inputRange: [0, 1],
 		outputRange: ["0deg", "360deg"],
-	})
+	});
 
 	return (
 		<View
-			className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#ffffffda] z-50"
+			className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#fff] z-50"
 			style={[StyleSheet.absoluteFill]}
 		>
 			<Animated.Image
@@ -80,7 +80,7 @@ export const ChartLoaderPNG = () => {
 				style={[{ width: 64, height: 64 }, { transform: [{ rotate }] }]}
 			/>
 		</View>
-	)
-}
+	);
+};
 
-export default LoaderPNG
+export default LoaderPNG;

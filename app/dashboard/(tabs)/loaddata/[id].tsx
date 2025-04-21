@@ -8,11 +8,11 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { getLoadDataTS } from "@/services/loaddata.service";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { View, Text, SafeAreaView, Platform, StatusBar } from "react-native";
+import useTabDataCache from "@/hooks/useTabDataCache";
 import {
 	exportTimeseriesToCSV,
 	exportTimeseriesToCSVForWeb,
-} from "@/components/exportcsv/exportToFiles";
-import useTabDataCache from "@/hooks/useTabDataCache";
+} from "@/components/exportcsv/exporttofile";
 
 const LoadDataDetails = () => {
 	const { id, title } = useLocalSearchParams();
@@ -47,6 +47,7 @@ const LoadDataDetails = () => {
 				...payload,
 			};
 			const data = await fetchWithCache(fullPayload, getLoadDataTS);
+			setloadDetails(data);
 			return data;
 		},
 		[fetchWithCache, id]
@@ -85,6 +86,7 @@ const LoadDataDetails = () => {
 								<Text className="text-mainCardHeaderText text-sm ml-2">
 									{new Intl.NumberFormat(locale, {
 										useGrouping: true,
+										maximumFractionDigits: 2,
 									}).format(loadDetail?.AverageValue)}{" "}
 									kWh
 								</Text>
@@ -96,6 +98,7 @@ const LoadDataDetails = () => {
 								<Text className="text-mainCardHeaderText text-sm ml-2">
 									{new Intl.NumberFormat(locale, {
 										useGrouping: true,
+										maximumFractionDigits: 2,
 									}).format(loadDetail?.AverageValue)}{" "}
 									kWh
 								</Text>
@@ -108,6 +111,7 @@ const LoadDataDetails = () => {
 								size={30}
 								color="#e31837"
 								onPress={() => {
+									if (loadDetail?.data?.length === 0) return;
 									if (Platform.OS === "web") {
 										exportTimeseriesToCSVForWeb(
 											loadDetail?.data

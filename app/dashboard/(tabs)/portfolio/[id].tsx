@@ -1,6 +1,6 @@
-import ChartComponent from "@/components/Chart/ChartComponent"
-import { inActiveLoading } from "@/store/navigationSlice"
-import React, { useEffect, useRef, useState } from "react"
+import ChartComponent from "@/components/Chart/ChartComponent";
+import { inActiveLoading } from "@/store/navigationSlice";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	View,
 	Platform,
@@ -10,50 +10,51 @@ import {
 	StatusBar,
 	Dimensions,
 	StyleSheet,
-} from "react-native"
-import { useDispatch, useSelector } from "react-redux"
-import { FontAwesome5 } from "@expo/vector-icons"
-import { i18n } from "@/localization/config"
-import { useLocalSearchParams } from "expo-router"
-import { RootState } from "@/store/store"
-import WebView, { WebViewMessageEvent } from "react-native-webview"
-import { PortFolioChartShimmer } from "@/components/ChartShimmer"
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { i18n } from "@/localization/config";
+import { useLocalSearchParams } from "expo-router";
+import { RootState } from "@/store/store";
+import WebView, { WebViewMessageEvent } from "react-native-webview";
+import { PortFolioChartShimmer } from "@/components/ChartShimmer";
 import {
 	getPortfolioDeals,
 	getPortfolioDetails,
 	getPortfolioReportBase64PDF,
-} from "@/services/portfolio.service"
-import Transactions, { DataDisplay } from "@/components/TranscationCard"
-import { Modal } from "react-native"
+} from "@/services/portfolio.service";
+import Transactions, { DataDisplay } from "@/components/TranscationCard";
+import { Modal } from "react-native";
 import {
 	updateApexChart,
 	updateEmptyChart,
-} from "@/components/Chart/chartUpdateFunctions"
+} from "@/components/Chart/chartUpdateFunctions";
+import Toast from "react-native-toast-message";
+import { FormattedPortfolioDetails, TradeDetailsArray } from "@/types/type";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
+import webviewAreaHtmlContent from "@/components/Chart/config/Areachart.android";
+import iframeAreaHtmlContent from "@/components/Chart/config/Areachart.web";
+import webviewDonutChartHtmlContent from "@/components/Chart/config/Donutchart.android";
+import iframeDonutChartHtmlContent from "@/components/Chart/config/Donutchart.web";
 import {
 	exportBase64ToPDF,
 	exportBase64ToPDFWeb,
-} from "@/components/exportcsv/exportToFiles"
-import Toast from "react-native-toast-message"
-import { FormattedPortfolioDetails, TradeDetailsArray } from "@/types/type"
-import useNetworkStatus from "@/hooks/useNetworkStatus"
-import webviewAreaHtmlContent from "@/components/Chart/config/Areachart.android"
-import iframeAreaHtmlContent from "@/components/Chart/config/Areachart.web"
-import webviewDonutChartHtmlContent from "@/components/Chart/config/Donutchart.android"
-import iframeDonutChartHtmlContent from "@/components/Chart/config/Donutchart.web"
+} from "@/components/exportcsv/exporttofile";
 
 const PortfolioOverView = () => {
-	const dispatch = useDispatch()
-	const isOnline = useNetworkStatus()
-	const { id } = useLocalSearchParams()
-	const locale = useSelector((state: RootState) => state.culture.locale)
-	const donutwebViewRef = useRef<WebView | null>(null)
-	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null)
-	const areaWebViewRef = useRef<WebView | null>(null)
-	const areaIFrameRef = useRef<HTMLIFrameElement | any>(null)
-	const paramsID = id ? JSON.parse(decodeURIComponent(id as string)) : {}
-	const [modalVisible, setModalVisible] = useState(false)
-	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false)
-	const [isDonutChartLoaded, setIsDonutChartLoaded] = useState<boolean>(false)
+	const dispatch = useDispatch();
+	const isOnline = useNetworkStatus();
+	const { id } = useLocalSearchParams();
+	const locale = useSelector((state: RootState) => state.culture.locale);
+	const donutwebViewRef = useRef<WebView | null>(null);
+	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null);
+	const areaWebViewRef = useRef<WebView | null>(null);
+	const areaIFrameRef = useRef<HTMLIFrameElement | any>(null);
+	const paramsID = id ? JSON.parse(decodeURIComponent(id as string)) : {};
+	const [modalVisible, setModalVisible] = useState(false);
+	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
+	const [isDonutChartLoaded, setIsDonutChartLoaded] =
+		useState<boolean>(false);
 	const [portfolioDetails, setPortfolioDetails] =
 		useState<FormattedPortfolioDetails>({
 			areaChartData: [],
@@ -61,50 +62,50 @@ const PortfolioOverView = () => {
 			closedData: [],
 			openData: [],
 			message: "",
-		})
-	const [portfolioDeals, setPortfolioDeals] = useState<TradeDetailsArray>([])
-	const [isRefreshing, setIsRefreshing] = useState<boolean>(false)
-	const { height: screenHeight } = Dimensions.get("window")
+		});
+	const [portfolioDeals, setPortfolioDeals] = useState<TradeDetailsArray>([]);
+	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+	const { height: screenHeight } = Dimensions.get("window");
 	const onMessage = async (event: WebViewMessageEvent) => {
-		const message = JSON.parse(event.nativeEvent.data)
+		const message = JSON.parse(event.nativeEvent.data);
 		//console.log(message?.action);
-	}
+	};
 	const onRefresh = async () => {
-		setIsRefreshing(true)
-		const responsePortfolioDeals: any = await getPortfolioDeals(paramsID)
-		setPortfolioDeals(responsePortfolioDeals)
-		setIsRefreshing(false)
-	}
+		setIsRefreshing(true);
+		const responsePortfolioDeals: any = await getPortfolioDeals(paramsID);
+		setPortfolioDeals(responsePortfolioDeals);
+		setIsRefreshing(false);
+	};
 	const updateLocale = () => {
 		if (Platform.OS === "web") {
-			const iframe = areaIFrameRef.current
+			const iframe = areaIFrameRef.current;
 			if (iframe && iframe?.contentWindow) {
 				iframe?.contentWindow?.updateLocale?.(
 					locale,
 					`${new Date(paramsID?.PortfolioDate).getFullYear()}`
-				)
+				);
 			}
 			if (
 				donutIFrameRef?.current &&
 				donutIFrameRef?.current?.contentWindow
 			) {
-				donutIFrameRef?.current?.contentWindow?.updateLocale?.(locale)
+				donutIFrameRef?.current?.contentWindow?.updateLocale?.(locale);
 			}
 		} else {
 			if (areaWebViewRef?.current) {
-				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}', ${new Date(paramsID?.PortfolioDate).getFullYear()});}`
+				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}', ${new Date(paramsID?.PortfolioDate).getFullYear()});}`;
 
-				areaWebViewRef.current.injectJavaScript(updateLocaleScript)
+				areaWebViewRef.current.injectJavaScript(updateLocaleScript);
 			}
 			if (donutwebViewRef?.current) {
-				let updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`
-				donutwebViewRef?.current.injectJavaScript(updateLocaleScript)
+				let updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
+				donutwebViewRef?.current.injectJavaScript(updateLocaleScript);
 			}
 		}
-	}
+	};
 
 	const exportPortfolioReport = async () => {
-		if (!isOnline || portfolioDetails?.message === "no data") return
+		if (!isOnline || portfolioDetails?.message === "no data") return;
 		else {
 			// Show initial toast indicating download is in progress
 			const toastId = Toast.show({
@@ -114,35 +115,35 @@ const PortfolioOverView = () => {
 				bottomOffset: 0,
 				autoHide: false, // Keeps the toast visible
 				props: { spinner: true },
-			})
+			});
 
 			try {
 				// Fetch the portfolio report
 				const responsePortfolioReport =
-					await getPortfolioReportBase64PDF(paramsID)
+					await getPortfolioReportBase64PDF(paramsID);
 
 				// Hide the previous toast
-				Toast.hide(toastId)
+				Toast.hide(toastId);
 				// Save or share the file based on platform
 				const fileName = paramsID.PortfolioName.replace(
 					/[&\/\\#,+()$~%.'":*?<>{}]/g,
 					""
-				)
+				);
 
 				if (Platform.OS === "web") {
 					exportBase64ToPDFWeb(
 						responsePortfolioReport,
 						`${fileName}_details.pdf`
-					)
+					);
 				} else {
 					exportBase64ToPDF(
 						responsePortfolioReport,
 						`${fileName}_details.pdf`
-					)
+					);
 				}
 			} catch (error) {
 				// Hide previous toast if there's an error
-				Toast.hide(toastId)
+				Toast.hide(toastId);
 
 				// Show error toast
 				Toast.show({
@@ -155,61 +156,61 @@ const PortfolioOverView = () => {
 					position: "bottom",
 					bottomOffset: 0,
 					visibilityTime: 3000,
-				})
+				});
 
-				console.error("Error downloading portfolio report:", error)
+				console.error("Error downloading portfolio report:", error);
 			}
 		}
-	}
+	};
 
 	useEffect(() => {
 		const fetchDetails = async () => {
-			if (!isOnline) return
+			if (!isOnline) return;
 			else {
 				try {
 					const responsePortfolioDetails: any =
-						await getPortfolioDetails(paramsID)
+						await getPortfolioDetails(paramsID);
 
-					setPortfolioDetails(responsePortfolioDetails)
+					setPortfolioDetails(responsePortfolioDetails);
 				} catch (error) {
-					console.log("Error fetching portfolio details:", error)
+					console.log("Error fetching portfolio details:", error);
 				} finally {
-					dispatch(inActiveLoading())
+					dispatch(inActiveLoading());
 				}
 			}
-		}
+		};
 
-		if (paramsID?.PortfolioId) fetchDetails()
-	}, [paramsID?.PortfolioId, isOnline])
+		if (paramsID?.PortfolioId) fetchDetails();
+	}, [paramsID?.PortfolioId, isOnline]);
 	useEffect(() => {
 		const fetchDeals = async () => {
 			if (!isOnline) {
-				return
+				return;
 			} else {
 				try {
 					if (portfolioDetails?.message != "no data") {
 						const responsePortfolioDeals: any =
-							await getPortfolioDeals(paramsID)
-						setPortfolioDeals(responsePortfolioDeals)
+							await getPortfolioDeals(paramsID);
+						setPortfolioDeals(responsePortfolioDeals);
 					}
 				} catch (error) {
-					console.log("Error fetching portfolio deals:", error)
+					console.log("Error fetching portfolio deals:", error);
 				} finally {
-					dispatch(inActiveLoading())
+					dispatch(inActiveLoading());
 				}
 			}
-		}
-		if (modalVisible) fetchDeals()
-	}, [modalVisible, isOnline])
+		};
+		if (modalVisible) fetchDeals();
+	}, [modalVisible, isOnline]);
 	useEffect(() => {
 		if (portfolioDetails && isChartLoaded) {
 			if (portfolioDetails?.message === "no data") {
-				updateEmptyChart(donutwebViewRef, donutIFrameRef, "donut")
-				updateEmptyChart(areaWebViewRef, areaIFrameRef, "area")
-				return
+				updateEmptyChart(donutwebViewRef, donutIFrameRef, "donut");
+				updateEmptyChart(areaWebViewRef, areaIFrameRef, "area");
+				return;
 			}
 
-			updateLocale()
+			updateLocale();
 			updateApexChart(
 				"chart",
 				donutwebViewRef,
@@ -220,15 +221,15 @@ const PortfolioOverView = () => {
 						text: paramsID?.PortfolioName,
 					},
 				}
-			)
+			);
 			updateApexChart(
 				"series",
 				areaWebViewRef,
 				areaIFrameRef,
 				portfolioDetails?.areaChartData
-			)
+			);
 		}
-	}, [isChartLoaded, isDonutChartLoaded])
+	}, [isChartLoaded, isDonutChartLoaded]);
 
 	return (
 		<SafeAreaView className="flex-1 bg-white">
@@ -244,7 +245,7 @@ const PortfolioOverView = () => {
 					<PortFolioChartShimmer />
 				</View>
 			) : (
-				<>
+				<React.Fragment>
 					<View style={{ flex: 1 }}>
 						<View
 							style={[
@@ -366,10 +367,10 @@ const PortfolioOverView = () => {
 							{i18n.t("View_Deals")}
 						</Text>
 					</TouchableOpacity>
-				</>
+				</React.Fragment>
 			)}
 		</SafeAreaView>
-	)
-}
+	);
+};
 
-export default PortfolioOverView
+export default PortfolioOverView;

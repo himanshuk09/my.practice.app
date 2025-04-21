@@ -394,7 +394,6 @@ const exportTimeseriesToCSV = async (data: any[]) => {
 	const headers = ["Date", "Time", "[kwh]"];
 
 	const rows = data.map((item) => {
-		// Ensure the input is in expected format (mm/dd/yyyy hh:mm)
 		if (!/^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(item.x)) {
 			console.warn(`Unexpected date format: ${item.x}`);
 		}
@@ -402,40 +401,16 @@ const exportTimeseriesToCSV = async (data: any[]) => {
 		const { formattedDate, formattedTime } = splitTimeSeriesString(item.x);
 		return [formattedDate, formattedTime, item.y].join(",");
 	});
-
+	console.log("rows", rows[0]);
 	const csvContent = [headers.join(","), ...rows].join("\n");
 	const fileName = "cockpit.csv";
 
-	try {
-		// Retrieve saved directory URI from AsyncStorage
-		let savedDirectoryUri = await AsyncStorage.getItem(DIRECTORY_URI_KEY);
-
-		// If no saved directory, ask for permission
-		if (!savedDirectoryUri) {
-			const permissions =
-				await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-			if (!permissions.granted) {
-				Toast.show({
-					type: "download",
-					text1: "Permission Denied",
-					text2: "Storage access not granted!",
-					position: "bottom",
-					bottomOffset: 0,
-					visibilityTime: 5000,
-				});
-				return;
-			}
-			savedDirectoryUri = permissions.directoryUri;
-			await AsyncStorage.setItem(DIRECTORY_URI_KEY, savedDirectoryUri);
-		}
-
-		// Create and write the file
+	const saveToFolder = async (directoryUri: string) => {
 		const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
-			savedDirectoryUri,
+			directoryUri,
 			fileName,
 			"text/csv"
 		);
-
 		await FileSystem.writeAsStringAsync(fileUri, csvContent, {
 			encoding: FileSystem.EncodingType.UTF8,
 		});
@@ -449,6 +424,43 @@ const exportTimeseriesToCSV = async (data: any[]) => {
 			visibilityTime: 5000,
 			props: { fileUri, fileName, type: "csv" },
 		});
+	};
+
+	try {
+		let savedDirectoryUri = await AsyncStorage.getItem(DIRECTORY_URI_KEY);
+
+		// Attempt to save using saved directory
+		if (savedDirectoryUri) {
+			try {
+				await saveToFolder(savedDirectoryUri);
+				return;
+			} catch (error: any) {
+				console.warn(
+					"Saved directory not writable. Requesting new folder."
+				);
+			}
+		}
+
+		// Ask for new folder
+		const permissions =
+			await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+		if (!permissions.granted) {
+			Toast.show({
+				type: "download",
+				text1: "Permission Denied",
+				text2: "Storage access not granted!",
+				position: "bottom",
+				bottomOffset: 0,
+				visibilityTime: 5000,
+			});
+			return;
+		}
+
+		savedDirectoryUri = permissions.directoryUri;
+		await AsyncStorage.setItem(DIRECTORY_URI_KEY, savedDirectoryUri);
+
+		// Save using new directory
+		await saveToFolder(savedDirectoryUri);
 	} catch (error) {
 		console.error("Error:", error);
 		Toast.show({
@@ -461,6 +473,7 @@ const exportTimeseriesToCSV = async (data: any[]) => {
 		});
 	}
 };
+
 const exportTimeseriesToCSVForWeb = (data: any[]) => {
 	const headers = ["Date", "Time", "[kwh]"];
 	const rows = data.map((item) => {
