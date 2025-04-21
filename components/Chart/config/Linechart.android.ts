@@ -648,7 +648,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 
 				// title based on locale
                 let currentSeries = chart.w.config.series;
-                currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy consumption: ";
+                currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy Use: ";
                 let MAX = newLocale === "de" ? "  Maximal" : "  Maximum";
                 let MIN = newLocale === "de" ? "  Minimum" : "  Minimum";
 

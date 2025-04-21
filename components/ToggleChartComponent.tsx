@@ -358,12 +358,11 @@ const ToggleChartComponent = ({
 					setMaxMinValues={setMaxMinValues}
 				/>
 			</View>
-
 			{/* Bottom Button */}
 			{!isLandscape && !isSignaleScreen && (
 				<React.Fragment>
 					<TouchableOpacity
-						className="bg-[#e31836] py-3 mx-5 rounded-sm my-2"
+						className="bg-[#e31836] py-3 mx-5 rounded-sm mb-2"
 						onPress={() => setModalVisible(!modalVisible)}
 						disabled={!showchart}
 					>

@@ -291,7 +291,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 								height: "90%",
 								pointerEvents: "auto",
 								marginVertical: 0,
-								padding: 5,
+								padding: 2,
 							}}
 							overScrollMode="content"
 							gestureHandling="auto"
