@@ -17,10 +17,12 @@ import { Href, useRouter } from "expo-router";
 import Logo from "@/components/SVG/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
 import { i18n } from "@/localization/config";
+
 const Forgotpassword = () => {
 	const router = useRouter();
 	let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const [email, setEmail] = useState<string>("");
+
 	const [errorMessage, setErrorMessage] = useState<string>("");
 	const [isEmailFocused, setIsEmailFocused] = useState(false);
 
@@ -191,4 +193,5 @@ const Forgotpassword = () => {
 		</SafeAreaView>
 	);
 };
+
 export default Forgotpassword;

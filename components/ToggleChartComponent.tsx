@@ -29,6 +29,7 @@ const formatNumber = (value: number, locale: string): string => {
 		maximumFractionDigits: 2,
 	}).format(value);
 };
+
 const parseNumber = (
 	value: string | number | null | undefined | any,
 	locale: string
@@ -41,20 +42,38 @@ const parseNumber = (
 	return parseFloat(normalized);
 };
 
+//convert yyyy-mm-dd hh:mm to mm-dd-yyyy hh:mm
+const convertDateTime = (input: any) => {
+	const [month, day, yearAndTime] = input.split("/");
+	const [year, time] = yearAndTime.split(" ");
+	const originalDate = new Date(`${year}-${month}-${day}T${time}`);
+	return dayjs(originalDate);
+};
+
+// formate to dd■mm■$yy■hh■mm
+function formatDateTime(input: any) {
+	const date = new Date(input);
+	const day = date.getDate();
+	const month = date.getMonth();
+	const year = date.getFullYear();
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+
+	return `${day}■${month}■${year}■${hours}■${minutes}`;
+}
+
 type ToggleChartComponentProps = {
-	isSignaleScreen?: boolean;
-	bottonTitle?: string;
-	showRangePicker?: boolean;
-	showValueRange?: boolean;
 	visibleTabs?: any;
 	fetchChartData?: any;
-	yaxisunit?: string;
 	isChartLoaded?: boolean;
 	setIsChartLoaded?: any;
+	showRangePicker?: boolean;
+	showValueRange?: boolean;
+	yaxisunit?: string;
+	isSignaleScreen?: boolean;
 };
 
 const ToggleChartComponent = ({
-	isSignaleScreen = false,
 	visibleTabs,
 	fetchChartData,
 	isChartLoaded,
@@ -62,7 +81,7 @@ const ToggleChartComponent = ({
 	showRangePicker,
 	showValueRange,
 	yaxisunit = "€/MWh",
-	bottonTitle = "Customize_View",
+	isSignaleScreen = false,
 }: ToggleChartComponentProps) => {
 	const dispatch = useDispatch();
 	let title = i18n.t("Energy_Use");
@@ -91,26 +110,6 @@ const ToggleChartComponent = ({
 	const [isTooltipEnabled, setIsTooltipEnabled] = useState(false);
 	const [isChartEmpty, setIsChartEmpty] = useState(false);
 	const [showchart, setShowChart] = useState<boolean>(false);
-
-	//convert yyyy-mm-dd hh:mm to mm-dd-yyyy hh:mm
-	const convertDateTime = (input: any) => {
-		const [month, day, yearAndTime] = input.split("/");
-		const [year, time] = yearAndTime.split(" ");
-		const originalDate = new Date(`${year}-${month}-${day}T${time}`);
-		return dayjs(originalDate);
-	};
-
-	// formate to dd■mm■$yy■hh■mm
-	function formatDateTime(input: any) {
-		const date = new Date(input);
-		const day = date.getDate();
-		const month = date.getMonth();
-		const year = date.getFullYear();
-		const hours = date.getHours();
-		const minutes = date.getMinutes();
-
-		return `${day}■${month}■${year}■${hours}■${minutes}`;
-	}
 
 	//its trigger by webview on charts operations
 	const onMessage = async (event: any) => {
@@ -367,7 +366,7 @@ const ToggleChartComponent = ({
 						disabled={!showchart}
 					>
 						<Text className="text-white text-center text-base font-normal uppercase">
-							{i18n.t(bottonTitle)}
+							{i18n.t("Customize_View")}
 						</Text>
 					</TouchableOpacity>
 					<PickerModel

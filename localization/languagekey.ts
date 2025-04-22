@@ -104,6 +104,7 @@ export const TranslationKeys: Translations | any = {
 		portfolio_overview: "Portfolio Overview",
 		Login_failed_Please_check_your_credentials:
 			"Login failed.Please check your credentials.",
+		Login_failed_Please_try_again: "Login failed. Please try again",
 		Please_enter_a_valid_email_address:
 			"Please enter a valid email address",
 		Both_min_and_max_are_required:
@@ -147,6 +148,37 @@ export const TranslationKeys: Translations | any = {
 		Select_End_Date: "Select End Date",
 		Select_Date_Range: "Select Date Range",
 		No_Internet_Connection: "No Internet Connection",
+		Waiting_for_reconnection: "Waiting for reconnection...",
+		logout_title: "Logout",
+		logout_message: "Are you sure you want to logout?",
+		//toast message
+		Cannot_Open_CSV: "Cannot Open CSV",
+		Make_sure_a_CSV_viewer_is_installed:
+			"Make sure a CSV viewer is installed.",
+		Cannot_Open_File: "Cannot Open File",
+		install_a_file_viewer:
+			"Install a file viewer app (e.g., Google Files) to open PNGs.",
+		Sharing_isnot_available_on_your_platform:
+			"Sharing isn't available on your platform",
+		Unabled_to_shared: "Unabled to shared",
+		Failed_to_Share_PNG: "Failed to Share PNG",
+		Ensure_your_device_supports_sharing:
+			"Ensure your device supports sharing",
+		LoggedIn_Successful: "LoggedIn Successful",
+		File_Downloading: "File Downloading....",
+		Download_Failed: "Download Failed!",
+		Permission_Denied: "Permission Denied",
+		Media_library_access_required: "Media library access required.",
+		Chart_saved: "Chart saved!",
+		Tap_to_open: "Tap to open",
+		Storage_access_not_granted: "Storage access not granted!",
+		File_Saved: "File Saved",
+		Save_Failed: "Save Failed",
+		An_error_occurred_while_saving: "An error occurred while saving.",
+		Please_enable_permission_from_settings:
+			"Please enable permission from settings.",
+		Open: "Open",
+		Share: "Share",
 		imprints: {
 			company: "enexion GmbH",
 			address1: "Am Kronberger Hang 2A,",
@@ -339,7 +371,7 @@ export const TranslationKeys: Translations | any = {
 		language: "Sprache",
 		notifications: "mitteilungen",
 		save: "SPEICHERN",
-		cancel: "abbrechen",
+		cancel: "Abbrechen",
 		send: "Schicken",
 		show_notifications: "mitteilungen anzeigen",
 		how_is_your_experience_with_our_app_so_far:
@@ -387,6 +419,8 @@ export const TranslationKeys: Translations | any = {
 			"Geben Sie Ihre registrierte E-Mail-Adresse ein, um Ihr Passwort zurückzusetzen.",
 		"Login failed. Please try again.":
 			"Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
+		Login_failed_Please_try_again:
+			"Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
 		portfolio_overview: "Portfolio Übersicht",
 		Login_failed_Please_check_your_credentials:
 			"Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldeinformationen.",
@@ -429,6 +463,39 @@ export const TranslationKeys: Translations | any = {
 		Select_End_Date: "Wählen Sie Enddatum aus",
 		Select_Date_Range: "Wählen Sie Datumsbereich aus",
 		No_Internet_Connection: "Keine Internetverbindung",
+		Waiting_for_reconnection: "Warten auf erneute Verbindung...",
+		logout_title: "Abmelden",
+		logout_message: "Möchten Sie sich wirklich abmelden?",
+		//toast messages
+		Cannot_Open_CSV: "CSV kann nicht geöffnet werden",
+		Make_sure_a_CSV_viewer_is_installed:
+			"Stellen Sie sicher, dass ein CSV-Viewer installiert ist.",
+		Cannot_Open_File: "Datei kann nicht geöffnet werden",
+		install_a_file_viewer:
+			"Installieren Sie eine Dateianzeige-App (z. B. Google Files), um PNGs zu öffnen.",
+		Sharing_isnot_available_on_your_platform:
+			"Teilen ist auf Ihrer Plattform nicht verfügbar",
+		Unabled_to_shared: "Kann nicht geteilt werden",
+		Failed_to_Share_PNG: "PNG konnte nicht freigegeben werden",
+		Ensure_your_device_supports_sharing:
+			"Stellen Sie sicher, dass Ihr Gerät die Freigabe unterstützt",
+		LoggedIn_Successful: "Eingeloggt erfolgreich",
+		File_Downloading: "Datei wird heruntergeladen...",
+		Download_Failed: "Download fehlgeschlagen!",
+		Permission_Denied: "Zugriff verweigert",
+		Media_library_access_required:
+			"Zugriff auf die Mediathek erforderlich.",
+		Chart_saved: "Diagramm gespeichert!",
+		Tap_to_open: "Zum Öffnen tippen",
+		Storage_access_not_granted: "Speicherzugriff nicht gewährt!",
+		File_Saved: "Datei gespeichert",
+		Save_Failed: "Speichern fehlgeschlagen",
+		An_error_occurred_while_saving:
+			"Beim Speichern ist ein Fehler aufgetreten.",
+		Please_enable_permission_from_settings:
+			"Bitte aktivieren Sie die Berechtigung in den Einstellungen.",
+		Open: "offen",
+		Share: "Aktie",
 		imprints: {
 			company: "enexion GmbH",
 			address1: "Am Kronberger Hang 2A, ",

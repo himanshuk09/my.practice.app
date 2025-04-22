@@ -1,7 +1,7 @@
 import * as Sharing from "expo-sharing";
 import { useEffect, useRef } from "react";
 import * as FileSystem from "expo-file-system";
-import Toast from "react-native-toast-message";
+import Toast, { ToastShowParams } from "react-native-toast-message";
 import { Animated, Easing } from "react-native";
 import * as IntentLauncher from "expo-intent-launcher";
 import { Linking, Platform, Text, TouchableOpacity, View } from "react-native";
@@ -11,33 +11,53 @@ import {
 	Fontisto,
 	MaterialIcons,
 } from "@expo/vector-icons";
+import { i18n } from "@/localization/config";
+import LottieView from "lottie-react-native";
+type ToastType = "success" | "error" | "info" | "download";
 
-const AnimatedSpinner = () => {
-	const spinValue = useRef(new Animated.Value(0)).current;
+interface ShowToastParams
+	extends Omit<ToastShowParams, "type" | "text1" | "text2" | "position"> {
+	type: ToastType;
+	title: string;
+	subtitle?: string;
+	position?: "bottom" | "top";
+}
 
-	useEffect(() => {
-		const spinAnimation = Animated.loop(
-			Animated.timing(spinValue, {
-				toValue: 1,
-				duration: 1000, // 1 second per full rotation
-				easing: Easing.linear,
-				useNativeDriver: true, // Ensures smooth performance
-			})
-		);
-		spinAnimation.start();
-		return () => spinAnimation.stop();
-	}, []);
-
-	const spin = spinValue.interpolate({
-		inputRange: [0, 1],
-		outputRange: ["0deg", "360deg"], // Rotates 360 degrees
+/**
+ * Show a toast using react-native-toast-message with i18n support and typed options.
+ */
+export const showToast = ({
+	type,
+	title,
+	subtitle,
+	position = "bottom",
+	...options
+}: ShowToastParams): void => {
+	Toast.show({
+		type,
+		text1: i18n.t(title),
+		text2: subtitle ? i18n.t(subtitle) : undefined,
+		position,
+		bottomOffset: 0,
+		visibilityTime: type === "error" ? 2000 : 3000,
+		autoHide: true,
+		topOffset: 0,
+		...options,
 	});
-
+};
+const Spinner = () => {
 	return (
-		<Animated.View style={{ transform: [{ rotate: spin }] }}>
-			{/* <EvilIcons name="spinner-2" size={24} color="black" /> */}
-			<AntDesign name="loading1" size={20} color="white" />
-		</Animated.View>
+		<View>
+			<LottieView
+				source={require("@/assets/lottie/spinner.json")}
+				autoPlay
+				loop
+				style={{
+					width: 25,
+					height: 25,
+				}}
+			/>
+		</View>
 	);
 };
 
@@ -56,14 +76,10 @@ const openCSVFile = async (fileUri: string) => {
 			await Linking.openURL(fileUri);
 		}
 	} catch (error) {
-		console.error("Failed to open file:", error);
-		Toast.show({
+		showToast({
 			type: "error",
-			text1: "Cannot Open CSV",
-			text2: "Make sure a CSV viewer is installed.",
-			position: "bottom",
-			bottomOffset: 0,
-			visibilityTime: 3000,
+			title: "Cannot_Open_CSV",
+			subtitle: "Make_sure_a_CSV_viewer_is_installed",
 		});
 	}
 };
@@ -84,24 +100,18 @@ const openPNGFile = async (fileUri: string) => {
 			);
 		}
 	} catch (error) {
-		Toast.show({
+		showToast({
 			type: "error",
-			text1: "Cannot Open File",
-			text2: "Install a file viewer app (e.g., Google Files) to open PNGs.",
-			position: "bottom",
-			bottomOffset: 0,
-			visibilityTime: 3000,
+			title: "Cannot_Open_File",
+			subtitle: "install_a_file_viewer",
 		});
 	}
 };
 const shareFile = async (fileName: string, fileUri: string) => {
 	if (!(await Sharing.isAvailableAsync())) {
-		Toast.show({
+		showToast({
 			type: "error",
-			text1: "Sharing isn't available on your platform",
-			position: "bottom",
-			bottomOffset: 0,
-			visibilityTime: 3000,
+			title: "Sharing_isnot_available_on_your_platform",
 		});
 		return;
 	}
@@ -119,12 +129,9 @@ const shareFile = async (fileName: string, fileUri: string) => {
 		// 3. Share the copied file
 		await Sharing.shareAsync(destUri);
 	} catch (error: any) {
-		Toast.show({
+		showToast({
 			type: "error",
-			text1: "Unabled to shared",
-			position: "bottom",
-			bottomOffset: 0,
-			visibilityTime: 3000,
+			title: "Unabled_to_shared",
 		});
 	}
 };
@@ -139,13 +146,10 @@ const sharePNGFile = async (fileName: string) => {
 		}
 	} catch (error) {
 		console.error("Failed to share file:", error);
-		Toast.show({
+		showToast({
 			type: "error",
-			text1: "Failed to Share PNG",
-			text2: "Ensure your device supports sharing.",
-			position: "bottom",
-			bottomOffset: 0,
-			visibilityTime: 3000,
+			title: "Failed_to_Share_PNG",
+			subtitle: "Ensure_your_device_supports_sharing",
 		});
 	}
 };
@@ -164,7 +168,8 @@ const toastConfig: any = {
 		</View>
 	),
 	error: ({ text1, text2, ...rest }: any) => (
-		<View className="flex-row justify-start items-start py-3 px-5 w-full bg-[#5D5D5D] rounded-sm">
+		<View className="flex-row justify-start items-start py-3 px-5 w-full bg-[#e31837]  rounded-sm">
+			{/** bg-[#5D5D5D]*/}
 			<View>
 				<Text className="text-lg justify-start items-center font-semibold text-white">
 					{text1}
@@ -207,7 +212,7 @@ const toastConfig: any = {
 					) : null}
 				</View>
 
-				{props?.spinner && Platform.OS !== "web" && <AnimatedSpinner />}
+				{props?.spinner && Platform.OS !== "web" && <Spinner />}
 			</View>
 			<View className="mx-3 flex-row gap-3">
 				{props?.fileUri && (
@@ -225,7 +230,7 @@ const toastConfig: any = {
 						}}
 					>
 						<Text className="text-white mr-1  font-semibold underline uppercase">
-							Open
+							{i18n.t("Open")}
 						</Text>
 						{props?.type === "png" ? (
 							<FontAwesome6
@@ -266,7 +271,7 @@ const toastConfig: any = {
 						}}
 					>
 						<Text className="text-white mr-1 font-semibold underline uppercase">
-							Share
+							{i18n.t("Share")}
 						</Text>
 						<Fontisto
 							name="share-a"
@@ -280,4 +285,5 @@ const toastConfig: any = {
 		</View>
 	),
 };
+
 export default toastConfig;

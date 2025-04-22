@@ -19,28 +19,27 @@ SplashScreen.setOptions({
 
 const Layout = () => {
 	useEffect(() => {
-		let timer = setTimeout(() => {
+		let timer: NodeJS.Timeout;
+
+		timer = setTimeout(() => {
 			SplashScreen.hideAsync();
 		}, 2000);
-		return () => {
-			clearTimeout(timer);
-		};
-	}, []);
 
-	useEffect(() => {
 		if (Platform.OS !== "web") {
-			// Lock orientation to portrait for mobile platforms
 			ScreenOrientation.lockAsync(
 				ScreenOrientation.OrientationLock.PORTRAIT_UP
 			);
 		}
+
 		return () => {
+			clearTimeout(timer);
+
 			if (Platform.OS !== "web") {
-				// Unlock orientation when leaving the screen (optional)
 				ScreenOrientation.unlockAsync();
 			}
 		};
 	}, []);
+
 	return (
 		<Provider store={store}>
 			<NavigationWatcher>

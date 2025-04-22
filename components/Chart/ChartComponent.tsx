@@ -12,6 +12,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 import { Platform, TouchableOpacity, BackHandler } from "react-native";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { showToast } from "../ToastConfig";
 
 type ChartComponentProps = {
 	webViewRef: React.RefObject<WebView | any>;
@@ -100,14 +101,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 	const captureWebView = useCallback(async () => {
 		try {
 			const { status } = await MediaLibrary.requestPermissionsAsync();
+
 			if (status !== "granted") {
-				Toast.show({
-					type: "download",
-					text1: "Permission Denied",
-					text2: "Media library access required.",
-					position: "bottom",
-					bottomOffset: 0,
-					visibilityTime: 3000,
+				showToast({
+					type: "error",
+					title: "Permission_Denied",
+					subtitle: "Please_enable_permission_from_settings",
 				});
 				return;
 			}
@@ -132,25 +131,17 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 			// Save to gallery
 			const asset = await MediaLibrary.createAssetAsync(fileUri);
 			await MediaLibrary.createAlbumAsync("cockpit", asset, false);
-
-			// Show toast
-			Toast.show({
+			showToast({
 				type: "download",
-				text1: "Chart saved!",
-				text2: "Tap to open",
-				position: "bottom",
-				bottomOffset: 0,
-				visibilityTime: 3000,
+				title: "Chart_saved",
+				subtitle: "Tap_to_open",
 				props: { fileUri: fileUri, fileName: fileUri, type: "png" }, // Pass the correct URI
 			});
 		} catch (error) {
-			Toast.show({
-				type: "download",
-				text1: "Permission Denied",
-				text2: "Failed to saved image.",
-				position: "bottom",
-				bottomOffset: 0,
-				visibilityTime: 3000,
+			showToast({
+				type: "error",
+				title: "Permission_Denied",
+				subtitle: "Please_enable_permission_from_settings",
 			});
 		}
 	}, []);

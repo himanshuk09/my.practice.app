@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import NetInfo from "@react-native-community/netinfo";
 import Toast from "react-native-toast-message";
+import { showToast } from "@/components/ToastConfig";
 
 /**
  * Custom hook to track internet connectivity status.
@@ -18,14 +19,12 @@ const useNetworkStatus = (): boolean => {
 			setIsOnline(onlineStatus);
 
 			if (!onlineStatus) {
-				// Show persistent toast when offline
-				Toast.show({
-					type: "error", // Change "download" to "error" for clarity
-					text1: "No Internet Connection",
-					text2: "Waiting for reconnection...",
-					autoHide: false, // Keeps toast visible until connection is restored
-					position: "bottom",
-					bottomOffset: 20,
+				showToast({
+					type: "download",
+					title: "No_Internet_Connection",
+					subtitle: "Waiting_for_reconnection",
+					autoHide: false,
+					props: { network: true },
 				});
 			} else {
 				// Hide the toast when back online

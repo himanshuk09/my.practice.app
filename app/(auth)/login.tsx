@@ -15,18 +15,19 @@ import {
 } from "react-native";
 import { Href, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { i18n } from "@/localization/config";
 import Logo from "@/components/SVG/Logo";
 import { loginUser } from "@/services/auth.service";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { useAuth } from "@/hooks/useAuth";
+import { showToast } from "@/components/ToastConfig";
 
 const SignIn: React.FC = () => {
 	const router = useRouter();
 	const isOnline = useNetworkStatus();
 	const { setSessionValue } = useAuth();
+
 	const [loading, setLoading] = useState<boolean>(false);
 	const [userName, setUserName] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
@@ -69,6 +70,7 @@ const SignIn: React.FC = () => {
 			setLoading(true);
 			if (!isOnline) {
 				setErrorMessage("No_Internet_Connection");
+				setLoading(false);
 				return;
 			}
 			const payload = {
@@ -82,9 +84,9 @@ const SignIn: React.FC = () => {
 				setSessionValue(true);
 				router.push("/dashboard" as Href);
 				setTimeout(() => {
-					Toast.show({
+					showToast({
 						type: "success",
-						text1: "LoggedIn Successful",
+						title: "LoggedIn_Successful",
 						position: "bottom",
 						bottomOffset: 25,
 						visibilityTime: 2000,
@@ -92,13 +94,6 @@ const SignIn: React.FC = () => {
 				}, 1000);
 			} else {
 				setErrorMessage("Login_failed_Please_check_your_credentials");
-				Toast.show({
-					type: "error",
-					text1: "Login failed. Please try again.",
-					position: "bottom",
-					bottomOffset: 30,
-					visibilityTime: 3000,
-				});
 			}
 		} catch (err: unknown) {
 			if (err instanceof Error) {
@@ -106,13 +101,12 @@ const SignIn: React.FC = () => {
 					err?.message || "An_error_occurred_Please_try_again"
 				);
 				setTimeout(() => {
-					Toast.show({
+					showToast({
 						type: "error",
-						text1:
-							err?.message || "Login failed. Please try again.",
+						title: "Login_failed_Please_try_again",
 						position: "bottom",
 						bottomOffset: 30,
-						visibilityTime: 1000,
+						visibilityTime: 3000,
 					});
 				}, 1000);
 			} else {

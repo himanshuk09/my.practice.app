@@ -6,10 +6,12 @@ import { useDispatch } from "react-redux";
 import { Href, Stack, useRouter } from "expo-router";
 import { useInitAuth } from "@/hooks/useInitAuth";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const RootLayout = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
+	const isOnline = useNetworkStatus();
 	const [appState, setAppState] = useState(AppState.currentState);
 	useEffect(() => {
 		if (Platform.OS === "web") return; // ❌ Don't apply on web
@@ -33,7 +35,7 @@ const RootLayout = () => {
 		return () => {
 			subscription.remove();
 		};
-	}, [appState]);
+	}, [appState, isOnline]);
 	useInitAuth();
 	return (
 		<Stack

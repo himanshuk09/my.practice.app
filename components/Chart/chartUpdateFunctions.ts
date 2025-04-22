@@ -44,7 +44,6 @@ export const updateApexChart = (
 				jsCommand = `updateChart(${JSON.stringify(
 					data
 				)}, ${JSON.stringify(options || {})});`;
-
 				break;
 			default:
 				console.error("Invalid chart update type");

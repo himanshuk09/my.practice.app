@@ -5,7 +5,10 @@ const getLoadDataList = async () => {
 		const response = await api.get(`/api/loadData/getMeterChannelInfo`);
 		return formateByEnergyType(response.data);
 	} catch (error) {
-		console.log("Error while Fetching LoadDataList", error);
+		console.log(
+			"Error while Fetching LoadDataList",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
 		return { gas: [], strom: [] };
 	}
 };

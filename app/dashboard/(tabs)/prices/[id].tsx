@@ -1,65 +1,65 @@
-import React, { useEffect, useState } from "react"
-import { PricesItem } from "@/constants/constantData"
-import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native"
-import { useLocalSearchParams } from "expo-router"
-import { inActiveLoading } from "@/store/navigationSlice"
-import { useDispatch, useSelector } from "react-redux"
-import { useIsFocused } from "@react-navigation/native"
-import ToggleChartComponent from "@/components/ToggleChartComponent"
-import { FontAwesome5 } from "@expo/vector-icons"
-import { RootState } from "@/store/store"
-import { fetchDataByToggle } from "@/services/auth.service"
-import { st } from "@/utils/Styles"
+import React, { useEffect, useState } from "react";
+import { PricesItem } from "@/constants/constantData";
+import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import ToggleChartComponent from "@/components/ToggleChartComponent";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { RootState } from "@/store/store";
+import { fetchDataByToggle } from "@/services/auth.service";
+import { st } from "@/utils/Styles";
 import {
 	saveCSVToFileWeb,
 	saveCSVToFileString,
-} from "@/components/exportcsv/exportToFiles"
-import { cockpitChartData } from "@/constants/cockpitchart"
-import { ChartShimmer } from "@/components/ChartShimmer"
-import { stringChartData } from "@/constants/stringChartData"
+} from "@/components/exportcsv/exportToFiles";
+import { cockpitChartData } from "@/constants/cockpitchart";
+import { ChartShimmer } from "@/components/ChartShimmer";
+import { stringChartData } from "@/constants/stringChartData";
 
 const PricesDetails = () => {
-	const { id } = useLocalSearchParams()
-	const [pricesDetail, setPricesDetails] = useState<any>([])
-	const [isChartLoaded, setIsChartLoaded] = useState<any>(false)
-	const dispatch = useDispatch()
-	const isFocused = useIsFocused()
+	const { id } = useLocalSearchParams();
+	const [pricesDetail, setPricesDetails] = useState<any>([]);
+	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
+	const dispatch = useDispatch();
+	const isFocused = useIsFocused();
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
-	)
+	);
 	useEffect(() => {
 		const filteredItem = PricesItem.filter(
 			(item: any) => item.id === Number(id)
-		)
+		);
 		setTimeout(() => {
-			setPricesDetails(filteredItem[0])
-		}, 1000)
-	}, [id])
+			setPricesDetails(filteredItem[0]);
+		}, 1000);
+	}, [id]);
 
 	const getCurrentUTCDateTime = () => {
-		const now = new Date()
+		const now = new Date();
 		// Extract UTC components
-		const day = String(now.getUTCDate()).padStart(2, "0")
-		const month = String(now.getUTCMonth() + 1).padStart(2, "0") // Months are zero-based
-		const year = now.getUTCFullYear()
-		const hours = String(now.getUTCHours()).padStart(2, "0")
-		const minutes = String(now.getUTCMinutes()).padStart(2, "0")
+		const day = String(now.getUTCDate()).padStart(2, "0");
+		const month = String(now.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
+		const year = now.getUTCFullYear();
+		const hours = String(now.getUTCHours()).padStart(2, "0");
+		const minutes = String(now.getUTCMinutes()).padStart(2, "0");
 
 		// Format as DD/MM/YYYY HH:mm
-		return `${day}/${month}/${year} ${hours}:${minutes}`
-	}
+		return `${day}/${month}/${year} ${hours}:${minutes}`;
+	};
 
 	const fetchChartData = async (tab: string) => {
 		try {
-			return fetchDataByToggle(tab)
+			return fetchDataByToggle(tab);
 		} catch (error) {
-			console.error("Error fetching data:", error)
-			return null
+			console.error("Error fetching data:", error);
+			return null;
 		}
-	}
+	};
 	useEffect(() => {
-		dispatch(inActiveLoading())
-	}, [isFocused])
+		dispatch(inActiveLoading());
+	}, [isFocused]);
 	return (
 		<SafeAreaView className="flex-1 ">
 			<StatusBar
@@ -103,9 +103,11 @@ const PricesDetails = () => {
 									color="#e31837"
 									onPress={() => {
 										if (Platform.OS === "web") {
-											saveCSVToFileWeb(cockpitChartData)
+											saveCSVToFileWeb(cockpitChartData);
 										} else {
-											saveCSVToFileString(stringChartData)
+											saveCSVToFileString(
+												stringChartData
+											);
 										}
 									}}
 								/>
@@ -114,7 +116,6 @@ const PricesDetails = () => {
 					)}
 					<ToggleChartComponent
 						showRangePicker={true}
-						showValueRange={false}
 						fetchChartData={fetchChartData}
 						isChartLoaded={isChartLoaded}
 						setIsChartLoaded={setIsChartLoaded}
@@ -122,7 +123,7 @@ const PricesDetails = () => {
 				</View>
 			)}
 		</SafeAreaView>
-	)
-}
+	);
+};
 
-export default PricesDetails
+export default PricesDetails;

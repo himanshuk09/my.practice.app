@@ -1,5 +1,5 @@
 // Drawer.js
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	View,
 	Animated,
@@ -15,16 +15,10 @@ import { activeLoading } from "@/store/navigationSlice";
 
 const Drawer = ({ drawerWidth = 280 }: any) => {
 	const dispatch = useDispatch();
+
 	let debounceTimeout: any = null;
 	const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
 	const translateX = React.useRef(new Animated.Value(-drawerWidth)).current;
-	React.useEffect(() => {
-		Animated.timing(translateX, {
-			toValue: isDrawerOpen ? 0 : -drawerWidth,
-			duration: 150,
-			useNativeDriver: Platform.OS !== "web" ? true : false,
-		}).start();
-	}, [isDrawerOpen]);
 
 	const handleCloseDrawer = () => {
 		dispatch(closeDrawer());
@@ -69,6 +63,15 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 		},
 		onPanResponderRelease: () => true,
 	});
+
+	useEffect(() => {
+		Animated.timing(translateX, {
+			toValue: isDrawerOpen ? 0 : -drawerWidth,
+			duration: 150,
+			useNativeDriver: Platform.OS !== "web" ? true : false,
+		}).start();
+	}, [isDrawerOpen]);
+
 	return (
 		<React.Fragment>
 			<View
@@ -96,6 +99,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 		</React.Fragment>
 	);
 };
+
 const styles = StyleSheet.create({
 	drawer: {
 		position: "absolute",

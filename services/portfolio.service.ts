@@ -9,6 +9,7 @@ const getPortfolioList = async () => {
 			"Error while Fetching PortfolioList",
 			error instanceof Error ? error.message : JSON.stringify(error)
 		);
+		return { gas: [], strom: [] };
 	}
 };
 const formatePortfolioDetails = (response: any) => {

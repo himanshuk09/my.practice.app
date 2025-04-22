@@ -130,7 +130,6 @@ const LoadDataDetails = () => {
 				)}
 				{/**chart component */}
 				<ToggleChartComponent
-					showRangePicker={false}
 					showValueRange={true}
 					fetchChartData={fetchChartData}
 					yaxisunit="kWh"

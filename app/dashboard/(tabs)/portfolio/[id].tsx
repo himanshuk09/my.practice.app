@@ -40,6 +40,7 @@ import {
 	exportBase64ToPDF,
 	exportBase64ToPDFWeb,
 } from "@/components/exportcsv/exporttofile";
+import { showToast } from "@/components/ToastConfig";
 
 const PortfolioOverView = () => {
 	const dispatch = useDispatch();
@@ -68,7 +69,7 @@ const PortfolioOverView = () => {
 	const { height: screenHeight } = Dimensions.get("window");
 	const onMessage = async (event: WebViewMessageEvent) => {
 		const message = JSON.parse(event.nativeEvent.data);
-		//console.log(message?.action);
+		// console.log(message?.action, message?.values);
 	};
 	const onRefresh = async () => {
 		setIsRefreshing(true);
@@ -110,13 +111,12 @@ const PortfolioOverView = () => {
 			// Show initial toast indicating download is in progress
 			const toastId = Toast.show({
 				type: "download",
-				text1: "File Downloading....",
+				text1: i18n.t("File_Downloading"),
 				position: "bottom",
 				bottomOffset: 0,
 				autoHide: false, // Keeps the toast visible
 				props: { spinner: true },
 			});
-
 			try {
 				// Fetch the portfolio report
 				const responsePortfolioReport =
@@ -144,20 +144,13 @@ const PortfolioOverView = () => {
 			} catch (error) {
 				// Hide previous toast if there's an error
 				Toast.hide(toastId);
-
-				// Show error toast
-				Toast.show({
+				showToast({
 					type: "error",
-					text1: "Download Failed!",
-					text2:
-						error instanceof Error
-							? error.message
-							: "Something went wrong.",
+					title: "Download_Failed",
 					position: "bottom",
-					bottomOffset: 0,
+					bottomOffset: 30,
 					visibilityTime: 3000,
 				});
-
 				console.error("Error downloading portfolio report:", error);
 			}
 		}
@@ -203,7 +196,7 @@ const PortfolioOverView = () => {
 		if (modalVisible) fetchDeals();
 	}, [modalVisible, isOnline]);
 	useEffect(() => {
-		if (portfolioDetails && isChartLoaded) {
+		if (portfolioDetails && isChartLoaded && isDonutChartLoaded) {
 			if (portfolioDetails?.message === "no data") {
 				updateEmptyChart(donutwebViewRef, donutIFrameRef, "donut");
 				updateEmptyChart(areaWebViewRef, areaIFrameRef, "area");
@@ -222,6 +215,7 @@ const PortfolioOverView = () => {
 					},
 				}
 			);
+
 			updateApexChart(
 				"series",
 				areaWebViewRef,
@@ -230,7 +224,6 @@ const PortfolioOverView = () => {
 			);
 		}
 	}, [isChartLoaded, isDonutChartLoaded]);
-
 	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar
@@ -361,7 +354,20 @@ const PortfolioOverView = () => {
 
 					<TouchableOpacity
 						className="bg-primary  bottom-0   mx-2 mb-2 py-3 rounded-sm  absolute  left-0 right-0 "
-						onPress={() => setModalVisible(!modalVisible)}
+						// onPress={() => setModalVisible(!modalVisible)}
+						// onPress={() => {
+						// 	updateApexChart(
+						// 		"chart",
+						// 		donutwebViewRef,
+						// 		donutIFrameRef,
+						// 		portfolioDetails?.donotChartData,
+						// 		{
+						// 			title: {
+						// 				text: paramsID?.PortfolioName,
+						// 			},
+						// 		}
+						// 	);
+						// }}
 					>
 						<Text className="text-white text-center text-base font-medium uppercase">
 							{i18n.t("View_Deals")}

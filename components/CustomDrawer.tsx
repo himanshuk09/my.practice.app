@@ -26,6 +26,7 @@ import { closeDrawer } from "@/store/drawerSlice";
 import { RootState } from "@/store/store";
 import { setOrientation } from "@/store/chartSlice";
 import { useAuth } from "@/hooks/useAuth";
+
 // Helper Components
 const Submenu = memo(
 	({
@@ -68,6 +69,7 @@ const Submenu = memo(
 		);
 	}
 );
+
 const CustomDrawer = memo(() => {
 	const dispatch = useDispatch();
 	const pathnames = usePathname();
@@ -222,6 +224,12 @@ const CustomDrawer = memo(() => {
 	};
 	const handleLogout = () => {
 		dispatch(closeDrawer());
+
+		const title = i18n.t("logout_title"); // e.g., "Logout"
+		const message = i18n.t("logout_message"); // e.g., "Are you sure you want to logout?"
+		const cancel = i18n.t("Cancel"); // e.g., "Cancel"
+		const confirm = i18n.t("OK"); // e.g., "OK"
+
 		if (typeof window !== "undefined" && Platform.OS === "web") {
 			const isConfirmed = window.confirm(
 				"Are you sure you want to logout?"
@@ -231,16 +239,16 @@ const CustomDrawer = memo(() => {
 			}
 		} else {
 			Alert.alert(
-				"Logout",
-				"Are you sure you want to logout?",
+				title,
+				message,
 				[
 					{
-						text: "Cancel",
+						text: cancel,
 						onPress: () => console.log("Logout canceled"),
 						style: "cancel",
 					},
 					{
-						text: "OK",
+						text: confirm,
 						onPress: () => clearStorageAndNavigate(router),
 						style: "destructive",
 					},
@@ -415,6 +423,7 @@ const CustomDrawer = memo(() => {
 		</ScrollView>
 	);
 });
+
 const areEqual = (prevProps: any, nextProps: any) =>
 	prevProps.pathnames === nextProps.pathnames;
 

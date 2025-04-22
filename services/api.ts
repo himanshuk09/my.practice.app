@@ -2,19 +2,17 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 import { router } from "expo-router";
-import Toast from "react-native-toast-message";
+import { showToast } from "@/components/ToastConfig";
 
 export const checkInternetConnection = async (): Promise<boolean> => {
 	try {
 		const netInfo = await NetInfo.fetch();
 		if (!netInfo.isConnected) {
-			Toast.show({
+			showToast({
 				type: "download",
-				text1: "No Internet Connection",
-				text2: "Waiting for reconnection...",
-				autoHide: false, // Keep the toast visible until reconnection
-				position: "bottom",
-				bottomOffset: 0,
+				title: "No_Internet_Connection",
+				subtitle: "Waiting_for_reconnection",
+				autoHide: false,
 			});
 			return false;
 		}
@@ -84,6 +82,7 @@ NetInfo.addEventListener((state) => {
 		// console.log("Internet reconnected. event");
 	}
 });
+
 export const formateByEnergyType = (data: any[] = []) => {
 	return data.reduce(
 		(acc, item) => {

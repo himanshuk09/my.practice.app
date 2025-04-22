@@ -1,6 +1,7 @@
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import { showToast } from "../ToastConfig";
 
 const DIRECTORY_URI_KEY = "SAVED_DIRECTORY_URI";
 
@@ -10,10 +11,10 @@ const requestWritableDirectory = async (): Promise<string | null> => {
 	const permissions =
 		await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 	if (!permissions.granted) {
-		Toast.show({
+		showToast({
 			type: "error",
-			text1: "Permission Denied",
-			text2: "Storage access not granted!",
+			title: "Permission_Denied",
+			subtitle: "Storage_access_not_granted",
 			position: "bottom",
 			bottomOffset: 0,
 			visibilityTime: 3000,
@@ -36,6 +37,7 @@ const getOrRequestDirectory = async (): Promise<string | null> => {
 			return savedDirectoryUri;
 		} catch {
 			console.warn("Saved directory not writable, requesting new one...");
+			await AsyncStorage.removeItem(DIRECTORY_URI_KEY);
 		}
 	}
 	return await requestWritableDirectory();
@@ -58,10 +60,10 @@ const saveToFile = async (
 		);
 		await FileSystem.writeAsStringAsync(fileUri, content, { encoding });
 
-		Toast.show({
+		showToast({
 			type: "download",
-			text1: "File Saved",
-			text2: "Tap to open the file.",
+			title: "File_Saved",
+			subtitle: "Tap_to_open",
 			position: "bottom",
 			bottomOffset: 0,
 			visibilityTime: 5000,
@@ -73,10 +75,11 @@ const saveToFile = async (
 		});
 	} catch (error) {
 		console.error("Error saving file:", error);
-		Toast.show({
+
+		showToast({
 			type: "error",
-			text1: "Save Failed",
-			text2: "An error occurred while saving.",
+			title: "Save_Failed",
+			subtitle: "An_error_occurred_while_saving",
 			position: "bottom",
 			bottomOffset: 0,
 			visibilityTime: 5000,
@@ -159,7 +162,6 @@ const exportTimeseriesToCSV = async (data: any[], fileName = "cockpit.csv") => {
 		const { formattedDate, formattedTime } = splitTimeSeriesString(item.x);
 		return [formattedDate, formattedTime, item.y].join(",");
 	});
-	console.log("rows1", rows[0]);
 	const csvContent = [headers.join(","), ...rows].join("\n");
 	await saveToFile(
 		csvContent,

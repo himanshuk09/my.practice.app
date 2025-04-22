@@ -1,7 +1,8 @@
+// app/(auth)/_layout.tsx
 import PublicAuthRoute from "@/components/PublicAuthRoute";
 import { Stack } from "expo-router";
 
-const LoginLayout = () => {
+const AuthLayout = () => {
 	return (
 		<PublicAuthRoute>
 			<Stack
@@ -33,4 +34,4 @@ const LoginLayout = () => {
 	);
 };
 
-export default LoginLayout;
+export default AuthLayout;

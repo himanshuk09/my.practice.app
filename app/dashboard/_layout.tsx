@@ -6,7 +6,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Drawer from "@/components/Drawer";
 import SwipeDetectionWrapper from "@/app/SwipeDetectionWrapper";
 
-const LegalNotesLayout = () => {
+const DashboardLayout = () => {
 	return (
 		<ProtectedRoute>
 			<Drawer drawerWidth={290} />
@@ -55,4 +55,4 @@ const LegalNotesLayout = () => {
 	);
 };
 
-export default LegalNotesLayout;
+export default DashboardLayout;

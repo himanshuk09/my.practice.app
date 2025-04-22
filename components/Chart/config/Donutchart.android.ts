@@ -225,21 +225,21 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
             };
 
             window.updateChart = function (filteredData, updatedOptions) {
-                // donutchart.updateOptions(updatedOptions);
-                // donutchart.updateSeries(filteredData, true);
-                sendMsgToReactNative("updateChart updated");
-                donutchart.updateOptions(
-                    {
-                        series: filteredData,
-                        animations: {
-                            enabled: true,
-                            speed: 800,
-                        },
-                        ...updatedOptions,
-                    },
-                    true,
-                    true
-                );
+                donutchart.updateOptions(updatedOptions);
+                donutchart.updateSeries(filteredData, true);
+                sendMsgToReactNative("updateChart updated",filteredData);
+                // donutchart.updateOptions(
+                //     {
+                //         series: filteredData,
+                //         animations: {
+                //             enabled: true,
+                //             speed: 800,
+                //         },
+                //         ...updatedOptions,
+                //     },
+                //     true,
+                //     true
+                // );
             };
             function updateLocale(locale) {
                 sendMsgToReactNative("updateChart locale");
