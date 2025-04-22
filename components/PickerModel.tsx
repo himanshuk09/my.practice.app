@@ -150,7 +150,7 @@ const PickerModel = ({
 
 		if (dayjs(selectedStartDate).isAfter(dayjs(selectedEndDate))) {
 			setDateError(true);
-			setDateErrorText("The_end_date_must_be_later_than_start_date.");
+			setDateErrorText("The_end_date_must_be_later_than_start_date");
 			return false;
 		}
 
@@ -485,7 +485,7 @@ const PickerModel = ({
 							{dateError && (
 								<View className="mx-2 mb-1">
 									<Text className="text-sm text-red-600">
-										{dateErrorText}
+										{i18n.t(dateErrorText)}
 									</Text>
 								</View>
 							)}
@@ -503,7 +503,6 @@ const PickerModel = ({
 									<Text className=" text-chartText   mb-1 font-semibold">
 										{i18n.t("From")}
 									</Text>
-
 									<View>
 										<TextInput
 											className=" bg-cardBg text-slate-700 p-3"
@@ -512,10 +511,6 @@ const PickerModel = ({
 												padding: 10,
 											}}
 											keyboardType="numeric"
-											// value={displayNumber(
-											// 	maxMinValues?.minY,
-											// 	locale
-											// )}
 											value={maxMinValues.minY.toString()}
 											onChangeText={(text) =>
 												handleInputChange(text, "minY")
@@ -551,10 +546,6 @@ const PickerModel = ({
 												padding: 10,
 											}}
 											keyboardType="numeric"
-											// value={displayNumber(
-											// 	maxMinValues?.maxY,
-											// 	locale
-											// )}
 											value={maxMinValues.maxY.toString()}
 											onChangeText={(text) =>
 												handleInputChange(text, "maxY")
@@ -581,7 +572,7 @@ const PickerModel = ({
 								{minMaxError && (
 									<View className="mx-2">
 										<Text className="text-sm text-red-600">
-											{minMaxErrorText}
+											{i18n.t(minMaxErrorText)}
 										</Text>
 									</View>
 								)}

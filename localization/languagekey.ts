@@ -106,6 +106,16 @@ export const TranslationKeys: Translations | any = {
 			"Login failed.Please check your credentials.",
 		Please_enter_a_valid_email_address:
 			"Please enter a valid email address",
+		Both_min_and_max_are_required:
+			"Both minimum and maximum values are required. If unsure, enter at least 0.",
+		Values_cannot_be_empty:
+			"Values cannot be empty. If unsure, enter at least 0.",
+		Max_value_must_be_greater_than_min:
+			"Maximum value must be greater than minimun.",
+		Please_enter_valid_start_and_end_dates:
+			"Please enter valid start and end dates.",
+		The_end_date_must_be_later_than_start_date:
+			"The end date must be later than start date.",
 		PFC_Details: "PFC Details",
 		Prices_Setting: "Prices Settings",
 		Prices_Details: "Prices Details",
@@ -382,6 +392,16 @@ export const TranslationKeys: Translations | any = {
 			"Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldeinformationen.",
 		Please_enter_a_valid_email_address:
 			"Bitte geben Sie eine gültige E-Mail-Adresse ein",
+		Both_min_and_max_are_required:
+			"Sowohl Mindest- als auch Höchstwert sind erforderlich. Geben Sie mindestens 0 ein, wenn Sie unsicher sind.",
+		values_cannot_be_empty:
+			"Werte dürfen nicht leer sein. Geben Sie mindestens 0 ein, wenn Sie unsicher sind.",
+		Max_value_must_be_greater_than_min:
+			"Der Höchstwert muss größer als der Mindestwert sein.",
+		Please_enter_valid_start_and_end_dates:
+			"Bitte geben Sie gültige Start- und Enddaten ein.",
+		The_end_date_must_be_later_than_start_date:
+			"Das Enddatum muss nach dem Startdatum liegen.",
 		Low_Soft: "Tief Weich",
 		Low_Hard: "Tief Hart",
 		Negative: "Negieren",

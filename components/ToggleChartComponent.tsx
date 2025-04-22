@@ -55,9 +55,9 @@ type ToggleChartComponentProps = {
 
 const ToggleChartComponent = ({
 	isSignaleScreen = false,
-	isChartLoaded,
 	visibleTabs,
 	fetchChartData,
+	isChartLoaded,
 	setIsChartLoaded,
 	showRangePicker,
 	showValueRange,
@@ -190,11 +190,11 @@ const ToggleChartComponent = ({
 		// ["Year", "Quarter", "Year_3"].includes(activeTab) ||
 		// ["Year", "Quarter", "Year_3"].includes(previousTab)
 
-		// if (isChartZoomed) {
-		// 	webViewRef?.current?.injectJavaScript("window.resetZoom(); true;");
-		// 	setIschartZoomed(false);
-		// 	if (!isYearlyView) setLoading(true);
-		// }
+		if (isChartZoomed) {
+			webViewRef?.current?.injectJavaScript("window.resetZoom(); true;");
+			setIschartZoomed(false);
+			if (!isYearlyView) setLoading(true);
+		}
 
 		const chartOptions = {
 			chart: { animations: { enabled: !isYearlyView } },

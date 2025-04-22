@@ -84,10 +84,12 @@ const LoadDataDetails = () => {
 									{i18n.t("Energy")}:{" "}
 								</Text>
 								<Text className="text-mainCardHeaderText text-sm ml-2">
-									{new Intl.NumberFormat(locale, {
-										useGrouping: true,
-										maximumFractionDigits: 2,
-									}).format(loadDetail?.AverageValue)}{" "}
+									{loadDetail?.AverageValue != null
+										? new Intl.NumberFormat(locale, {
+												useGrouping: true,
+												maximumFractionDigits: 2,
+											}).format(loadDetail.AverageValue)
+										: "0"}{" "}
 									kWh
 								</Text>
 							</View>
@@ -96,10 +98,12 @@ const LoadDataDetails = () => {
 									{i18n.t("Average")}:{" "}
 								</Text>
 								<Text className="text-mainCardHeaderText text-sm ml-2">
-									{new Intl.NumberFormat(locale, {
-										useGrouping: true,
-										maximumFractionDigits: 2,
-									}).format(loadDetail?.AverageValue)}{" "}
+									{loadDetail?.AverageValue != null
+										? new Intl.NumberFormat(locale, {
+												useGrouping: true,
+												maximumFractionDigits: 2,
+											}).format(loadDetail.AverageValue)
+										: "0"}{" "}
 									kWh
 								</Text>
 							</View>

@@ -27,6 +27,9 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
                 opacity: 1 !important;
                 visibility: visible !important;
             }
+			.apexcharts-tooltip .apexcharts-tooltip-title {
+  				font-weight: bold;
+			}
         </style>
     </head>
 

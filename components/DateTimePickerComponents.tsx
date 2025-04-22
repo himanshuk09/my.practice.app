@@ -108,10 +108,10 @@ const DateTimePickerComponents = ({
 				initialView={initialView} //day or time
 				firstDayOfWeek={1}
 				height={300}
-				// minDate={dayjs().startOf('day')}
-				// maxDate={dayjs().add(3, 'day').endOf('day')}
-				//disabledDates={[dayjs(), dayjs().add(1, 'day')]}
-				//disabledDates={(date) => [0, 6].includes(dayjs(date).day())} // disable weekends
+				// minDate={dayjs().startOf("day")}
+				//maxDate={dayjs().add(7, "day").endOf("day")}
+				// disabledDates={[dayjs(), dayjs().add(1, "day")]} // we can add the date in array
+				// disabledDates={(date) => [0, 6].includes(dayjs(date).day())} // disable weekends
 				displayFullDays
 				timePicker={timePicker}
 				onChange={onChange}

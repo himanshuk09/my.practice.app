@@ -1,0 +1,55 @@
+
+import Onboarding from "react-native-onboarding-swiper";
+import LottieView from "lottie-react-native";
+
+return (
+		<Onboarding
+			pages={[
+				{
+					backgroundColor: "#fff",
+					image: (
+						<LottieView
+							source={require("@/assets/lottie/energy.json")} // Your Lottie file
+							autoPlay
+							loop
+							style={{
+								width: 350,
+								height: 300,
+							}}
+						/>
+					),
+					title: "Monitor Your Energy",
+					subtitle:
+						"Keep track of your energy usage with real-time insights.",
+				},
+				{
+					backgroundColor: "#fff",
+					image: (
+						<LottieView
+							source={require("@/assets/lottie/market.json")}
+							autoPlay
+							loop
+							style={{ width: 300, height: 300 }}
+						/>
+					),
+					title: "Live Market Prices",
+					subtitle:
+						"Stay updated with energy market trends and prices.",
+				},
+				{
+					backgroundColor: "#fff",
+					image: (
+						<LottieView
+							source={require("@/assets/lottie//portfolio.json")}
+							autoPlay
+							loop
+							style={{ width: 300, height: 300 }}
+						/>
+					),
+					title: "Portfolio Overview",
+					subtitle:
+						"See your energy data and cost metrics all in one place.",
+				},
+			]}
+		/>
+	);

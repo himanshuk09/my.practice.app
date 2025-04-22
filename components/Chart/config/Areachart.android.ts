@@ -20,6 +20,9 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 position: absolute;
                 touch-action: none;
             }
+			.apexcharts-tooltip .apexcharts-tooltip-title {
+  				font-weight: bold;
+			}
         </style>
     </head>
     <body>
@@ -358,6 +361,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                         format: "MMMM", // Display full month names
                         formatter: (value) => {
                             const months = getLocalizedMonths(locale, "long");
+						
                             return months[value] + "  " + title;
                         },
                     },
