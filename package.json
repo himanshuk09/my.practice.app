@@ -42,7 +42,6 @@
     "expo-localization": "~16.0.1",
     "expo-media-library": "~17.0.6",
     "expo-notifications": "~0.29.14",
-    "expo-permissions": "^14.4.0",
     "expo-print": "~14.0.3",
     "expo-router": "~4.0.20",
     "expo-screen-capture": "~7.0.1",
