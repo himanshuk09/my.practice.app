@@ -411,6 +411,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 });
                 // Stop loader after chart update
                 sendMsgToReactNative("stopLoader");
+				chart.updateSeries(chart.w.config.series);sss
             }
 
             //update chart series and options

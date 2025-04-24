@@ -109,7 +109,7 @@ const ToggleChartComponent = ({
 	const [isChartZoomed, setIschartZoomed] = useState(false);
 	const [isTooltipEnabled, setIsTooltipEnabled] = useState(false);
 	const [isChartEmpty, setIsChartEmpty] = useState(false);
-	const [showchart, setShowChart] = useState<boolean>(false);
+	const [showChartShimmer, setShowChartShimmer] = useState<boolean>(true);
 
 	//its trigger by webview on charts operations
 	const onMessage = async (event: any) => {
@@ -131,10 +131,10 @@ const ToggleChartComponent = ({
 				break;
 
 			case "startLoader":
-				setLoading(true);
+				// setLoading(true);
 				break;
 
-			case "stopLoader":
+			// case "stopLoader":
 			case "Empty":
 				setTimeout(() => setLoading(false), 2000);
 				break;
@@ -150,14 +150,15 @@ const ToggleChartComponent = ({
 				//setMaxMinValues(values)
 				break;
 			case "animationEnd":
-				setShowChart(true);
+				setShowChartShimmer(false);
 				break;
 			case "Empty Series":
-				setShowChart(true);
+				setShowChartShimmer(false);
 				break;
 			default:
 				break;
 		}
+
 		// console.log(
 		// 	"msg from webview line chart",
 		// 	action,
@@ -233,24 +234,6 @@ const ToggleChartComponent = ({
 		}
 	};
 
-	//its used to handle custom data
-	const handleRangeDataFilter = async () => {
-		setActiveTab("");
-		fetchData({
-			TimeFrame: 6,
-			MinValue: formatNumber(
-				parseNumber(maxMinValues?.minY, locale),
-				"en"
-			),
-			MaxValue: formatNumber(
-				parseNumber(maxMinValues?.maxY, locale),
-				"en"
-			),
-			StartDate: formatDateTime(dayjs(selectedStartDate)),
-			EndDate: formatDateTime(dayjs(selectedEndDate)),
-		});
-	};
-
 	const fetchData = async (rangePayload = {}) => {
 		if (fetchChartData) {
 			try {
@@ -258,6 +241,7 @@ const ToggleChartComponent = ({
 					activeTab,
 					rangePayload
 				);
+
 				if (chartConfig?.data?.length > 0) {
 					updateChartData(chartConfig?.data);
 					setPreviousTab(activeTab);
@@ -274,13 +258,13 @@ const ToggleChartComponent = ({
 						minX: 0,
 						minY: new Intl.NumberFormat(locale, {
 							useGrouping: false,
-							// minimumFractionDigits: 0,
+							minimumFractionDigits: 0,
 							maximumFractionDigits: 2,
 						}).format(chartConfig?.MinValue),
 						maxX: 0,
 						maxY: new Intl.NumberFormat(locale, {
 							useGrouping: false,
-							// minimumFractionDigits: 0,
+							minimumFractionDigits: 0,
 							maximumFractionDigits: 2,
 						}).format(chartConfig?.MaxValue),
 					});
@@ -295,11 +279,29 @@ const ToggleChartComponent = ({
 						maxY: 0,
 					});
 				}
-				// setShowChart(true);
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}
 		}
+	};
+
+	//its used to handle custom data
+	const handleRangeDataFilter = async () => {
+		setActiveTab("");
+		setLoading(true);
+		fetchData({
+			TimeFrame: 6,
+			MinValue: formatNumber(
+				parseNumber(maxMinValues?.minY, locale),
+				"en"
+			),
+			MaxValue: formatNumber(
+				parseNumber(maxMinValues?.maxY, locale),
+				"en"
+			),
+			StartDate: formatDateTime(dayjs(selectedStartDate)),
+			EndDate: formatDateTime(dayjs(selectedEndDate)),
+		});
 	};
 
 	useEffect(() => {
@@ -340,7 +342,7 @@ const ToggleChartComponent = ({
 			)}
 			{/* Chart  */}
 			<View className="flex-1  border-gray-300">
-				{!showchart && <ChartGraphSimmer />}
+				{showChartShimmer && <ChartGraphSimmer />}
 				{isLoading && <ChartLoaderPNG />}
 				<ChartComponent
 					isChartEmpty={isChartEmpty}
@@ -349,8 +351,8 @@ const ToggleChartComponent = ({
 					onMessage={onMessage}
 					activeTab={activeTab}
 					webViewhtmlContent={webviewLineHtmlContent}
-					iFramehtmlContent={iframeLineHtmlContent}
-					setShowChart={setShowChart}
+					iFramehtmlContent={iframeLineHtmlContent} // for web
+					setShowChartShimmer={setShowChartShimmer} //for web
 					setLoading={setLoading} // for web
 					isTooltipEnabled={isTooltipEnabled}
 					setIsChartLoaded={setIsChartLoaded}
@@ -363,7 +365,7 @@ const ToggleChartComponent = ({
 					<TouchableOpacity
 						className="bg-[#e31836] py-3 mx-5 rounded-sm mb-2"
 						onPress={() => setModalVisible(!modalVisible)}
-						disabled={!showchart}
+						disabled={!showChartShimmer}
 					>
 						<Text className="text-white text-center text-base font-normal uppercase">
 							{i18n.t("Customize_View")}

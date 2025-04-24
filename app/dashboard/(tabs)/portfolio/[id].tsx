@@ -354,20 +354,7 @@ const PortfolioOverView = () => {
 
 					<TouchableOpacity
 						className="bg-primary  bottom-0   mx-2 mb-2 py-3 rounded-sm  absolute  left-0 right-0 "
-						// onPress={() => setModalVisible(!modalVisible)}
-						// onPress={() => {
-						// 	updateApexChart(
-						// 		"chart",
-						// 		donutwebViewRef,
-						// 		donutIFrameRef,
-						// 		portfolioDetails?.donotChartData,
-						// 		{
-						// 			title: {
-						// 				text: paramsID?.PortfolioName,
-						// 			},
-						// 		}
-						// 	);
-						// }}
+						onPress={() => setModalVisible(!modalVisible)}
 					>
 						<Text className="text-white text-center text-base font-medium uppercase">
 							{i18n.t("View_Deals")}

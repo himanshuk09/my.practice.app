@@ -24,7 +24,7 @@ type ChartComponentProps = {
 	showToggleOrientation?: boolean;
 	showToolbar?: boolean;
 	iFrameWidth?: string | number | undefined;
-	setShowChart?: any;
+	setShowChartShimmer?: any;
 	setLoading?: any;
 	isTooltipEnabled?: boolean;
 	isChartEmpty?: boolean;
@@ -42,8 +42,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 	showToggleOrientation = true,
 	showToolbar = true,
 	iFrameWidth = "100%",
-	setShowChart,
-	setLoading,
+	setShowChartShimmer,
+	setLoading = () => {},
 	isTooltipEnabled,
 	isChartEmpty = false,
 	setIsChartLoaded,
@@ -225,8 +225,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 			else if (message === "highLightedMaxMin") {
 				setMaxMinValues(values ? values : "0");
 			} else if (message === "Empty Series") {
-				setShowChart(true);
-			} else if (message === "animationEnd") setShowChart(true);
+				setShowChartShimmer(false);
+			} else if (message === "animationEnd") setShowChartShimmer(false);
 			//console.log(`Message from ${source} iframe:`, event.data);
 		};
 

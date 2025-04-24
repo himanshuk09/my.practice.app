@@ -38,6 +38,7 @@ type EnergyDataRequest = {
 	EndDate?: string;
 };
 
+// dd.m.yyyy hh:mm:ss  ---to--- mm/dd/yyyy hh:mm
 function transformData(input: {
 	ValueArray: number[];
 	DateTimeArray: string[];
