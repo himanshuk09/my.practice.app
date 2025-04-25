@@ -214,7 +214,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 				type: "gradient",
 			},
 			title: {
-				text: ".",
+				text: " ",
 				align: "center",
 				style: {
 					fontSize: "12px",

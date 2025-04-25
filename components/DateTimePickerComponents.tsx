@@ -16,7 +16,7 @@ import "dayjs/locale/fr";
 import "dayjs/locale/tr";
 import "dayjs/locale/en-in";
 import { useSelector } from "react-redux";
-import { i18n } from "@/localization/config";
+import { englishLocale, i18n } from "@/localization/config";
 
 type DateTimePickerComponentsProps = {
 	title?: String;
@@ -137,7 +137,7 @@ const DateTimePickerComponents = ({
 									? dayjs(date)
 											.locale(locale)
 											.format(
-												locale === "en"
+												locale === englishLocale
 													? timePicker
 														? "DD/MM/YYYY HH:mm"
 														: "DD/MM/YYYY"
@@ -196,7 +196,7 @@ const DateTimePickerComponents = ({
 									? dayjs(range?.startDate)
 											.locale(locale)
 											.format(
-												locale === "en"
+												locale === englishLocale
 													? timePicker
 														? "DD/MM/YYYY HH:mm"
 														: "DD/MM/YYYY"
@@ -221,7 +221,7 @@ const DateTimePickerComponents = ({
 									? dayjs(range.endDate)
 											.locale(locale)
 											.format(
-												locale === "en"
+												locale === englishLocale
 													? timePicker
 														? "DD/MM/YYYY HH:mm"
 														: "DD/MM/YYYY"

@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
 import { RootState } from "@/store/store";
 import WebView from "react-native-webview";
-import { i18n } from "@/localization/config";
+import { englishLocale, germanyLocale, i18n } from "@/localization/config";
 import { ChartGraphSimmer } from "./ChartShimmer";
 import PickerModel from "@/components/PickerModel";
 import { ChartLoaderPNG } from "@/components/Loader";
@@ -38,7 +38,9 @@ const parseNumber = (
 		return 0;
 	}
 	const normalized =
-		locale === "de" ? value?.replace(/\./g, "").replace(",", ".") : value;
+		locale === germanyLocale
+			? value?.replace(/\./g, "").replace(",", ".")
+			: value;
 	return parseFloat(normalized);
 };
 
@@ -293,11 +295,11 @@ const ToggleChartComponent = ({
 			TimeFrame: 6,
 			MinValue: formatNumber(
 				parseNumber(maxMinValues?.minY, locale),
-				"en"
+				englishLocale
 			),
 			MaxValue: formatNumber(
 				parseNumber(maxMinValues?.maxY, locale),
-				"en"
+				englishLocale
 			),
 			StartDate: formatDateTime(dayjs(selectedStartDate)),
 			EndDate: formatDateTime(dayjs(selectedEndDate)),
@@ -365,7 +367,6 @@ const ToggleChartComponent = ({
 					<TouchableOpacity
 						className="bg-[#e31836] py-3 mx-5 rounded-sm mb-2"
 						onPress={() => setModalVisible(!modalVisible)}
-						disabled={!showChartShimmer}
 					>
 						<Text className="text-white text-center text-base font-normal uppercase">
 							{i18n.t("Customize_View")}

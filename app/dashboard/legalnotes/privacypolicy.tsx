@@ -1,4 +1,4 @@
-import { i18n } from "@/localization/config";
+import { germanyLocale, i18n } from "@/localization/config";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { RootState } from "@/store/store";
 import { useIsFocused } from "@react-navigation/native";
@@ -85,7 +85,7 @@ const PrivacyAndPolicy = () => {
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
 						{i18n.t("privacyAndPolicy.h1s1p1")}
 					</Text>
-					{locale === "de" && (
+					{locale === germanyLocale && (
 						<React.Fragment>
 							<Text className="text-[#4b4b4e] py-2 text-md font-normal">
 								{i18n.t("privacyAndPolicy.h1s1p2")}

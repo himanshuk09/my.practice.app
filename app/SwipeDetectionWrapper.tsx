@@ -1,9 +1,8 @@
 import React from "react";
-import { usePathname } from "expo-router";
+import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { View, PanResponder, StyleSheet } from "react-native";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
-import { RootState } from "@/store/store";
 type SwipeDetectionWrapperProps = {
 	children: React.ReactNode;
 };
@@ -12,9 +11,7 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 	children,
 }) => {
 	const dispatch = useDispatch();
-	const pathname = usePathname();
-	const isLoginRoute =
-		pathname === "/(auth)/login" || pathname === "/(auth)/forgot-password";
+
 	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 	const isDrawerOpen = useSelector(
 		(state: RootState) => state.drawer.isDrawerOpen
@@ -26,12 +23,14 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 		}
 		debounceTimeout = setTimeout(action, 300);
 	};
+
 	const debounceToggleDrawer = () => {
 		debounceAction(() => {
 			//console.log("Left swipe detected!");
 			dispatch(toggleDrawer());
 		});
 	};
+
 	const debounceCloseDrawer = () => {
 		debounceAction(() => {
 			//console.log("Right to left swipe detected, closing drawer!");
@@ -61,7 +60,7 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 	return (
 		<View
 			style={styles.container}
-			{...(!isLoginRoute ? panResponder.panHandlers : {})}
+			{...panResponder.panHandlers}
 			className="font-sans"
 		>
 			{children}

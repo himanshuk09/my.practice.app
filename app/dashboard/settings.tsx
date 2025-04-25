@@ -1,5 +1,5 @@
 import { st } from "@/utils/Styles";
-import { i18n } from "@/localization/config";
+import { englishLocale, germanyLocale, i18n } from "@/localization/config";
 import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -58,7 +58,7 @@ const Settings = () => {
 				>
 					<Picker.Item
 						label="ENGLISH"
-						value="en"
+						value={englishLocale}
 						style={{
 							color: "#0f172a",
 							fontSize: 16,
@@ -67,7 +67,7 @@ const Settings = () => {
 					/>
 					<Picker.Item
 						label="DEUTSCH"
-						value="de"
+						value={germanyLocale}
 						style={{
 							color: "#0f172a",
 							fontSize: 16,

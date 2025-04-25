@@ -18,7 +18,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { i18n } from "@/localization/config";
+import { englishLocale, germanyLocale, i18n } from "@/localization/config";
 import { DateType } from "react-native-ui-datepicker";
 type initialViewProps = "day" | "month" | "year" | "time";
 
@@ -55,7 +55,9 @@ const parseNumber = (
 		return 0;
 	}
 	const normalized =
-		locale === "de" ? value?.replace(/\./g, "").replace(",", ".") : value;
+		locale === germanyLocale
+			? value?.replace(/\./g, "").replace(",", ".")
+			: value;
 	return parseFloat(normalized);
 };
 
@@ -150,7 +152,7 @@ const PickerModel = ({
 
 	const handleInputChange = (text: string, key: any) => {
 		let isValid = false;
-		let isEng = locale === "en";
+		let isEng = locale === englishLocale;
 		if (isEng) {
 			// Allow only digits and one dot, no commas
 			isValid = /^-?\d*(\.\d*)?$/.test(text);
@@ -264,14 +266,16 @@ const PickerModel = ({
 												? dayjs(rangeDate.startDate)
 														.locale(locale)
 														.format(
-															locale === "en"
+															locale ===
+																englishLocale
 																? "DD/MM/YYYY"
 																: "DD.MM.YYYY"
 														)
 												: dayjs()
 														.locale(locale)
 														.format(
-															locale === "en"
+															locale ===
+																englishLocale
 																? "DD/MM/YYYY"
 																: "DD.MM.YYYY"
 														)}
@@ -302,14 +306,16 @@ const PickerModel = ({
 												? dayjs(rangeDate.endDate)
 														.locale(locale)
 														.format(
-															locale === "en"
+															locale ===
+																englishLocale
 																? "DD/MM/YYYY"
 																: "DD.MM.YYYY"
 														)
 												: dayjs()
 														.locale(locale)
 														.format(
-															locale === "en"
+															locale ===
+																englishLocale
 																? "DD/MM/YYYY"
 																: "DD.MM.YYYY"
 														)}
@@ -349,17 +355,18 @@ const PickerModel = ({
 												? dayjs(selectedStartDate)
 														.locale(locale)
 														.format(
-															locale === "en"
+															locale ===
+																englishLocale
 																? "DD/MM/YYYY"
 																: "DD.MM.YYYY"
 														)
-												: locale === "en"
+												: locale === englishLocale
 													? "-- / -- /----"
 													: "-- . -- . ----"}
 											{/* dayjs()
 														.locale(locale)
 														.format(
-															locale === "en"
+															locale === englishLocale
 																? "DD/MM/YYYY"
 																: "DD.MM.YYYY"
 														) */}
@@ -386,11 +393,11 @@ const PickerModel = ({
 										<Text className="text-slate-700">
 											{dayjs(selectedStartDate).isValid()
 												? dayjs(selectedStartDate)
-														.locale("en")
+														.locale(englishLocale)
 														.format("HH:mm")
 												: "-- : --"}
 											{/* dayjs()
-														.locale("en")
+														.locale(englishLocale)
 														.format("HH:mm") */}
 										</Text>
 										<Ionicons
@@ -418,17 +425,18 @@ const PickerModel = ({
 												? dayjs(selectedEndDate)
 														.locale(locale)
 														.format(
-															locale === "en"
+															locale ===
+																englishLocale
 																? "DD/MM/YYYY"
 																: "DD.MM.YYYY"
 														)
-												: locale === "en"
+												: locale === englishLocale
 													? "-- / -- /----"
 													: "-- . -- . ----"}
 											{/* dayjs()
 														.locale(locale)
 														.format(
-															locale === "en"
+															locale === englishLocale
 																? "DD/MM/YYYY"
 																: "DD.MM.YYYY"
 														) */}
@@ -454,11 +462,11 @@ const PickerModel = ({
 										<Text className="text-slate-700">
 											{dayjs(selectedEndDate).isValid()
 												? dayjs(selectedEndDate)
-														.locale("en")
+														.locale(englishLocale)
 														.format("HH:mm")
 												: "-- : --"}
 											{/* dayjs()
-														.locale("en")
+														.locale(englishLocale)
 														.format("HH:mm") */}
 										</Text>
 
@@ -512,7 +520,7 @@ const PickerModel = ({
 											}
 											placeholderTextColor="#9a9b9f"
 											placeholder={
-												locale === "de"
+												locale === germanyLocale
 													? "00,00"
 													: "00.00"
 											}
@@ -547,7 +555,7 @@ const PickerModel = ({
 											}
 											placeholderTextColor="#9a9b9f"
 											placeholder={
-												locale === "de"
+												locale === germanyLocale
 													? "00,00"
 													: "00.00"
 											}

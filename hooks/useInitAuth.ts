@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { setLoading, setSession } from "@/store/authSlice";
 import { updateLocale } from "@/store/languageSlice";
+import { englishLocale } from "@/localization/config";
 
 export const useInitAuth = () => {
 	const dispatch = useDispatch();
@@ -17,7 +18,7 @@ export const useInitAuth = () => {
 			}
 			dispatch(setLoading(false));
 			const culture = await AsyncStorage.getItem("culture");
-			dispatch(updateLocale(culture || "en"));
+			dispatch(updateLocale(culture || englishLocale));
 		};
 
 		checkLoginStatus();

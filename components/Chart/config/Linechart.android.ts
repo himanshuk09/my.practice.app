@@ -308,7 +308,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 			const seriesData = chartInstance.w.config.series[0].data;
 
 			// Check if seriesData is an array and has valid data
-			if (!Array.isArray(seriesData) || seriesData.length === 0) {
+			if (!Array.isArray(seriesData) || seriesData.length === 0 || seriesData.length === 1) {
 				// console.log('Invalid or empty series data');
 				return;
 			}
@@ -379,7 +379,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 		}
 
 		const options = {
-			series: [{ name: "Energy Use", data: [{"x":"01/01/2000 00:00","y":0}]}],
+			series: [{ name: "Energy Use", data: [{"x":"01/01/2000 00:00","y":85}]}],
 			chart: {
 				type: "line",
 				height: "285",
@@ -476,7 +476,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 
 					mouseMove: function () {
 						sendMsgToReactNative("mouseMove");
-						// handleChartMouseMove();
+						handleChartMouseMove();
 					},
 
 					mouseLeave: function () {
@@ -547,6 +547,20 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 								}
 							);
 						}
+							selectionHideTimeout = setTimeout(() => {
+							const selectionRect = document.querySelector('.apexcharts-selection-rect');
+							if (selectionRect) {
+								selectionRect.style.transition = 'opacity 150ms ease-out';
+								selectionRect.style.opacity = '0';
+								setTimeout(() => {
+									selectionRect.style.display = 'none';
+									selectionRect.style.opacity = '1';
+									selectionRect.style.transition = '';
+									isCurrentlySelecting = false;
+									chart.resetSelection();
+								}, 150);
+							}
+						}, 200);
 					},
 
 					dataPointMouseEnter: function () {
@@ -785,6 +799,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 					return max + (max * 0.1);
 				},
 				forceNiceScale: true,
+				tickAmount: 10,
 				title: {
 					text: "-",
 					rotate: -90,
@@ -838,7 +853,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 
 			tooltip: {
 				enabled: true,
-				shared: false,
+				shared: true,
 				intersect: false,
 				hideEmptySeries: true,
 				fillSeriesColor: false,
@@ -882,9 +897,9 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 				},
 				fixed: {
 					enabled: false,
-					position: "topRight",
+					position: "bottomRight", // or 'topLeft', 'bottomRight',topRight etc.
 					offsetX: 0,
-					offsetY: 0,
+					offsetY: -40,
 				},
 			},
 			fill: {
@@ -973,6 +988,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 						return max + (max * 0.1);
 					},
 					forceNiceScale: true,
+					tickAmount: 10,
 					title: {
 						text: yAxisTitle,
 					},
@@ -988,7 +1004,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 						formatter: (value) => {
 							const locale = newLocale === "de" ? "de-DE" : "en-IN";
 							return new Intl.NumberFormat(locale, {
-								maximumFractionDigits: 2,
+								maximumFractionDigits: 0,
 							}).format(value);
 						},
 					},
@@ -1041,7 +1057,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 								case "Week":
 								case "Month":
 									formatOptions = {
-										year: "numeric",
+										year: "2-digit",
 										month: "short",
 										day: "2-digit",
 									};

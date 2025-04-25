@@ -1,8 +1,6 @@
 import * as Sharing from "expo-sharing";
-import { useEffect, useRef } from "react";
 import * as FileSystem from "expo-file-system";
 import Toast, { ToastShowParams } from "react-native-toast-message";
-import { Animated, Easing } from "react-native";
 import * as IntentLauncher from "expo-intent-launcher";
 import { Linking, Platform, Text, TouchableOpacity, View } from "react-native";
 import {

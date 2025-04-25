@@ -1,5 +1,5 @@
 import { RootState } from "@/store/store";
-import { i18n } from "@/localization/config";
+import { germanyLocale, i18n } from "@/localization/config";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
@@ -56,9 +56,7 @@ const TermsAndConditionsScreen = () => {
 						{i18n.t("termsAndConditions.terms")}
 					</Text>
 					<Text className="text-black py-2 text-lg font-medium ">
-						{i18n.t(
-							"termsAndConditions.contractPartiesAndObject"
-						)}
+						{i18n.t("termsAndConditions.contractPartiesAndObject")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
 						{i18n.t(
@@ -100,49 +98,31 @@ const TermsAndConditionsScreen = () => {
 						)}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.usercommitmentPoint1"
-						)}
+						{i18n.t("termsAndConditions.usercommitmentPoint1")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.usercommitmentPoint2"
-						)}
+						{i18n.t("termsAndConditions.usercommitmentPoint2")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.usercommitmentPoint3"
-						)}
+						{i18n.t("termsAndConditions.usercommitmentPoint3")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.usercommitmentPoint4"
-						)}
+						{i18n.t("termsAndConditions.usercommitmentPoint4")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.usercommitmentPoint5"
-						)}
+						{i18n.t("termsAndConditions.usercommitmentPoint5")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.usercommitmentPoint6"
-						)}
+						{i18n.t("termsAndConditions.usercommitmentPoint6")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.usercommitmentPoint7"
-						)}
+						{i18n.t("termsAndConditions.usercommitmentPoint7")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.usercommitmentPoint8"
-						)}
+						{i18n.t("termsAndConditions.usercommitmentPoint8")}
 					</Text>
 					<Text className="text-black py-2 text-lg font-medium">
-						{i18n.t(
-							"termsAndConditions.intellectualProperty"
-						)}
+						{i18n.t("termsAndConditions.intellectualProperty")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2 text-md font-normal">
 						{i18n.t(
@@ -152,7 +132,7 @@ const TermsAndConditionsScreen = () => {
 					<Text className="text-black py-2 text-lg font-medium">
 						{i18n.t("termsAndConditions.enexionRights")}
 					</Text>
-					{locale === "de" && (
+					{locale === germanyLocale && (
 						<Text className="text-[#4b4b4e] py-2  text-md font-normal">
 							{i18n.t(
 								"termsAndConditions.enexionRightsDescription"
@@ -172,19 +152,13 @@ const TermsAndConditionsScreen = () => {
 						{i18n.t("termsAndConditions.termination")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2  text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.terminationDescription1"
-						)}
+						{i18n.t("termsAndConditions.terminationDescription1")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2  text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.terminationDescription2"
-						)}
+						{i18n.t("termsAndConditions.terminationDescription2")}
 					</Text>
 					<Text className="text-black py-2 text-lg font-medium">
-						{i18n.t(
-							"termsAndConditions.supplementaryAgreements"
-						)}
+						{i18n.t("termsAndConditions.supplementaryAgreements")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2  text-md font-normal">
 						{i18n.t(
@@ -210,9 +184,7 @@ const TermsAndConditionsScreen = () => {
 						{i18n.t("termsAndConditions.applicableLaw")}
 					</Text>
 					<Text className="text-[#4b4b4e] py-2  text-md font-normal">
-						{i18n.t(
-							"termsAndConditions.applicableLawDescription"
-						)}
+						{i18n.t("termsAndConditions.applicableLawDescription")}
 					</Text>
 					<Text className="text-black py-2 text-lg font-medium">
 						{i18n.t("termsAndConditions.severabilityClause")}

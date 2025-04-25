@@ -224,7 +224,11 @@ const PortfolioOverView = () => {
 			);
 		}
 	}, [isChartLoaded, isDonutChartLoaded]);
-	return (
+	return portfolioDetails?.closedData?.length === 0 ? (
+		<View className="flex-1  bg-white">
+			<PortFolioChartShimmer />
+		</View>
+	) : (
 		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar
 				barStyle="dark-content"
@@ -233,135 +237,104 @@ const PortfolioOverView = () => {
 				showHideTransition={"slide"}
 				networkActivityIndicatorVisible
 			/>
-			{portfolioDetails?.closedData?.length === 0 ? (
-				<View className="flex-1  bg-white">
-					<PortFolioChartShimmer />
+
+			<View
+				className={`flex flex-row justify-between `}
+				style={{
+					height: screenHeight * 0.23,
+				}}
+			>
+				<ChartComponent
+					webViewRef={donutwebViewRef}
+					iFrameRef={donutIFrameRef}
+					onMessage={onMessage}
+					webViewhtmlContent={webviewDonutChartHtmlContent}
+					iFramehtmlContent={iframeDonutChartHtmlContent}
+					showToggleOrientation={false}
+					showToolbar={false}
+					iFrameWidth="50%"
+					setIsChartLoaded={setIsDonutChartLoaded}
+				/>
+
+				<View className={`flex-col justify-start w-[33%] md:w-[10%]`}>
+					<DataDisplay
+						data={portfolioDetails?.closedData[0]}
+						title={"Closed"}
+						locale={locale}
+					/>
+					<DataDisplay
+						data={portfolioDetails?.openData[0]}
+						title={"Open"}
+						locale={locale}
+					/>
 				</View>
-			) : (
-				<React.Fragment>
-					<View style={{ flex: 1 }}>
-						<View
-							style={[
-								{
-									height: "100%",
-								},
-							]}
-						>
-							<View
-								className={`flex flex-row justify-between `}
-								style={{
-									height:
-										Platform.OS === "web"
-											? screenHeight * 0.23
-											: screenHeight * 0.23,
-								}}
-							>
-								<ChartComponent
-									webViewRef={donutwebViewRef}
-									iFrameRef={donutIFrameRef}
-									onMessage={onMessage}
-									webViewhtmlContent={
-										webviewDonutChartHtmlContent
-									}
-									iFramehtmlContent={
-										iframeDonutChartHtmlContent
-									}
-									showToggleOrientation={false}
-									showToolbar={false}
-									iFrameWidth="50%"
-									setIsChartLoaded={setIsDonutChartLoaded}
-								/>
+				<View
+					className="ml-7 mt-3 "
+					style={{
+						marginRight: Platform.OS === "web" ? "10%" : 20,
+					}}
+				>
+					<FontAwesome5
+						name="file-download"
+						size={25}
+						color="#ef4444"
+						onPress={exportPortfolioReport}
+					/>
+				</View>
+			</View>
+			<View className="h-1 bg-[#DEDEDE] mt-1" />
+			<View
+				className="flex"
+				style={{
+					height:
+						Platform.OS === "web"
+							? screenHeight * 0.6
+							: screenHeight * 0.61,
+					paddingTop: Platform.OS !== "web" ? 15 : undefined,
+					padding: 3,
+				}}
+			>
+				<ChartComponent
+					isChartEmpty={portfolioDetails?.message === "no data"}
+					webViewRef={areaWebViewRef}
+					iFrameRef={areaIFrameRef}
+					onMessage={onMessage}
+					webViewhtmlContent={webviewAreaHtmlContent}
+					iFramehtmlContent={iframeAreaHtmlContent}
+					showToggleOrientation={false}
+					setIsChartLoaded={setIsChartLoaded}
+				/>
+			</View>
 
-								<View
-									className={`flex-col justify-start w-[33%] md:w-[10%]`}
-								>
-									<DataDisplay
-										data={portfolioDetails?.closedData[0]}
-										title={"Closed"}
-										locale={locale}
-									/>
-									<DataDisplay
-										data={portfolioDetails?.openData[0]}
-										title={"Open"}
-										locale={locale}
-									/>
-								</View>
-								<View
-									className="ml-7 mt-3 "
-									style={{
-										marginRight:
-											Platform.OS === "web" ? "10%" : 20,
-									}}
-								>
-									<FontAwesome5
-										name="file-download"
-										size={25}
-										color="#ef4444"
-										onPress={exportPortfolioReport}
-									/>
-								</View>
-							</View>
-							<View className="h-1 bg-[#DEDEDE] mt-1" />
-							<View
-								className=""
-								style={{
-									height:
-										Platform.OS === "web"
-											? screenHeight * 0.6
-											: screenHeight * 0.61,
-									paddingTop:
-										Platform.OS !== "web" ? 15 : undefined,
-									padding: 3,
-								}}
-							>
-								<ChartComponent
-									isChartEmpty={
-										portfolioDetails?.message === "no data"
-									}
-									webViewRef={areaWebViewRef}
-									iFrameRef={areaIFrameRef}
-									onMessage={onMessage}
-									webViewhtmlContent={webviewAreaHtmlContent}
-									iFramehtmlContent={iframeAreaHtmlContent}
-									showToggleOrientation={false}
-									setIsChartLoaded={setIsChartLoaded}
-								/>
-							</View>
-						</View>
-						<Modal
-							animationType="fade"
-							transparent={false}
-							visible={modalVisible}
-							onRequestClose={() =>
-								setModalVisible(!modalVisible)
-							}
-						>
-							<View
-								className={`"h-full w-full absolute flex-1`}
-								style={StyleSheet.absoluteFill}
-							>
-								<Transactions
-									cards={portfolioDeals}
-									setModalVisible={setModalVisible}
-									modalVisible={modalVisible}
-									title={paramsID?.PortfolioName}
-									onRefresh={onRefresh}
-									isRefreshing={isRefreshing}
-								/>
-							</View>
-						</Modal>
-					</View>
+			<Modal
+				animationType="fade"
+				transparent={false}
+				visible={modalVisible}
+				onRequestClose={() => setModalVisible(!modalVisible)}
+			>
+				<View
+					className={`"h-full w-full absolute flex-1`}
+					style={StyleSheet.absoluteFill}
+				>
+					<Transactions
+						cards={portfolioDeals}
+						setModalVisible={setModalVisible}
+						modalVisible={modalVisible}
+						title={paramsID?.PortfolioName}
+						onRefresh={onRefresh}
+						isRefreshing={isRefreshing}
+					/>
+				</View>
+			</Modal>
 
-					<TouchableOpacity
-						className="bg-primary  bottom-0   mx-2 mb-2 py-3 rounded-sm  absolute  left-0 right-0 "
-						onPress={() => setModalVisible(!modalVisible)}
-					>
-						<Text className="text-white text-center text-base font-medium uppercase">
-							{i18n.t("View_Deals")}
-						</Text>
-					</TouchableOpacity>
-				</React.Fragment>
-			)}
+			<TouchableOpacity
+				className="bg-primary  bottom-0   mx-2 mb-2 py-3 rounded-sm  absolute  left-0 right-0 "
+				onPress={() => setModalVisible(!modalVisible)}
+			>
+				<Text className="text-white text-center text-base font-medium uppercase">
+					{i18n.t("View_Deals")}
+				</Text>
+			</TouchableOpacity>
 		</SafeAreaView>
 	);
 };

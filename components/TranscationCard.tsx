@@ -1,14 +1,14 @@
-import { st } from "@/utils/Styles"
-import StackHeader from "./StackHeader"
-import { ChartLoaderPNG } from "./Loader"
-import { useEffect, useState } from "react"
-import { FontAwesome5 } from "@expo/vector-icons"
-import { i18n } from "@/localization/config"
-import useNetworkStatus from "@/hooks/useNetworkStatus"
+import { st } from "@/utils/Styles";
+import StackHeader from "./StackHeader";
+import { ChartLoaderPNG } from "./Loader";
+import { useEffect, useState } from "react";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { i18n } from "@/localization/config";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 import {
 	exportDealsToCSV,
 	exportDealsToCSVWeb,
-} from "./exportcsv/exportToFiles"
+} from "./exportcsv/exportToFiles";
 import {
 	View,
 	Platform,
@@ -17,8 +17,13 @@ import {
 	Text,
 	StyleSheet,
 	RefreshControl,
-} from "react-native"
-
+} from "react-native";
+type DataRowPrpos = {
+	label?: string;
+	value: any;
+	unit: string;
+	locale?: string;
+};
 const Card = ({ title, deals }: any) => {
 	return (
 		<View className="bg-cardBg  mx-1 p-3 my-1 " style={st.boxShadow}>
@@ -94,8 +99,58 @@ const Card = ({ title, deals }: any) => {
 				</View>
 			</View>
 		</View>
-	)
-}
+	);
+};
+const DataRow = ({ value, unit, locale }: DataRowPrpos) => (
+	<View className="flex-row w-full">
+		<Text className="text-chartText text-xs font-normal flex-1 text-right">
+			{value ? new Intl.NumberFormat(locale).format(value) : "0"}
+		</Text>
+		<Text className="text-chartText text-xs w-12 text-left ml-2">
+			{unit}
+		</Text>
+	</View>
+);
+const DataDisplay = ({
+	data,
+	title,
+	locale,
+}: {
+	data: any;
+	title: string;
+	locale?: string;
+}) => {
+	if (!data) return null; // Prevents rendering if data is missing
+
+	return (
+		<View className="flex p-1 bg-white">
+			<Text
+				className={`${title === "Closed" ? "text-red-600" : "text-chartText"} mb-1 text-sm font-bold`}
+			>
+				{title}
+			</Text>
+			<DataRow
+				label="Price"
+				value={Math.trunc(data?.Price)}
+				unit={data?.PriceUnit}
+				locale={locale}
+			/>
+			<DataRow
+				label="Load"
+				value={data?.Load}
+				unit={data?.LoadUnit}
+				locale={locale}
+			/>
+			<DataRow
+				label="Value"
+				value={data?.Value}
+				unit={data?.unit || "€/MWh"}
+				locale={locale}
+			/>
+		</View>
+	);
+};
+
 const Transactions = ({
 	cards,
 	setModalVisible,
@@ -104,17 +159,17 @@ const Transactions = ({
 	onRefresh,
 	isRefreshing,
 }: any) => {
-	const [loading, setLoadig] = useState<any>(true)
-	const isOnline = useNetworkStatus()
+	const [loading, setLoadig] = useState<any>(true);
+	const isOnline = useNetworkStatus();
 
 	useEffect(() => {
 		setTimeout(() => {
-			setLoadig(false)
-		}, 500)
-	}, [])
+			setLoadig(false);
+		}, 200);
+	}, []);
 
 	return (
-		<View className="flex-1  " style={StyleSheet.absoluteFill}>
+		<View className="flex-1 " style={StyleSheet.absoluteFill}>
 			<StackHeader
 				title={"portfolio_overview"}
 				closed={true}
@@ -136,23 +191,21 @@ const Transactions = ({
 						size={25}
 						color="#ef4444"
 						onPress={() => {
-							if (!isOnline || cards?.length === 0) return
-							setModalVisible(!modalVisible)
+							if (!isOnline || cards?.length === 0) return;
+							setModalVisible(!modalVisible);
 							if (Platform.OS === "web") {
-								exportDealsToCSVWeb(cards, `${title}_deals.csv`)
+								exportDealsToCSVWeb(
+									cards,
+									`${title}_deals.csv`
+								);
 							} else {
-								exportDealsToCSV(cards, `${title}_deals.csv`)
+								exportDealsToCSV(cards, `${title}_deals.csv`);
 							}
 						}}
 					/>
 				</View>
 			</View>
-			<View
-				className="flex-1  w-full  "
-				style={{
-					height: "100%",
-				}}
-			>
+			<View className="flex-1  w-full h-full">
 				{!cards || cards?.length === 0 ? (
 					<View
 						className="items-center justify-center"
@@ -192,77 +245,18 @@ const Transactions = ({
 						}
 					/>
 				)}
-				<TouchableOpacity
-					className={`bg-primary  mx-2 mb-2 py-3 flex justify-center items-center rounded-sm    
-						${loading || cards?.length === 0 ? "absolute bottom-1 left-0 right-0 " : ""}}`}
-					onPress={() => setModalVisible(!modalVisible)}
-				>
-					<Text className="text-white text-center text-base font-medium uppercase">
-						{i18n.t("View_Portfolio")}
-					</Text>
-				</TouchableOpacity>
 			</View>
-		</View>
-	)
-}
-
-const DataRow = ({
-	value,
-	unit,
-	locale,
-}: {
-	label?: string
-	value: any
-	unit: string
-	locale?: string
-}) => (
-	<View className="flex-row w-full">
-		<Text className="text-chartText text-xs font-normal flex-1 text-right">
-			{value ? new Intl.NumberFormat(locale).format(value) : "0"}
-		</Text>
-		<Text className="text-chartText text-xs w-12 text-left ml-2">
-			{unit}
-		</Text>
-	</View>
-)
-export const DataDisplay = ({
-	data,
-	title,
-	locale,
-}: {
-	data: any
-	title: string
-	locale?: string
-}) => {
-	if (!data) return null // Prevents rendering if data is missing
-
-	return (
-		<View className="flex p-1 bg-white">
-			<Text
-				className={`${title === "Closed" ? "text-red-600" : "text-chartText"} mb-1 text-sm font-bold`}
+			<TouchableOpacity
+				className={`bg-primary  mx-2 mb-1 py-3 flex justify-center items-center rounded-sm    
+						${loading || cards?.length === 0 ? "absolute bottom-1 left-0 right-0 " : ""}}`}
+				onPress={() => setModalVisible(!modalVisible)}
 			>
-				{title}
-			</Text>
-			<DataRow
-				label="Price"
-				value={Math.trunc(data?.Price)}
-				unit={data?.PriceUnit}
-				locale={locale}
-			/>
-			<DataRow
-				label="Load"
-				value={data?.Load}
-				unit={data?.LoadUnit}
-				locale={locale}
-			/>
-			<DataRow
-				label="Value"
-				value={data?.Value}
-				unit={data?.unit || "€/MWh"}
-				locale={locale}
-			/>
+				<Text className="text-white text-center text-base font-medium uppercase">
+					{i18n.t("View_Portfolio")}
+				</Text>
+			</TouchableOpacity>
 		</View>
-	)
-}
-
-export default Transactions
+	);
+};
+export default Transactions;
+export { DataDisplay };

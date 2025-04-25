@@ -226,7 +226,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 				setMaxMinValues(values ? values : "0");
 			} else if (message === "Empty Series") {
 				setShowChartShimmer(false);
-			} else if (message === "animationEnd") setShowChartShimmer(false);
+			} else if (message === "animationEnd") {
+				setTimeout(() => {
+					setShowChartShimmer(false);
+				}, 1000);
+			}
 			//console.log(`Message from ${source} iframe:`, event.data);
 		};
 

@@ -15,6 +15,7 @@ import { cockpitChartData } from "@/constants/cockpitchart";
 import { ChartShimmer } from "@/components/ChartShimmer";
 import { stringChartData } from "@/constants/stringChartData";
 import { st } from "@/utils/Styles";
+import { englishLocale } from "@/localization/config";
 
 const PFCDetails = () => {
 	const { id } = useLocalSearchParams();
@@ -36,7 +37,7 @@ const PFCDetails = () => {
 		const minutes = String(now.getUTCMinutes()).padStart(2, "0");
 
 		// Format as DD/MM/YYYY HH:mm
-		return locale === "en"
+		return locale === englishLocale
 			? `${day}/${month}/${year} ${hours}:${minutes}`
 			: `${day}.${month}.${year} ${hours}:${minutes}`;
 	};

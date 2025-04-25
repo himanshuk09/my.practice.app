@@ -643,6 +643,8 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 		};
 
 		function updateLocale(newLocale) {
+		let currentSeries = chart.w.config.series;
+			currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy Use: ";
 			chart.updateOptions({
 				chart: {},
 				tooltip: {

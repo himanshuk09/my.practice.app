@@ -23,6 +23,24 @@ type TimeFrameString =
 	| "Custom";
 
 type TimeFrame = TimeFrameString | 0 | 1 | 2 | 3 | 4 | 5 | 6;
+var graphPriceUnit = [
+	" €/MWh",
+	" €/MWh",
+	" €/MWh",
+	" US$/ton",
+	" €/ton",
+	" TL/MWh",
+];
+var currencySymbol = [" €", " €", " €", " US$", " €", " TL"];
+var timeFrameText = [
+	"Day",
+	"Week",
+	"Month",
+	"Quarter",
+	"Year",
+	"ThreeYear",
+	"Custom",
+];
 type EnergyDataRequest = {
 	ChannelId?: number;
 	ClientId?: number;
