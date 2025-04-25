@@ -69,7 +69,7 @@ const MenuCard = memo(({ item }: MenuCardProps) => {
 	return (
 		<Pressable
 			className=" m-1 items-center"
-			onPressIn={async () => {
+			onPressIn={() => {
 				dispatch(activeLoading());
 				setTimeout(() => router.push(item.route));
 			}}

@@ -10,6 +10,14 @@ import { useAuth } from "@/hooks/useAuth";
 type NavigationWatcherProps = {
 	children: React.ReactNode;
 };
+// Handle specific paths within dashboard
+const dashboardPaths = [
+	"/dashboard/(tabs)/prices",
+	"/dashboard/(tabs)/pfc",
+	"/dashboard/(tabs)/loaddata",
+	"/dashboard/(tabs)/signals",
+	"/dashboard/(tabs)/portfolio",
+];
 
 const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 	const store = useStore();
@@ -56,21 +64,11 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 				router.replace("/(auth)/login");
 				return true;
 			}
-			if (currentPath === "/(auth)/login") {
+			if (!router.canGoBack()) {
 				BackHandler.exitApp();
 				return true;
 			}
-
 			dispatch(activeLoading());
-
-			// Handle specific paths within dashboard
-			const dashboardPaths = [
-				"/dashboard/(tabs)/prices",
-				"/dashboard/(tabs)/pfc",
-				"/dashboard/(tabs)/loaddata",
-				"/dashboard/(tabs)/signals",
-				"/dashboard/(tabs)/portfolio",
-			];
 
 			if (dashboardPaths.includes(currentPath)) {
 				setTimeout(() => router.replace("/dashboard"));

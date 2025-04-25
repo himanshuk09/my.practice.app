@@ -50,7 +50,7 @@ const Header = React.memo(({ navigation }: any) => {
 					activeOpacity={0.7}
 					onPress={() => {
 						setTimeout(() => {
-							router.replace("/dashboard");
+							router.push("/dashboard");
 						});
 						dispatch(activeLoading());
 						setTimeout(() => {
