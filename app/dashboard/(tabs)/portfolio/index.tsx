@@ -1,106 +1,71 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect } from "react";
+import { Platform, SafeAreaView, useWindowDimensions } from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import {
-	Platform,
-	SafeAreaView,
-	Text,
-	TouchableOpacity,
-	useWindowDimensions,
-	View,
-} from "react-native";
-import { StatusBar } from "react-native";
 import { getPortfolioList } from "@/services/portfolio.service";
-import { Portfolioprops, PortfolioArray } from "@/types/type";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
-import { i18n } from "@/localization/config";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
+
+import { Portfolioprops } from "@/types/type";
+import NoNetwork from "@/components/icons/NoNetwork";
+import NoData from "@/components/icons/NoData";
 
 const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
-	const isOnline = useNetworkStatus();
-	let NavigateTo = "dashboard/portfolio";
 	const { height } = useWindowDimensions();
-	const [error, setError] = useState(false);
-	const [gasList, setGasList] = useState<PortfolioArray>([]);
-	const [stromList, setStromList] = useState<PortfolioArray>([]);
+	const NavigateTo = "dashboard/portfolio";
 
-	useEffect(() => {
-		const fetchDetails = async () => {
-			if (!isOnline) return;
-			else {
-				try {
-					const response: any = await getPortfolioList();
-					if (
-						response?.gas.length === 0 ||
-						response?.strom.length === 0
-					) {
-						setError(true);
-					} else {
-						setGasList(response?.gas);
-						setStromList(response?.strom);
-						setError(false);
-					}
-				} catch (error) {
-					console.log("Error fetching portfolio list:", error);
-				}
-			}
-		};
+	const {
+		data: portfolioData,
+		error,
+		loading,
+		isOnline,
+		refetch,
+	} = useNetworkAwareApiRequest(getPortfolioList, {
+		autoFetch: true,
+		enabled: isFocused,
+		showGlobalLoader: false,
+		deps: [isFocused],
+	});
 
-		fetchDetails();
-	}, [isOnline]);
+	const gasList = portfolioData?.gas || [];
+	const stromList = portfolioData?.strom || [];
 
 	useLayoutEffect(() => {
 		dispatch(inActiveLoading());
 	}, [isFocused]);
+
+	/**
+	 *
+	 * Return Based On Condition
+	 */
+	if (error) return <NoNetwork />;
+	if (portfolioData?.gas?.length === 0) return <NoData />;
+
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
-				animated
-				showHideTransition={"slide"}
-				networkActivityIndicatorVisible
+			<FlatListBlock
+				title="Gas"
+				items={gasList}
+				height={Platform.OS === "web" ? height * 0.45 : "50%"}
+				NavigateTo={NavigateTo}
+				renderType={"Portfolio"}
+				keyEndxtractor={(item: Portfolioprops) =>
+					item?.PortfolioId.toString()
+				}
 			/>
-			{error ? (
-				<View
-					className="items-center justify-center "
-					style={{
-						height: "90%",
-					}}
-				>
-					<Text className="text-md font-medium text-mainCardHeaderText">
-						{i18n.t("Data_not_available")}
-					</Text>
-				</View>
-			) : (
-				<React.Fragment>
-					<FlatListBlock
-						title="Gas"
-						items={gasList || []}
-						height={Platform.OS === "web" ? height * 0.45 : "50%"}
-						NavigateTo={NavigateTo}
-						renderType={"Portfolio"}
-						keyExtractor={(item: Portfolioprops) =>
-							item?.PortfolioId.toString()
-						}
-					/>
-					<FlatListBlock
-						title="Power"
-						items={stromList || []}
-						height={Platform.OS === "web" ? height * 0.45 : "50%"}
-						NavigateTo={NavigateTo}
-						renderType={"Portfolio"}
-						keyExtractor={(item: Portfolioprops) =>
-							item?.PortfolioId.toString()
-						}
-					/>
-				</React.Fragment>
-			)}
+			<FlatListBlock
+				title="Power"
+				items={stromList}
+				height={Platform.OS === "web" ? height * 0.45 : "50%"}
+				NavigateTo={NavigateTo}
+				renderType={"Portfolio"}
+				keyExtractor={(item: Portfolioprops) =>
+					item?.PortfolioId.toString()
+				}
+			/>
 		</SafeAreaView>
 	);
 };

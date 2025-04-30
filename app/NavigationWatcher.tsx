@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
+import { closeDrawer } from "@/store/drawerSlice";
 import { BackHandler, Alert } from "react-native";
 import { useDispatch, useStore } from "react-redux";
 import { useRouter, useSegments } from "expo-router";
-import { closeDrawer } from "@/store/drawerSlice";
 import { activeLoading } from "@/store/navigationSlice";
 
 import { useAuth } from "@/hooks/useAuth";

@@ -53,6 +53,7 @@ const useTabDataCache = () => {
 
 		try {
 			const requestPromise = fetchFn(payload);
+
 			pendingRequestsRef.current[cacheKey] = requestPromise;
 
 			const response = await requestPromise;

@@ -1,5 +1,5 @@
-import Header from "@/components/MainHeader";
 import { Stack } from "expo-router";
+import Header from "@/components/MainHeader";
 
 const LoaddataLayout = () => {
 	return (

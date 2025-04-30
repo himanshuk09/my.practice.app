@@ -1,3 +1,15 @@
+import { st } from "@/utils/Styles";
+import { Href } from "expo-router";
+import { useRouter } from "expo-router";
+import { useDispatch } from "react-redux";
+import NoData from "@/components/icons/NoData";
+import NoNetwork from "@/components/icons/NoNetwork";
+import { PricesItem } from "@/constants/constantData";
+import { useIsFocused } from "@react-navigation/native";
+import React, { memo, useEffect, useState } from "react";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { ShimmerPrices, ShimmerPricesHeader } from "@/components/ShimmerEffect";
 import {
 	View,
 	Text,
@@ -7,25 +19,15 @@ import {
 	StatusBar,
 	RefreshControl,
 } from "react-native";
-import React, { memo, useEffect, useState } from "react";
-import { PricesItem } from "@/constants/constantData";
-import { Href } from "expo-router";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-import { useIsFocused } from "@react-navigation/native";
-import { useRouter } from "expo-router";
-import { useDispatch } from "react-redux";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import { st } from "@/utils/Styles";
-import { ShimmerPrices, ShimmerPricesHeader } from "@/components/ShimmerEffect";
-import { i18n } from "@/localization/config";
 
 const Prices = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const [error, setError] = useState(false);
-	const [prices, setPrices] = useState<any>([]);
+	const [prices, setPrices] = useState<any>(PricesItem);
 	const [isRefreshing, setIsRefreshing] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const ListItem = memo(({ item }: any) => (
 		<TouchableOpacity
 			key={item.id}
@@ -75,14 +77,21 @@ const Prices = () => {
 		</TouchableOpacity>
 	));
 	const renderItem = ({ item }: any) =>
-		prices?.length <= 0 ? <ShimmerPrices /> : <ListItem item={item} />;
+		loading ? <ShimmerPrices /> : <ListItem item={item} />;
 
 	useEffect(() => {
 		setTimeout(() => {
-			setPrices(PricesItem);
-		}, 1000);
+			setLoading(false);
+		}, 2000);
 		dispatch(inActiveLoading());
 	}, [isFocused]);
+
+	/**
+	 *
+	 * Return Based On Condition
+	 */
+	if (error) return <NoNetwork />;
+	if (prices.length === 0) return <NoData />;
 	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar
@@ -92,78 +101,61 @@ const Prices = () => {
 				showHideTransition={"slide"}
 				networkActivityIndicatorVisible
 			/>
-			{error ? (
-				<View
-					className="items-center justify-center "
-					style={{
-						height: "90%",
-					}}
-				>
-					<Text className="text-md font-medium text-mainCardHeaderText">
-						{i18n.t("Data_not_available")}
-					</Text>
-				</View>
+
+			{loading ? (
+				<ShimmerPricesHeader />
 			) : (
-				<React.Fragment>
-					{prices?.length <= 0 ? (
-						<ShimmerPricesHeader />
-					) : (
-						<View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-primary ">
-							<View className="flex flex-col justify-evenly w-[60%]">
-								<Text className="flex justify-start font-normal mb-2  items-center   text-xl  text-white">
-									EEX Power Auction
-								</Text>
-								<Text className="flex justify-start font-normal items-center  text-sm  text-white">
-									24/07/5468
-								</Text>
-							</View>
+				<View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-primary ">
+					<View className="flex flex-col justify-evenly w-[60%]">
+						<Text className="flex justify-start font-normal mb-2  items-center   text-xl  text-white">
+							EEX Power Auction
+						</Text>
+						<Text className="flex justify-start font-normal items-center  text-sm  text-white">
+							24/07/5468
+						</Text>
+					</View>
 
-							<View className="flex justify-center items-center w-[10%] mb-4">
-								<Ionicons
-									name="settings-sharp"
-									size={30}
-									color="white"
-									onPress={() => {
-										dispatch(activeLoading());
+					<View className="flex justify-center items-center w-[10%] mb-4">
+						<Ionicons
+							name="settings-sharp"
+							size={30}
+							color="white"
+							onPress={() => {
+								dispatch(activeLoading());
 
-										setTimeout(() =>
-											router.push(
-												"/dashboard/prices/settings"
-											)
-										);
-									}}
-								/>
-							</View>
-						</View>
-					)}
-
-					<FlatList
-						data={
-							prices?.length <= 0
-								? [...Array(10).keys()].map((index) => ({
-										id: index,
-										title: `Shimmer ${index}`,
-										unit: 0,
-										indicator: "Loading",
-										route: "",
-									}))
-								: prices
-						}
-						renderItem={renderItem}
-						keyExtractor={(item: any, index) => index.toString()}
-						contentContainerStyle={{ paddingTop: 4 }}
-						showsHorizontalScrollIndicator={false}
-						showsVerticalScrollIndicator={false}
-						refreshControl={
-							<RefreshControl
-								refreshing={isRefreshing}
-								onRefresh={() => setIsRefreshing(false)}
-								colors={["#e31837"]} // Optional: Set colors for the refresh indicator
-							/>
-						}
-					/>
-				</React.Fragment>
+								setTimeout(() =>
+									router.push("/dashboard/prices/settings")
+								);
+							}}
+						/>
+					</View>
+				</View>
 			)}
+			<FlatList
+				data={
+					loading
+						? [...Array(10).keys()].map((index) => ({
+								id: index,
+								title: `Shimmer ${index}`,
+								unit: 0,
+								indicator: "Loading",
+								route: "",
+							}))
+						: prices
+				}
+				renderItem={renderItem}
+				keyExtractor={(item: any, index) => index.toString()}
+				contentContainerStyle={{ paddingTop: 4 }}
+				showsHorizontalScrollIndicator={false}
+				showsVerticalScrollIndicator={false}
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefreshing}
+						onRefresh={() => setIsRefreshing(false)}
+						colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+					/>
+				}
+			/>
 		</SafeAreaView>
 	);
 };

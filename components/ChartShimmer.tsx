@@ -60,9 +60,15 @@ const ChartShimmer = () => {
 };
 const PortFolioChartShimmer = () => {
 	return (
-		<View style={[styles.container]}>
+		<View
+			style={[
+				styles.container,
+				StyleSheet.absoluteFill,
+				{ margin: 1, zIndex: 100 },
+			]}
+		>
 			<ShimmerPlaceholder
-				style={[styles.graph, { height: 150, marginBottom: 2 }]}
+				style={[styles.graph, { height: 132, marginBottom: 2 }]}
 			/>
 			<ShimmerPlaceholder style={styles.graph} />
 			<ShimmerPlaceholder style={styles.button} />

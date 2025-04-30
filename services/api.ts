@@ -1,27 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import NetInfo from "@react-native-community/netinfo";
 import { router } from "expo-router";
-import { showToast } from "@/components/ToastConfig";
+import { checkInternetConnection } from "./helper";
 
-export const checkInternetConnection = async (): Promise<boolean> => {
-	try {
-		const netInfo = await NetInfo.fetch();
-		if (!netInfo.isConnected) {
-			showToast({
-				type: "download",
-				title: "No_Internet_Connection",
-				subtitle: "Waiting_for_reconnection",
-				autoHide: false,
-			});
-			return false;
-		}
-		return true;
-	} catch (error) {
-		console.log("Error checking internet connection:", error);
-		return false;
-	}
-};
 const api = axios.create({
 	baseURL: process.env.EXPO_PUBLIC_BASE_URL,
 	headers: {
@@ -53,7 +34,7 @@ api.interceptors.request.use(
 		return Promise.reject(error);
 	}
 );
-
+// Queue for storing API response
 api.interceptors.response.use(
 	(response) => response,
 	async (error) => {
@@ -76,25 +57,5 @@ api.interceptors.response.use(
 		return Promise.reject(error); // Pass error to the calling code
 	}
 );
-// Listen for internet reconnection and retry failed requests
-NetInfo.addEventListener((state) => {
-	if (state.isConnected) {
-		// console.log("Internet reconnected. event");
-	}
-});
-
-export const formateByEnergyType = (data: any[] = []) => {
-	return data.reduce(
-		(acc, item) => {
-			if (item.EnergyType === 1) {
-				acc.strom.push(item);
-			} else if (item.EnergyType === 2 || item.EnergyType === 5) {
-				acc.gas.push(item);
-			}
-			return acc;
-		},
-		{ gas: [] as any[], strom: [] as any[] }
-	);
-};
 
 export default api;

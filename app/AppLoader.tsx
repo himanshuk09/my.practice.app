@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
+import Loader from "@/components/Loader";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import Loader from "@/components/Loader";
 type AppLoaderProps = {
 	children: React.ReactNode;
 };

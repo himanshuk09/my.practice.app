@@ -1,28 +1,11 @@
-import api, { formateByEnergyType } from "./api";
+import api from "./api";
+import { formateByEnergyType } from "./helper";
 
-const getLoadDataList = async () => {
-	try {
-		const response = await api.get(`/api/loadData/getMeterChannelInfo`);
-		return formateByEnergyType(response.data);
-	} catch (error) {
-		console.log(
-			"Error while Fetching LoadDataList",
-			error instanceof Error ? error.message : JSON.stringify(error)
-		);
-		return { gas: [], strom: [] };
-	}
-};
-
-type TimeFrameString =
-	| "day"
-	| "Week"
-	| "Month"
-	| "Quarter"
-	| "Year"
-	| "ThreeYear"
-	| "Custom";
-
-type TimeFrame = TimeFrameString | 0 | 1 | 2 | 3 | 4 | 5 | 6;
+/**
+ *
+ * Types
+ *
+ */
 var graphPriceUnit = [
 	" €/MWh",
 	" €/MWh",
@@ -41,6 +24,18 @@ var timeFrameText = [
 	"ThreeYear",
 	"Custom",
 ];
+
+type TimeFrameString =
+	| "day"
+	| "Week"
+	| "Month"
+	| "Quarter"
+	| "Year"
+	| "ThreeYear"
+	| "Custom";
+
+type TimeFrame = TimeFrameString | 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
 type EnergyDataRequest = {
 	ChannelId?: number;
 	ClientId?: number;
@@ -56,7 +51,33 @@ type EnergyDataRequest = {
 	EndDate?: string;
 };
 
-// dd.m.yyyy hh:mm:ss  ---to--- mm/dd/yyyy hh:mm
+/**
+ * Get Load Data List
+ * @returns {gas: [], strom: []}
+ */
+
+const getLoadDataList = async () => {
+	try {
+		const response = await api.get(`/api/loadData/getMeterChannelInfo`);
+		return formateByEnergyType(response.data);
+	} catch (error) {
+		console.log(
+			"Error while Fetching LoadDataList",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
+		return {
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
+	}
+};
+
+/**
+ * transformData
+ * dd.m.yyyy hh:mm:ss  ---to--- mm/dd/yyyy hh:mm
+ * @param input { ValueArray:[],DateTimeArray:[],[key: string]: any;}
+ * @returns { ValueArray:[],DateTimeArray:[],[key: string]: any;, data:[x:string,y:number]}
+ */
+
 function transformData(input: {
 	ValueArray: number[];
 	DateTimeArray: string[];
@@ -85,6 +106,11 @@ function transformData(input: {
 		data,
 	};
 }
+
+/**
+ * Get Load Data TS
+ * @returns
+ */
 const getLoadDataTS = async (payload: EnergyDataRequest) => {
 	try {
 		const response = await api.post(`/api/loadData/getLoadDataTS`, {

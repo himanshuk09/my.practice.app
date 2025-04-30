@@ -5,8 +5,9 @@ import AppLoader from "@/app/AppLoader";
 import React, { useEffect } from "react";
 import RootLayout from "@/app/RootLayout";
 import Toast from "react-native-toast-message";
-import * as SplashScreen from "expo-splash-screen";
+import NetworkListener from "./NetworkListener";
 import toastConfig from "@/components/ToastConfig";
+import * as SplashScreen from "expo-splash-screen";
 import NavigationWatcher from "@/app/NavigationWatcher";
 import * as ScreenOrientation from "expo-screen-orientation";
 
@@ -44,6 +45,7 @@ const Layout = () => {
 		<Provider store={store}>
 			<NavigationWatcher>
 				<AppLoader>
+					<NetworkListener />
 					<RootLayout />
 					<Toast config={toastConfig} />
 				</AppLoader>

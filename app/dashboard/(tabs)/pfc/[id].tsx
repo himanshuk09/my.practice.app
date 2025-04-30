@@ -1,31 +1,32 @@
-import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
+import { st } from "@/utils/Styles";
+import { RootState } from "@/store/store";
+import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { PFCGas, PFCStrom } from "@/constants/constantData";
-import { useSelector } from "react-redux";
-import ToggleChartComponent from "@/components/ToggleChartComponent";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { RootState } from "@/store/store";
+import { englishLocale } from "@/localization/config";
+import { useDispatch, useSelector } from "react-redux";
+import { inActiveLoading } from "@/store/navigationSlice";
 import { fetchDataByToggle } from "@/services/auth.service";
+import { cockpitChartData } from "@/constants/cockpitchart";
+import { PFCGas, PFCStrom } from "@/constants/constantData";
+import ToggleChartComponent from "@/components/ToggleChartComponent";
+import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
 import {
 	saveCSVToFileWeb,
 	saveCSVToFileString,
 } from "@/components/exportcsv/exportToFiles";
-import { cockpitChartData } from "@/constants/cockpitchart";
-import { ChartShimmer } from "@/components/ChartShimmer";
 import { stringChartData } from "@/constants/stringChartData";
-import { st } from "@/utils/Styles";
-import { englishLocale } from "@/localization/config";
 
 const PFCDetails = () => {
+	const dispatch = useDispatch();
 	const { id } = useLocalSearchParams();
+	const locale = useSelector((state: RootState) => state.culture.locale);
 	let visibleTabs = ["Week", "Month", "Quarter", "Year", "Year_3"];
 	const [pfcDetails, setPfcDetails] = useState<any>([]);
 	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-	const locale = useSelector((state: RootState) => state.culture.locale);
 
 	const getCurrentUTCDateTime = () => {
 		const now = new Date();
@@ -56,64 +57,50 @@ const PFCDetails = () => {
 		setTimeout(() => {
 			setPfcDetails(filteredItem);
 		}, 1000);
+		dispatch(inActiveLoading());
 	}, [id]);
 
 	return (
 		<SafeAreaView className="flex-1 ">
-			<StatusBar
-				barStyle="dark-content"
-				backgroundColor={isLandscape ? "#ffffff" : "#C3C3C3"}
-				animated
-				showHideTransition={"slide"}
-				networkActivityIndicatorVisible
-			/>
-			{pfcDetails <= 0 ? (
-				<View className="flex-1  bg-white">
-					<ChartShimmer />
-				</View>
-			) : (
-				<View className="flex-1  bg-white">
-					{/* Header Section */}
-					{!isLandscape && (
-						<View
-							className="flex justify-between bg-white flex-row  m-1  h-24 px-3 pl-5  pt-3"
-							style={[st.headerShadow, st.bottomShadow]}
-						>
-							<View className="flex-col w-60  ">
-								<Text className="text-xl break-words font-bold text-mainCardHeaderText">
-									{pfcDetails?.title}
-								</Text>
-								<Text className=" text-md text-mainCardHeaderText ">
-									{getCurrentUTCDateTime()}
-								</Text>
-							</View>
-							<View className="px-2 justify-start">
-								<FontAwesome5
-									classname="mr-2"
-									name="file-download"
-									size={30}
-									color="#e11935"
-									onPress={() => {
-										if (Platform.OS === "web") {
-											saveCSVToFileWeb(cockpitChartData);
-										} else {
-											saveCSVToFileString(
-												stringChartData
-											);
-										}
-									}}
-								/>
-							</View>
+			<View className="flex-1  bg-white">
+				{/* Header Section */}
+				{!isLandscape && (
+					<View
+						className="flex justify-between bg-white flex-row  m-1  h-24 px-3 pl-5  pt-3"
+						style={[st.headerShadow, st.bottomShadow]}
+					>
+						<View className="flex-col w-60  ">
+							<Text className="text-xl break-words font-bold text-mainCardHeaderText">
+								{pfcDetails?.title}
+							</Text>
+							<Text className=" text-md text-mainCardHeaderText ">
+								{getCurrentUTCDateTime()}
+							</Text>
 						</View>
-					)}
-					<ToggleChartComponent
-						visibleTabs={visibleTabs}
-						fetchChartData={fetchChartData}
-						isChartLoaded={isChartLoaded}
-						setIsChartLoaded={setIsChartLoaded}
-					/>
-				</View>
-			)}
+						<View className="px-2 justify-start">
+							<FontAwesome5
+								classname="mr-2"
+								name="file-download"
+								size={30}
+								color="#e11935"
+								onPress={() => {
+									if (Platform.OS === "web") {
+										saveCSVToFileWeb(cockpitChartData);
+									} else {
+										saveCSVToFileString(stringChartData);
+									}
+								}}
+							/>
+						</View>
+					</View>
+				)}
+				<ToggleChartComponent
+					visibleTabs={visibleTabs}
+					fetchChartData={fetchChartData}
+					isChartLoaded={isChartLoaded}
+					setIsChartLoaded={setIsChartLoaded}
+				/>
+			</View>
 		</SafeAreaView>
 	);
 };

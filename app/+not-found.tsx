@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, Pressable, StyleSheet, Image } from "react-native";
 import { Link, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { View, Text, Pressable, StyleSheet, Image } from "react-native";
 
 export default function NotFoundScreen() {
 	return (

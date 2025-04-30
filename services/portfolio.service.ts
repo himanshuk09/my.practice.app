@@ -1,5 +1,9 @@
-import api, { formateByEnergyType } from "./api";
-
+import api from "./api";
+import { formateByEnergyType } from "./helper";
+/**
+ * GET PORTFOLIO LIST
+ * @returns { gas: [], strom: [] };
+ */
 const getPortfolioList = async () => {
 	try {
 		const response = await api.get("/api/portfolio/GetPortfolioList");
@@ -12,6 +16,26 @@ const getPortfolioList = async () => {
 		return { gas: [], strom: [] };
 	}
 };
+
+/**
+ * FORMATE PORTFOLIO DETAILS
+ * @param response 
+ * @returns areaChartData,
+		    donotChartData: [openPercentage, closedPercentage],
+		    closedData: formattedData.map((d: any) => ({
+                ...d.Close,
+                PriceUnit: "€",
+                LoadUnit: "MWh",
+                unit: "€/MWh",
+            })),
+            openData: formattedData.map((d: any) => ({
+                ...d.Open,
+                PriceUnit: "€",
+                LoadUnit: "MWh",
+                unit: "€/MWh",
+            })),
+            message: "no error",
+ */
 const formatePortfolioDetails = (response: any) => {
 	// Extract response lists safely
 	const { ResponseMonthlyList, ResponseOpenCloseList } = response;
@@ -73,8 +97,15 @@ const formatePortfolioDetails = (response: any) => {
 			LoadUnit: "MWh",
 			unit: "€/MWh",
 		})),
+		message: "no error",
 	};
 };
+
+/**
+ * GET PORTFOLIO DETAILS
+ * @param payload
+ * @returns
+ */
 const getPortfolioDetails = async (payload: any) => {
 	try {
 		const response = await api.post(
@@ -115,6 +146,12 @@ const getPortfolioDetails = async (payload: any) => {
 		);
 	}
 };
+
+/**
+ * GET PORTFOLIO DEALS
+ * @param payload
+ * @returns
+ */
 const getPortfolioDeals = async (payload: any) => {
 	try {
 		const response: any = await api.post(
@@ -129,6 +166,12 @@ const getPortfolioDeals = async (payload: any) => {
 		);
 	}
 };
+
+/**
+ * GET PORTFOLIO REPORT BASE 64 PDF
+ * @param payload
+ * @returns
+ */
 const getPortfolioReportBase64PDF = async (payload: any) => {
 	try {
 		const response = await api.post(
@@ -144,6 +187,10 @@ const getPortfolioReportBase64PDF = async (payload: any) => {
 		);
 	}
 };
+
+/**
+ * EXPORTS
+ */
 export {
 	getPortfolioList,
 	getPortfolioDetails,

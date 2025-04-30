@@ -19,6 +19,7 @@ import {
 } from "@/components/Chart/chartUpdateFunctions";
 import iframeLineHtmlContent from "@/components/Chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/Chart/config/Linechart.android";
+import NoData from "./icons/NoData";
 
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
 
@@ -92,6 +93,9 @@ const ToggleChartComponent = ({
 	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
 	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const isOnline = useSelector(
+		(state: RootState) => state.network.isConnected
+	);
 	const locale = useSelector((state: any) => state.culture.locale);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
@@ -243,7 +247,6 @@ const ToggleChartComponent = ({
 					activeTab,
 					rangePayload
 				);
-
 				if (chartConfig?.data?.length > 0) {
 					updateChartData(chartConfig?.data);
 					setPreviousTab(activeTab);
@@ -308,7 +311,7 @@ const ToggleChartComponent = ({
 
 	useEffect(() => {
 		const handler = setTimeout(() => {
-			if (isChartLoaded && activeTab !== "") {
+			if (isChartLoaded && activeTab !== "" && isOnline) {
 				setLoading(true);
 				fetchData();
 			}
@@ -318,10 +321,10 @@ const ToggleChartComponent = ({
 	}, [activeTab]);
 
 	useEffect(() => {
-		if (isChartLoaded) {
+		if (isChartLoaded && isOnline) {
 			fetchData();
 		}
-	}, [locale, isChartLoaded]);
+	}, [locale, isChartLoaded, isOnline]);
 
 	return (
 		<View className="flex-1  bg-white">
@@ -346,6 +349,7 @@ const ToggleChartComponent = ({
 			<View className="flex-1  border-gray-300">
 				{showChartShimmer && <ChartGraphSimmer />}
 				{isLoading && <ChartLoaderPNG />}
+
 				<ChartComponent
 					isChartEmpty={isChartEmpty}
 					webViewRef={webViewRef}
@@ -361,6 +365,7 @@ const ToggleChartComponent = ({
 					setMaxMinValues={setMaxMinValues}
 				/>
 			</View>
+
 			{/* Bottom Button */}
 			{!isLandscape && !isSignaleScreen && (
 				<React.Fragment>

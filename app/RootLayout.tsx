@@ -1,17 +1,11 @@
 import "../global.css";
 import "react-native-reanimated";
+import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { AppState, Platform } from "react-native";
-import { useDispatch } from "react-redux";
-import { Href, Stack, useRouter } from "expo-router";
 import { useInitAuth } from "@/hooks/useInitAuth";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const RootLayout = () => {
-	const router = useRouter();
-	const dispatch = useDispatch();
-	const isOnline = useNetworkStatus();
 	const [appState, setAppState] = useState(AppState.currentState);
 	useEffect(() => {
 		if (Platform.OS === "web") return; // ❌ Don't apply on web
@@ -20,11 +14,6 @@ const RootLayout = () => {
 				appState.match(/inactive|background/) &&
 				nextAppState === "active"
 			) {
-				// dispatch(activeLoading());
-				// setTimeout(() => {
-				// 	dispatch(inActiveLoading());
-				// 	// router.push("/dashboard" as Href);
-				// }, 1000);
 			}
 			setAppState(nextAppState);
 		};
@@ -35,7 +24,7 @@ const RootLayout = () => {
 		return () => {
 			subscription.remove();
 		};
-	}, [appState, isOnline]);
+	}, [appState]);
 	useInitAuth();
 	return (
 		<Stack

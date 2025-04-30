@@ -1553,7 +1553,7 @@
 			"masksProperties": [
 				{
 					"inv": false,
-					"mode": "i",
+					"mode": "a",
 					"pt": {
 						"a": 0,
 						"k": {

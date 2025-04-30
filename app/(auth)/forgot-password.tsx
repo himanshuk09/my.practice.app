@@ -12,17 +12,16 @@ import {
 	ScrollView,
 	TouchableWithoutFeedback,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Href, useRouter } from "expo-router";
 import Logo from "@/components/SVG/Logo";
-import Foundation from "@expo/vector-icons/Foundation";
 import { i18n } from "@/localization/config";
+import { Href, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import Foundation from "@expo/vector-icons/Foundation";
 
 const Forgotpassword = () => {
 	const router = useRouter();
 	let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const [email, setEmail] = useState<string>("");
-
 	const [errorMessage, setErrorMessage] = useState<string>("");
 	const [isEmailFocused, setIsEmailFocused] = useState(false);
 

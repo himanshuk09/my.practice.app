@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-	SafeAreaView,
-	FlatList,
-	RefreshControl,
-	View,
-	Text,
-} from "react-native";
+import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import { StatusBar } from "react-native";
-import { i18n } from "@/localization/config";
+import NoNetwork from "@/components/icons/NoNetwork";
+import NoData from "@/components/icons/NoData";
 
 const Signals = () => {
 	const dispatch = useDispatch();
@@ -49,43 +43,29 @@ const Signals = () => {
 			setSignalsStrom(SignalsStrom);
 		}, 1000);
 	}, [isFocused]);
+	/**
+	 *
+	 * Return Based On Condition
+	 */
+	if (error) return <NoNetwork />;
+	if (signalsGas?.length === 0) return <NoData />;
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
-				animated
-				showHideTransition={"slide"}
-				networkActivityIndicatorVisible
+			<FlatList
+				data={combinedData}
+				renderItem={renderItem}
+				className=" overflow-scroll"
+				keyExtractor={(item, index) => `${item.title}-${index}`}
+				showsVerticalScrollIndicator={false}
+				showsHorizontalScrollIndicator={false}
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefreshing}
+						onRefresh={() => setIsRefreshing(false)}
+						colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+					/>
+				}
 			/>
-			{error ? (
-				<View
-					className="items-center justify-center "
-					style={{
-						height: "90%",
-					}}
-				>
-					<Text className="text-md font-medium text-mainCardHeaderText">
-						{i18n.t("Data_not_available")}
-					</Text>
-				</View>
-			) : (
-				<FlatList
-					data={combinedData}
-					renderItem={renderItem}
-					className=" overflow-scroll"
-					keyExtractor={(item, index) => `${item.title}-${index}`}
-					showsVerticalScrollIndicator={false}
-					showsHorizontalScrollIndicator={false}
-					refreshControl={
-						<RefreshControl
-							refreshing={isRefreshing}
-							onRefresh={() => setIsRefreshing(false)}
-							colors={["#e31837"]} // Optional: Set colors for the refresh indicator
-						/>
-					}
-				/>
-			)}
 		</SafeAreaView>
 	);
 };

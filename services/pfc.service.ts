@@ -1,5 +1,9 @@
-import api, { formateByEnergyType } from "./api";
-
+import api from "./api";
+import { formateByEnergyType } from "./helper";
+/**
+ * GET PFC LIST
+ * @returns
+ */
 const getPFCList = async () => {
 	try {
 		const response = await api.get("/api/pfc/GetPriceForwardCurves");

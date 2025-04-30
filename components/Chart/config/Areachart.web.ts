@@ -42,7 +42,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 			const newSize = markersVisible ? 3 : 0;
 			const newColor = markersVisible ? "red" : "gray";
 
-			chart.updateOptions({
+			chart?.updateOptions({
 				markers: {
 					size: newSize,
 				},
@@ -68,7 +68,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 					},
 				},
 			});
-			chart.updateSeries(chart.w.config.series);
+			chart?.updateSeries(chart?.w?.config?.series);
 		}
 
 		// send to web console
@@ -99,7 +99,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 			categories = getLocalizedMonths(newLocale);
 			localeAfterMount = newLocale;
 			titleAfterMount = newTitle;
-			chart.updateOptions({
+			chart?.updateOptions({
 				xaxis: {
 					categories: categories,
 				},
@@ -150,24 +150,24 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 
 		//Update options and series
 		function updateChart(filteredData, updatedOptions) {
-			chart.updateSeries(filteredData);
-			chart.updateOptions(updatedOptions);
+			chart?.updateSeries(filteredData);
+			chart?.updateOptions(updatedOptions);
 		}
 
 		function updateChartSeries(filteredData) {
-			chart.updateSeries(filteredData);
+			chart?.updateSeries(filteredData);
 		}
 
 		function updateChartOptions(updatedOptions) {
-			chart.updateOptions(updatedOptions);
+			chart?.updateOptions(updatedOptions);
 		}
 
 		function resetChartSeries() {
-			chart.resetSeries();
+			chart?.resetSeries();
 		}
 
 		function appendChartData(data) {
-			chart.appendData(data);
+			chart?.appendData(data);
 		}
 
 		var options = {
@@ -212,22 +212,20 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 						updateToggleMarker();
 					},
 
-
-
 					beforeZoom: function (chartContext, { xaxis, yaxis }) {
 						updateLocale(localeAfterMount, titleAfterMount);
 						return handleZoomOrPan(chartContext, xaxis, yaxis);
 					},
 
 					scrolled: function (chartContext, { xaxis, yaxis }) {
-						chartContext.updateOptions({
+						chartContext?.updateOptions({
 							xaxis: handleZoomOrPan(chartContext, xaxis, yaxis).xaxis,
 						});
 						updateLocale(localeAfterMount, titleAfterMount);
 					},
 
 					beforeResetZoom: function (chartContext) {
-						chartContext.updateOptions({
+						chartContext?.updateOptions({
 							xaxis: {
 								min: "Jan",
 								max: "Dec",
@@ -345,7 +343,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 
 
 		chart = new ApexCharts(document.querySelector("#chart"), options);
-		chart.render();
+		chart?.render();
 	</script>
 </body>
 

@@ -11,6 +11,7 @@ import { i18n } from "@/localization/config";
 import { st } from "@/utils/Styles";
 import StackHeader from "@/components/StackHeader";
 import { ChartLoaderPNG } from "@/components/Loader";
+import NoData from "./icons/NoData";
 const Card = ({ title, data }: any) => {
 	return (
 		<View
@@ -118,14 +119,7 @@ const SignalSettings = ({
 				}}
 			>
 				{!cards || cards?.length === 0 ? (
-					<View
-						className="items-center  justify-center "
-						style={{
-							height: "90%",
-						}}
-					>
-						<Text>{i18n.t("Data_not_available")}</Text>
-					</View>
+					<NoData />
 				) : loading ? (
 					<ChartLoaderPNG />
 				) : (

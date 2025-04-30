@@ -1,6 +1,7 @@
 import Header from "@/components/MainHeader";
 import { i18n } from "@/localization/config";
 import { activeLoading } from "@/store/navigationSlice";
+import { RootState } from "@/store/store";
 import { Tabs, usePathname } from "expo-router";
 import React, { useRef, useEffect } from "react";
 import {
@@ -13,7 +14,7 @@ import {
 	StatusBar,
 	Platform,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 interface CustomTabBarProps {
 	state: any;
 	descriptors: any;
@@ -144,6 +145,9 @@ const CustomTabBar = ({
 
 // Main Tab Navigator
 const TabNavigatorLayout = () => {
+	const isLandscape = useSelector(
+		(state: RootState) => state.orientation.isLandscape
+	);
 	const pathname = usePathname();
 	const isIdRoute =
 		/^\/dashboard\/test\/\d+$/.test(pathname) ||
@@ -169,7 +173,7 @@ const TabNavigatorLayout = () => {
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar
 				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
+				backgroundColor={isLandscape ? "#ffffff" : "#C3C3C3"}
 				animated
 				showHideTransition={"slide"}
 				networkActivityIndicatorVisible

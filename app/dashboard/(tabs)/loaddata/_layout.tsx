@@ -1,8 +1,8 @@
-import StackHeader from "@/components/StackHeader";
-import { RootState } from "@/store/store";
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
+import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import StackHeader from "@/components/StackHeader";
 
 const LoaddataLayout = () => {
 	const isLandscape = useSelector(

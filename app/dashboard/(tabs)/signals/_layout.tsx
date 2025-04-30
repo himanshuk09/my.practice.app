@@ -1,8 +1,8 @@
-import StackHeader from "@/components/StackHeader";
-import { RootState } from "@/store/store";
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
 import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import StackHeader from "@/components/StackHeader";
 
 const SignalsLayout = () => {
 	const isLandscape = useSelector(
@@ -26,7 +26,7 @@ const SignalsLayout = () => {
 				name="[id]"
 				options={{
 					headerShown: Platform.OS === "web" ? true : !isLandscape,
-					animation: "slide_from_right",
+					animation: "fade",
 					header: ({ navigation }) => (
 						<StackHeader
 							navigation={navigation}

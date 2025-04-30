@@ -13,21 +13,23 @@ import {
 	TouchableWithoutFeedback,
 	ActivityIndicator,
 } from "react-native";
-import { Href, useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { i18n } from "@/localization/config";
-import Logo from "@/components/SVG/Logo";
-import { loginUser } from "@/services/auth.service";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
+import { RootState } from "@/store/store";
 import { useAuth } from "@/hooks/useAuth";
+import Logo from "@/components/SVG/Logo";
+import { useSelector } from "react-redux";
+import { i18n } from "@/localization/config";
+import { Href, useRouter } from "expo-router";
+import { loginUser } from "@/services/auth.service";
 import { showToast } from "@/components/ToastConfig";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SignIn: React.FC = () => {
 	const router = useRouter();
-	const isOnline = useNetworkStatus();
 	const { setSessionValue } = useAuth();
-
+	const isOnline = useSelector(
+		(state: RootState) => state?.network.isConnected
+	);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [userName, setUserName] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
@@ -147,7 +149,7 @@ const SignIn: React.FC = () => {
 								<View className="items-center mb-10 w-full">
 									<Logo />
 								</View>
-								{/**Error Handler */}
+
 								<View className="mb-5">
 									{/** Username Feild*/}
 									<View className="relative">
@@ -335,6 +337,7 @@ const SignIn: React.FC = () => {
 											/>
 										</TouchableOpacity>
 									</View>
+									{/**Error Handler */}
 									{errorMessage ? (
 										<Text className="text-red-500  font-normal text-left text-sm">
 											{i18n.t(errorMessage)}

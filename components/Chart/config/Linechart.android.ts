@@ -379,7 +379,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 		}
 
 		const options = {
-			series: [{ name: "Energy Use", data: [{"x":"01/01/2000 00:00","y":85}]}],
+			series: [{ name: "Energy Use", data: [{"x":"01/01/2000 00:00","y":0}]}],
 			chart: {
 				type: "line",
 				height: "285",
@@ -907,6 +907,16 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 				opacity: 1,
 				type: 'solid',
 			},
+			plotOptions: {
+				line: {
+					isSlopeChart: false,
+					colors: {
+						threshold: 0,
+						colorAboveThreshold: undefined,
+						colorBelowThreshold: undefined,
+					}
+          		},
+        	},
 			//this working in portrait and by default in landscape
 			responsive: [
 				{

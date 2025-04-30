@@ -6,14 +6,14 @@ import {
 	TouchableOpacity,
 	Image,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { i18n } from "@/localization/config";
-import { useRouter } from "expo-router";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { useDispatch } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
-import { StatusBar } from "react-native";
 import { st } from "@/utils/Styles";
+import { useRouter } from "expo-router";
+import { StatusBar } from "react-native";
+import { useDispatch } from "react-redux";
+import { i18n } from "@/localization/config";
+import { Picker } from "@react-native-picker/picker";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 
 const PricesSettings = () => {
 	const [selectedPlace, setSelectedPlace] = useState();
@@ -21,6 +21,7 @@ const PricesSettings = () => {
 	const [selectedProductType, setSelectedProductType] = useState("Futures");
 	const router = useRouter();
 	const isFocused = useIsFocused();
+	const dispatch = useDispatch();
 	const energyTypes = ["Power", "H GAS", "Coal", "Hydrogen"];
 	const allProductTypes: any = {
 		Power: ["Futures", "Spot Auction"],
@@ -121,7 +122,7 @@ const PricesSettings = () => {
 			setSelectedProductType(filteredProductTypes[0]);
 		}
 	}, [filteredProductTypes]);
-	const dispatch = useDispatch();
+
 	useEffect(() => {
 		dispatch(inActiveLoading());
 	}, [isFocused]);

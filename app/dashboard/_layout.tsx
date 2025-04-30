@@ -1,9 +1,9 @@
 import "react-native-reanimated";
 import React from "react";
 import { Stack } from "expo-router";
+import Drawer from "@/components/Drawer";
 import Header from "@/components/MainHeader";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Drawer from "@/components/Drawer";
 import SwipeDetectionWrapper from "@/app/SwipeDetectionWrapper";
 
 const DashboardLayout = () => {

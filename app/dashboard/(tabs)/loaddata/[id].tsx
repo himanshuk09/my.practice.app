@@ -1,14 +1,14 @@
 import { st } from "@/utils/Styles";
-import React, { useCallback, useState } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
 import { useLocalSearchParams } from "expo-router";
+import React, { useCallback, useState } from "react";
+import useTabDataCache from "@/hooks/useTabDataCache";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { getLoadDataTS } from "@/services/loaddata.service";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { View, Text, SafeAreaView, Platform, StatusBar } from "react-native";
-import useTabDataCache from "@/hooks/useTabDataCache";
 import {
 	exportTimeseriesToCSV,
 	exportTimeseriesToCSVForWeb,
@@ -23,6 +23,7 @@ const LoadDataDetails = () => {
 	);
 	const locale = useSelector((state: RootState) => state.culture.locale);
 	const { fetchWithCache } = useTabDataCache();
+
 	// const fetchChartData = async (tab: string, payload: any) => {
 	// 	try {
 	// 		let fullPayload = {

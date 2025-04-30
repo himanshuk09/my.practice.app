@@ -22,6 +22,7 @@ const PrivacyAndPolicy = () => {
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
+
 	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar

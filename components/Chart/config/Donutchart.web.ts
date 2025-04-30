@@ -35,18 +35,18 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 
 		//...Update chart options and series
 		function updateChart(filteredData, updatedOptions) {
-			donutchart.updateSeries(filteredData, true);
-			donutchart.updateOptions(updatedOptions);
+			donutchart?.updateSeries(filteredData, true);
+			donutchart?.updateOptions(updatedOptions);
 			sendMsgToWeb("updateChart");
 		}
 
 		function updateChartSeries(filteredData) {
-			donutchart.updateSeries(filteredData, true);
+			donutchart?.updateSeries(filteredData, true);
 			sendMsgToWeb("updateChartSeries");
 		}
 
 		function updateChartOptions(updatedOptions) {
-			donutchart.updateOptions(updatedOptions);
+			donutchart?.updateOptions(updatedOptions);
 			sendMsgToWeb("updateChartOptions");
 		}
 
@@ -60,7 +60,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 
 		function updateLocale(locale) {
 			sendMsgToWeb("updateChart locale");
-			donutchart.updateOptions(
+			donutchart?.updateOptions(
 				{
 					plotOptions: {
 						pie: {
@@ -111,7 +111,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 						var clickedIndex = config.dataPointIndex;
 						if (activeIndex === clickedIndex) {
 							activeIndex = null;
-							chartContext.updateOptions(
+							chartContext?.updateOptions(
 								{
 									plotOptions: {
 										pie: {
@@ -136,7 +136,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 							donutchart.toggleDataPointSelection(activeIndex);
 							activeIndex = null;
 						}
-						chartContext.updateOptions(
+						chartContext?.updateOptions(
 							{
 								plotOptions: {
 									pie: {

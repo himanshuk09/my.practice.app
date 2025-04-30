@@ -4,7 +4,6 @@ import { ChartLoaderPNG } from "./Loader";
 import { useEffect, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { i18n } from "@/localization/config";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
 import {
 	exportDealsToCSV,
 	exportDealsToCSVWeb,
@@ -18,6 +17,9 @@ import {
 	StyleSheet,
 	RefreshControl,
 } from "react-native";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import NoData from "./icons/NoData";
 type DataRowPrpos = {
 	label?: string;
 	value: any;
@@ -120,7 +122,7 @@ const DataDisplay = ({
 	title: string;
 	locale?: string;
 }) => {
-	if (!data) return null; // Prevents rendering if data is missing
+	// if (!data) return null; // Prevents rendering if data is missing
 
 	return (
 		<View className="flex p-1 bg-white">
@@ -160,7 +162,9 @@ const Transactions = ({
 	isRefreshing,
 }: any) => {
 	const [loading, setLoadig] = useState<any>(true);
-	const isOnline = useNetworkStatus();
+	const isOnline = useSelector(
+		(state: RootState) => state?.network.isConnected
+	);
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -207,16 +211,7 @@ const Transactions = ({
 			</View>
 			<View className="flex-1  w-full h-full">
 				{!cards || cards?.length === 0 ? (
-					<View
-						className="items-center justify-center"
-						style={{
-							height: "91.5%",
-						}}
-					>
-						<Text className="text-md font-medium text-mainCardHeaderText">
-							{i18n.t("Data_not_available")}
-						</Text>
-					</View>
+					<NoData />
 				) : loading ? (
 					<ChartLoaderPNG />
 				) : (

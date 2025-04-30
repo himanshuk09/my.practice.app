@@ -11,6 +11,7 @@ import { i18n } from "@/localization/config";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
+
 const imprintDetails = [
 	"company",
 	"address1",
@@ -26,6 +27,7 @@ const imprintDetails = [
 	"responsibleContent",
 	"liability",
 ];
+
 const Imprint = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();

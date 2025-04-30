@@ -57,6 +57,7 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 		},
 		onPanResponderRelease: () => true,
 	});
+
 	return (
 		<View
 			style={styles.container}

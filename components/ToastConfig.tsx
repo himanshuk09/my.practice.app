@@ -2,15 +2,27 @@ import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 import Toast, { ToastShowParams } from "react-native-toast-message";
 import * as IntentLauncher from "expo-intent-launcher";
-import { Linking, Platform, Text, TouchableOpacity, View } from "react-native";
 import {
-	AntDesign,
+	Animated,
+	Linking,
+	Platform,
+	Pressable,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
+import {
 	FontAwesome6,
 	Fontisto,
+	Ionicons,
 	MaterialIcons,
 } from "@expo/vector-icons";
 import { i18n } from "@/localization/config";
 import LottieView from "lottie-react-native";
+import React, { useRef } from "react";
+import useRetryNetwork from "@/hooks/useRetryNetwork";
+import NetworkRetry from "./icons/Network";
+import Spinner from "./icons/Spinner";
 type ToastType = "success" | "error" | "info" | "download";
 
 interface ShowToastParams
@@ -24,11 +36,12 @@ interface ShowToastParams
 /**
  * Show a toast using react-native-toast-message with i18n support and typed options.
  */
-export const showToast = ({
+const showToast = ({
 	type,
 	title,
 	subtitle,
 	position = "bottom",
+	autoHide,
 	...options
 }: ShowToastParams): void => {
 	Toast.show({
@@ -38,25 +51,10 @@ export const showToast = ({
 		position,
 		bottomOffset: 0,
 		visibilityTime: type === "error" ? 2000 : 3000,
-		autoHide: true,
+		autoHide: autoHide,
 		topOffset: 0,
 		...options,
 	});
-};
-const Spinner = () => {
-	return (
-		<View>
-			<LottieView
-				source={require("@/assets/lottie/spinner.json")}
-				autoPlay
-				loop
-				style={{
-					width: 25,
-					height: 25,
-				}}
-			/>
-		</View>
-	);
 };
 
 const openCSVFile = async (fileUri: string) => {
@@ -198,7 +196,7 @@ const toastConfig: any = {
 	),
 	download: ({ text1, text2, props }: any) => (
 		<View className="flex-row justify-between items-start py-3 px-5 w-full  bg-[#5D5D5D] rounded-sm">
-			<View className="mx-3 flex justify-between flex-row ">
+			<View className="mx-3 flex justify-around flex-row ">
 				<View
 					className={`${props?.spinner && Platform.OS !== "web" ? "w-[90%]" : ""}`}
 				>
@@ -213,6 +211,7 @@ const toastConfig: any = {
 				{props?.spinner && Platform.OS !== "web" && <Spinner />}
 			</View>
 			<View className="mx-3 flex-row gap-3">
+				{props?.network && Platform.OS !== "web" && <NetworkRetry />}
 				{props?.fileUri && (
 					<TouchableOpacity
 						className=" flex-row px-1 py-2 my-2 rounded-full"
@@ -285,3 +284,4 @@ const toastConfig: any = {
 };
 
 export default toastConfig;
+export { Toast, showToast };

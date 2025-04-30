@@ -34,7 +34,7 @@ const FlatListBlock = ({
 	const previousRouteRef = useRef<string | null>(null);
 	const ITEM_HEIGHT = Platform.OS === "web" ? 83 : 72.8;
 	const currentYear = new Date().getFullYear();
-	const [isRefreshing, setIsRefreshing] = useState(false);
+
 	const previousRoute: any = previousRouteRef.current;
 
 	const ListItem = memo(({ item, router }: any) => (
@@ -125,18 +125,14 @@ const FlatListBlock = ({
 					: ListItem;
 		return <Component item={item} router={router} />;
 	};
-	const onRefresh = async () => {
-		setIsRefreshing(true);
-		setTimeout(() => {
-			setIsRefreshing(false);
-		}, 2000);
-	};
+
 	useEffect(() => {
 		previousRouteRef.current = currentRoute;
 	}, [currentRoute]);
 
 	useEffect(() => {
 		if (/^\/dashboard\/portfolio\/.+%/.test(previousRoute)) return;
+
 		if (enableAutoScroll && flatListRef.current && isFocused) {
 			const targetIndex = items.findIndex(
 				(item: any) =>
@@ -204,13 +200,6 @@ const FlatListBlock = ({
 				initialNumToRender={40}
 				showsHorizontalScrollIndicator={false}
 				showsVerticalScrollIndicator={false}
-				refreshControl={
-					<RefreshControl
-						refreshing={isRefreshing}
-						onRefresh={onRefresh}
-						colors={["#e31837"]} // Optional: Set colors for the refresh indicator
-					/>
-				}
 				windowSize={40} // Reduce the number of items kept in memory
 				maxToRenderPerBatch={40} // Render 10 items per batch
 				updateCellsBatchingPeriod={50} // Batch updates to reduce re-renders
