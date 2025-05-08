@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { View, Animated, StyleSheet, Dimensions, Platform } from "react-native";
-const { width, height } = Dimensions.get("window");
+const { width, height: screenHeight } = Dimensions.get("window");
 
 const ShimmerPlaceholder = ({ style }: any) => {
 	const shimmerAnim = useRef(new Animated.Value(-1)).current;
@@ -68,7 +68,10 @@ const PortFolioChartShimmer = () => {
 			]}
 		>
 			<ShimmerPlaceholder
-				style={[styles.graph, { height: 132, marginBottom: 2 }]}
+				style={[
+					styles.graph,
+					{ height: screenHeight * 0.17, marginBottom: 2 },
+				]}
 			/>
 			<ShimmerPlaceholder style={styles.graph} />
 			<ShimmerPlaceholder style={styles.button} />
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
 	},
 	graph: {
 		width: Platform.OS !== "web" ? width - 30 : "100%",
-		height: Platform.OS !== "web" ? height * 0.6 : "95%",
+		height: Platform.OS !== "web" ? screenHeight * 0.6 : "95%",
 		borderRadius: 8,
 	},
 	button: {

@@ -49,7 +49,6 @@ const PFC = () => {
 				<FlatListBlock
 					title={item.title}
 					items={item.data || []}
-					enableAutoScroll={false}
 					height={"auto"}
 					NavigateTo={NavigateTo}
 					renderType="pfc"

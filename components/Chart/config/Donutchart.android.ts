@@ -20,7 +20,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 	<script>
 
 
-		let activeIndex = null;
+		var activeIndex = null;
 		let donutchart;
 
 		function sendMsgToReactNative(action, values = null) {
@@ -60,11 +60,11 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 
 
 		let options = {
-			series: [0, 0],
+			series: [1, 1],
 			labels: ["Open", "Closed"],
 			chart: {
 				type: "donut",
-				height: "100%",
+				height: "95%",
 				width: "100%",
 				background: "none",
 				animations: {
@@ -77,13 +77,14 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 					},
 					dynamicAnimation: {
 						enabled: true,
-						speed: 1500, // ✅ Smoother animation
+						speed: 1000, // ✅ Smoother animation
 					},
 				},
 				toolbar: { show: false },
 				events: {
 					dataPointSelection: function (event, chartContext, config) {
 						var clickedIndex = config.dataPointIndex;
+                        sendMsgToReactNative("dataPointSelection", event);
 						if (activeIndex === clickedIndex) {
 							activeIndex = null;
 							chartContext.updateOptions(
@@ -104,6 +105,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 						} else {
 							activeIndex = clickedIndex;
 						}
+                        
 					},
 					dataPointMouseLeave: function (event, chartContext, config) {
 						if (activeIndex !== null) {
@@ -125,6 +127,63 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 							false,
 							false
 						);
+                            sendMsgToReactNative("dataPointMouseLeave", activeIndex );
+
+					},
+                    animationEnd: function (chartContext, { xaxis, yaxis }) {
+						sendMsgToReactNative("animationEnd donut");
+					},
+
+					mouseMove: function () {
+						sendMsgToReactNative("mouseMove");
+						handleChartMouseMove();
+					},
+
+					mouseLeave: function () {
+						sendMsgToReactNative("mouseLeave");
+					},
+
+					click: function () {
+						sendMsgToReactNative("click");
+					},
+
+					legendClick: function () {
+						sendMsgToReactNative("legendClick");
+					},
+
+					markerClick: function () {
+						sendMsgToReactNative("markerClick");
+					},
+
+					xAxisLabelClick: function () {
+						sendMsgToReactNative("xAxisLabelClick");
+					},
+                    beforeResetZoom: function () {
+						sendMsgToReactNative("beforeResetZoom");
+					},
+
+					zoomed: function () {
+						sendMsgToReactNative("chartZoomed", null, null, true);
+						sendMsgToReactNative("Zoomed");
+					},
+
+					beforeMount: function () {
+						sendMsgToReactNative("beforeMount");
+					},
+
+					mounted: function (chartContext) {
+						sendMsgToReactNative("mounted");
+						highlightMinAndMax(chartContext);
+						document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true });
+					},
+
+					dataPointSelection: function () {
+						sendMsgToReactNative("dataPointSelection");
+					},
+
+					updated: function (chartContext) {
+						sendMsgToReactNative("Chart updated");
+						highlightMinAndMax(chartContext);
 					},
 				},
 			},
@@ -214,7 +273,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 				type: "gradient",
 			},
 			title: {
-				text: " ",
+				text: "-",
 				align: "center",
 				style: {
 					fontSize: "12px",

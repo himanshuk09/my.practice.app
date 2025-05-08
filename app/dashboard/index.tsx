@@ -1,11 +1,11 @@
 import { View, FlatList, SafeAreaView, StatusBar } from "react-native";
 import "nativewind";
+import { useDispatch } from "react-redux";
 import MenuCard from "@/components/MenuCard";
 import React, { useLayoutEffect } from "react";
-import { DashboardCardsList } from "@/constants/constantData";
 import { inActiveLoading } from "@/store/navigationSlice";
-import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
+import { dashboardMenuItems } from "@/utils/MenuItemlist";
 
 const Dashboard: React.FC = () => {
 	const isFocused = useIsFocused();
@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
 			/>
 			<View className="justify-center mt-6 items-center">
 				<FlatList
-					data={DashboardCardsList}
+					data={dashboardMenuItems}
 					keyExtractor={(item) => item?.id?.toString()}
 					numColumns={2}
 					renderItem={({ item, index }) => (

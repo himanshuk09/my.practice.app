@@ -1,3 +1,6 @@
+const imageUri = require("@/assets/images/large_chart_bg.png");
+console.log(imageUri);
+
 const webviewLineHtmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -383,7 +386,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 			chart: {
 				type: "line",
 				height: "285",
-				background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
+				background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
 				stacked: false,
 				selection: {
 					enabled: true,
@@ -924,7 +927,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 					options: {
 						chart: {
 							height: "95%",
-							background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
+							background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
 						},
 					},
 				},
@@ -1025,7 +1028,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 						options: {
 							chart: {
 								height: "95%",
-								background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
+								background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
 							},
 						},
 					},

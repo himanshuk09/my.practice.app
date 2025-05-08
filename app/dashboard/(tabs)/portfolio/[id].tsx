@@ -57,7 +57,7 @@ const PortfolioOverView = () => {
 		useState<boolean>(false);
 	const [showChart, setShowChart] = useState<boolean>(false);
 	const locale = useSelector((state: RootState) => state.culture.locale);
-
+	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const paramsID = useMemo(() => {
 		try {
 			return rawId ? JSON.parse(decodeURIComponent(rawId)) : {};
@@ -104,6 +104,14 @@ const PortfolioOverView = () => {
 	const onMessage = (event: WebViewMessageEvent) => {
 		const message = JSON.parse(event.nativeEvent.data);
 		// Handle messages from charts if needed
+		if (message?.action === "Chart updated") {
+			if (LoaderTimeoutRef.current)
+				clearTimeout(LoaderTimeoutRef.current);
+			LoaderTimeoutRef.current = setTimeout(() => {
+				setShowChart(true);
+			}, 300);
+		}
+		console.log(message);
 	};
 
 	const updateLocale = () => {
@@ -180,7 +188,7 @@ const PortfolioOverView = () => {
 				updateEmptyChart(donutwebViewRef, donutIFrameRef, "donut");
 				updateEmptyChart(areaWebViewRef, areaIFrameRef, "area");
 				setEnabledToCallDeals(false);
-				setShowChart(true);
+				if (Platform.OS === "web") setShowChart(true);
 				return;
 			}
 
@@ -199,8 +207,9 @@ const PortfolioOverView = () => {
 				areaIFrameRef,
 				portfolioDetails?.areaChartData
 			);
-			setShowChart(true);
+
 			setEnabledToCallDeals(true);
+			if (Platform.OS === "web") setShowChart(true);
 		}
 	}, [isChartLoaded, isDonutChartLoaded, portfolioDetails]);
 
@@ -209,7 +218,7 @@ const PortfolioOverView = () => {
 	}
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			{!showChart && isDetailsLoading && <PortFolioChartShimmer />}
+			{!showChart && <PortFolioChartShimmer />}
 
 			<View
 				className="flex flex-row justify-between"

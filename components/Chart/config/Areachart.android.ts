@@ -6,6 +6,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
         <title>Donut Chart with ApexCharts for webview</title>	
 		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <style>
+        
             * {
                 margin: 0;
                 padding: 0;
@@ -81,7 +82,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                         type: "x",
                         autoScaleYaxis: true,
                     },
-                    background: "url('https://i.ibb.co/wgS847n/default-large-chart.png') no-repeat center center",
+                    background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 500px",
                     toolbar: {
                         show: false,
                         offsetX: 0,
@@ -102,8 +103,8 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                         easing: "linear",
                         speed: 1000,
                         dynamicAnimation: { enabled: true, speed: 1000 },
-                        animategradually: { enabled: true, delay: 2000 },
-                        initialAnimation: { enabled: true },
+                        animategradually: { enabled: true, delay: 1000 },
+                        initialAnimation: { enabled: true, delay: 1000 },
                     },
                     events: {
                         selection: function (chartContext, { xaxis, yaxis }) {
@@ -133,6 +134,61 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                             });
                             updateLocale(locale, title);
                         },
+                        animationEnd: function (chartContext, { xaxis, yaxis }) {
+						sendMsgToReactNative("animationEnd donut");
+					},
+
+					mouseMove: function () {
+						sendMsgToReactNative("mouseMove");
+						handleChartMouseMove();
+					},
+
+					mouseLeave: function () {
+						sendMsgToReactNative("mouseLeave");
+					},
+
+					click: function () {
+						sendMsgToReactNative("click");
+					},
+
+					legendClick: function () {
+						sendMsgToReactNative("legendClick");
+					},
+
+					markerClick: function () {
+						sendMsgToReactNative("markerClick");
+					},
+
+					xAxisLabelClick: function () {
+						sendMsgToReactNative("xAxisLabelClick");
+					},
+                    beforeResetZoom: function () {
+						sendMsgToReactNative("beforeResetZoom");
+					},
+
+					zoomed: function () {
+						sendMsgToReactNative("chartZoomed", null, null, true);
+						sendMsgToReactNative("Zoomed");
+					},
+
+					beforeMount: function () {
+						sendMsgToReactNative("beforeMount");
+					},
+
+					mounted: function (chartContext) {
+						sendMsgToReactNative("mounted");
+						highlightMinAndMax(chartContext);
+						document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true });
+					},
+
+					dataPointSelection: function () {
+						sendMsgToReactNative("dataPointSelection");
+					},
+
+					updated: function (chartContext) {
+						sendMsgToReactNative("Chart updated");
+						highlightMinAndMax(chartContext);
+					},
                     },
                 },
                 title: {

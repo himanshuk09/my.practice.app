@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 import WebView from "react-native-webview";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesome5, Octicons } from "@expo/vector-icons";
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 
@@ -18,7 +18,7 @@ export default function FloatingActionMenu({
 	const [isZoomIn, setIsZoomIn] = useState(true);
 	const [tooltip, setTooltip] = useState<boolean | any>(false);
 	const [tooltipLabel, setTooltipLabel] = useState<any>(null);
-	const [pressedItem, setPressedItem] = useState<any>(null);
+	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 	const menuItems = [
 		{
 			icon: isZoomIn ? "search-plus" : "search-minus",
@@ -107,15 +107,25 @@ export default function FloatingActionMenu({
 									setIsZoomIn(!isZoomIn);
 								}
 								setTooltipLabel(null);
-								setPressedItem(
-									pressedItem === item.label
-										? null
-										: item.label
-								);
 							}}
 							onLongPress={() => {
-								// Show the tooltip label on long press
 								setTooltipLabel(item?.label);
+
+								// Repeatedly call the JS every 500ms (you can adjust)
+								intervalRef.current = setInterval(() => {
+									if (item.label !== "Download") {
+										(
+											webViewRef?.current as any
+										)?.injectJavaScript(item.action);
+									}
+								}, 100);
+							}}
+							onPressOut={() => {
+								// Stop calling JS when user lifts finger
+								if (intervalRef.current) {
+									clearInterval(intervalRef.current);
+									intervalRef.current = null;
+								}
 							}}
 						>
 							{item.label !== "Marker" ? (

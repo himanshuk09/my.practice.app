@@ -19,7 +19,6 @@ import {
 } from "@/components/Chart/chartUpdateFunctions";
 import iframeLineHtmlContent from "@/components/Chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/Chart/config/Linechart.android";
-import NoData from "./icons/NoData";
 
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
 
@@ -86,13 +85,9 @@ const ToggleChartComponent = ({
 	yaxisunit = "€/MWh",
 	isSignaleScreen = false,
 }: ToggleChartComponentProps) => {
-	const dispatch = useDispatch();
-	let title = i18n.t("Energy_Use");
-	const isFirstRender = useRef(true);
 	const webViewRef = useRef<WebView | any>(null);
 	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
 	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const isOnline = useSelector(
 		(state: RootState) => state.network.isConnected
 	);
@@ -102,7 +97,6 @@ const ToggleChartComponent = ({
 	);
 	const [isLoading, setLoading] = useState(false);
 	const [activeTab, setActiveTab] = useState<tabsType>("Week");
-	const [previousTab, setPreviousTab] = useState<tabsType>("Week");
 	const [selectedStartDate, setSelectedStartDate] = useState<any>(); //yyyy-mm-dd hh:mm
 	const [selectedEndDate, setSelectedEndDate] = useState<any>(); //yyyy-mm-dd hh:mm
 	const [maxMinValues, setMaxMinValues] = useState<any>({
@@ -249,7 +243,7 @@ const ToggleChartComponent = ({
 				);
 				if (chartConfig?.data?.length > 0) {
 					updateChartData(chartConfig?.data);
-					setPreviousTab(activeTab);
+
 					updateLocale();
 					setSelectedStartDate(
 						convertDateTime(chartConfig?.data[0]?.x)

@@ -102,8 +102,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			origin: false,
 		},
 		eas: {
-			projectId: "ccdfe2b9-660f-4bf0-8feb-2edaebc5e910"
-		  }
+			projectId: "ccdfe2b9-660f-4bf0-8feb-2edaebc5e910",
+		},
 	},
 
 	owner: "himanshukhade",

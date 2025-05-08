@@ -2,7 +2,7 @@ import Header from "@/components/MainHeader";
 import { i18n } from "@/localization/config";
 import { activeLoading } from "@/store/navigationSlice";
 import { RootState } from "@/store/store";
-import { Tabs, usePathname } from "expo-router";
+import { Tabs, useSegments } from "expo-router";
 import React, { useRef, useEffect } from "react";
 import {
 	Animated,
@@ -145,22 +145,24 @@ const CustomTabBar = ({
 
 // Main Tab Navigator
 const TabNavigatorLayout = () => {
+	// change the color of status bar on landscape
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-	const pathname = usePathname();
-	const isIdRoute =
-		/^\/dashboard\/test\/\d+$/.test(pathname) ||
-		/^\/dashboard\/loaddata\/\d+$/.test(pathname) ||
-		/^\/dashboard\/loaddata\/\d+\/\d+$/.test(pathname) ||
-		/^\/dashboard\/signals\/\d+$/.test(pathname) ||
-		/^\/dashboard\/prices\/\d+$/.test(pathname) ||
-		/^\/dashboard\/pfc\/\d+$/.test(pathname) ||
-		/^\/dashboard\/portfolio\/\d+$/.test(pathname) ||
-		/^\/dashboard\/portfolio\/portfolio-overview$/.test(pathname) ||
-		/^\/dashboard\/prices\/settings$/.test(pathname) ||
-		/^\/dashboard\/portfolio\/.+%/.test(pathname) ||
-		/^\/dashboard\/loaddata\/.+%/.test(pathname);
+
+	const segments = useSegments();
+	const segmentPath = segments.join("/");
+	// Routes to match (with parameter placeholders)
+	const idRoutes = [
+		"dashboard/(tabs)/loaddata/[id]",
+		"dashboard/(tabs)/signals/[id]",
+		"dashboard/(tabs)/portfolio/[id]",
+		"dashboard/(tabs)/pfc/[id]",
+		"dashboard/(tabs)/prices/[id]",
+		"dashboard/(tabs)/prices/settings",
+	];
+
+	const isIdRoute = idRoutes.includes(segmentPath);
 
 	const notificationCounts = {
 		prices: 0,
@@ -169,6 +171,7 @@ const TabNavigatorLayout = () => {
 		signals: 1,
 		portfolio: 0,
 	};
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar

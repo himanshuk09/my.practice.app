@@ -256,12 +256,16 @@ const ShimmerListCard = () => {
 		</TouchableOpacity>
 	);
 };
-const ShimmerFlatListBlock = () => {
+const ShimmerFlatListBlock = ({ height }: any) => {
 	return (
-		<View>
+		<View
+			style={{
+				height: height,
+			}}
+		>
 			<ShimmerHeader />
 			<FlatList
-				data={[...Array(3).keys()].map((index) => ({
+				data={[...Array(10).keys()].map((index) => ({
 					id: index,
 					title: `Shimmer ${index}`,
 					unit: 0,

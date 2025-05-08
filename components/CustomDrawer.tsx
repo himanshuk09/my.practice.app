@@ -16,7 +16,7 @@ import {
 	Feather,
 	FontAwesome6,
 } from "@expo/vector-icons";
-import { Href, usePathname, useRouter } from "expo-router";
+import { Href, useRouter, useSegments } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import * as Linking from "expo-linking";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -26,6 +26,8 @@ import { closeDrawer } from "@/store/drawerSlice";
 import { RootState } from "@/store/store";
 import { setOrientation } from "@/store/chartSlice";
 import { useAuth } from "@/hooks/useAuth";
+import { menuItems } from "@/utils/MenuItemlist";
+import { activeLoading } from "@/store/navigationSlice";
 
 // Helper Components
 const Submenu = memo(
@@ -72,12 +74,13 @@ const Submenu = memo(
 
 const CustomDrawer = memo(() => {
 	const dispatch = useDispatch();
-	const pathnames = usePathname();
 	const router = useRouter();
-	const pathname = usePathname();
+	const segments = useSegments();
+	const segmentPath = segments.join("/");
 	const { setSessionValue } = useAuth();
 	const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
 	const [isPressed, setIsPressed] = useState(false);
+
 	const toggleSubmenu = (key: string) => {
 		setActiveSubmenu((prev) => (prev === key ? null : key)); // Toggle or close the current submenu
 	};
@@ -86,127 +89,10 @@ const CustomDrawer = memo(() => {
 	);
 	const getTextAndIconStyle = useMemo(
 		() => (routeName: string) => ({
-			color:
-				routeName.replace(/\(.*\)/g, "").replace(/\/\//g, "/") ===
-				pathnames
-					? "white"
-					: "#9a9b9f",
+			color: routeName === segmentPath ? "white" : "#9a9b9f",
 		}),
-		[pathnames]
+		[segments]
 	);
-
-	const menuItems = [
-		{
-			label: "start",
-			route: "/dashboard",
-			icon: <FontAwesome name="home" size={23} />,
-		},
-		{
-			label: "portfolio",
-			route: "/dashboard/(tabs)/portfolio",
-			icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
-		},
-		{
-			label: "settings",
-			route: "/dashboard/settings",
-			icon: (
-				<MaterialIcons
-					name="settings-suggest"
-					size={25}
-					color="#9a9b9f"
-				/>
-			),
-		},
-	];
-
-	const submenus = [
-		{
-			label: "start",
-			key: "",
-			items: [],
-			route: "/dashboard",
-			icon: <FontAwesome name="home" size={23} />,
-		},
-		{
-			label: "marketinfo",
-			key: "marketInfo",
-			icon: <FontAwesome name="bar-chart-o" size={20} color="#9a9b9f" />,
-			items: [
-				{ label: "prices", route: "/dashboard/(tabs)/prices" },
-				{ label: "pfc", route: "/dashboard/(tabs)/pfc" },
-				{ label: "signals", route: "/dashboard/(tabs)/signals" },
-			],
-			height: Platform.OS === "web" ? 156 : 137,
-		},
-		{
-			label: "consumption",
-			key: "consumption",
-			icon: (
-				<Ionicons name="speedometer-sharp" size={24} color="#9a9b9f" />
-			),
-			items: [{ label: "loaddata", route: "/dashboard/(tabs)/loaddata" }],
-			height: Platform.OS === "web" ? 52 : 45,
-		},
-		{
-			label: "portfolio",
-			key: "",
-			items: [],
-			route: "/dashboard/(tabs)/portfolio",
-			icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
-		},
-		{
-			label: "settings",
-			route: "/dashboard/settings",
-			key: "",
-			items: [],
-			icon: (
-				<MaterialIcons
-					name="settings-suggest"
-					size={25}
-					color="#9a9b9f"
-				/>
-			),
-		},
-		{
-			label: "feedback",
-			key: "feedback",
-			icon: <MaterialIcons name="message" size={24} color="#9a9b9f" />,
-			items: [
-				{ label: "rateus", route: "/dashboard/feedback/rate" },
-				{
-					label: "contactus",
-					route: "/dashboard/feedback/contact",
-				},
-				{
-					label: "visitwebsite",
-					route: "http://test-eec.enexion-sys.de/Cockpit.aspx",
-				},
-			],
-			height: Platform.OS === "web" ? 156 : 136,
-		},
-		{
-			label: "imprintLegalNotes",
-			key: "legalNotes",
-			icon: (
-				<FontAwesome6 name="scale-balanced" size={24} color="#9a9b9f" />
-			),
-			items: [
-				{
-					label: "imprint",
-					route: "/dashboard/legalnotes/imprint",
-				},
-				{
-					label: "termsConditions",
-					route: "/dashboard/legalnotes/tc",
-				},
-				{
-					label: "privacypolicy",
-					route: "/dashboard/legalnotes/privacypolicy",
-				},
-			],
-			height: Platform.OS === "web" ? 160 : 138,
-		},
-	];
 
 	const clearStorageAndNavigate = async (router: any) => {
 		try {
@@ -264,14 +150,12 @@ const CustomDrawer = memo(() => {
 			); // Switch to portrait mode
 			dispatch(setOrientation(false)); // Update the state to reflect the change
 		}
-		dispatch(closeDrawer());
+
 		if (item?.route && !item?.route.startsWith("http")) {
 			setActiveSubmenu(null);
-			if (pathname !== item?.route.replace(/\/\([^)]*\)\//g, "/")) {
-				// startLoader();
-				// setTimeout(() => {
+			if (segmentPath !== item?.route) {
+				//dispatch(activeLoading());
 				router.replace(item?.route as Href);
-				// });
 			}
 		} else if (item?.route?.startsWith("http")) {
 			if (Platform.OS === "web") {
@@ -280,6 +164,7 @@ const CustomDrawer = memo(() => {
 				Linking.openURL(item.route);
 			}
 		}
+		dispatch(closeDrawer());
 	};
 
 	return (
@@ -287,9 +172,9 @@ const CustomDrawer = memo(() => {
 			className="flex-1 bg-[#fff] mt-5"
 			showsVerticalScrollIndicator={false}
 		>
-			{submenus.map((submenu: any, index) => {
+			{menuItems.map((menu: any, index) => {
 				// Check if there are items in the submenu
-				const hasItems = submenu.items?.length > 0;
+				const hasItems = menu.items?.length > 0;
 				return (
 					<View key={index}>
 						{/* Render simple View if no submenu items */}
@@ -297,25 +182,25 @@ const CustomDrawer = memo(() => {
 							<TouchableOpacity
 								activeOpacity={0.6}
 								className={`flex-row items-center  p-5   break-words  `}
-								onPress={() => toggleSubmenu(submenu?.key)}
+								onPress={() => toggleSubmenu(menu?.key)}
 							>
-								{submenu?.icon}
+								{menu?.icon}
 								<Text
 									className={`text-lg font-semibold ml-4 text-chartText  flex-1 break-words `}
-									onPress={() => toggleSubmenu(submenu?.key)}
+									onPress={() => toggleSubmenu(menu?.key)}
 								>
-									{i18n.t(submenu?.label)}
+									{i18n.t(menu?.label)}
 								</Text>
 								<Feather
 									className="mr-10"
 									name={
-										activeSubmenu === submenu?.key
+										activeSubmenu === menu?.key
 											? "chevron-up"
 											: "chevron-down"
 									}
 									size={18}
 									color="#9a9b9f"
-									onPress={() => toggleSubmenu(submenu?.key)}
+									onPress={() => toggleSubmenu(menu?.key)}
 								/>
 							</TouchableOpacity>
 						) : (
@@ -325,30 +210,25 @@ const CustomDrawer = memo(() => {
 									key={index}
 									activeOpacity={0.7}
 									className={`flex-row items-center p-5 ${
-										submenu.route.replace(
-											/\/\([^)]*\)\//g,
-											"/"
-										) === pathnames
+										menu.route === segmentPath
 											? "bg-primary"
 											: "bg-transparent"
 									} `}
-									onPress={() => navigationToRoute(submenu)}
+									onPress={() => navigationToRoute(menu)}
 								>
 									{React.cloneElement(
-										submenu?.icon,
-										getTextAndIconStyle(submenu?.route)
+										menu?.icon,
+										getTextAndIconStyle(menu?.route)
 									)}
 									<Text
 										className={`text-lg font-semibold ml-4 bg-yellow text-chartText  ${
-											submenu?.label === "portfolio"
+											menu?.label === "portfolio"
 												? "uppercase"
 												: "capitalize"
 										}`}
-										style={getTextAndIconStyle(
-											submenu?.route
-										)}
+										style={getTextAndIconStyle(menu?.route)}
 									>
-										{i18n.t(submenu?.label)}
+										{i18n.t(menu?.label)}
 									</Text>
 								</TouchableOpacity>
 							</View>
@@ -357,33 +237,30 @@ const CustomDrawer = memo(() => {
 						{/* Render submenu if items are present */}
 						{hasItems && (
 							<Submenu
-								isVisible={activeSubmenu === submenu?.key}
-								height={submenu?.height}
+								isVisible={activeSubmenu === menu?.key}
+								height={menu?.height}
 							>
-								{submenu?.items.map(
-									(item: any, subIndex: any) => (
+								{menu?.items.map(
+									(submenu: any, subIndex: any) => (
 										<TouchableOpacity
 											activeOpacity={0.6}
 											key={subIndex}
 											className={`pl-16 py-3 ${
-												item.route.replace(
-													/\/\([^)]*\)\//g,
-													"/"
-												) === pathnames
+												submenu.route === segmentPath
 													? "bg-primary"
 													: "bg-transparent"
 											}`}
 											onPress={() =>
-												navigationToRoute(item)
+												navigationToRoute(submenu)
 											}
 										>
 											<Text
 												className="text-lg font-normal text-chartText"
 												style={getTextAndIconStyle(
-													item?.route
+													submenu?.route
 												)}
 											>
-												{i18n.t(item?.label)}
+												{i18n.t(submenu?.label)}
 											</Text>
 										</TouchableOpacity>
 									)
@@ -393,7 +270,7 @@ const CustomDrawer = memo(() => {
 					</View>
 				);
 			})}
-
+			{/**Divider */}
 			<View className="w-full h-px bg-gray-300 my-2 " />
 
 			{/* Logout */}

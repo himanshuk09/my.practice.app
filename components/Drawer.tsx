@@ -1,4 +1,3 @@
-// Drawer.js
 import React, { useEffect } from "react";
 import {
 	View,
@@ -11,7 +10,6 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import CustomDrawer from "./CustomDrawer";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
-import { activeLoading } from "@/store/navigationSlice";
 
 const Drawer = ({ drawerWidth = 280 }: any) => {
 	const dispatch = useDispatch();
@@ -23,9 +21,6 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 	const handleCloseDrawer = () => {
 		dispatch(closeDrawer());
 	};
-	const startLoader = () => {
-		dispatch(activeLoading());
-	};
 
 	const debounceAction = (action: () => void) => {
 		if (debounceTimeout) {
@@ -35,13 +30,13 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 	};
 	const debounceToggleDrawer = () => {
 		debounceAction(() => {
-			console.log("Left swipe detected!");
+			// On Left swipe detected!
 			dispatch(toggleDrawer());
 		});
 	};
 	const debounceCloseDrawer = () => {
 		debounceAction(() => {
-			console.log("Right to left swipe detected, closing drawer!");
+			//On Right to left swipe detected, closing drawer!
 			dispatch(closeDrawer());
 		});
 	};

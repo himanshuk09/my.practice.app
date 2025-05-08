@@ -7,7 +7,6 @@ import {
 	Platform,
 	Animated,
 	Easing,
-	RefreshControl,
 } from "react-native";
 import { Href, usePathname, useRouter } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
@@ -20,7 +19,7 @@ import { ShimmerFlatListBlock } from "./ShimmerEffect";
 const FlatListBlock = ({
 	title,
 	items,
-	enableAutoScroll = true,
+	enableAutoScroll = false,
 	height = "100%",
 	keyExtractor,
 	NavigateTo,
@@ -151,7 +150,7 @@ const FlatListBlock = ({
 						// Animate the scrolling smoothly
 						Animated.timing(scrollValue, {
 							toValue: offset, // Scroll target offset
-							duration: 800, // Duration in milliseconds
+							duration: 500, // Duration in milliseconds
 							easing: Easing.out(Easing.linear), // Smooth easing function
 							useNativeDriver: Platform.OS != "web", // Disable for scrolling animations
 						}).start();
@@ -172,7 +171,7 @@ const FlatListBlock = ({
 	}, [items, enableAutoScroll, currentYear, isFocused, items?.length <= 0]);
 
 	return items?.length <= 0 ? (
-		<ShimmerFlatListBlock />
+		<ShimmerFlatListBlock height={height} />
 	) : (
 		<View
 			style={{
