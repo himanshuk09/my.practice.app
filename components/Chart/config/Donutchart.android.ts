@@ -70,47 +70,50 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 				animations: {
 					enabled: true,
 					easing: "easeinout",
-					speed: 1000, // ✅ Reduced for smoother transition
+					speed: 1000, //  Reduced for smoother transition
 					animateGradually: {
 						enabled: true,
-						delay: 1000, // ✅ Lowered for faster animation
+						delay: 1000, //  Lowered for faster animation
 					},
 					dynamicAnimation: {
 						enabled: true,
-						speed: 1000, // ✅ Smoother animation
+						speed: 1000, //  Smoother animation
 					},
 				},
 				toolbar: { show: false },
 				events: {
 					dataPointSelection: function (event, chartContext, config) {
-						var clickedIndex = config.dataPointIndex;
-                        sendMsgToReactNative("dataPointSelection", event);
+						let clickedIndex = config.dataPointIndex;
+                        if (clickedIndex === -1 || clickedIndex === undefined) return;
 						if (activeIndex === clickedIndex) {
 							activeIndex = null;
-							chartContext.updateOptions(
-								{
-									plotOptions: {
-										pie: {
-											donut: {
-												labels: {
-													show: false,
-												},
+							donutchart.updateOptions(
+							{
+								plotOptions: {
+									pie: {
+										donut: {
+											labels: {
+												show: false,
 											},
 										},
 									},
 								},
-								false,
-								false
-							);
+                                title: {
+				                    text: "-Selection"
+                                },
+							},
+							true,
+							true 
+						);
+                        donutchart.updateSeries(donutchart.w.config.series);
 						} else {
 							activeIndex = clickedIndex;
 						}
-                        
 					},
 					dataPointMouseLeave: function (event, chartContext, config) {
 						if (activeIndex !== null) {
 							donutchart.toggleDataPointSelection(activeIndex);
-							activeIndex = null;
+							activeIndex = null;        
 						}
 						chartContext.updateOptions(
 							{
@@ -124,10 +127,10 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 									},
 								},
 							},
-							false,
-							false
+							true,
+							true 
 						);
-                            sendMsgToReactNative("dataPointMouseLeave", activeIndex );
+                        donutchart.updateSeries(donutchart.w.config.series);
 
 					},
                     animationEnd: function (chartContext, { xaxis, yaxis }) {
@@ -176,11 +179,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 						highlightMinAndMax(chartContext);
 						document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true });
 					},
-
-					dataPointSelection: function () {
-						sendMsgToReactNative("dataPointSelection");
-					},
-
+					
 					updated: function (chartContext) {
 						sendMsgToReactNative("Chart updated");
 						highlightMinAndMax(chartContext);

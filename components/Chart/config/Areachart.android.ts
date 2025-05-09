@@ -124,71 +124,73 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                                 currentMax + zoomAmount,
                                 chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
                             );
-
+                            
                             // Update chart optionsata no
                             chart.updateOptions({
                                 xaxis: {
                                     min: newMinX,
                                     max: newMaxX,
+                                    
                                 },
                             });
                             updateLocale(locale, title);
                         },
-                        animationEnd: function (chartContext, { xaxis, yaxis }) {
-						sendMsgToReactNative("animationEnd donut");
-					},
+                        animationEnd: function (chartContext, { xaxis, yaxis })
+                        {
+						    sendMsgToReactNative("animationEnd Area");
+					    },
 
-					mouseMove: function () {
-						sendMsgToReactNative("mouseMove");
-						handleChartMouseMove();
-					},
+                        mouseMove: function () {
+                            sendMsgToReactNative("mouseMove");
+                            handleChartMouseMove();
+                        },
 
-					mouseLeave: function () {
-						sendMsgToReactNative("mouseLeave");
-					},
+                        mouseLeave: function () {
+                            sendMsgToReactNative("mouseLeave");
+                        },
 
-					click: function () {
-						sendMsgToReactNative("click");
-					},
+                        click: function () {
+                            sendMsgToReactNative("click");
+                        },
 
-					legendClick: function () {
-						sendMsgToReactNative("legendClick");
-					},
+                        legendClick: function () {
+                            sendMsgToReactNative("legendClick");
+                        },
 
-					markerClick: function () {
-						sendMsgToReactNative("markerClick");
-					},
+                        markerClick: function () {
+                            sendMsgToReactNative("markerClick");
+                        },
 
-					xAxisLabelClick: function () {
-						sendMsgToReactNative("xAxisLabelClick");
-					},
-                    beforeResetZoom: function () {
-						sendMsgToReactNative("beforeResetZoom");
-					},
+                        xAxisLabelClick: function () {
+                            sendMsgToReactNative("xAxisLabelClick");
+                        },
+                        beforeResetZoom: function () {
+                            sendMsgToReactNative("beforeResetZoom");
+                        },
 
-					zoomed: function () {
-						sendMsgToReactNative("chartZoomed", null, null, true);
-						sendMsgToReactNative("Zoomed");
-					},
+                        zoomed: function () {
+                            sendMsgToReactNative("chartZoomed", null, null, true);
+                            sendMsgToReactNative("Zoomed");
+                        },
 
-					beforeMount: function () {
-						sendMsgToReactNative("beforeMount");
-					},
+                        beforeMount: function () {
+                            sendMsgToReactNative("beforeMount");
+                        },
 
-					mounted: function (chartContext) {
-						sendMsgToReactNative("mounted");
-						highlightMinAndMax(chartContext);
-						document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true });
-					},
+                        mounted: function (chartContext) {
+                            sendMsgToReactNative("mounted");
+                            highlightMinAndMax(chartContext);
+                            document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true });
+                        },
 
-					dataPointSelection: function () {
-						sendMsgToReactNative("dataPointSelection");
-					},
+                        dataPointSelection: function () {
+                            sendMsgToReactNative("dataPointSelection");
+                        },
 
-					updated: function (chartContext) {
-						sendMsgToReactNative("Chart updated");
-						highlightMinAndMax(chartContext);
-					},
+                        updated: function (chartContext) {
+                            sendMsgToReactNative("Chart updated");
+                            highlightMinAndMax(chartContext);
+                        },
                     },
                 },
                 title: {
@@ -510,135 +512,122 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 }
             }
             window.exportChart = exportChart;
+            // Helper functions to get first and last data points
+            function getFirstDataPoint() {
+                const series = chart.w.config.series[0].data;
+                return series.length > 0 ? series[0] : null;
+            }            
 
-            // Set functions  Globally
+            function getLastDataPoint() {
+                const series = chart.w.config.series[0].data;
+                return series.length > 0 ? series[series.length - 1] : null;
+            }            
+            function getCurrentXRange() {
+                return {
+                    min: chart.w.globals.minX,
+                    max: chart.w.globals.maxX,
+                };
+            }
+
+            function getFullDataRange() {
+                const seriesX = chart.w.globals.seriesX[0];
+                return {
+                    min: seriesX[0],
+                    max: seriesX[seriesX.length - 1],
+                };
+            }
 
             // zoomin
-            window.zoomIn = function () {
-                if (chart?.w?.globals) {
-                    sendMsgToReactNative("Zoom Start");
-
-                    const currentMin = chart.w.globals.minX;
-                    const currentMax = chart.w.globals.maxX;
-                    const zoomAmount = (currentMax - currentMin) * 0.1;
-
-                    // Ensure the new zoomed range stays within the series bounds
-                    const newMinX = Math.max(
-                        currentMin + zoomAmount,
-                        chart.w.globals.seriesX[0][0] // Series minimum
-                    );
-                    const newMaxX = Math.min(
-                        currentMax - zoomAmount,
-                        chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
-                    );
-
-                    // Update chart options
-                    chart.updateOptions({
-                        xaxis: {
-                            min: newMinX,
-                            max: newMaxX,
-                        },
-                    });
-                    updateLocale(locale, title);
-                } else {
+            function zoomIn() {
+                if (!chart?.w?.globals) {
                     console.warn("Zoom In action skipped: chart or required properties not available.");
+                    return;
                 }
-            };
 
-            //zoomout
-            window.zoomOut = function () {
-                if (chart?.w?.globals) {
-                    sendMsgToReactNative("Zoomed");
+                sendMsgToReactNative("Zoom Start");
 
-                    const currentMin = chart.w.globals.minX;
-                    const currentMax = chart.w.globals.maxX;
-                    const zoomAmount = (currentMax - currentMin) * 0.1;
+                const currentRange = getCurrentXRange();
+                const range = currentRange.max - currentRange.min;
+                const newRange = range * 0.7; // Zoom in by 30%
+                const center = currentRange.min + range / 2;
 
-                    // Ensure the new zoomed range stays within the series bounds
-                    const newMinX = Math.max(
-                        currentMin - zoomAmount,
-                        chart.w.globals.seriesX[0][0] // Series minimum
-                    );
-                    const newMaxX = Math.min(
-                        currentMax + zoomAmount,
-                        chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
-                    );
+                const fullRange = getFullDataRange();
+                const newMin = Math.max(fullRange.min, center - newRange / 2);
+                const newMax = Math.min(fullRange.max, center + newRange / 2);
 
-                    // Update chart options
-                    chart.updateOptions({
-                        xaxis: {
-                            min: newMinX,
-                            max: newMaxX,
-                        },
-                    });
-                    updateLocale(locale, title);
-                } else {
+                chart.zoomX(newMin, newMax);
+                
+            }
+            //Zoom out
+            function zoomOut() {
+                if (!chart?.w?.globals) {
                     console.warn("Zoom Out action skipped: chart or required properties not available.");
+                    return;
                 }
-            };
+
+                sendMsgToReactNative("Zoomed");
+
+                const currentRange = getCurrentXRange();
+                const range = currentRange.max - currentRange.min;
+                const newRange = range * 1.3; // Zoom out by 30%
+                const center = currentRange.min + range / 2;
+
+                const fullRange = getFullDataRange();
+                const newMin = Math.max(fullRange.min, center - newRange / 2);
+                const newMax = Math.min(fullRange.max, center + newRange / 2);
+
+                chart.zoomX(newMin, newMax);
+            }
+
+
+            
+
 
             //resetzoom
-            window.resetZoom = function () {
-                // Dynamically access the series and x-axis data from the chart instance
-                const seriesData = chart.w.config.series[0].data;
-                if (seriesData.length > 0) {
-                    const initialMinX = seriesData[0][0]; // First x-axis value
-                    const initialMaxX = seriesData[seriesData.length - 1][0]; // Last x-axis value
-
-                    chart.updateOptions({
-                        xaxis: {
-                            min: initialMinX,
-                            max: initialMaxX,
-                        },
-                    });
-                    updateLocale(locale, title);
-                } else {
-                    console.error("Series data is empty, unable to reset zoom.");
-                }
-            };
+            function resetZoom() {
+                const fullRange = getFullDataRange();
+                chart.zoomX(fullRange.min, fullRange.max);
+            }
 
             //left pan
-            window.customPanLeft = function () {
-                const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.5;
+            function customPanLeft() {
+                if (!chart?.w?.globals) {
+                    console.warn("Pan Left action skipped: chart or required properties not available.");
+                    return;
+                }
 
-                // Calculate the new min and max X values for the pan
-                const newMinX = Math.max(chart.w.globals.minX - moveFactor, chart.w.globals.seriesX[0][0]); // Prevent going past the series minimum
-                const newMaxX = Math.max(chart.w.globals.maxX - moveFactor, chart.w.globals.seriesX[0][0] + (chart.w.globals.maxX - chart.w.globals.minX)); // Prevent going past the series minimum
+                const fullRange = getFullDataRange();
+                const currentRange = getCurrentXRange();
+                const range = currentRange.max - currentRange.min;
+                const moveFactor = range * 0.5;
 
-                // Update chart options to apply the pan
-                chart.updateOptions(
-                    {
-                        xaxis: {
-                            min: newMinX,
-                            max: newMaxX,
-                        },
-                    },
-                    true
-                ); // false, false to not animate the chart and not update the series
-                updateLocale(locale, title);
-            };
+                const newMin = Math.max(fullRange.min, currentRange.min - moveFactor);
+                const newMax = newMin + range;
+
+                chart.zoomX(newMin, newMax);
+                
+            }
 
             //right pan
-            window.customPanRight = function () {
-                const moveFactor = (chart.w.globals.maxX - chart.w.globals.minX) * 0.5;
+            
+            function customPanRight() {
+                if (!chart?.w?.globals) {
+                    console.warn("Pan Right action skipped: chart or required properties not available.");
+                    return;
+                }
 
-                // Calculate the new min and max X values for the pan
+                const fullRange = getFullDataRange();
+                const currentRange = getCurrentXRange();
+                const range = currentRange.max - currentRange.min;
+                const moveFactor = range * 0.5;
 
-                // Prevent going past the series maximum
-                const newMinX = Math.min(chart.w.globals.minX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] - (chart.w.globals.maxX - chart.w.globals.minX));
+                const newMax = Math.min(fullRange.max, currentRange.max + moveFactor);
+                const newMin = newMax - range;
 
-                // Prevent going past the series maximum
-                const newMaxX = Math.min(chart.w.globals.maxX + moveFactor, chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1]);
+                chart.zoomX(newMin, newMax);
+                
+            }
 
-                // Update chart options to apply the pan
-                chart.updateOptions({
-                    xaxis: {
-                        min: newMinX,
-                        max: newMaxX,
-                    },
-                }); // false, false to not animate the chart and not update the series
-                updateLocale(locale, title);
-            };
 
             //toggle zoom and selection
             window.toggleZoomAndSelection = () => {

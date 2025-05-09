@@ -103,15 +103,16 @@ const PortfolioOverView = () => {
 
 	const onMessage = (event: WebViewMessageEvent) => {
 		const message = JSON.parse(event.nativeEvent.data);
+		const { action, value } = message;
 		// Handle messages from charts if needed
-		if (message?.action === "Chart updated") {
+		if (action === "Chart updated") {
 			if (LoaderTimeoutRef.current)
 				clearTimeout(LoaderTimeoutRef.current);
 			LoaderTimeoutRef.current = setTimeout(() => {
 				setShowChart(true);
 			}, 300);
 		}
-		console.log(message);
+		//console.log(action);
 	};
 
 	const updateLocale = () => {

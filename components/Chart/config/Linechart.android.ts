@@ -1,6 +1,3 @@
-const imageUri = require("@/assets/images/large_chart_bg.png");
-console.log(imageUri);
-
 const webviewLineHtmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,12 +43,11 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 <body>
 	<div id="chart"></div>
 	<script>
-
+    
 		let chart;
 		let activeTab = "", locale = "";
 		let selectionHideTimeout;
 		let isCurrentlySelecting = false;
-
 		// send to react native
 		function sendMsgToReactNative(action = null, values = null, reason = null, isZoomed = null) {
 			window.ReactNativeWebView.postMessage(
