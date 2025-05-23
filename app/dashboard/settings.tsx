@@ -9,13 +9,9 @@ import { updateLocale } from "@/store/languageSlice";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import CustomSwitch from "@/components/CustomSwitch";
-import {
-	View,
-	Text,
-	SafeAreaView,
-	TouchableOpacity,
-	StatusBar,
-} from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 const Settings = () => {
 	const router = useRouter();
@@ -25,20 +21,25 @@ const Settings = () => {
 	const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
 	const [isNotificationEnabled, setIsNotificationEnabled] =
 		useState<boolean>(true);
-	const [isSignalsEnabled, setIsSignalsEnabled] = useState<boolean>(true);
-
+	const [isSignalsEnabled, setIsSignalsEnabled] = useState<boolean>(false);
+	const insets = useSafeAreaInsets();
 	useEffect(() => {
 		let timer = setTimeout(() => dispatch(inActiveLoading()), 0);
 		return () => clearTimeout(timer);
 	}, [isFocused]);
 
 	return (
-		<SafeAreaView className="flex-1 bg-white">
+		<SafeAreaView
+			className="flex-1 bg-white"
+			style={{
+				marginBottom: insets.bottom,
+			}}
+		>
 			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#ffffff"
+				style="light"
+				translucent
 				animated
-				showHideTransition={"slide"}
+				hideTransitionAnimation="fade"
 				networkActivityIndicatorVisible
 			/>
 			<View className=" w-full z-50 p-3 mt-1 bg-primary">
@@ -54,15 +55,19 @@ const Settings = () => {
 				<Picker
 					selectedValue={selectedLanguage}
 					onValueChange={(newValue) => setSelectedLanguage(newValue)}
-					className="w-full p-3 border-b-2  rounded-sm "
+					className="w-full p-3 border-b-2 rounded-3xl"
+					mode="dropdown"
+					dropdownIconColor="#000"
+					dropdownIconRippleColor="#c1c1c1"
 				>
 					<Picker.Item
 						label="ENGLISH"
 						value={englishLocale}
 						style={{
 							color: "#0f172a",
-							fontSize: 16,
+							fontSize: 15,
 							fontWeight: "900",
+							backgroundColor: "white",
 						}}
 					/>
 					<Picker.Item
@@ -70,8 +75,9 @@ const Settings = () => {
 						value={germanyLocale}
 						style={{
 							color: "#0f172a",
-							fontSize: 16,
-							fontWeight: 400,
+							fontSize: 15,
+							fontWeight: "900",
+							backgroundColor: "white",
 						}}
 					/>
 				</Picker>

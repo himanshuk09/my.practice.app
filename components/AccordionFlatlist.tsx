@@ -8,7 +8,7 @@ import {
 	Animated,
 	Platform,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { ShimmerAccordion } from "./ShimmerEffect";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
@@ -18,37 +18,32 @@ const AccordionFlatlist = ({
 	startLoader,
 	scrollToIndex,
 	index,
+	expandedMeterId,
+	setExpandedMeterId,
 }: any) => {
 	const router = useRouter();
 	const animations = useRef<any>({}).current;
-	const [expanded, setExpanded] = useState<number | null>(null);
 
 	data?.forEach((item: any) => {
-		if (!animations[item?.MeterId]) {
-			animations[item?.MeterId] = new Animated.Value(0);
+		const uniqueKey = `${title}-${item?.MeterId}`;
+		if (!animations[uniqueKey]) {
+			animations[uniqueKey] = new Animated.Value(0);
 		}
 	});
 
 	const toggleExpand = (id: number, detailsLength: number) => {
-		const animation = animations[id];
+		const uniqueKey = `${title}-${id}`;
+		const animation = animations[uniqueKey];
 
-		if (expanded === id) {
+		if (expandedMeterId === uniqueKey) {
 			Animated.timing(animation, {
 				toValue: 0,
 				duration: 100,
 				useNativeDriver: false,
-			}).start(() => setExpanded(null));
+			}).start(() => setExpandedMeterId(null));
 		} else {
-			// Collapse all open accordions
-			Object.keys(animations).forEach((key) => {
-				if (animations[key]) {
-					Animated.timing(animations[key], {
-						toValue: 0,
-						duration: 200,
-						useNativeDriver: false,
-					}).start();
-				}
-			});
+			setExpandedMeterId(uniqueKey);
+
 			const baseValue =
 				detailsLength > 0
 					? Platform.OS === "web"
@@ -57,7 +52,7 @@ const AccordionFlatlist = ({
 					: Platform.OS === "web"
 						? 30
 						: 35;
-			// Expand the clicked accordion
+
 			Animated.timing(animation, {
 				toValue:
 					Platform.select({
@@ -66,13 +61,34 @@ const AccordionFlatlist = ({
 					}) ?? (Platform.OS === "web" ? baseValue : baseValue + 40),
 				duration: 100,
 				useNativeDriver: false,
-			}).start(() => setExpanded(id));
+			}).start();
 		}
 	};
-	const renderItem = ({ item }: any) => {
-		const isExpanded = expanded === item?.MeterId;
 
-		const animation = animations[item?.MeterId];
+	useEffect(() => {
+		const collapseAnimations: Animated.CompositeAnimation[] = [];
+
+		Object.keys(animations).forEach((key) => {
+			if (key !== expandedMeterId && animations[key]) {
+				collapseAnimations.push(
+					Animated.timing(animations[key], {
+						toValue: 0,
+						duration: 100, // Faster
+						useNativeDriver: false,
+					})
+				);
+			}
+		});
+
+		if (collapseAnimations.length > 0) {
+			Animated.parallel(collapseAnimations).start();
+		}
+	}, [expandedMeterId]);
+
+	const renderItem = ({ item }: any) => {
+		const uniqueKey = `${title}-${item?.MeterId}`;
+		const isExpanded = expandedMeterId === uniqueKey;
+		const animation = animations[uniqueKey];
 
 		return (
 			<View>
@@ -82,10 +98,10 @@ const AccordionFlatlist = ({
 						scrollToIndex(index);
 					}}
 					style={st.boxShadow}
-					className="flex flex-row justify-between items-center p-4 mx-2 text-lg font-serif font-medium rounded-sm my-1   bg-white space-x-1 h-20 "
+					className="flex flex-row justify-between items-center p-4 mx-2 text-lg font-serif font-medium rounded-sm my-1 bg-white space-x-1 h-20"
 					activeOpacity={0.6}
 				>
-					<Text className="text-listText w-[95%] text-base  font-normal">
+					<Text className="text-listText w-[95%] text-base font-normal">
 						{item?.MeterName}
 					</Text>
 					<AntDesign
@@ -102,44 +118,40 @@ const AccordionFlatlist = ({
 					}}
 				>
 					{item?.ChannelList?.length > 0 ? (
-						item?.ChannelList.map(
-							(channels: any, index: number) => (
-								<TouchableOpacity
-									key={channels?.ChannelId}
-									className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3 pl-4 items-start justify-center  rounded-sm text-center border-y-4 border-y-white h-20"
-									onPress={() => {
-										startLoader();
-
-										setTimeout(() =>
-											router.push({
-												pathname: `/dashboard/(tabs)/loaddata/[id]`,
-												params: {
-													id: encodeURIComponent(
-														JSON.stringify({
-															ClientId:
-																item?.ClientId,
-															MeterId:
-																item?.MeterId,
-															EnergyType:
-																item?.EnergyType,
-															ChannelId:
-																channels?.ChannelId,
-															UnitId: channels?.UnitId,
-															TimeFrame: "Week",
-														})
-													),
-													title: channels?.ChanelName,
-												},
-											})
-										);
-									}}
-								>
-									<Text className="text-md font-normal text-listText">
-										{channels?.ChanelName}
-									</Text>
-								</TouchableOpacity>
-							)
-						)
+						item?.ChannelList.map((channels: any) => (
+							<TouchableOpacity
+								key={channels?.ChannelId}
+								className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3 pl-4 items-start justify-center rounded-sm text-center border-y-4 border-y-white h-20"
+								onPress={() => {
+									startLoader();
+									setTimeout(() =>
+										router.push({
+											pathname: `/dashboard/(tabs)/loaddata/[id]`,
+											params: {
+												id: encodeURIComponent(
+													JSON.stringify({
+														ClientId:
+															item?.ClientId,
+														MeterId: item?.MeterId,
+														EnergyType:
+															item?.EnergyType,
+														ChannelId:
+															channels?.ChannelId,
+														UnitId: channels?.UnitId,
+														TimeFrame: "Week",
+													})
+												),
+												title: channels?.ChanelName,
+											},
+										})
+									);
+								}}
+							>
+								<Text className="text-md font-normal text-listText">
+									{channels?.ChanelName}
+								</Text>
+							</TouchableOpacity>
+						))
 					) : (
 						<View className="pl-3 py-2 bg-[#f1f3f5] rounded-sm">
 							<Text className="text-[#adb5bd] italic">
@@ -155,9 +167,9 @@ const AccordionFlatlist = ({
 	return data?.length <= 0 ? (
 		<ShimmerAccordion />
 	) : (
-		<React.Fragment>
-			<View className="w-full  p-3 bg-primary">
-				<Text className="flex justify-start font-normal  py-2 p-3  items-center mb-4  h-14 text-xl rounded-sm text-white">
+		<>
+			<View className="w-full p-3 bg-primary">
+				<Text className="flex justify-start font-normal py-2 p-3 items-center mb-4 h-14 text-xl rounded-sm text-white">
 					{title}
 				</Text>
 			</View>
@@ -167,11 +179,9 @@ const AccordionFlatlist = ({
 				data={data}
 				keyExtractor={(item) => item?.MeterId}
 				renderItem={renderItem}
-				contentContainerStyle={{
-					padding: 10,
-				}}
+				contentContainerStyle={{ padding: 10 }}
 			/>
-		</React.Fragment>
+		</>
 	);
 };
 

@@ -4,12 +4,11 @@ import {
 	Text,
 	TextInput,
 	TouchableOpacity,
-	KeyboardAvoidingView,
 	Platform,
 	ScrollView,
-	StatusBar,
 	Keyboard,
 	TouchableWithoutFeedback,
+	TextStyle,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { useRouter } from "expo-router";
@@ -17,6 +16,10 @@ import { i18n } from "@/localization/config";
 import { FontAwesome } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Alert } from "rn-custom-alert-prompt";
+import CustomAlert from "@/components/CustomAlert";
+import { StatusBar } from "expo-status-bar";
 const ContactUs = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
@@ -25,6 +28,7 @@ const ContactUs = () => {
 	const [phone, setPhone] = useState("");
 	const [email, setEmail] = useState("");
 	const [message, setMessage] = useState("");
+	const insets = useSafeAreaInsets();
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
@@ -36,12 +40,19 @@ const ContactUs = () => {
 				}
 			}}
 		>
-			<View style={{ flex: 1, backgroundColor: "white" }}>
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "white",
+					paddingBottom: insets.bottom,
+				}}
+			>
 				<StatusBar
-					barStyle="dark-content"
-					backgroundColor="#C3C3C3"
+					style="light"
+					translucent
 					animated
-					showHideTransition="slide"
+					hideTransitionAnimation="fade"
+					networkActivityIndicatorVisible
 				/>
 
 				<View className="top-0 w-full z-50 p-3 bg-primary h-20">
@@ -62,6 +73,7 @@ const ContactUs = () => {
 						<TextInput
 							className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 rounded-sm text-lg"
 							placeholder={i18n.t("name")}
+							placeholderTextColor={"#808080"}
 							value={name}
 							onChangeText={setName}
 							autoCapitalize="words"
@@ -82,6 +94,7 @@ const ContactUs = () => {
 						<TextInput
 							className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 rounded-sm text-lg"
 							placeholder={i18n.t("phone")}
+							placeholderTextColor={"#808080"}
 							value={phone}
 							onChangeText={setPhone}
 							keyboardType="phone-pad"
@@ -102,6 +115,7 @@ const ContactUs = () => {
 						<TextInput
 							className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 rounded-sm text-lg"
 							placeholder={i18n.t("email")}
+							placeholderTextColor={"#808080"}
 							value={email}
 							onChangeText={setEmail}
 							keyboardType="email-address"
@@ -124,6 +138,7 @@ const ContactUs = () => {
 						<TextInput
 							className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 rounded-sm text-lg h-40"
 							placeholder={i18n.t("message")}
+							placeholderTextColor={"#808080"}
 							value={message}
 							onChangeText={setMessage}
 							multiline={true}
@@ -144,11 +159,11 @@ const ContactUs = () => {
 					</View>
 				</ScrollView>
 
-				{/* Footer (won't move!) */}
-				<View className="w-full flex flex-row justify-evenly border-t-2 border-primary">
+				{/* Footer */}
+				<View className="w-full flex flex-row justify-evenly border-y-2 border-primary">
 					<TouchableOpacity
 						className="items-center p-5 w-[50%] bg-white"
-						onPress={() => router.back()}
+						onPress={() => router.push("/dashboard")}
 					>
 						<Text className="text-center text-primary font-normal uppercase bg-white">
 							{i18n.t("cancel")}
@@ -157,14 +172,43 @@ const ContactUs = () => {
 
 					<TouchableOpacity
 						className="items-center p-5 w-[50%] bg-primary"
-						onPress={() => {
+						onPress={async () => {
 							console.log("Message sent:", {
 								name,
 								phone,
 								email,
 								message,
 							});
-							alert("Message sent successfully!");
+
+							CustomAlert({
+								title: "submit",
+								description: "message_sent_successfully",
+								showCancelButton: true,
+								icon: "success",
+								iconColor: "green",
+								buttons: [
+									{
+										text: i18n.t("Cancel"),
+										textStyle: {
+											fontSize: 16,
+											fontWeight: "600",
+											color: "#808080",
+										} as TextStyle,
+										onPress: () => null,
+									},
+									{
+										text: i18n.t("OK"),
+										textStyle: {
+											fontSize: 16,
+											fontWeight: "bold",
+											color: "#e31837",
+											textTransform: "uppercase",
+										} as TextStyle,
+										onPress: () =>
+											router.push("/dashboard"),
+									},
+								],
+							});
 						}}
 					>
 						<Text className="text-center text-white uppercase font-normal">
@@ -174,154 +218,6 @@ const ContactUs = () => {
 				</View>
 			</View>
 		</TouchableWithoutFeedback>
-	);
-
-	return (
-		<KeyboardAvoidingView
-			style={{ flex: 1, backgroundColor: "white" }}
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			keyboardVerticalOffset={Platform.select({ ios: 60, android: 0 })}
-		>
-			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
-				animated
-				showHideTransition={"slide"}
-				networkActivityIndicatorVisible
-			/>
-
-			<View className="top-0 w-full z-50 p-3 bg-primary h-20">
-				<Text className="text-xl font-semibold text-white capitalize">
-					{i18n.t("contactus")}
-				</Text>
-			</View>
-
-			{/* Input Fields */}
-			<ScrollView
-				className="flex-1"
-				contentContainerStyle={{ padding: 15 }}
-				keyboardShouldPersistTaps="handled"
-				nestedScrollEnabled={true}
-				scrollEnabled={true}
-			>
-				{/* Name Field */}
-				<View className="w-full p-2 relative mb-1">
-					<TextInput
-						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-sm text-lg"
-						placeholder={i18n.t("name")}
-						value={name}
-						onChangeText={setName}
-						autoCapitalize="words"
-					/>
-					<FontAwesome
-						style={{
-							position: "absolute",
-							right: 20,
-							top: 20,
-						}}
-						name="user"
-						size={20}
-						color="#6b7280"
-					/>
-				</View>
-
-				{/* Phone Field */}
-				<View className="w-full p-2 relative mb-1">
-					<TextInput
-						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-sm text-lg"
-						placeholder={i18n.t("phone")}
-						value={phone}
-						onChangeText={setPhone}
-						keyboardType="phone-pad"
-					/>
-					<FontAwesome
-						style={{
-							position: "absolute",
-							right: 20,
-							top: 20,
-						}}
-						name="phone"
-						size={20}
-						color="#6b7280"
-					/>
-				</View>
-
-				{/* Email Field */}
-				<View className="w-full p-2 relative mb-1">
-					<TextInput
-						className="pr-10 pl-3 py-3 bg-gray-200 border w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-sm text-lg"
-						placeholder={i18n.t("email")}
-						value={email}
-						onChangeText={setEmail}
-						keyboardType="email-address"
-						autoCapitalize="none"
-					/>
-					<FontAwesome
-						style={{
-							position: "absolute",
-							right: 20,
-							top: 20,
-						}}
-						name="envelope"
-						size={20}
-						color="#6b7280"
-					/>
-				</View>
-
-				{/* Message Field */}
-				<View className="w-full p-2 relative">
-					<TextInput
-						className="pr-10 pl-3 py-3 bg-gray-200 border h-40 w-full placeholder-[#808080] border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-0 rounded-sm text-lg align-top"
-						placeholder={i18n.t("message")}
-						value={message}
-						onChangeText={setMessage}
-						multiline={true}
-						numberOfLines={6}
-					/>
-					<FontAwesome
-						style={{
-							position: "absolute",
-							right: 20,
-							top: 20,
-						}}
-						name="pencil"
-						size={20}
-						color="#6b7280"
-					/>
-				</View>
-			</ScrollView>
-
-			{/* Footer Buttons */}
-			<View className="w-full flex flex-row justify-evenly border-t-2 border-primary">
-				<TouchableOpacity
-					className="items-center p-5 w-[50%] bg-white"
-					onPress={() => {
-						router.back();
-					}}
-				>
-					<Text className="text-center text-primary font-normal uppercase bg-white">
-						{i18n.t("cancel")}
-					</Text>
-				</TouchableOpacity>
-
-				<TouchableOpacity
-					className="items-center p-5 w-[50%] bg-primary"
-					onPress={() => {
-						console.log("Message sent:", {
-							name,
-							phone,
-							email,
-							message,
-						});
-						alert("Message sent successfully!");
-					}}
-				>
-					<Text className="text-center text-white uppercase font-normal">
-						{i18n.t("send")}
-					</Text>
-				</TouchableOpacity>
-			</View>
-		</KeyboardAvoidingView>
 	);
 };
 export default ContactUs;

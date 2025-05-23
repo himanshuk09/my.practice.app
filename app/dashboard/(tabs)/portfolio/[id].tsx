@@ -1,10 +1,10 @@
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import ChartComponent from "@/components/Chart/ChartComponent";
-import { PortFolioChartShimmer } from "@/components/ChartShimmer";
+import { ChartGraphSimmer } from "@/components/ChartShimmer";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Transactions, { DataDisplay } from "@/components/TranscationCard";
@@ -20,6 +20,7 @@ import {
 	Dimensions,
 	StyleSheet,
 	Modal,
+	Animated,
 } from "react-native";
 import {
 	getPortfolioDeals,
@@ -40,10 +41,16 @@ import {
 	webviewAreaHtmlContent,
 	webviewDonutChartHtmlContent,
 } from "@/components/Chart/config";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 
 const PortfolioOverView = () => {
+	const insets = useSafeAreaInsets();
 	const { id } = useLocalSearchParams();
 	const rawId = id as string;
+	const dispatch = useDispatch();
+	const isFocused = useIsFocused();
 	const donutwebViewRef = useRef<WebView | null>(null);
 	const areaWebViewRef = useRef<WebView | null>(null);
 	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null);
@@ -55,9 +62,11 @@ const PortfolioOverView = () => {
 		useState<boolean>(false);
 	const [isEnabledToCallDeals, setEnabledToCallDeals] =
 		useState<boolean>(false);
-	const [showChart, setShowChart] = useState<boolean>(false);
+	const [showPieChart, setShowPieChart] = useState<boolean>(false);
+	const [showAreaChart, setShowAreaChart] = useState<boolean>(false);
 	const locale = useSelector((state: RootState) => state.culture.locale);
-	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const LoaderPieTimeoutRef = useRef<NodeJS.Timeout | null | any>(null);
+	const LoaderAreaTimeoutRef = useRef<NodeJS.Timeout | null | any>(null);
 	const paramsID = useMemo(() => {
 		try {
 			return rawId ? JSON.parse(decodeURIComponent(rawId)) : {};
@@ -103,16 +112,24 @@ const PortfolioOverView = () => {
 
 	const onMessage = (event: WebViewMessageEvent) => {
 		const message = JSON.parse(event.nativeEvent.data);
-		const { action, value } = message;
+		const { action, values } = message;
 		// Handle messages from charts if needed
-		if (action === "Chart updated") {
-			if (LoaderTimeoutRef.current)
-				clearTimeout(LoaderTimeoutRef.current);
-			LoaderTimeoutRef.current = setTimeout(() => {
-				setShowChart(true);
-			}, 300);
+		if (action === "Area Chart updated") {
+			if (LoaderAreaTimeoutRef.current)
+				clearTimeout(LoaderAreaTimeoutRef.current);
+			LoaderAreaTimeoutRef.current = setTimeout(() => {
+				setShowAreaChart(true);
+			}, 500);
 		}
-		//console.log(action);
+		if (action === "Pie Chart updated") {
+			if (LoaderPieTimeoutRef.current)
+				clearTimeout(LoaderPieTimeoutRef.current);
+			LoaderPieTimeoutRef.current = setTimeout(() => {
+				setShowPieChart(true);
+			}, 500);
+		}
+
+		console.log(action, values);
 	};
 
 	const updateLocale = () => {
@@ -150,7 +167,6 @@ const PortfolioOverView = () => {
 			type: "download",
 			text1: i18n.t("File_Downloading"),
 			position: "bottom",
-			bottomOffset: 0,
 			autoHide: false,
 			props: { spinner: true },
 		});
@@ -173,9 +189,6 @@ const PortfolioOverView = () => {
 			showToast({
 				type: "error",
 				title: "Download_Failed",
-				position: "bottom",
-				bottomOffset: 30,
-				visibilityTime: 3000,
 			});
 			console.error("Error downloading portfolio report:", error);
 		} finally {
@@ -189,7 +202,10 @@ const PortfolioOverView = () => {
 				updateEmptyChart(donutwebViewRef, donutIFrameRef, "donut");
 				updateEmptyChart(areaWebViewRef, areaIFrameRef, "area");
 				setEnabledToCallDeals(false);
-				if (Platform.OS === "web") setShowChart(true);
+				if (Platform.OS === "web") {
+					setShowAreaChart(true);
+					setShowPieChart(true);
+				}
 				return;
 			}
 
@@ -210,21 +226,39 @@ const PortfolioOverView = () => {
 			);
 
 			setEnabledToCallDeals(true);
-			if (Platform.OS === "web") setShowChart(true);
+			if (Platform.OS === "web") {
+				setShowAreaChart(true);
+				setShowPieChart(true);
+			}
 		}
 	}, [isChartLoaded, isDonutChartLoaded, portfolioDetails]);
+	useEffect(() => {
+		if (isFocused) {
+			setTimeout(() => {
+				dispatch(inActiveLoading());
+			}, 500);
+		}
+	}, [isFocused]);
 
+	/**
+	 * Return
+	 */
 	if (portfolioError === "No internet connection") {
 		return <NoNetwork />;
 	}
-	return (
-		<SafeAreaView className="flex-1 bg-white">
-			{!showChart && <PortFolioChartShimmer />}
 
+	return (
+		<SafeAreaView
+			className="flex-1 bg-white"
+			style={{ marginBottom: insets.bottom }}
+		>
+			{/* Top Chart Section */}
 			<View
 				className="flex flex-row justify-between"
-				style={{ height: screenHeight * 0.23 }}
+				style={{ height: 160 }} // Use reasonable fixed height for top
 			>
+				{!showPieChart && !showAreaChart && <ChartGraphSimmer />}
+
 				<ChartComponent
 					webViewRef={donutwebViewRef}
 					iFrameRef={donutIFrameRef}
@@ -236,6 +270,7 @@ const PortfolioOverView = () => {
 					iFrameWidth="50%"
 					setIsChartLoaded={setIsDonutChartLoaded}
 				/>
+
 				<View className="flex-col justify-start w-[33%] md:w-[10%]">
 					<DataDisplay
 						data={portfolioDetails?.closedData[0]}
@@ -248,6 +283,7 @@ const PortfolioOverView = () => {
 						locale={locale}
 					/>
 				</View>
+
 				<View
 					className="ml-7 mt-3"
 					style={{ marginRight: Platform.OS === "web" ? "10%" : 20 }}
@@ -261,19 +297,18 @@ const PortfolioOverView = () => {
 				</View>
 			</View>
 
+			{/* Divider */}
 			<View className="h-1 bg-[#DEDEDE] mt-1" />
 
+			{/* Area Chart Section */}
 			<View
-				className="flex"
+				className="flex-1"
 				style={{
-					height:
-						Platform.OS === "web"
-							? screenHeight * 0.6
-							: screenHeight * 0.61,
 					paddingTop: Platform.OS !== "web" ? 15 : undefined,
 					padding: 3,
 				}}
 			>
+				{!showPieChart && !showAreaChart && <ChartGraphSimmer />}
 				<ChartComponent
 					isChartEmpty={portfolioDetails?.message === "no data"}
 					webViewRef={areaWebViewRef}
@@ -286,6 +321,17 @@ const PortfolioOverView = () => {
 				/>
 			</View>
 
+			{/* Bottom CTA */}
+			<TouchableOpacity
+				className="bg-[#e31836] py-3 mx-5 rounded-sm"
+				onPress={() => setModalVisible(!modalVisible)}
+			>
+				<Text className="text-white text-center text-base font-normal uppercase">
+					{i18n.t("View_Deals")}
+				</Text>
+			</TouchableOpacity>
+
+			{/* Modal */}
 			<Modal
 				animationType="fade"
 				transparent={false}
@@ -306,15 +352,6 @@ const PortfolioOverView = () => {
 					/>
 				</View>
 			</Modal>
-
-			<TouchableOpacity
-				className="bg-primary bottom-0 mx-2 mb-2 py-3 rounded-sm absolute left-0 right-0"
-				onPress={() => setModalVisible(true)}
-			>
-				<Text className="text-white text-center text-base font-medium uppercase">
-					{i18n.t("View_Deals")}
-				</Text>
-			</TouchableOpacity>
 		</SafeAreaView>
 	);
 };

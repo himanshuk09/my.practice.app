@@ -18,7 +18,7 @@ export default function FloatingActionMenu({
 	const [isZoomIn, setIsZoomIn] = useState(true);
 	const [tooltip, setTooltip] = useState<boolean | any>(false);
 	const [tooltipLabel, setTooltipLabel] = useState<any>(null);
-	const intervalRef = useRef<NodeJS.Timeout | null>(null);
+	const intervalRef = useRef<NodeJS.Timeout | number>(null);
 	const menuItems = [
 		{
 			icon: isZoomIn ? "search-plus" : "search-minus",

@@ -5,7 +5,6 @@ import {
 	TextInput,
 	TouchableOpacity,
 	Pressable,
-	StatusBar,
 	Platform,
 	Keyboard,
 	KeyboardAvoidingView,
@@ -17,6 +16,7 @@ import { i18n } from "@/localization/config";
 import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import Foundation from "@expo/vector-icons/Foundation";
+import { StatusBar } from "expo-status-bar";
 
 const Forgotpassword = () => {
 	const router = useRouter();
@@ -45,10 +45,10 @@ const Forgotpassword = () => {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#ffffff"
+				style="light"
+				translucent
 				animated
-				showHideTransition={"slide"}
+				hideTransitionAnimation="fade"
 				networkActivityIndicatorVisible
 			/>
 			<KeyboardAvoidingView

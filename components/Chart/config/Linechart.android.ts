@@ -45,7 +45,8 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 	<script>
     
 		let chart;
-		let activeTab = "", locale = "";
+		let activeTab = "", locale = "en";
+        let yaxisTitle="";
 		let selectionHideTimeout;
 		let isCurrentlySelecting = false;
 		// send to react native
@@ -206,7 +207,8 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 			}, false, true);
 			sendMsgToReactNative("tooltip", currentSize === 0 ? true : false);
 			sendMsgToReactNative("stopLoader");
-			chart.updateSeries(chart.w.config.series);
+			// chart.updateSeries(chart.w.config.series);
+            updateLocale();
 		}
 
 		function toggleModes() {
@@ -308,7 +310,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 
 			// Check if seriesData is an array and has valid data
 			if (!Array.isArray(seriesData) || seriesData.length === 0 || seriesData.length === 1) {
-				// console.log('Invalid or empty series data');
+				//Invalid or empty series data
 				return;
 			}
 
@@ -854,7 +856,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 				enabled: true,
 				shared: true,
 				intersect: false,
-				hideEmptySeries: true,
+				hideEmptySeries: false,
 				fillSeriesColor: false,
 				offsetX: 10,
 				offsetY: 10,
@@ -931,10 +933,10 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 		};
 
 
-		function updateLocale(newLocale, yAxisTitle) {
+		function updateLocale(newLocale=locale, yAxisTitle=yaxisTitle) {
 
 			locale = newLocale;
-
+            yaxisTitle=yAxisTitle;
 			// tooltip min/max 
 			let yValues = chart.w.config.series[0].data.map((point) => point.y);
 			let maxY = Math.max(...yValues);

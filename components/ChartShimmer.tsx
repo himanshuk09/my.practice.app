@@ -86,7 +86,7 @@ const ChartGraphSimmer = () => {
 				StyleSheet.absoluteFill,
 				{ margin: 1, zIndex: 100 },
 			]}
-			className="absolute top-0 left-0 right-0 -bottom-1 justify-center items-center bg-[#ffffffda] z-50"
+			className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#ffffff] z-50"
 		>
 			<ShimmerPlaceholder style={styles.graph} />
 		</View>
@@ -115,7 +115,8 @@ const styles = StyleSheet.create({
 	},
 	graph: {
 		width: Platform.OS !== "web" ? width - 30 : "100%",
-		height: Platform.OS !== "web" ? screenHeight * 0.6 : "95%",
+		// height: Platform.OS !== "web" ? screenHeight * 0.55 : "95%",
+		height: "100%",
 		borderRadius: 8,
 	},
 	button: {

@@ -1,20 +1,25 @@
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
 import { useLocalSearchParams } from "expo-router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import useTabDataCache from "@/hooks/useTabDataCache";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { getLoadDataTS } from "@/services/loaddata.service";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
-import { View, Text, SafeAreaView, Platform, StatusBar } from "react-native";
+import { View, Text, SafeAreaView, Platform } from "react-native";
 import {
 	exportTimeseriesToCSV,
 	exportTimeseriesToCSVForWeb,
 } from "@/components/exportcsv/exporttofile";
+import { StatusBar } from "expo-status-bar";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { useIsFocused } from "@react-navigation/native";
 
 const LoadDataDetails = () => {
+	const isFocused = useIsFocused();
+	const dispatch = useDispatch();
 	const { id, title } = useLocalSearchParams();
 	const [loadDetail, setloadDetails] = useState<any>({});
 	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
@@ -53,14 +58,20 @@ const LoadDataDetails = () => {
 		},
 		[fetchWithCache, id]
 	);
-
+	useEffect(() => {
+		if (isFocused) {
+			setTimeout(() => {
+				dispatch(inActiveLoading());
+			}, 500);
+		}
+	}, [isFocused, id]);
 	return (
 		<SafeAreaView className="flex-1 ">
 			<StatusBar
-				barStyle="dark-content"
-				backgroundColor={isLandscape ? "#ffffff" : "#C3C3C3"}
+				style="light"
+				translucent
 				animated
-				showHideTransition={"slide"}
+				hideTransitionAnimation="fade"
 				networkActivityIndicatorVisible
 			/>
 
@@ -85,13 +96,19 @@ const LoadDataDetails = () => {
 									{i18n.t("Energy")}:{" "}
 								</Text>
 								<Text className="text-mainCardHeaderText text-sm ml-2">
-									{loadDetail?.AverageValue != null
-										? new Intl.NumberFormat(locale, {
+									{loadDetail?.MaxMomentum
+										? `${new Intl.NumberFormat(locale, {
 												useGrouping: true,
-												maximumFractionDigits: 2,
-											}).format(loadDetail.AverageValue)
-										: "0"}{" "}
-									kWh
+												maximumFractionDigits: 0,
+											}).format(
+												parseFloat(
+													loadDetail.MaxMomentum.replace(
+														/[^\d.]/g,
+														""
+													)
+												)
+											)} kWh`
+										: "0 kWh"}
 								</Text>
 							</View>
 							<View className="flex-row justify-items-start">
@@ -100,12 +117,13 @@ const LoadDataDetails = () => {
 								</Text>
 								<Text className="text-mainCardHeaderText text-sm ml-2">
 									{loadDetail?.AverageValue != null
-										? new Intl.NumberFormat(locale, {
+										? `${new Intl.NumberFormat(locale, {
 												useGrouping: true,
 												maximumFractionDigits: 2,
-											}).format(loadDetail.AverageValue)
-										: "0"}{" "}
-									kWh
+											}).format(
+												loadDetail.AverageValue
+											)} kWh`
+										: "0 kWh"}
 								</Text>
 							</View>
 						</View>

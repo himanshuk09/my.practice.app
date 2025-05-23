@@ -18,6 +18,7 @@ import {
 	TouchableOpacity,
 	Modal,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const SignalDetails = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
@@ -29,7 +30,7 @@ const SignalDetails = () => {
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-
+	const insets = useSafeAreaInsets();
 	useEffect(() => {
 		const filteredItem = PricesItem.filter(
 			(item: any) => item.id === Number(id)
@@ -48,11 +49,20 @@ const SignalDetails = () => {
 		}
 	};
 	useEffect(() => {
-		dispatch(inActiveLoading());
+		if (isFocused) {
+			setTimeout(() => {
+				dispatch(inActiveLoading());
+			}, 500);
+		}
 	}, [isFocused]);
 
 	return (
-		<SafeAreaView className="flex-1 bg-white ">
+		<SafeAreaView
+			className="flex-1 bg-white "
+			style={{
+				marginBottom: insets.bottom,
+			}}
+		>
 			<View
 				className="flex-1 
 					 bg-white"

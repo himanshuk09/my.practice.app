@@ -1,11 +1,12 @@
-import { View, FlatList, SafeAreaView, StatusBar } from "react-native";
 import "nativewind";
+import { View, FlatList, SafeAreaView } from "react-native";
 import { useDispatch } from "react-redux";
 import MenuCard from "@/components/MenuCard";
 import React, { useLayoutEffect } from "react";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import { dashboardMenuItems } from "@/utils/MenuItemlist";
+import { StatusBar } from "expo-status-bar";
 
 const Dashboard: React.FC = () => {
 	const isFocused = useIsFocused();
@@ -18,10 +19,10 @@ const Dashboard: React.FC = () => {
 	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
+				style="light"
+				translucent
 				animated
-				showHideTransition={"slide"}
+				hideTransitionAnimation="fade"
 				networkActivityIndicatorVisible
 			/>
 			<View className="justify-center mt-6 items-center">

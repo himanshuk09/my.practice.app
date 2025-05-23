@@ -7,6 +7,8 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import NoNetwork from "@/components/icons/NoNetwork";
 import NoData from "@/components/icons/NoData";
+import { isIdRoute } from "../_layout";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Signals = () => {
 	const dispatch = useDispatch();
@@ -16,7 +18,7 @@ const Signals = () => {
 	const [signalsGas, setSignalsGas] = useState<any>();
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [signalsStrom, setSignalsStrom] = useState<any>();
-
+	const insets = useSafeAreaInsets();
 	const combinedData = [
 		{ type: "header", title: "Gas", data: signalsGas },
 		{ type: "header", title: "Strom", data: signalsStrom },
@@ -37,11 +39,13 @@ const Signals = () => {
 	};
 
 	useEffect(() => {
-		dispatch(inActiveLoading());
+		if (isFocused) {
+			dispatch(inActiveLoading());
+		}
 		setTimeout(() => {
 			setSignalsGas(SignalsGas);
 			setSignalsStrom(SignalsStrom);
-		}, 1000);
+		}, 500);
 	}, [isFocused]);
 	/**
 	 *
@@ -50,7 +54,12 @@ const Signals = () => {
 	if (error) return <NoNetwork />;
 	if (signalsGas?.length === 0) return <NoData />;
 	return (
-		<SafeAreaView className="flex-1 bg-white">
+		<SafeAreaView
+			className="flex-1 bg-white"
+			style={{
+				marginTop: isIdRoute ? insets.top : 0,
+			}}
+		>
 			<FlatList
 				data={combinedData}
 				renderItem={renderItem}

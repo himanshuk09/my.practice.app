@@ -7,7 +7,6 @@ import {
 	RefreshControl,
 	SafeAreaView,
 	ScrollView,
-	StatusBar,
 	Text,
 	View,
 } from "react-native";
@@ -25,13 +24,6 @@ const PrivacyAndPolicy = () => {
 
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
-				animated
-				showHideTransition={"slide"}
-				networkActivityIndicatorVisible
-			/>
 			<View className="top-0 w-full z-50 p-5 bg-[#e31837] h-24">
 				<Text className="text-2xl font-normal text-white capitalize">
 					{i18n.t("privacypolicy")}

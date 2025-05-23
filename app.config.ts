@@ -50,7 +50,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			foregroundImage: "./assets/icons/adaptive-icon.png",
 			monochromeImage: "./assets/icons/adaptive-icon.png",
 			backgroundImage: "./assets/icons/adaptive-icon-bg.png",
-			// backgroundColor: "#ffffff",
 		},
 		package: getUniqueIdentifier(),
 		permissions: [
@@ -59,6 +58,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			"MANAGE_EXTERNAL_STORAGE",
 		],
 		softwareKeyboardLayoutMode: "pan",
+		edgeToEdgeEnabled: true,
 	},
 	web: {
 		bundler: "metro",

@@ -4,7 +4,6 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { RootState } from "@/store/store";
 import WebView from "react-native-webview";
 import ViewShot from "react-native-view-shot";
-import Toast from "react-native-toast-message";
 import { MaterialIcons } from "@expo/vector-icons";
 import { setOrientation } from "@/store/chartSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,7 +53,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const LoaderTimeoutRef = useRef<NodeJS.Timeout | number>(null);
 
 	const toggleOrientation = async () => {
 		if (Platform.OS != "web") {
@@ -159,14 +158,14 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 		};
 
 		// Add the back button listener
-		BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+		const backHandler = BackHandler.addEventListener(
+			"hardwareBackPress",
+			handleBackPress
+		);
 
 		// Cleanup on unmount
 		return () => {
-			BackHandler.removeEventListener(
-				"hardwareBackPress",
-				handleBackPress
-			);
+			backHandler.remove();
 		};
 	}, [isLandscape, dispatch]);
 

@@ -2,27 +2,19 @@ import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 import Toast, { ToastShowParams } from "react-native-toast-message";
 import * as IntentLauncher from "expo-intent-launcher";
+import { Linking, Platform, Text, TouchableOpacity, View } from "react-native";
 import {
-	Animated,
-	Linking,
-	Platform,
-	Pressable,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import {
+	Feather,
 	FontAwesome6,
 	Fontisto,
-	Ionicons,
 	MaterialIcons,
 } from "@expo/vector-icons";
 import { i18n } from "@/localization/config";
-import LottieView from "lottie-react-native";
-import React, { useRef } from "react";
-import useRetryNetwork from "@/hooks/useRetryNetwork";
+import React from "react";
 import NetworkRetry from "./icons/Network";
 import Spinner from "./icons/Spinner";
+import { getBottomInset } from "./safeArea";
+
 type ToastType = "success" | "error" | "info" | "download";
 
 interface ShowToastParams
@@ -41,7 +33,10 @@ const showToast = ({
 	title,
 	subtitle,
 	position = "bottom",
-	autoHide,
+	autoHide = true,
+	swipeable = false,
+	bottomOffset,
+	visibilityTime,
 	...options
 }: ShowToastParams): void => {
 	Toast.show({
@@ -49,10 +44,14 @@ const showToast = ({
 		text1: i18n.t(title),
 		text2: subtitle ? i18n.t(subtitle) : undefined,
 		position,
-		bottomOffset: 0,
-		visibilityTime: type === "error" ? 2000 : 3000,
-		autoHide: autoHide,
 		topOffset: 0,
+		bottomOffset: bottomOffset
+			? bottomOffset + getBottomInset()
+			: getBottomInset(),
+		visibilityTime: 3000,
+		autoHide,
+		swipeable,
+		avoidKeyboard: true,
 		...options,
 	});
 };
@@ -152,22 +151,63 @@ const sharePNGFile = async (fileName: string) => {
 
 const toastConfig: any = {
 	success: ({ text1, text2 }: any) => (
-		<View className="flex-row justify-start items-start py-3 px-5 w-full bg-cardBg rounded-sm">
-			<View>
-				<Text className="text-md justify-start items-center font-semibold text-listText">
+		<View className="flex-row items-center py-3 px-5 w-full bg-cardBg rounded-sm">
+			{/* Success Icon */}
+			<Feather
+				name="check-circle"
+				size={24}
+				color="#e31837"
+				className="mr-3"
+			/>
+
+			{/* Text Content */}
+			<View className="flex-1">
+				<Text className="text-md font-semibold text-listText">
 					{text1}
 				</Text>
 				{text2 ? (
-					<Text className="text-sm text-listText">{text2}</Text>
+					<Text className="text-sm text-listText mt-0.5">
+						{text2}
+					</Text>
 				) : null}
 			</View>
 		</View>
 	),
-	error: ({ text1, text2, ...rest }: any) => (
-		<View className="flex-row justify-start items-start py-3 px-5 w-full bg-[#e31837]  rounded-sm">
-			{/** bg-[#5D5D5D]*/}
-			<View>
-				<Text className="text-lg justify-start items-center font-semibold text-white">
+	error: ({ text1, text2, props }: any) => (
+		<View className="flex-row items-center py-3 px-5 w-full bg-[#5D5D5D] rounded-sm">
+			{/* Error Icon */}
+			<MaterialIcons
+				name="error-outline"
+				size={24}
+				color="white"
+				style={{ marginRight: 12, marginVertical: 10 }}
+			/>
+
+			{/* Text Content */}
+			<View className="flex-1">
+				<Text className="text-lg font-semibold text-white">
+					{text1}
+				</Text>
+				{text2 ? (
+					<Text className="text-sm text-white">{text2}</Text>
+				) : null}
+			</View>
+			{/* Right side: Action Buttons */}
+			<View className="flex-row gap-3 ml-3">
+				{props?.network && Platform.OS !== "web" && <NetworkRetry />}
+			</View>
+		</View>
+	),
+	info: ({ text1, text2, ...rest }: any) => (
+		<View className="flex-row items-center py-3 px-5 w-full bg-[#5D5D5D] rounded-sm">
+			<MaterialIcons
+				name="info"
+				size={24}
+				color="white"
+				className="mr-2"
+			/>
+			<View className="flex-1">
+				<Text className="text-lg font-semibold text-white">
 					{text1}
 				</Text>
 				{text2 ? (
@@ -176,31 +216,22 @@ const toastConfig: any = {
 			</View>
 		</View>
 	),
-	info: ({ text1, text2, ...rest }: any) => (
-		<View className="flex-row items-center p-4 mx-10 bg-blue-100 rounded-lg">
-			<MaterialIcons
-				name="info"
-				size={24}
-				color="blue"
-				className="mr-2"
-			/>
-			<View className="flex-1">
-				<Text className="text-lg font-semibold text-blue-800">
-					{text1}
-				</Text>
-				{text2 ? (
-					<Text className="text-sm text-blue-700">{text2}</Text>
-				) : null}
-			</View>
-		</View>
-	),
+
 	download: ({ text1, text2, props }: any) => (
-		<View className="flex-row justify-between items-start py-3 px-5 w-full  bg-[#5D5D5D] rounded-sm">
-			<View className="mx-3 flex justify-around flex-row ">
-				<View
-					className={`${props?.spinner && Platform.OS !== "web" ? "w-[90%]" : ""}`}
-				>
-					<Text className="text-md justify-start items-center font-semibold text-white">
+		<View className="flex-row justify-between items-center py-3 px-5 w-full bg-[#5D5D5D] rounded-sm">
+			{/* Left side: Icon + Text + Spinner */}
+			<View className="flex-row items-center flex-1">
+				{/* Download Icon */}
+				<MaterialIcons
+					name="file-download"
+					size={24}
+					color="white"
+					className="mr-3"
+				/>
+
+				{/* Text Content */}
+				<View className="flex-1">
+					<Text className="text-md font-semibold text-white">
 						{text1}
 					</Text>
 					{text2 ? (
@@ -208,13 +239,19 @@ const toastConfig: any = {
 					) : null}
 				</View>
 
-				{props?.spinner && Platform.OS !== "web" && <Spinner />}
+				{/* Spinner */}
+				{props?.spinner && Platform.OS !== "web" && (
+					<View className="ml-2">
+						<Spinner />
+					</View>
+				)}
 			</View>
-			<View className="mx-3 flex-row gap-3">
-				{props?.network && Platform.OS !== "web" && <NetworkRetry />}
+
+			{/* Right side: Action Buttons */}
+			<View className="flex-row gap-3 ml-3">
 				{props?.fileUri && (
 					<TouchableOpacity
-						className=" flex-row px-1 py-2 my-2 rounded-full"
+						className="flex-row items-center px-1 py-2 rounded-full"
 						onPress={() => {
 							if (
 								props?.type === "csv" ||
@@ -226,36 +263,25 @@ const toastConfig: any = {
 							}
 						}}
 					>
-						<Text className="text-white mr-1  font-semibold underline uppercase">
+						<Text className="text-white mr-1 font-semibold underline uppercase">
 							{i18n.t("Open")}
 						</Text>
-						{props?.type === "png" ? (
-							<FontAwesome6
-								name="file-image"
-								size={12}
-								color="white"
-								className="my-1"
-							/>
-						) : props?.type === "csv" ? (
-							<FontAwesome6
-								name="file-csv"
-								size={12}
-								color="white"
-								className="my-1"
-							/>
-						) : (
-							<FontAwesome6
-								name="file-pdf"
-								size={12}
-								color="white"
-								className="my-1"
-							/>
-						)}
+						<FontAwesome6
+							name={
+								props?.type === "png"
+									? "file-image"
+									: props?.type === "csv"
+										? "file-csv"
+										: "file-pdf"
+							}
+							size={12}
+							color="white"
+						/>
 					</TouchableOpacity>
 				)}
 				{props?.fileName && (
 					<TouchableOpacity
-						className="flex-row px-1 py-2 my-2 rounded-full"
+						className="flex-row items-center px-1 py-2 rounded-full"
 						onPress={() => {
 							if (
 								props?.type === "csv" ||
@@ -270,12 +296,7 @@ const toastConfig: any = {
 						<Text className="text-white mr-1 font-semibold underline uppercase">
 							{i18n.t("Share")}
 						</Text>
-						<Fontisto
-							name="share-a"
-							size={10}
-							color="white"
-							className="my-1"
-						/>
+						<Fontisto name="share-a" size={10} color="white" />
 					</TouchableOpacity>
 				)}
 			</View>

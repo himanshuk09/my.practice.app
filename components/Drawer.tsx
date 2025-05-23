@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
 	View,
 	Animated,
@@ -10,14 +10,14 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import CustomDrawer from "./CustomDrawer";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Drawer = ({ drawerWidth = 280 }: any) => {
 	const dispatch = useDispatch();
-
 	let debounceTimeout: any = null;
 	const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
-	const translateX = React.useRef(new Animated.Value(-drawerWidth)).current;
-
+	const translateX = useRef(new Animated.Value(-drawerWidth)).current;
+	const insets = useSafeAreaInsets();
 	const handleCloseDrawer = () => {
 		dispatch(closeDrawer());
 	};
@@ -62,36 +62,42 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 	useEffect(() => {
 		Animated.timing(translateX, {
 			toValue: isDrawerOpen ? 0 : -drawerWidth,
-			duration: 150,
+			duration: 100,
 			useNativeDriver: Platform.OS !== "web" ? true : false,
 		}).start();
 	}, [isDrawerOpen]);
 
 	return (
-		<React.Fragment>
+		<>
 			<View
 				{...panResponder.panHandlers}
-				style={[StyleSheet.absoluteFill]}
-				className="font-sans "
+				style={[
+					StyleSheet.absoluteFill,
+					Platform.OS === "web" ? { cursor: "pointer" } : {},
+				]}
+				className="font-sans"
 			/>
 			{/* Drawer Content */}
 			<Animated.View
 				style={[
 					styles.drawer,
-					{ width: drawerWidth, transform: [{ translateX }] },
+					Platform.OS === "web" && styles.webDrawer,
+					{
+						width: drawerWidth,
+						transform: [{ translateX: translateX }],
+						paddingTop: insets.top,
+					},
 				]}
-				{...panResponder.panHandlers}
 			>
 				<CustomDrawer />
 			</Animated.View>
-
 			{/* Overlay */}
 			{isDrawerOpen && (
 				<Pressable onPress={handleCloseDrawer} style={styles.overlay}>
 					<View />
 				</Pressable>
 			)}
-		</React.Fragment>
+		</>
 	);
 };
 
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
 			default: {
 				// Web
 				boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
-				transition: "box-shadow 0.3s ease", // Optional for smooth transitions
+				willChange: "transform",
 			},
 		}),
 	},
@@ -131,25 +137,11 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(0, 0, 0, 0.5)",
 		zIndex: 99,
 	},
-	overlayContainer: {
-		position: "absolute",
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
-		zIndex: 2,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	iconContainer: {
-		backgroundColor: "#e31837",
-		padding: 0,
-		width: 85,
-		position: "absolute",
-		top: 0,
-		right: -85,
-		zIndex: 100, // To make sure the icon is on top of the overlay
-		alignItems: "center",
+	webDrawer: {
+		position: "fixed" as any,
+		height: "100vh" as any,
+		boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
+		willChange: "transform",
 	},
 });
 

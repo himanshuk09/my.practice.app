@@ -4,15 +4,13 @@ import { Platform } from "react-native";
 import AppLoader from "@/app/AppLoader";
 import React, { useEffect } from "react";
 import RootLayout from "@/app/RootLayout";
-import Toast from "react-native-toast-message";
 import NetworkListener from "./NetworkListener";
-import toastConfig from "@/components/ToastConfig";
 import * as SplashScreen from "expo-splash-screen";
 import NavigationWatcher from "@/app/NavigationWatcher";
 import * as ScreenOrientation from "expo-screen-orientation";
-
+import { AlertContainer } from "rn-custom-alert-prompt";
+import ToastProvider from "@/components/ToastProvider";
 SplashScreen.preventAutoHideAsync();
-
 SplashScreen.setOptions({
 	duration: 1000,
 	fade: true,
@@ -20,7 +18,7 @@ SplashScreen.setOptions({
 
 const Layout = () => {
 	useEffect(() => {
-		let timer: NodeJS.Timeout;
+		let timer: NodeJS.Timeout | number;
 
 		timer = setTimeout(() => {
 			SplashScreen.hideAsync();
@@ -47,7 +45,12 @@ const Layout = () => {
 				<AppLoader>
 					<NetworkListener />
 					<RootLayout />
-					<Toast config={toastConfig} />
+					<AlertContainer
+						animationType="fade"
+						appearance="light"
+						theme="ios"
+					/>
+					<ToastProvider />
 				</AppLoader>
 			</NavigationWatcher>
 		</Provider>

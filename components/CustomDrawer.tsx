@@ -6,16 +6,9 @@ import {
 	Animated,
 	Easing,
 	View,
-	Alert,
 	Platform,
 } from "react-native";
-import {
-	MaterialIcons,
-	FontAwesome,
-	Ionicons,
-	Feather,
-	FontAwesome6,
-} from "@expo/vector-icons";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { Href, useRouter, useSegments } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import * as Linking from "expo-linking";
@@ -27,8 +20,9 @@ import { RootState } from "@/store/store";
 import { setOrientation } from "@/store/chartSlice";
 import { useAuth } from "@/hooks/useAuth";
 import { menuItems } from "@/utils/MenuItemlist";
-import { activeLoading } from "@/store/navigationSlice";
 
+import CustomAlert from "./CustomAlert";
+import { activeLoading } from "@/store/navigationSlice";
 // Helper Components
 const Submenu = memo(
 	({
@@ -108,61 +102,46 @@ const CustomDrawer = memo(() => {
 			console.error("Error clearing AsyncStorage or navigating:", error);
 		}
 	};
-	const handleLogout = () => {
+
+	const handleLogout = async () => {
 		dispatch(closeDrawer());
-
-		const title = i18n.t("logout_title"); // e.g., "Logout"
-		const message = i18n.t("logout_message"); // e.g., "Are you sure you want to logout?"
-		const cancel = i18n.t("Cancel"); // e.g., "Cancel"
-		const confirm = i18n.t("OK"); // e.g., "OK"
-
 		if (typeof window !== "undefined" && Platform.OS === "web") {
-			const isConfirmed = window.confirm(
-				"Are you sure you want to logout?"
-			);
+			const isConfirmed = window.confirm(i18n.t("logout_message"));
 			if (isConfirmed) {
 				clearStorageAndNavigate(router);
 			}
 		} else {
-			Alert.alert(
-				title,
-				message,
-				[
-					{
-						text: cancel,
-						onPress: () => console.log("Logout canceled"),
-						style: "cancel",
-					},
-					{
-						text: confirm,
-						onPress: () => clearStorageAndNavigate(router),
-						style: "destructive",
-					},
-				],
-				{ cancelable: true }
-			);
+			CustomAlert({
+				title: "logout_title",
+				description: "logout_message",
+				showCancelButton: true,
+				icon: "question",
+				iconColor: "#e31837",
+				onConfirm() {
+					clearStorageAndNavigate(router);
+				},
+			});
 		}
 	};
+
 	const navigationToRoute = (item: any) => {
+		if (!item?.route) return dispatch(closeDrawer());
+
 		if (isLandscape) {
 			ScreenOrientation.lockAsync(
 				ScreenOrientation.OrientationLock.PORTRAIT
-			); // Switch to portrait mode
-			dispatch(setOrientation(false)); // Update the state to reflect the change
+			);
+			dispatch(setOrientation(false));
 		}
 
-		if (item?.route && !item?.route.startsWith("http")) {
+		if (item.route.startsWith("http")) {
+			Platform.OS === "web"
+				? window.open(item.route, "_blank")
+				: Linking.openURL(item.route);
+		} else if (segmentPath !== item.route) {
+			// dispatch(activeLoading());
+			setTimeout(() => router.replace(item.route as Href));
 			setActiveSubmenu(null);
-			if (segmentPath !== item?.route) {
-				//dispatch(activeLoading());
-				router.replace(item?.route as Href);
-			}
-		} else if (item?.route?.startsWith("http")) {
-			if (Platform.OS === "web") {
-				window.open(item.route, "_blank");
-			} else {
-				Linking.openURL(item.route);
-			}
 		}
 		dispatch(closeDrawer());
 	};

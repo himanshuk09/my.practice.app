@@ -6,7 +6,6 @@ import {
 	TouchableOpacity,
 	Keyboard,
 	Pressable,
-	StatusBar,
 	Platform,
 	KeyboardAvoidingView,
 	ScrollView,
@@ -23,6 +22,7 @@ import { loginUser } from "@/services/auth.service";
 import { showToast } from "@/components/ToastConfig";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 const SignIn: React.FC = () => {
 	const router = useRouter();
@@ -89,9 +89,6 @@ const SignIn: React.FC = () => {
 					showToast({
 						type: "success",
 						title: "LoggedIn_Successful",
-						position: "bottom",
-						bottomOffset: 25,
-						visibilityTime: 2000,
 					});
 				}, 1000);
 			} else {
@@ -106,9 +103,6 @@ const SignIn: React.FC = () => {
 					showToast({
 						type: "error",
 						title: "Login_failed_Please_try_again",
-						position: "bottom",
-						bottomOffset: 30,
-						visibilityTime: 3000,
 					});
 				}, 1000);
 			} else {
@@ -122,10 +116,10 @@ const SignIn: React.FC = () => {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#ffffff"
+				style="light"
+				translucent
 				animated
-				showHideTransition={"slide"}
+				hideTransitionAnimation="fade"
 				networkActivityIndicatorVisible
 			/>
 			<KeyboardAvoidingView

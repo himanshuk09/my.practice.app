@@ -11,7 +11,6 @@ import {
 	Text,
 	ScrollView,
 	SafeAreaView,
-	StatusBar,
 	Platform,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +20,8 @@ interface CustomTabBarProps {
 	navigation: any;
 	notificationCounts: Record<string, number>;
 }
-
+import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 // Custom Tab Bar
 const CustomTabBar = ({
 	state,
@@ -142,14 +142,9 @@ const CustomTabBar = ({
 		</View>
 	);
 };
-
+export let isIdRoute: boolean;
 // Main Tab Navigator
 const TabNavigatorLayout = () => {
-	// change the color of status bar on landscape
-	const isLandscape = useSelector(
-		(state: RootState) => state.orientation.isLandscape
-	);
-
 	const segments = useSegments();
 	const segmentPath = segments.join("/");
 	// Routes to match (with parameter placeholders)
@@ -162,7 +157,7 @@ const TabNavigatorLayout = () => {
 		"dashboard/(tabs)/prices/settings",
 	];
 
-	const isIdRoute = idRoutes.includes(segmentPath);
+	isIdRoute = idRoutes.includes(segmentPath);
 
 	const notificationCounts = {
 		prices: 0,
@@ -175,10 +170,10 @@ const TabNavigatorLayout = () => {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar
-				barStyle="dark-content"
-				backgroundColor={isLandscape ? "#ffffff" : "#C3C3C3"}
+				style="light"
+				translucent
 				animated
-				showHideTransition={"slide"}
+				hideTransitionAnimation="fade"
 				networkActivityIndicatorVisible
 			/>
 			{!isIdRoute && <Header />}

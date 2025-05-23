@@ -19,6 +19,7 @@ import {
 } from "@/components/Chart/chartUpdateFunctions";
 import iframeLineHtmlContent from "@/components/Chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/Chart/config/Linechart.android";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
 
@@ -87,7 +88,7 @@ const ToggleChartComponent = ({
 }: ToggleChartComponentProps) => {
 	const webViewRef = useRef<WebView | any>(null);
 	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
-	const LoaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const LoaderTimeoutRef = useRef<NodeJS.Timeout | number>(null);
 	const isOnline = useSelector(
 		(state: RootState) => state.network.isConnected
 	);
@@ -110,7 +111,7 @@ const ToggleChartComponent = ({
 	const [isTooltipEnabled, setIsTooltipEnabled] = useState(false);
 	const [isChartEmpty, setIsChartEmpty] = useState(false);
 	const [showChartShimmer, setShowChartShimmer] = useState<boolean>(true);
-
+	const insets = useSafeAreaInsets();
 	//its trigger by webview on charts operations
 	const onMessage = async (event: any) => {
 		const message = JSON.parse(event.nativeEvent.data);
@@ -158,14 +159,6 @@ const ToggleChartComponent = ({
 			default:
 				break;
 		}
-
-		// console.log(
-		// 	"msg from webview line chart",
-		// 	action,
-		// 	values,
-		// 	reason,
-		// 	isZoomed
-		// );
 	};
 
 	// its used to update chart options and series based on data
@@ -321,7 +314,15 @@ const ToggleChartComponent = ({
 	}, [locale, isChartLoaded, isOnline]);
 
 	return (
-		<View className="flex-1  bg-white">
+		<View
+			className="flex-1  bg-white"
+			style={{
+				marginBottom: insets.bottom,
+				marginTop: isLandscape ? insets.top : 0,
+				marginRight: insets.right,
+				marginLeft: insets.left,
+			}}
+		>
 			{!isLandscape ? (
 				<TabToggleButtons
 					activeTab={activeTab}
@@ -340,7 +341,7 @@ const ToggleChartComponent = ({
 				/>
 			)}
 			{/* Chart  */}
-			<View className="flex-1  border-gray-300">
+			<View className="flex-1  border-gray-300 relative">
 				{showChartShimmer && <ChartGraphSimmer />}
 				{isLoading && <ChartLoaderPNG />}
 

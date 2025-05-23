@@ -68,7 +68,8 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 					},
 				},
 			});
-			chart?.updateSeries(chart?.w?.config?.series);
+			// chart?.updateSeries(chart?.w?.config?.series);
+            updateLocale(localeAfterMount,titleAfterMount)
 		}
 
 		// send to web console

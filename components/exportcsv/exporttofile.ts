@@ -1,6 +1,6 @@
+//in used
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Toast from "react-native-toast-message";
 import { showToast } from "../ToastConfig";
 
 const DIRECTORY_URI_KEY = "SAVED_DIRECTORY_URI";
@@ -15,9 +15,6 @@ const requestWritableDirectory = async (): Promise<string | null> => {
 			type: "error",
 			title: "Permission_Denied",
 			subtitle: "Storage_access_not_granted",
-			position: "bottom",
-			bottomOffset: 0,
-			visibilityTime: 3000,
 		});
 		return null;
 	}
@@ -64,9 +61,6 @@ const saveToFile = async (
 			type: "download",
 			title: "File_Saved",
 			subtitle: "Tap_to_open",
-			position: "bottom",
-			bottomOffset: 0,
-			visibilityTime: 5000,
 			props: {
 				fileUri,
 				fileName,
@@ -74,15 +68,10 @@ const saveToFile = async (
 			},
 		});
 	} catch (error) {
-		console.error("Error saving file:", error);
-
 		showToast({
 			type: "error",
 			title: "Save_Failed",
 			subtitle: "An_error_occurred_while_saving",
-			position: "bottom",
-			bottomOffset: 0,
-			visibilityTime: 5000,
 		});
 	}
 };
@@ -134,7 +123,7 @@ const splitTimeSeriesString = (timeseries: string) => {
 	};
 };
 
-// ------------------- Export Functions ----------------------
+// ------------------- Export Functions for Android Versions----------------------
 
 const exportBase64ToPDF = async (base64: string, fileName = "document.pdf") => {
 	if (!base64) return;
@@ -171,7 +160,7 @@ const exportTimeseriesToCSV = async (data: any[], fileName = "cockpit.csv") => {
 	);
 };
 
-// ------------------ Web Versions ------------------------
+// ------------------Export Functions for Web Versions ------------------------
 
 const downloadBlobWeb = (blob: Blob, fileName: string) => {
 	const url = URL.createObjectURL(blob);

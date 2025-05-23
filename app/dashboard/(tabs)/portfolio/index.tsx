@@ -1,16 +1,22 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Platform, SafeAreaView, useWindowDimensions } from "react-native";
+import {
+	Animated,
+	Platform,
+	SafeAreaView,
+	useWindowDimensions,
+} from "react-native";
 import FlatListBlock from "@/components/FlatListBlock";
 import { useDispatch } from "react-redux";
 import { inActiveLoading } from "@/store/navigationSlice";
-import { useIsFocused, useNavigationState } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { getPortfolioList } from "@/services/portfolio.service";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
-
 import { Portfolioprops } from "@/types/type";
 import NoNetwork from "@/components/icons/NoNetwork";
 import NoData from "@/components/icons/NoData";
 import useIsComingFromPortfolioDetail from "@/hooks/useIsComingFromPortfolioDetail";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { isIdRoute } from "../_layout";
 
 const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();
@@ -18,6 +24,7 @@ const Portfolio: React.FC = () => {
 	const { height } = useWindowDimensions();
 	const NavigateTo = "dashboard/portfolio";
 	const isFromDetail = useIsComingFromPortfolioDetail();
+	const insets = useSafeAreaInsets();
 
 	const {
 		data: portfolioData,
@@ -35,19 +42,22 @@ const Portfolio: React.FC = () => {
 	const gasList = portfolioData?.gas || [];
 	const stromList = portfolioData?.strom || [];
 
-	useLayoutEffect(() => {
-		dispatch(inActiveLoading());
+	useEffect(() => {
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
-
 	/**
-	 *
-	 * Return Based On Condition
+	 *Return Based On Condition
 	 */
 	if (error) return <NoNetwork />;
 	if (portfolioData?.gas?.length === 0) return <NoData />;
 
 	return (
-		<SafeAreaView className="flex-1 bg-white">
+		<SafeAreaView
+			className="flex-1 bg-white"
+			style={{
+				marginTop: isIdRoute ? insets.top : 0,
+			}}
+		>
 			<FlatListBlock
 				title="Gas"
 				items={gasList}

@@ -94,7 +94,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 			series: [10, 50],// initial data for animation
 			chart: {
 				type: "donut",
-				height: "120%",
+				height: "100%",
 				width: "100%",
 				background: "none",
 				animations: {

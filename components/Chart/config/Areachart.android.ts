@@ -38,7 +38,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 );
             }
 
-            var locale, title, categories;
+            var locale, title="", categories;
 
             //generate locale months
             function getLocalizedMonths(locale = "en-US", type = "short") {
@@ -56,7 +56,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
             categories = getLocalizedMonths("en-IN"); // Default locale
 
             // Function to update the chart's locale
-            function updateLocale(newLocale = "en-IN", newTitle) {
+            function updateLocale(newLocale = "en-IN", newTitle=title) {
                 title = newTitle;
                 locale = newLocale;
                 categories = getLocalizedMonths(newLocale);
@@ -188,7 +188,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                         },
 
                         updated: function (chartContext) {
-                            sendMsgToReactNative("Chart updated");
+                            sendMsgToReactNative("Area Chart updated");
                             highlightMinAndMax(chartContext);
                         },
                     },
@@ -399,7 +399,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                     followCursor: false,
                     intersect: false,
                     inverseOrder: false,
-                    hideEmptySeries: true,
+                    hideEmptySeries: false,
                     fillSeriesColor: false,
                     // theme: true,
                     style: {
@@ -469,7 +469,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 });
                 // Stop loader after chart update
                 sendMsgToReactNative("stopLoader");
-				chart.updateSeries(chart.w.config.series);sss
+                updateLocale();
             }
 
             //update chart series and options
@@ -538,7 +538,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
             }
 
             // zoomin
-            function zoomIn() {
+            function zoomIn1() {
                 if (!chart?.w?.globals) {
                     console.warn("Zoom In action skipped: chart or required properties not available.");
                     return;
@@ -559,7 +559,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 
             }
             //Zoom out
-            function zoomOut() {
+            function zoomOut1() {
                 if (!chart?.w?.globals) {
                     console.warn("Zoom Out action skipped: chart or required properties not available.");
                     return;
@@ -579,9 +579,62 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 chart.zoomX(newMin, newMax);
             }
 
+            //New Optimized Function
+            //zoomIn
+            function zoomIn() {
+                if (!chart?.w?.globals) {
+                    console.warn("Zoom In action skipped: chart or required properties not available.");
+                    return;
+                }
 
-            
+                sendMsgToReactNative("Zoom In");
 
+                const currentRange = getCurrentXRange();
+                const fullRange = getFullDataRange();
+
+                const minX = currentRange.min;
+                const maxX = currentRange.max;
+
+                const center = (minX + maxX) / 2;
+
+                // Zoom in by moving min/max halfway toward the center (50% zoom)
+                let newMin = (minX + center) / 2;
+                let newMax = (maxX + center) / 2;
+
+                // Clamp newMin and newMax to data bounds
+                newMin = Math.max(fullRange.min, newMin);
+                newMax = Math.min(fullRange.max, newMax);
+
+                chart.zoomX(newMin, newMax);
+            }
+            //zoomOut
+            function zoomOut() {
+                if (!chart?.w?.globals) {
+                    console.warn("Zoom Out action skipped: chart or required properties not available.");
+                    return;
+                }
+
+                sendMsgToReactNative("Zoomed Out");
+
+                const currentRange = getCurrentXRange();
+                const fullRange = getFullDataRange();
+                const minX = currentRange.min;
+                const maxX = currentRange.max;
+                const center = (minX + maxX) / 2;
+
+                // Zoom out by moving min/max away from center (double the distance from center)
+                // Calculate new min by reflecting minX further away from center
+                let newMin = center - (center - minX) * 2;
+                
+                // Calculate new max by reflecting maxX further away from center
+                let newMax = center + (maxX - center) * 2;
+
+                // Clamp newMin and newMax to data bounds
+                newMin = Math.max(fullRange.min, newMin);
+                newMax = Math.min(fullRange.max, newMax);
+
+                chart.zoomX(newMin, newMax);
+            }
 
             //resetzoom
             function resetZoom() {
@@ -628,7 +681,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 
             }
 
-
+                
             //toggle zoom and selection
             window.toggleZoomAndSelection = () => {
                 if (chart.w.globals.zoomEnabled) {

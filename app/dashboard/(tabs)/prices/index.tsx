@@ -16,9 +16,10 @@ import {
 	SafeAreaView,
 	FlatList,
 	TouchableOpacity,
-	StatusBar,
 	RefreshControl,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { isIdRoute } from "../_layout";
 
 const Prices = () => {
 	const router = useRouter();
@@ -28,6 +29,7 @@ const Prices = () => {
 	const [prices, setPrices] = useState<any>(PricesItem);
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const insets = useSafeAreaInsets();
 	const ListItem = memo(({ item }: any) => (
 		<TouchableOpacity
 			key={item.id}
@@ -83,7 +85,7 @@ const Prices = () => {
 		setTimeout(() => {
 			setLoading(false);
 		}, 2000);
-		dispatch(inActiveLoading());
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 
 	/**
@@ -94,18 +96,15 @@ const Prices = () => {
 	if (prices.length === 0) return <NoData />;
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
-				animated
-				showHideTransition={"slide"}
-				networkActivityIndicatorVisible
-			/>
-
 			{loading ? (
 				<ShimmerPricesHeader />
 			) : (
-				<View className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-primary ">
+				<View
+					className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-primary"
+					style={{
+						marginTop: isIdRoute ? insets.top : 0,
+					}}
+				>
 					<View className="flex flex-col justify-evenly w-[60%]">
 						<Text className="flex justify-start font-normal mb-2  items-center   text-xl  text-white">
 							EEX Power Auction

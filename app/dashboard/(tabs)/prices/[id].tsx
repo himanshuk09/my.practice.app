@@ -11,11 +11,11 @@ import { cockpitChartData } from "@/constants/cockpitchart";
 import { fetchDataByToggle } from "@/services/auth.service";
 import { stringChartData } from "@/constants/stringChartData";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
-import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
+import { View, Text, SafeAreaView, Platform } from "react-native";
 import {
-	saveCSVToFileWeb,
-	saveCSVToFileString,
-} from "@/components/exportcsv/exportToFiles";
+	exportTimeseriesToCSV,
+	exportTimeseriesToCSVForWeb,
+} from "@/components/exportcsv/exporttofile";
 
 const PricesDetails = () => {
 	const { id } = useLocalSearchParams();
@@ -57,7 +57,11 @@ const PricesDetails = () => {
 		}
 	};
 	useEffect(() => {
-		dispatch(inActiveLoading());
+		if (isFocused) {
+			setTimeout(() => {
+				dispatch(inActiveLoading());
+			}, 500);
+		}
 	}, [isFocused]);
 	return (
 		<SafeAreaView className="flex-1 ">
@@ -90,9 +94,11 @@ const PricesDetails = () => {
 								color="#e31837"
 								onPress={() => {
 									if (Platform.OS === "web") {
-										saveCSVToFileWeb(cockpitChartData);
+										exportTimeseriesToCSVForWeb(
+											cockpitChartData
+										);
 									} else {
-										saveCSVToFileString(stringChartData);
+										exportTimeseriesToCSV(stringChartData);
 									}
 								}}
 							/>

@@ -20,7 +20,7 @@ const useNetworkStatus = (): boolean => {
 
 			if (!onlineStatus) {
 				showToast({
-					type: "download",
+					type: "error",
 					title: "No_Internet_Connection",
 					subtitle: "Waiting_for_reconnection",
 					autoHide: false,

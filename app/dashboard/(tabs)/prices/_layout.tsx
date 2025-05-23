@@ -25,7 +25,7 @@ const PricesLayout = () => {
 				name="[id]"
 				options={{
 					headerShown: Platform.OS === "web" ? true : !isLandscape,
-					animation: "fade",
+					animation: "simple_push",
 					header: ({ navigation }) => (
 						<StackHeader
 							navigation={navigation}

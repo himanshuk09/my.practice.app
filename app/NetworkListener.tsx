@@ -20,7 +20,7 @@ const NetworkListener = () => {
 
 				if (!isConnected) {
 					showToast({
-						type: "download",
+						type: "error",
 						title: "No_Internet_Connection",
 						subtitle: "Waiting_for_reconnection",
 						swipeable: false,

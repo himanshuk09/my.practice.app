@@ -4,10 +4,7 @@ import { ChartLoaderPNG } from "./Loader";
 import { useEffect, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { i18n } from "@/localization/config";
-import {
-	exportDealsToCSV,
-	exportDealsToCSVWeb,
-} from "./exportcsv/exportToFiles";
+
 import {
 	View,
 	Platform,
@@ -20,6 +17,10 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import NoData from "./icons/NoData";
+import {
+	exportDealsToCSV,
+	exportDealsToCSVWeb,
+} from "./exportcsv/exporttofile";
 type DataRowPrpos = {
 	label?: string;
 	value: any;
@@ -203,6 +204,7 @@ const Transactions = ({
 									`${title}_deals.csv`
 								);
 							} else {
+								console.log("inside");
 								exportDealsToCSV(cards, `${title}_deals.csv`);
 							}
 						}}

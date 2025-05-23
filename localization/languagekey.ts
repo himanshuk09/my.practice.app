@@ -141,8 +141,11 @@ export const TranslationKeys: Translations | any = {
 		Value_Range: "Value Range",
 		Cancel: "CANCEL",
 		OK: "OK",
+		submit: "Submit",
 		select: "Select",
 		today: "Today",
+		message_sent_successfully: "Message sent successfully!",
+		thank_you_for_your_feedback: "Thank you for your feedback!",
 		Data_not_available: "Data not available",
 		Select_Start_Date: "Select Start Date",
 		Select_End_Date: "Select End Date",
@@ -151,6 +154,8 @@ export const TranslationKeys: Translations | any = {
 		Waiting_for_reconnection: "Waiting for reconnection...",
 		logout_title: "Logout",
 		logout_message: "Are you sure you want to logout?",
+		exit_app: "Exit App",
+		exit_msg: "Are you sure you want to exit?",
 		//toast message
 		Cannot_Open_CSV: "Cannot Open CSV",
 		Make_sure_a_CSV_viewer_is_installed:
@@ -456,9 +461,12 @@ export const TranslationKeys: Translations | any = {
 		Value_Range: "Wertebereich",
 		Cancel: "ABBRECHEN",
 		OK: "OK",
-		Data_not_available: "Daten nicht verfugbar",
+		submit: "Senden",
 		select: "wählen",
 		today: "Heute",
+		message_sent_successfully: "Nachricht erfolgreich gesendet!",
+		thank_you_for_your_feedback: "Vielen Dank für Ihr Feedback!",
+		Data_not_available: "Daten nicht verfugbar",
 		Select_Start_Date: "Wählen Sie Startdatum",
 		Select_End_Date: "Wählen Sie Enddatum aus",
 		Select_Date_Range: "Wählen Sie Datumsbereich aus",
@@ -466,6 +474,8 @@ export const TranslationKeys: Translations | any = {
 		Waiting_for_reconnection: "Warten auf erneute Verbindung...",
 		logout_title: "Abmelden",
 		logout_message: "Möchten Sie sich wirklich abmelden?",
+		exit_app: "App beenden",
+		exit_msg: "Möchten Sie wirklich beenden?",
 		//toast messages
 		Cannot_Open_CSV: "CSV kann nicht geöffnet werden",
 		Make_sure_a_CSV_viewer_is_installed:

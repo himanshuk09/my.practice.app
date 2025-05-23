@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
 import Logo from "./SVG/Logo";
-import { useRouter } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 import { useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 import { toggleDrawer } from "@/store/drawerSlice";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Header = React.memo(({ navigation }: any) => {
 	const dispatch = useDispatch();
 	const router = useRouter();
+	const segment = useSegments().join("/");
+	const [headerPress, setHeaderPress] = useState(false);
+	const insets = useSafeAreaInsets();
 	return (
-		<SafeAreaView style={{ backgroundColor: "white" }}>
+		<SafeAreaView
+			style={{ backgroundColor: "white", marginTop: insets.top }}
+		>
 			<View
 				style={{
 					paddingHorizontal: 1,
@@ -48,14 +54,26 @@ const Header = React.memo(({ navigation }: any) => {
 
 				<TouchableOpacity
 					activeOpacity={0.7}
+					disabled={headerPress}
 					onPress={() => {
-						setTimeout(() => {
-							router.push("/dashboard");
-						});
+						if (headerPress) return; // Prevent double press
+						setHeaderPress(true);
 						dispatch(activeLoading());
+
 						setTimeout(() => {
 							dispatch(inActiveLoading());
-						}, 2000);
+						}, 1000);
+
+						if (segment === "dashboard") {
+							setHeaderPress(false);
+							return;
+						}
+
+						// Navigate after a slight delay, ensuring loading starts first
+						setTimeout(() => {
+							router.push("/dashboard");
+							setHeaderPress(false);
+						});
 					}}
 				>
 					<Logo />

@@ -36,6 +36,7 @@ const RatingStars = ({ maxStars = 5 }: any) => {
 					return (
 						<TouchableOpacity
 							key={starIndex}
+							onPressIn={() => handleRating(starIndex)}
 							onPress={() => handleRating(starIndex)}
 							style={styles.star}
 						>

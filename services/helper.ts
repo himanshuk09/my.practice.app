@@ -6,7 +6,7 @@ export const checkInternetConnection = async (): Promise<boolean> => {
 		const netInfo = await NetInfo.fetch();
 		if (!netInfo.isConnected) {
 			showToast({
-				type: "download",
+				type: "error",
 				title: "No_Internet_Connection",
 				subtitle: "Waiting_for_reconnection",
 				autoHide: false,

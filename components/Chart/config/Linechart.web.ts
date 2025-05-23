@@ -14,7 +14,7 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 
 		let chart;
 		let isZoomed = false;
-
+        let updatedLocale;
 		let markersVisible = false;
 
 		function updateToggleMarker() {
@@ -47,7 +47,8 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 					},
 				},
 			});
-			chart.updateSeries(chart.w.config.series);
+			//chart.updateSeries(chart.w.config.series);
+            updateLocale(updatedLocale)
 		}
 
 
@@ -169,7 +170,7 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 			const seriesData = chartInstance.w.config.series[0].data;
 
 			if (!Array.isArray(seriesData) || seriesData.length === 0) {
-				//  console.log("Invalid or empty series data");
+				//  Invalid or empty series data
 				return;
 			}
 
@@ -232,7 +233,7 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 		var options = {
 			series: [{ name: "Energy Use", data: [{ "x": "01/01/2000 00:00", "y": 1 }] }],
 			chart: {
-				height: "90%",
+				height: "100%",
 				type: "line",
 				offsetX: 0,
 				offsetY: 30,
@@ -644,6 +645,7 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 
 		function updateLocale(newLocale) {
 		let currentSeries = chart.w.config.series;
+        updatedLocale=newLocale
 			currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy Use: ";
 			chart.updateOptions({
 				chart: {},

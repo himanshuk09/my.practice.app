@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { SvgProps, Defs, ClipPath, Path, G } from "react-native-svg";
 /* SVGR has dropped some elements not supported by react-native-svg: style */
 const Load = (props: SvgProps) => (
-	<Svg viewBox="9344 243 65.851 47.757" width={66} height={48} {...props}>
+	<Svg viewBox="9344 243 65.851 47.9" width={66} height={49} {...props}>
 		<Defs>
 			<ClipPath id="clip-path">
 				<Path
@@ -21,7 +21,8 @@ const Load = (props: SvgProps) => (
 					data-name="Path 146"
 					fill="#e31837"
 					d="M0,0V21.823H9.912V10.386L6.46,13.837,4.648,12.024l6.838-6.836,6.836,6.836L16.51,13.837l-3.45-3.451V21.823h9.911V0Z"
-					transform="translate(42.88 0)"
+					// transform="translate(42.88 0)"
+					transform="translate(41.3 1.5)"
 				/>
 			</G>
 			<G id="Group_321" data-name="Group 321" className="cls-3">

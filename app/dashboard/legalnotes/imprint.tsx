@@ -2,7 +2,6 @@ import {
 	View,
 	Text,
 	SafeAreaView,
-	StatusBar,
 	ScrollView,
 	RefreshControl,
 } from "react-native";
@@ -38,13 +37,6 @@ const Imprint = () => {
 	}, [isFocused]);
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
-				animated
-				showHideTransition={"slide"}
-				networkActivityIndicatorVisible
-			/>
 			<View className="top-0 w-full z-50 p-5 bg-primary h-24">
 				<Text className="text-2xl font-normal text-white capitalize">
 					{i18n.t("imprint")}

@@ -216,10 +216,10 @@ const PickerModel = ({
 				className={`flex-1  pt-20 bg-[#0a0a0aa8] bg-opacity-50 ${Platform.OS === "web" && "justify-center items-center"}`}
 			>
 				<View
-					className={`bg-white mx-3 ${Platform.OS === "web" && "w-80"}`}
+					className={`bg-white mx-4 ${Platform.OS === "web" && "w-80"} `}
 				>
 					{/* Period of Time Header*/}
-					<View className="flex-row justify-between p-3 bg-[#ebebeb] pl-5">
+					<View className="flex-row justify-between p-3  bg-secondary pl-5 ">
 						<Text
 							className="text-chartText font-bold text-lg "
 							onPress={() => {

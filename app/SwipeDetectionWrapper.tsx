@@ -24,16 +24,16 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 		debounceTimeout = setTimeout(action, 300);
 	};
 
+	//Left swipe detected!
 	const debounceToggleDrawer = () => {
 		debounceAction(() => {
-			//console.log("Left swipe detected!");
 			dispatch(toggleDrawer());
 		});
 	};
 
+	//Right to left swipe detected, closing drawer!
 	const debounceCloseDrawer = () => {
 		debounceAction(() => {
-			//console.log("Right to left swipe detected, closing drawer!");
 			dispatch(closeDrawer());
 		});
 	};

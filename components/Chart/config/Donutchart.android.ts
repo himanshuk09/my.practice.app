@@ -60,7 +60,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 
 
 		let options = {
-			series: [1, 1],
+			series: [1,1],
 			labels: ["Open", "Closed"],
 			chart: {
 				type: "donut",
@@ -70,14 +70,14 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 				animations: {
 					enabled: true,
 					easing: "easeinout",
-					speed: 1000, //  Reduced for smoother transition
+					speed: 800, //  Reduced for smoother transition
 					animateGradually: {
 						enabled: true,
-						delay: 1000, //  Lowered for faster animation
+						delay: 800, //  Lowered for faster animation
 					},
 					dynamicAnimation: {
 						enabled: true,
-						speed: 1000, //  Smoother animation
+						speed: 800, //  Smoother animation
 					},
 				},
 				toolbar: { show: false },
@@ -98,9 +98,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 										},
 									},
 								},
-                                title: {
-				                    text: "-Selection"
-                                },
+                            
 							},
 							true,
 							true 
@@ -181,7 +179,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 					},
 					
 					updated: function (chartContext) {
-						sendMsgToReactNative("Chart updated");
+						sendMsgToReactNative("Pie Chart updated");
 						highlightMinAndMax(chartContext);
 					},
 				},

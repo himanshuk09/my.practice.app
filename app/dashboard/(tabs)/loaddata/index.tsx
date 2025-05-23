@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { FlatList, RefreshControl, SafeAreaView } from "react-native";
 import { useDispatch } from "react-redux";
 import NoData from "@/components/icons/NoData";
@@ -8,6 +8,8 @@ import { getLoadDataList } from "@/services/loaddata.service";
 import AccordionFlatlist from "@/components/AccordionFlatlist";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
+import { isIdRoute } from "../_layout";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface DataItem {
 	id: string;
@@ -19,7 +21,8 @@ const LoadData = () => {
 	const mainFlatListRef = useRef<FlatList<DataItem>>(null);
 	const isFocused = useIsFocused();
 	const dispatch = useDispatch();
-
+	const [expandedMeterId, setExpandedMeterId] = useState<string | null>(null); // 🔑 Shared state
+	const insets = useSafeAreaInsets();
 	const { data, loading, error, refetch, isOnline } =
 		useNetworkAwareApiRequest(getLoadDataList, {
 			autoFetch: true,
@@ -38,7 +41,7 @@ const LoadData = () => {
 	];
 
 	useLayoutEffect(() => {
-		dispatch(inActiveLoading());
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 
 	/**
@@ -48,7 +51,12 @@ const LoadData = () => {
 	if (error) return <NoNetwork />;
 	if (data?.gas?.length === 0) return <NoData />;
 	return (
-		<SafeAreaView className="flex-1 bg-white">
+		<SafeAreaView
+			className="flex-1 bg-white"
+			style={{
+				marginTop: isIdRoute ? insets.top : 0,
+			}}
+		>
 			<FlatList
 				ref={mainFlatListRef}
 				data={listData}
@@ -60,6 +68,8 @@ const LoadData = () => {
 						scrollToIndex={scrollToIndex}
 						index={index}
 						startLoader={() => dispatch(activeLoading())}
+						expandedMeterId={expandedMeterId} // 🔑 pass shared state
+						setExpandedMeterId={setExpandedMeterId}
 					/>
 				)}
 				showsVerticalScrollIndicator={false}

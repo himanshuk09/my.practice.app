@@ -10,15 +10,16 @@ import { fetchDataByToggle } from "@/services/auth.service";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
-import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
-import {
-	saveCSVToFileWeb,
-	saveCSVToFileString,
-} from "@/components/exportcsv/exportToFiles";
+import { View, Text, SafeAreaView, Platform } from "react-native";
 import { stringChartData } from "@/constants/stringChartData";
-
+import {
+	exportTimeseriesToCSV,
+	exportTimeseriesToCSVForWeb,
+} from "@/components/exportcsv/exporttofile";
+import { useIsFocused } from "@react-navigation/native";
 const PFCDetails = () => {
 	const dispatch = useDispatch();
+	const isFocused = useIsFocused();
 	const { id } = useLocalSearchParams();
 	const locale = useSelector((state: RootState) => state.culture.locale);
 	let visibleTabs = ["Week", "Month", "Quarter", "Year", "Year_3"];
@@ -57,9 +58,14 @@ const PFCDetails = () => {
 		setTimeout(() => {
 			setPfcDetails(filteredItem);
 		}, 1000);
-		dispatch(inActiveLoading());
 	}, [id]);
-
+	useEffect(() => {
+		if (isFocused) {
+			setTimeout(() => {
+				dispatch(inActiveLoading());
+			}, 500);
+		}
+	}, [isFocused, id]);
 	return (
 		<SafeAreaView className="flex-1 ">
 			<View className="flex-1  bg-white">
@@ -85,9 +91,11 @@ const PFCDetails = () => {
 								color="#e11935"
 								onPress={() => {
 									if (Platform.OS === "web") {
-										saveCSVToFileWeb(cockpitChartData);
+										exportTimeseriesToCSVForWeb(
+											cockpitChartData
+										);
 									} else {
-										saveCSVToFileString(stringChartData);
+										exportTimeseriesToCSV(stringChartData);
 									}
 								}}
 							/>

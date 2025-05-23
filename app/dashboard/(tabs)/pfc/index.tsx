@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import NoData from "@/components/icons/NoData";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import NoNetwork from "@/components/icons/NoNetwork";
 import { getPFCList } from "@/services/pfc.service";
 import { PriceForwardCurveArray } from "@/types/type";
@@ -14,6 +14,8 @@ import {
 	SafeAreaView,
 	ListRenderItem,
 } from "react-native";
+import { isIdRoute } from "../_layout";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface CombinedData {
 	type: "header";
@@ -25,6 +27,7 @@ const PFC = () => {
 	const isFocused = useIsFocused();
 	const NavigateTo = "dashboard/pfc";
 	const dispatch = useDispatch();
+	const insets = useSafeAreaInsets();
 	const {
 		data: pfcResponse,
 		error,
@@ -57,8 +60,8 @@ const PFC = () => {
 		}
 		return null;
 	};
-	useLayoutEffect(() => {
-		dispatch(inActiveLoading());
+	useEffect(() => {
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 
 	/**
@@ -68,7 +71,12 @@ const PFC = () => {
 	if (error) return <NoNetwork />;
 	if (pfcResponse?.gas?.length === 0) return <NoData />;
 	return (
-		<SafeAreaView className="flex-1 bg-white">
+		<SafeAreaView
+			className="flex-1 bg-white"
+			style={{
+				marginTop: isIdRoute ? insets.top : 0,
+			}}
+		>
 			<FlatList
 				data={combinedData}
 				renderItem={renderItem}

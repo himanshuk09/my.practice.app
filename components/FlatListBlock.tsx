@@ -1,4 +1,13 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, {
+	forwardRef,
+	memo,
+	useCallback,
+	useEffect,
+	useImperativeHandle,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import {
 	View,
 	Text,
@@ -30,10 +39,9 @@ const FlatListBlock = ({
 	const isFocused = useIsFocused();
 	const currentRoute = usePathname(); // Provides the current route path
 	const flatListRef = useRef<any>(null);
+	const currentYear = new Date().getFullYear();
 	const previousRouteRef = useRef<string | null>(null);
 	const ITEM_HEIGHT = Platform.OS === "web" ? 83 : 72.8;
-	const currentYear = new Date().getFullYear();
-
 	const previousRoute: any = previousRouteRef.current;
 
 	const ListItem = memo(({ item, router }: any) => (
@@ -115,22 +123,30 @@ const FlatListBlock = ({
 		</TouchableOpacity>
 	));
 
-	const renderItem = ({ item }: any) => {
-		const Component =
-			renderType === "Portfolio"
-				? PortfolioListItem
-				: renderType === "pfc"
-					? PFCListItem
-					: ListItem;
-		return <Component item={item} router={router} />;
-	};
+	const renderItem = useCallback(
+		({ item }: any) => {
+			const Component =
+				renderType === "Portfolio"
+					? PortfolioListItem
+					: renderType === "pfc"
+						? PFCListItem
+						: ListItem;
+			return <Component item={item} router={router} />;
+		},
+		[renderType] // Only redefined when renderType changes
+	);
 
 	useEffect(() => {
 		previousRouteRef.current = currentRoute;
 	}, [currentRoute]);
 
 	useEffect(() => {
-		if (/^\/dashboard\/portfolio\/.+%/.test(previousRoute)) return;
+		if (
+			/^\/dashboard\/portfolio\/.+%/.test(previousRoute) ||
+			items?.length <= 0
+		) {
+			return;
+		}
 
 		if (enableAutoScroll && flatListRef.current && isFocused) {
 			const targetIndex = items.findIndex(
@@ -140,42 +156,48 @@ const FlatListBlock = ({
 			);
 
 			if (targetIndex !== -1) {
-				// Scroll to the first matched item (current year)
 				const offset = targetIndex * ITEM_HEIGHT;
+				const maxOffset = (items.length - 1) * ITEM_HEIGHT;
+				const safeOffset = Math.min(offset, maxOffset);
 
-				const scrollValue = new Animated.Value(0); // Start with 0
+				// Animated scroll value starts from current scroll position
+				let currentOffset = 0;
 
-				setTimeout(() => {
-					try {
-						// Animate the scrolling smoothly
-						Animated.timing(scrollValue, {
-							toValue: offset, // Scroll target offset
-							duration: 500, // Duration in milliseconds
-							easing: Easing.out(Easing.linear), // Smooth easing function
-							useNativeDriver: Platform.OS != "web", // Disable for scrolling animations
-						}).start();
+				flatListRef.current?.scrollToOffset({
+					offset: 0,
+					animated: false,
+				});
 
-						// Attach the animation to the FlatList's scroll position
-						scrollValue.addListener(({ value }) => {
-							flatListRef.current?.scrollToOffset({
-								offset: value, // Update offset during animation
-								animated: false, // Manual control of animation
-							});
-						});
-					} catch (error) {
-						console.warn("Scroll Error:", error);
-					}
+				const scrollAnim = new Animated.Value(0);
+
+				// Keep track of current scroll offset
+				const listenerId = scrollAnim.addListener(({ value }) => {
+					flatListRef.current?.scrollToOffset({
+						offset: value,
+						animated: false,
+					});
+					currentOffset = value;
+				});
+
+				// Animate from 0 (or currentOffset) to safeOffset over 800ms
+				Animated.timing(scrollAnim, {
+					toValue: safeOffset,
+					duration: 1500, // You can change this duration
+					easing: Easing.out(Easing.cubic),
+					useNativeDriver: false, // scrollToOffset needs false
+				}).start(() => {
+					scrollAnim.removeListener(listenerId);
 				});
 			}
 		}
-	}, [items, enableAutoScroll, currentYear, isFocused, items?.length <= 0]);
+	}, [items, enableAutoScroll]);
 
 	return items?.length <= 0 ? (
 		<ShimmerFlatListBlock height={height} />
 	) : (
 		<View
 			style={{
-				height: height,
+				height: height ?? undefined,
 			}}
 		>
 			<View className="top-0 w-[100%] z-50 p-3 bg-[#e31837]">
@@ -200,7 +222,7 @@ const FlatListBlock = ({
 				showsHorizontalScrollIndicator={false}
 				showsVerticalScrollIndicator={false}
 				windowSize={40} // Reduce the number of items kept in memory
-				maxToRenderPerBatch={40} // Render 10 items per batch
+				maxToRenderPerBatch={20} // Render 10 items per batch
 				updateCellsBatchingPeriod={50} // Batch updates to reduce re-renders
 				removeClippedSubviews={Platform.OS === "android" ? false : true}
 			/>

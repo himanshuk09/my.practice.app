@@ -8,12 +8,13 @@ import {
 } from "react-native";
 import { st } from "@/utils/Styles";
 import { useRouter } from "expo-router";
-import { StatusBar } from "react-native";
 import { useDispatch } from "react-redux";
 import { i18n } from "@/localization/config";
 import { Picker } from "@react-native-picker/picker";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 const PricesSettings = () => {
 	const [selectedPlace, setSelectedPlace] = useState();
@@ -29,7 +30,7 @@ const PricesSettings = () => {
 		Coal: ["Futures"],
 		Hydrogen: ["Spot Auction"],
 	};
-
+	const insets = useSafeAreaInsets();
 	const renderButtons = (
 		options: string[],
 		selectedValue: string,
@@ -127,12 +128,17 @@ const PricesSettings = () => {
 		dispatch(inActiveLoading());
 	}, [isFocused]);
 	return (
-		<SafeAreaView className="flex-1 bg-white">
+		<SafeAreaView
+			className="flex-1 bg-white"
+			style={{
+				marginBottom: insets.bottom,
+			}}
+		>
 			<StatusBar
-				barStyle="dark-content"
-				backgroundColor="#C3C3C3"
+				style="light"
+				translucent
 				animated
-				showHideTransition={"slide"}
+				hideTransitionAnimation="fade"
 				networkActivityIndicatorVisible
 			/>
 			{/* Market Place Section */}
