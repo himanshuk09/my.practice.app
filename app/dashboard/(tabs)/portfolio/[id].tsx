@@ -323,7 +323,7 @@ const PortfolioOverView = () => {
 
 			{/* Bottom CTA */}
 			<TouchableOpacity
-				className="bg-[#e31836] py-3 mx-5 rounded-sm"
+				className="bg-[#e31836] py-3 mx-5 mb-2 rounded-sm"
 				onPress={() => setModalVisible(!modalVisible)}
 			>
 				<Text className="text-white text-center text-base font-normal uppercase">

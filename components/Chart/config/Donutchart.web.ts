@@ -10,7 +10,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 		#donut-chart {
 			touch-action: none;
 			overflow: hidden;
-			height: "100%";
+			height: "90%";
 			width: "100%";
 		}
 	</style>
@@ -94,7 +94,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 			series: [10, 50],// initial data for animation
 			chart: {
 				type: "donut",
-				height: "100%",
+				height: "90%",
 				width: "100%",
 				background: "none",
 				animations: {
@@ -238,7 +238,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 				{
 					breakpoint: 480,
 					options: {
-						chart: { width: "100%", height: "100%" },
+						chart: { width: "100%", height: "90%" },
 					},
 				},
 			],
