@@ -4,8 +4,6 @@ import { BackHandler, TextStyle } from "react-native";
 import { useDispatch, useStore } from "react-redux";
 import { useRouter, useSegments } from "expo-router";
 import { activeLoading } from "@/store/navigationSlice";
-import { useAuth } from "@/hooks/useAuth";
-import { i18n } from "@/localization/config";
 import CustomAlert from "@/components/CustomAlert";
 
 type NavigationWatcherProps = {
@@ -23,7 +21,6 @@ const dashboardPaths = [
 const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 	const store = useStore();
 	const router = useRouter();
-	const { session } = useAuth();
 	const dispatch = useDispatch();
 	const segments = useSegments();
 	const currentPath = "/" + segments.join("/");
@@ -41,55 +38,6 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 		return true;
 	};
 
-	// useEffect(() => {
-	// 	const backAction = () => {
-	// 		const state: any = store.getState();
-	// 		const isDrawerOpen = state?.drawer?.isDrawerOpen;
-
-	// 		if (isDrawerOpen) {
-	// 			dispatch(closeDrawer());
-	// 			return true;
-	// 		}
-
-	// 		// Handle exit confirmation on /dashboard
-	// 		if (currentPath === "/dashboard") {
-	// 			if (session) {
-	// 				showAlert();
-	// 			} else {
-	// 				router.back();
-	// 			}
-	// 			return true;
-	// 		}
-
-	// 		// Handle navigation for other paths
-	// 		if (currentPath === "/(auth)/forgot-password") {
-	// 			router.replace("/(auth)/login");
-	// 			return true;
-	// 		}
-	// 		if (!router.canGoBack()) {
-	// 			BackHandler.exitApp();
-	// 			return true;
-	// 		}
-	// 		dispatch(activeLoading());
-
-	// 		if (dashboardPaths.includes(currentPath)) {
-	// 			setTimeout(() => router.replace("/dashboard"));
-	// 			return true;
-	// 		}
-	// 		dispatch(activeLoading());
-	// 		router.back();
-	// 		return true;
-	// 	};
-
-	// 	const backHandler = BackHandler.addEventListener(
-	// 		"hardwareBackPress",
-	// 		backAction
-	// 	);
-
-	// 	return () => {
-	// 		backHandler.remove();
-	// 	};
-	// }, [currentPath, session, dispatch, router, segments]);
 	useEffect(() => {
 		const backAction = () => {
 			const state: any = store.getState();
@@ -104,11 +52,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 			// Handle specific route cases
 			switch (currentPath) {
 				case "/dashboard":
-					if (session) {
-						showAlert();
-					} else {
-						router.back();
-					}
+					showAlert();
 					return true;
 
 				case "/(auth)/forgot-password":
@@ -143,7 +87,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 		);
 
 		return () => backHandler.remove();
-	}, [currentPath, session, dispatch, router]);
+	}, [currentPath, dispatch, router]);
 	return children;
 };
 

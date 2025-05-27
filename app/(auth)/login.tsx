@@ -366,6 +366,7 @@ const SignIn: React.FC = () => {
 											);
 										}}
 										className="mx-auto my-5  p-4"
+										disabled={loading}
 									>
 										<Text className="text-red-600 capitalize underline text-center text-sm">
 											{i18n.t("forgotyourpassword")}

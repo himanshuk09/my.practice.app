@@ -22,8 +22,9 @@ const NoNetwork = () => {
 			<Image
 				source={require("@/assets/gif/no-connection.gif")} // Local GIF
 				style={{
-					width: animationSize,
+					width: animationSize - 20,
 					height: animationSize,
+					resizeMode: "contain",
 					transform: [{ rotate: "20deg" }], // rotate left
 				}}
 			/>

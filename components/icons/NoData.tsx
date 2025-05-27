@@ -21,8 +21,9 @@ const NoData = () => {
 			<Image
 				source={require("@/assets/gif/no-data-new.gif")} // Local GIF
 				style={{
-					width: animationSize + 50,
-					height: animationSize + 10,
+					width: animationSize,
+					height: animationSize,
+					resizeMode: "contain",
 				}}
 			/>
 			<Text className="text-2xl mt-3 font-medium text-mainCardHeaderText mb-10 ">

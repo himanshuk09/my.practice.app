@@ -3,10 +3,12 @@ import "react-native-reanimated";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { AppState, Platform } from "react-native";
-import { useInitAuth } from "@/hooks/useInitAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 const RootLayout = () => {
 	const [appState, setAppState] = useState(AppState.currentState);
+	const { session } = useAuth();
+
 	useEffect(() => {
 		if (Platform.OS === "web") return; // ❌ Don't apply on web
 		const handleAppStateChange = (nextAppState: any) => {
@@ -25,7 +27,6 @@ const RootLayout = () => {
 			subscription.remove();
 		};
 	}, [appState]);
-	useInitAuth();
 	return (
 		<Stack
 			screenOptions={{
@@ -41,25 +42,26 @@ const RootLayout = () => {
 				options={{
 					headerShown: false,
 					animation: "slide_from_left",
-					animationDuration: 500,
 				}}
 			/>
-			<Stack.Screen
-				name="(auth)"
-				options={{
-					headerShown: false,
-					animation: "slide_from_right",
-					animationDuration: 4000,
-				}}
-			/>
-			<Stack.Screen
-				name="dashboard"
-				options={{
-					headerShown: false,
-					animation: "slide_from_bottom",
-					animationDuration: 4000,
-				}}
-			/>
+			<Stack.Protected guard={!session}>
+				<Stack.Screen
+					name="(auth)"
+					options={{
+						headerShown: false,
+						animation: "slide_from_right",
+					}}
+				/>
+			</Stack.Protected>
+			<Stack.Protected guard={!!session}>
+				<Stack.Screen
+					name="dashboard"
+					options={{
+						headerShown: false,
+						animation: "slide_from_bottom",
+					}}
+				/>
+			</Stack.Protected>
 
 			<Stack.Screen name="+not-found" />
 		</Stack>

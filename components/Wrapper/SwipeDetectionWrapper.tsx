@@ -11,11 +11,10 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 	children,
 }) => {
 	const dispatch = useDispatch();
-
-	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 	const isDrawerOpen = useSelector(
 		(state: RootState) => state.drawer.isDrawerOpen
 	);
+	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	const debounceAction = (action: () => void) => {
 		if (debounceTimeout) {

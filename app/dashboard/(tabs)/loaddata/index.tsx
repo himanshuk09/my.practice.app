@@ -80,6 +80,9 @@ const LoadData = () => {
 						colors={["#e31837"]}
 					/>
 				}
+				contentContainerStyle={{
+					paddingBottom: 40,
+				}}
 			/>
 		</SafeAreaView>
 	);

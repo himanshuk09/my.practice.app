@@ -31,7 +31,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 	<div id="chart" style="width: 100%; height: 100%;"></div>
 	<script>
 		let chart;
-		let localeAfterMount = "en-IN";
+		let localeAfterMount = "en";
 		let titleAfterMount = "";
 		let initialXAxisRange = {};
 		let categories;
@@ -193,8 +193,39 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 						zoomin: true,
 						zoomout: true,
 						pan: true,
-
 					},
+                    export: {
+                        scale: undefined,
+                        width: undefined,
+                        csv: {
+                            filename: "cockpit_csv",
+                            columnDelimiter: ',',
+                            headerCategory: 'Month',
+                            headerValue: '',
+                            categoryFormatter(x) {
+                                return x
+                            },
+                            valueFormatter(y) {
+                                const formattedY = new Intl.NumberFormat(localeAfterMount, {
+                                        useGrouping: true,
+                                        maximumFractionDigits: 2,
+                                        roundingMode: "floor",
+                                        localeMatcher: "best fit",
+                                        signDisplay: "auto",
+                                        style: "decimal",
+                                    }).format(y);
+
+                                const safeY = formattedY.includes(",") ? \`"\${formattedY}"\` : formattedY;
+                                return safeY;
+                            }
+                        },
+                        svg: {
+                            filename: "cockpit_svg",
+                        },
+                        png: {
+                            filename: "cockpit_png",
+                        }
+                    }
 				},
 				animations: {
 					enabled: true,

@@ -16,12 +16,15 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
+import dayjs from "dayjs";
 
 const LoadDataDetails = () => {
 	const isFocused = useIsFocused();
 	const dispatch = useDispatch();
 	const { id, title } = useLocalSearchParams();
 	const [loadDetail, setloadDetails] = useState<any>({});
+	const [activeTabForFileName, setActiveTabForFileName] =
+		useState<any>("Week");
 	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
@@ -137,10 +140,18 @@ const LoadDataDetails = () => {
 									if (loadDetail?.data?.length === 0) return;
 									if (Platform.OS === "web") {
 										exportTimeseriesToCSVForWeb(
-											loadDetail?.data
+											loadDetail?.data,
+											`_${activeTabForFileName}_${dayjs().format(
+												"DD-MM-YYYY-HH-mm-ss"
+											)}`
 										);
 									} else {
-										exportTimeseriesToCSV(loadDetail?.data);
+										exportTimeseriesToCSV(
+											loadDetail?.data,
+											`_${activeTabForFileName}_${dayjs().format(
+												"DD-MM-YYYY-HH-mm-ss"
+											)}`
+										);
 									}
 								}}
 							/>
@@ -154,6 +165,7 @@ const LoadDataDetails = () => {
 					yaxisunit="kWh"
 					isChartLoaded={isChartLoaded}
 					setIsChartLoaded={setIsChartLoaded}
+					setActiveTabForFileName={setActiveTabForFileName}
 				/>
 			</View>
 		</SafeAreaView>

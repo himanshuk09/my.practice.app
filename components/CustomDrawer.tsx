@@ -96,7 +96,7 @@ const CustomDrawer = memo(() => {
 				"UserId",
 				"ApkVersion",
 			]);
-			router.push("/");
+			router.push("/login");
 			setSessionValue(false);
 		} catch (error) {
 			console.error("Error clearing AsyncStorage or navigating:", error);

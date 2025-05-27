@@ -74,6 +74,9 @@ const Signals = () => {
 						colors={["#e31837"]} // Optional: Set colors for the refresh indicator
 					/>
 				}
+				contentContainerStyle={{
+					paddingBottom: 40,
+				}}
 			/>
 		</SafeAreaView>
 	);

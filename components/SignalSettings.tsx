@@ -88,11 +88,7 @@ const SignalSettings = ({
 			className={`h-full w-full absolute flex-1 bg-white `}
 			style={StyleSheet.absoluteFill}
 		>
-			<StackHeader
-				title={"Signals_Details"}
-				closed={true}
-				setModalVisible={setModalVisible}
-			/>
+			<StackHeader title={"Signals_Details"} closed={true} />
 			<View
 				className="flex justify-between bg-white flex-row  m-1  h-20 px-3 pl-5  "
 				style={[st.headerShadow, st.bottomShadow]}

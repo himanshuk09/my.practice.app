@@ -5,7 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const StackHeader = ({ title, closed = false, setModalVisible }: any) => {
+const StackHeader = ({ title, closed = false }: any) => {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	return (
@@ -17,11 +17,6 @@ const StackHeader = ({ title, closed = false, setModalVisible }: any) => {
 		>
 			<TouchableOpacity
 				onPress={() => {
-					if (closed) {
-						setModalVisible(false);
-						return;
-					}
-
 					if (Platform.OS === "web") {
 						window.history.back();
 						return;
@@ -32,7 +27,7 @@ const StackHeader = ({ title, closed = false, setModalVisible }: any) => {
 			>
 				<MaterialIcons name="arrow-back" size={27} color="#9a9b9f" />
 			</TouchableOpacity>
-			<Text className="ml-2 font-semibold text-xl text-chartText">
+			<Text className="ml-2 font-thin text-2xl text-chartText">
 				{i18n.t(title)}
 			</Text>
 		</View>

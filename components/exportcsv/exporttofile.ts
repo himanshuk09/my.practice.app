@@ -2,7 +2,9 @@
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showToast } from "../ToastConfig";
-
+import dayjs from "dayjs";
+import { getLocale } from "../global";
+import { englishLocale } from "@/localization/config";
 const DIRECTORY_URI_KEY = "SAVED_DIRECTORY_URI";
 
 // -------------------- Helpers ------------------------
@@ -78,7 +80,7 @@ const saveToFile = async (
 
 // ------------------ CSV Utilities ----------------------
 
-const convertDealsToCSV = (data: any[]) => {
+const convertPortfolioDealsToCSV = (data: any[]) => {
 	const headers = [
 		"Date",
 		"Time",
@@ -116,10 +118,12 @@ const splitTimeSeriesString = (timeseries: string) => {
 	const [datePart, timePart] = timeseries.split(" ");
 	const [month, day, year] = datePart.split("/");
 	const [hours, minutes] = timePart.split(":");
-
+	const locale = getLocale();
 	return {
-		formattedDate: `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`,
-		formattedTime: `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}:00`,
+		formattedDate: dayjs(datePart, "MM/DD/YYYY").format(
+			locale === englishLocale ? "YYYY/MM/DD" : "YYYY.MM.DD"
+		),
+		formattedTime: dayjs(`${timePart}:00`, "HH:mm:ss").format("HH:mm:ss"),
 	};
 };
 
@@ -136,7 +140,7 @@ const exportBase64ToPDF = async (base64: string, fileName = "document.pdf") => {
 };
 
 const exportDealsToCSV = async (data: any[], fileName = "trades.csv") => {
-	const csvContent = convertDealsToCSV(data);
+	const csvContent = convertPortfolioDealsToCSV(data);
 	await saveToFile(
 		csvContent,
 		fileName,
@@ -147,9 +151,20 @@ const exportDealsToCSV = async (data: any[], fileName = "trades.csv") => {
 
 const exportTimeseriesToCSV = async (data: any[], fileName = "cockpit.csv") => {
 	const headers = ["Date", "Time", "[kwh]"];
+	const locale = getLocale();
 	const rows = data.map((item) => {
 		const { formattedDate, formattedTime } = splitTimeSeriesString(item.x);
-		return [formattedDate, formattedTime, item.y].join(",");
+		const formattedY = new Intl.NumberFormat(locale, {
+			useGrouping: true,
+			maximumFractionDigits: 2,
+			roundingMode: "floor",
+			localeMatcher: "best fit",
+			signDisplay: "auto",
+			style: "decimal",
+		}).format(item.y);
+
+		const safeY = formattedY.includes(",") ? `"${formattedY}"` : formattedY;
+		return [`="${formattedDate}"`, formattedTime, safeY].join(",");
 	});
 	const csvContent = [headers.join(","), ...rows].join("\n");
 	await saveToFile(
@@ -182,16 +197,27 @@ const exportBase64ToPDFWeb = (base64: string, fileName = "document.pdf") => {
 };
 
 const exportDealsToCSVWeb = (data: any[], fileName = "trades.csv") => {
-	const csvContent = convertDealsToCSV(data);
+	const csvContent = convertPortfolioDealsToCSV(data);
 	const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
 	downloadBlobWeb(blob, fileName);
 };
 
 const exportTimeseriesToCSVForWeb = (data: any[], fileName = "cockpit.csv") => {
 	const headers = ["Date", "Time", "[kwh]"];
+	const locale = getLocale();
 	const rows = data.map((item) => {
 		const { formattedDate, formattedTime } = splitTimeSeriesString(item.x);
-		return [formattedDate, formattedTime, item.y].join(",");
+		const formattedY = new Intl.NumberFormat(locale, {
+			useGrouping: true,
+			maximumFractionDigits: 2,
+			roundingMode: "floor",
+			localeMatcher: "best fit",
+			signDisplay: "auto",
+			style: "decimal",
+		}).format(item.y);
+
+		const safeY = formattedY.includes(",") ? `"${formattedY}"` : formattedY;
+		return [`="${formattedDate}"`, formattedTime, safeY].join(",");
 	});
 	const csvContent = [headers.join(","), ...rows].join("\n");
 	const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });

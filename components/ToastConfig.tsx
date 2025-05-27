@@ -13,7 +13,7 @@ import { i18n } from "@/localization/config";
 import React from "react";
 import NetworkRetry from "./icons/Network";
 import Spinner from "./icons/Spinner";
-import { getBottomInset } from "./safeArea";
+import { getBottomInset } from "./global";
 
 type ToastType = "success" | "error" | "info" | "download";
 

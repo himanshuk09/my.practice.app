@@ -3,12 +3,11 @@ import React from "react";
 import { Stack } from "expo-router";
 import Drawer from "@/components/Drawer";
 import Header from "@/components/MainHeader";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import SwipeDetectionWrapper from "@/app/SwipeDetectionWrapper";
+import SwipeDetectionWrapper from "@/components/Wrapper/SwipeDetectionWrapper";
 
 const DashboardLayout = () => {
 	return (
-		<ProtectedRoute>
+		<React.Fragment>
 			<Drawer drawerWidth={290} />
 			<SwipeDetectionWrapper>
 				<Stack
@@ -25,7 +24,6 @@ const DashboardLayout = () => {
 						options={{
 							headerShown: true,
 							animation: "slide_from_left",
-
 							header: ({ navigation }) => (
 								<Header navigation={navigation} />
 							),
@@ -43,15 +41,26 @@ const DashboardLayout = () => {
 						options={{
 							headerShown: true,
 							animation: "slide_from_right",
-
 							header: ({ navigation }) => (
 								<Header navigation={navigation} />
 							),
 						}}
 					/>
+					<Stack.Screen
+						name="feedback"
+						options={{
+							headerShown: false,
+						}}
+					/>
+					<Stack.Screen
+						name="legalnotes"
+						options={{
+							headerShown: false,
+						}}
+					/>
 				</Stack>
 			</SwipeDetectionWrapper>
-		</ProtectedRoute>
+		</React.Fragment>
 	);
 };
 

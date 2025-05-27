@@ -74,6 +74,7 @@ type ToggleChartComponentProps = {
 	showValueRange?: boolean;
 	yaxisunit?: string;
 	isSignaleScreen?: boolean;
+	setActiveTabForFileName?: any;
 };
 
 const ToggleChartComponent = ({
@@ -85,6 +86,7 @@ const ToggleChartComponent = ({
 	showValueRange,
 	yaxisunit = "€/MWh",
 	isSignaleScreen = false,
+	setActiveTabForFileName,
 }: ToggleChartComponentProps) => {
 	const webViewRef = useRef<WebView | any>(null);
 	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
@@ -301,6 +303,7 @@ const ToggleChartComponent = ({
 			if (isChartLoaded && activeTab !== "" && isOnline) {
 				setLoading(true);
 				fetchData();
+				setActiveTabForFileName(activeTab);
 			}
 		}, 300);
 

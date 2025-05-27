@@ -175,11 +175,7 @@ const Transactions = ({
 
 	return (
 		<View className="flex-1 " style={StyleSheet.absoluteFill}>
-			<StackHeader
-				title={"portfolio_overview"}
-				closed={true}
-				setModalVisible={setModalVisible}
-			/>
+			<StackHeader title={"portfolio_overview"} closed={true} />
 			<View className="flex justify-between  bg-white flex-row    h-20 px-3 pl-5 shadow-lg shadow-cardBg ">
 				<View className="justify-center items-start bg-white">
 					<Text className="text-xl font-semibold  text-mainCardHeaderText">

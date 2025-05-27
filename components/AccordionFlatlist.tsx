@@ -38,7 +38,7 @@ const AccordionFlatlist = ({
 		if (expandedMeterId === uniqueKey) {
 			Animated.timing(animation, {
 				toValue: 0,
-				duration: 100,
+				duration: 250,
 				useNativeDriver: false,
 			}).start(() => setExpandedMeterId(null));
 		} else {
@@ -59,7 +59,7 @@ const AccordionFlatlist = ({
 						ios: baseValue + 20,
 						android: baseValue,
 					}) ?? (Platform.OS === "web" ? baseValue : baseValue + 40),
-				duration: 100,
+				duration: 250,
 				useNativeDriver: false,
 			}).start();
 		}
@@ -73,7 +73,7 @@ const AccordionFlatlist = ({
 				collapseAnimations.push(
 					Animated.timing(animations[key], {
 						toValue: 0,
-						duration: 100, // Faster
+						duration: 250, // Faster
 						useNativeDriver: false,
 					})
 				);

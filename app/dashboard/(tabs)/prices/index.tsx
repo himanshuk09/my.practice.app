@@ -144,7 +144,7 @@ const Prices = () => {
 				}
 				renderItem={renderItem}
 				keyExtractor={(item: any, index) => index.toString()}
-				contentContainerStyle={{ paddingTop: 4 }}
+				contentContainerStyle={{ paddingTop: 4, paddingBottom: 40 }}
 				showsHorizontalScrollIndicator={false}
 				showsVerticalScrollIndicator={false}
 				refreshControl={

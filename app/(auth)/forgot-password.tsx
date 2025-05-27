@@ -37,7 +37,7 @@ const Forgotpassword = () => {
 		if (email) {
 			const interval = setInterval(() => {
 				validateEmail(email);
-			}, 2000);
+			}, 1000);
 			return () => clearInterval(interval);
 		}
 	}, [email]);

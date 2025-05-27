@@ -47,8 +47,7 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 					},
 				},
 			});
-			//chart.updateSeries(chart.w.config.series);
-            updateLocale(updatedLocale)
+			chart.updateSeries(chart.w.config.series);
 		}
 
 
@@ -311,20 +310,55 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 				},
 
 				toolbar: {
-					show: true,
-					offsetX: 2,
-					offsetY: 10,
-					autoSelected: "zoom",
-					tools: {
-						download: true,
-						reset: true,
-						zoomin: true,
-						zoomout: true,
-						zoom: true,
-						pan: true,
-						selection: true
-					},
-				},
+                    show: true,
+                    offsetX: 2,
+                    offsetY: 10,
+                    autoSelected: "zoom",
+                    tools: {
+                        download: true,
+                        reset: true,
+                        zoomin: true,
+                        zoomout: true,
+                        zoom: true,
+                        pan: true,
+                        selection: true
+                    },
+                    export: {
+                        scale: undefined,
+                        width: undefined,
+                        csv: {
+                            filename: "cockpit_csv",
+                            columnDelimiter: ',',
+                            headerCategory: 'Date, Time',
+                            headerValue: 'KHW',
+                            categoryFormatter(x) {
+                                const date = new Date(x);
+                                return updatedLocale === "en" ?
+                                \`="\${date.getFullYear()}/\${(date.getMonth() + 1).toString().padStart(2, '0')}/\${date.getDate().toString().padStart(2, '0')}",="\${date.getHours().toString().padStart(2, '0')}:\${date.getMinutes().toString().padStart(2, '0')}:\${date.getSeconds().toString().padStart(2, '0')}"\` 
+                                : \`="\${date.getFullYear()}.\${(date.getMonth() + 1).toString().padStart(2, '0')}.\${date.getDate().toString().padStart(2, '0')}",="\${date.getHours().toString().padStart(2, '0')}:\${date.getMinutes().toString().padStart(2, '0')}:\${date.getSeconds().toString().padStart(2, '0')}"\`;
+                            },
+                            valueFormatter(y) {
+                                const formattedY = new Intl.NumberFormat(updatedLocale, {
+                                    useGrouping: true,
+                                    maximumFractionDigits: 2,
+                                    roundingMode: "floor",
+                                    localeMatcher: "best fit",
+                                    signDisplay: "auto",
+                                    style: "decimal",
+                                }).format(y);
+
+                                const safeY = formattedY.includes(",") ? \`"\${formattedY}"\` : formattedY;
+                                return safeY;
+                            }
+                        },
+                        svg: {
+                            filename: "cockpit_svg",
+                        },
+                        png: {
+                            filename: "cockpit_png",
+                        }
+                    }
+                },
 			},
 			dataLabels: {
 				enabled: false,
@@ -644,9 +678,9 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 		};
 
 		function updateLocale(newLocale) {
-		let currentSeries = chart.w.config.series;
-        updatedLocale=newLocale
-			currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy Use: ";
+            let currentSeries = chart.w.config.series;
+            updatedLocale=newLocale
+            currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy Use: ";
 			chart.updateOptions({
 				chart: {},
 				tooltip: {

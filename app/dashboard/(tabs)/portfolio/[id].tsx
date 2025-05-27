@@ -129,7 +129,7 @@ const PortfolioOverView = () => {
 			}, 500);
 		}
 
-		console.log(action, values);
+		//console.log(action, values);
 	};
 
 	const updateLocale = () => {

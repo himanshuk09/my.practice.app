@@ -44,96 +44,63 @@ const FlatListBlock = ({
 	const ITEM_HEIGHT = Platform.OS === "web" ? 83 : 72.8;
 	const previousRoute: any = previousRouteRef.current;
 
-	const ListItem = memo(({ item, router }: any) => (
-		<TouchableOpacity
-			key={item.id}
-			className="flex justify-start flex-row px-5  py-6  text-lg font-serif font-medium rounded-sm my-1  mx-2 bg-white h-[4.7rem] "
-			style={st.boxShadow}
-			onPress={() => {
-				dispatch(activeLoading());
+	const ListItem = memo(({ item, router, renderType, index }: any) => {
+		const handlePress = () => {
+			dispatch(activeLoading());
 
-				setTimeout(() => {
-					router.push(`${NavigateTo}/${item?.id}` as Href);
-				});
-			}}
-		>
-			{item?.notificationCount && (
-				<FontAwesome
-					name="circle"
-					size={8}
-					color="#e31837"
-					className="mr-1 mt-[0.4rem]"
-				/>
-			)}
-			<Text className="text-listText text-sm">{item?.title}</Text>
-		</TouchableOpacity>
-	));
-	const PFCListItem = memo(({ item, router }: any) => (
-		<TouchableOpacity
-			key={item.id}
-			className="flex justify-start flex-row px-5  py-6  text-lg font-serif font-medium rounded-sm my-1  mx-2 bg-white h-[4.7rem] "
-			style={st.boxShadow}
-			onPress={() => {
-				dispatch(activeLoading());
-
-				setTimeout(() => {
-					router.push(`${NavigateTo}/1` as Href);
-				});
-			}}
-		>
-			{item?.notificationCount && (
-				<FontAwesome
-					name="circle"
-					size={8}
-					color="#e31837"
-					className="mr-1 mt-[0.4rem]"
-				/>
-			)}
-			<Text className="text-listText text-sm">
-				{item?.PriceForwardCurveName}
-			</Text>
-		</TouchableOpacity>
-	));
-	const PortfolioListItem = memo(({ item, router }: any) => (
-		<TouchableOpacity
-			key={item.id}
-			className="flex justify-start flex-row px-5  py-6  text-lg font-serif font-medium rounded-sm my-1  mx-2 bg-white h-[4.7rem] "
-			style={st.boxShadow}
-			onPress={() => {
-				dispatch(activeLoading());
-				setTimeout(() => {
+			setTimeout(() => {
+				if (renderType === "Portfolio") {
 					router.push({
 						pathname: `dashboard/(tabs)/portfolio/[id]`,
 						params: {
 							id: encodeURIComponent(JSON.stringify(item)),
 						},
 					});
-				});
-			}}
-		>
-			{item?.notificationCount && (
-				<FontAwesome
-					name="circle"
-					size={8}
-					color="#e31837"
-					className="mr-1 mt-[0.4rem]"
-				/>
-			)}
-			<Text className="text-listText text-sm">{item?.PortfolioName}</Text>
-		</TouchableOpacity>
-	));
+				} else if (renderType === "pfc") {
+					router.push(`${NavigateTo}/1` as Href);
+				} else {
+					router.push(`${NavigateTo}/${index + 1}` as Href);
+				}
+			});
+		};
+
+		const title =
+			renderType === "Portfolio"
+				? item?.PortfolioName
+				: renderType === "pfc"
+					? item?.PriceForwardCurveName
+					: item?.title;
+
+		return (
+			<TouchableOpacity
+				key={item.id}
+				className="flex justify-start flex-row px-5 py-6 text-lg font-serif font-medium rounded-sm my-1 mx-2 bg-white h-[4.7rem]"
+				style={st.boxShadow}
+				onPress={handlePress}
+			>
+				{item?.notificationCount && (
+					<FontAwesome
+						name="circle"
+						size={8}
+						color="#e31837"
+						className="mr-1 mt-[0.4rem]"
+					/>
+				)}
+				<Text className="text-listText text-sm">{title}</Text>
+			</TouchableOpacity>
+		);
+	});
 
 	const renderItem = useCallback(
-		({ item }: any) => {
-			const Component =
-				renderType === "Portfolio"
-					? PortfolioListItem
-					: renderType === "pfc"
-						? PFCListItem
-						: ListItem;
-			return <Component item={item} router={router} />;
-		},
-		[renderType] // Only redefined when renderType changes
+		({ item, index }: any) => (
+			<ListItem
+				item={item}
+				router={router}
+				renderType={renderType}
+				index={index}
+			/>
+		),
+		[renderType]
 	);
 
 	useEffect(() => {
@@ -182,7 +149,7 @@ const FlatListBlock = ({
 				// Animate from 0 (or currentOffset) to safeOffset over 800ms
 				Animated.timing(scrollAnim, {
 					toValue: safeOffset,
-					duration: 1500, // You can change this duration
+					duration: 3000, // You can change this duration
 					easing: Easing.out(Easing.cubic),
 					useNativeDriver: false, // scrollToOffset needs false
 				}).start(() => {
@@ -197,6 +164,7 @@ const FlatListBlock = ({
 	) : (
 		<View
 			style={{
+				flex: 1,
 				height: height ?? undefined,
 			}}
 		>
@@ -224,7 +192,9 @@ const FlatListBlock = ({
 				windowSize={40} // Reduce the number of items kept in memory
 				maxToRenderPerBatch={20} // Render 10 items per batch
 				updateCellsBatchingPeriod={50} // Batch updates to reduce re-renders
-				removeClippedSubviews={Platform.OS === "android" ? false : true}
+				contentContainerStyle={{
+					paddingBottom: 40,
+				}}
 			/>
 		</View>
 	);
