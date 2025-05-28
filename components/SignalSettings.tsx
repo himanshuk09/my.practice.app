@@ -5,13 +5,14 @@ import {
 	FlatList,
 	StyleSheet,
 } from "react-native";
+import { st } from "@/utils/Styles";
+import { i18n } from "@/localization/config";
+import NoData from "@/components/icons/NoData";
+import StackHeader from "@/components/StackHeader";
 import React, { useEffect, useState } from "react";
 import CustomSwitch from "@/components/CustomSwitch";
-import { i18n } from "@/localization/config";
-import { st } from "@/utils/Styles";
-import StackHeader from "@/components/StackHeader";
 import { ChartLoaderPNG } from "@/components/Loader";
-import NoData from "@/components/icons/NoData";
+
 const Card = ({ title, data }: any) => {
 	return (
 		<View
@@ -68,6 +69,7 @@ const Card = ({ title, data }: any) => {
 		</View>
 	);
 };
+
 const SignalSettings = ({
 	cards,
 	setModalVisible,
@@ -150,4 +152,5 @@ const SignalSettings = ({
 		</View>
 	);
 };
+
 export default SignalSettings;

@@ -1,17 +1,18 @@
 import { store } from "@/store/store";
 import { Provider } from "react-redux";
 import { Platform } from "react-native";
-import AppLoader from "@/components/Wrapper/AppLoader";
 import React, { useEffect } from "react";
 import RootLayout from "@/app/RootLayout";
-import NetworkListener from "@/components/Wrapper/NetworkListener";
 import * as SplashScreen from "expo-splash-screen";
-import NavigationWatcher from "@/components/Wrapper/NavigationWatcher";
-import * as ScreenOrientation from "expo-screen-orientation";
-import { AlertContainer } from "rn-custom-alert-prompt";
 import ToastProvider from "@/components/ToastProvider";
-import AuthInitializeWrapper from "@/components/Wrapper/AuthInitializeWrapper ";
+import AppLoader from "@/components/Wrapper/AppLoader";
+import { AlertContainer } from "rn-custom-alert-prompt";
+import * as ScreenOrientation from "expo-screen-orientation";
 import UpdatesListener from "@/components/Wrapper/UpdatesListener";
+import NetworkListener from "@/components/Wrapper/NetworkListener";
+import NavigationWatcher from "@/components/Wrapper/NavigationWatcher";
+import AuthInitializeWrapper from "@/components/Wrapper/AuthInitializeWrapper ";
+
 SplashScreen.preventAutoHideAsync();
 SplashScreen.setOptions({
 	fade: true,
@@ -31,6 +32,7 @@ const Layout = () => {
 			}
 		};
 	}, []);
+
 	return (
 		<Provider store={store}>
 			<AuthInitializeWrapper>

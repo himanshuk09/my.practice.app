@@ -1,16 +1,3 @@
-import { RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { i18n } from "@/localization/config";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
-import ChartComponent from "@/components/Chart/ChartComponent";
-import { ChartGraphSimmer } from "@/components/ChartShimmer";
-import WebView, { WebViewMessageEvent } from "react-native-webview";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import Transactions, { DataDisplay } from "@/components/TranscationCard";
-import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
-import NoNetwork from "@/components/icons/NoNetwork";
-import { Toast, showToast } from "@/components/ToastConfig";
 import {
 	View,
 	Platform,
@@ -20,7 +7,6 @@ import {
 	Dimensions,
 	StyleSheet,
 	Modal,
-	Animated,
 } from "react-native";
 import {
 	getPortfolioDeals,
@@ -41,9 +27,22 @@ import {
 	webviewAreaHtmlContent,
 	webviewDonutChartHtmlContent,
 } from "@/components/Chart/config";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { RootState } from "@/store/store";
+import { i18n } from "@/localization/config";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
+import NoNetwork from "@/components/icons/NoNetwork";
+import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
+import { Toast, showToast } from "@/components/ToastConfig";
+import { ChartGraphSimmer } from "@/components/ChartShimmer";
+import ChartComponent from "@/components/Chart/ChartComponent";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import WebView, { WebViewMessageEvent } from "react-native-webview";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import Transactions, { DataDisplay } from "@/components/TranscationCard";
+import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 
 const PortfolioOverView = () => {
 	const insets = useSafeAreaInsets();

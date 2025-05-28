@@ -1,9 +1,9 @@
 import { st } from "@/utils/Styles";
+import { useEffect, useState } from "react";
+import { i18n } from "@/localization/config";
+import { FontAwesome5 } from "@expo/vector-icons";
 import StackHeader from "@/components/StackHeader";
 import { ChartLoaderPNG } from "@/components/Loader";
-import { useEffect, useState } from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { i18n } from "@/localization/config";
 
 import {
 	View,

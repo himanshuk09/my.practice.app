@@ -1,25 +1,25 @@
-import dayjs from "dayjs";
-dayjs.extend(customParseFormat);
-import { RootState } from "@/store/store";
-import WebView from "react-native-webview";
-import { englishLocale, germanyLocale, i18n } from "@/localization/config";
-import { ChartGraphSimmer } from "@/components/ChartShimmer";
-import PickerModel from "@/components/PickerModel";
-import { ChartLoaderPNG } from "@/components/Loader";
-import { useSelector } from "react-redux";
-import React, { useEffect, useRef, useState } from "react";
-import TabToggleButtons from "@/components/TabToggleButtons";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import ChartComponent from "@/components/Chart/ChartComponent";
-import FloatingActionMenu from "@/components/FloatingActionMenu";
-import { View, Text, Platform, TouchableOpacity } from "react-native";
 import {
 	updateApexChart,
 	updateEmptyChart,
 } from "@/components/Chart/chartUpdateFunctions";
+import dayjs from "dayjs";
+dayjs.extend(customParseFormat);
+import { RootState } from "@/store/store";
+import WebView from "react-native-webview";
+import { useSelector } from "react-redux";
+import PickerModel from "@/components/PickerModel";
+import { ChartLoaderPNG } from "@/components/Loader";
+import React, { useEffect, useRef, useState } from "react";
+import TabToggleButtons from "@/components/TabToggleButtons";
+import { ChartGraphSimmer } from "@/components/ChartShimmer";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import ChartComponent from "@/components/Chart/ChartComponent";
+import FloatingActionMenu from "@/components/FloatingActionMenu";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View, Text, Platform, TouchableOpacity } from "react-native";
+import { englishLocale, germanyLocale, i18n } from "@/localization/config";
 import iframeLineHtmlContent from "@/components/Chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/Chart/config/Linechart.android";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
 

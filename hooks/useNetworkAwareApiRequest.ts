@@ -1,7 +1,7 @@
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { RootState } from "@/store/store";
-import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 interface UseNetworkAwareApiRequestOptions<P = any> {
 	autoFetch?: boolean; // automatically call API on mount

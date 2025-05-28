@@ -1,4 +1,3 @@
-import React, { useEffect, useRef } from "react";
 import {
 	View,
 	Animated,
@@ -7,8 +6,9 @@ import {
 	Platform,
 	Pressable,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useRef } from "react";
 import CustomDrawer from "@/components/CustomDrawer";
+import { useSelector, useDispatch } from "react-redux";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

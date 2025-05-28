@@ -1,11 +1,10 @@
-// components/ToastProvider.tsx
-import React, { useEffect } from "react";
-import Toast from "react-native-toast-message";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import toastConfig from "@/components/ToastConfig";
-import { setBottomInset, setLocalebyhook } from "@/components/global";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import React, { useEffect } from "react";
+import Toast from "react-native-toast-message";
+import toastConfig from "@/components/ToastConfig";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { setBottomInset, setLocalebyhook } from "@/components/global";
 
 const ToastProvider = () => {
 	const insets = useSafeAreaInsets();

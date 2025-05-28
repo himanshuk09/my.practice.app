@@ -1,14 +1,14 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./api";
-import { cockpitChartData } from "@/constants/cockpitchart";
 import {
 	filterByCurrentQuarterUTC,
 	filterByMonthYearUTC,
 	filterCurrentDayDataUTC,
 	filterCurrentWeekDataUTC,
 } from "@/components/Chart/filterFunction";
+import { cockpitChartData } from "@/constants/cockpitchart";
 import { stringChartData } from "@/constants/stringChartData";
 import { loginPayloadProps, AuthResponse } from "@/types/apiTypes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const loginUser = async (payload: loginPayloadProps) => {
 	try {

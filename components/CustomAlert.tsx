@@ -1,6 +1,5 @@
-import React from "react";
-import { Alert } from "rn-custom-alert-prompt";
 import { TextStyle } from "react-native";
+import { Alert } from "rn-custom-alert-prompt";
 import { i18n } from "@/localization/config";
 
 type Button = {

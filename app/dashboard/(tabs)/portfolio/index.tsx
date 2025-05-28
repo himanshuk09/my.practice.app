@@ -1,22 +1,17 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import {
-	Animated,
-	Platform,
-	SafeAreaView,
-	useWindowDimensions,
-} from "react-native";
-import FlatListBlock from "@/components/FlatListBlock";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { useIsFocused } from "@react-navigation/native";
-import { getPortfolioList } from "@/services/portfolio.service";
-import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 import { Portfolioprops } from "@/types/type";
-import NoNetwork from "@/components/icons/NoNetwork";
 import NoData from "@/components/icons/NoData";
-import useIsComingFromPortfolioDetail from "@/hooks/useIsComingFromPortfolioDetail";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import NoNetwork from "@/components/icons/NoNetwork";
+import FlatListBlock from "@/components/FlatListBlock";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
+import { getPortfolioList } from "@/services/portfolio.service";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform, SafeAreaView, useWindowDimensions } from "react-native";
+import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
+import useIsComingFromPortfolioDetail from "@/hooks/useIsComingFromPortfolioDetail";
 
 const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();

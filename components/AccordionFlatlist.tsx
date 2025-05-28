@@ -1,5 +1,3 @@
-import { st } from "@/utils/Styles";
-import { useRouter } from "expo-router";
 import {
 	View,
 	Text,
@@ -8,9 +6,11 @@ import {
 	Animated,
 	Platform,
 } from "react-native";
+import { st } from "@/utils/Styles";
+import { useRouter } from "expo-router";
 import React, { useEffect, useRef } from "react";
-import { ShimmerAccordion } from "@/components/ShimmerEffect";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { ShimmerAccordion } from "@/components/ShimmerEffect";
 
 const AccordionFlatlist = ({
 	data,

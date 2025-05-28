@@ -1,9 +1,3 @@
-import { RootState } from "@/store/store";
-import { germanyLocale, i18n } from "@/localization/config";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
-import { inActiveLoading } from "@/store/navigationSlice";
 import {
 	RefreshControl,
 	SafeAreaView,
@@ -11,6 +5,12 @@ import {
 	Text,
 	View,
 } from "react-native";
+import { RootState } from "@/store/store";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { germanyLocale, i18n } from "@/localization/config";
 
 const TermsAndConditionsScreen = () => {
 	const dispatch = useDispatch();

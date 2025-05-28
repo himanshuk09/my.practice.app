@@ -1,8 +1,3 @@
-import { germanyLocale, i18n } from "@/localization/config";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { RootState } from "@/store/store";
-import { useIsFocused } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
 import {
 	RefreshControl,
 	SafeAreaView,
@@ -10,7 +5,12 @@ import {
 	Text,
 	View,
 } from "react-native";
+import { RootState } from "@/store/store";
+import React, { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { germanyLocale, i18n } from "@/localization/config";
 
 const PrivacyAndPolicy = () => {
 	const dispatch = useDispatch();

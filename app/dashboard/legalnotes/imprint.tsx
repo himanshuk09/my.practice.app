@@ -5,11 +5,11 @@ import {
 	ScrollView,
 	RefreshControl,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { i18n } from "@/localization/config";
+import React, { useEffect, useState } from "react";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
 
 const imprintDetails = [
 	"company",

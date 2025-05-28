@@ -1,6 +1,5 @@
-// components/PublicAuthRoute.tsx
 import { useAuth } from "@/hooks/useAuth";
-import { Redirect, Slot } from "expo-router";
+import { Redirect } from "expo-router";
 import React, { ReactNode } from "react";
 
 type PublicAuthRouteProps = {

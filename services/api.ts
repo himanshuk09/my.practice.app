@@ -1,7 +1,7 @@
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { checkInternetConnection } from "./helper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const api = axios.create({
 	baseURL: process.env.EXPO_PUBLIC_BASE_URL,

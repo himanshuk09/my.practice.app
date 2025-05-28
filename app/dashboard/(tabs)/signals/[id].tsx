@@ -1,3 +1,10 @@
+import {
+	View,
+	Text,
+	SafeAreaView,
+	TouchableOpacity,
+	Modal,
+} from "react-native";
 import { st } from "@/utils/Styles";
 import { i18n } from "@/localization/config";
 import { RootState } from "@/store/store";
@@ -11,14 +18,8 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { fetchDataByToggle } from "@/services/auth.service";
 import { PricesItem, signalsCards } from "@/constants/constantData";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
-import {
-	View,
-	Text,
-	SafeAreaView,
-	TouchableOpacity,
-	Modal,
-} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 const SignalDetails = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();

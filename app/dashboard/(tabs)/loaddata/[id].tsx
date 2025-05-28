@@ -1,22 +1,22 @@
-import { st } from "@/utils/Styles";
-import { RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { i18n } from "@/localization/config";
-import { useLocalSearchParams } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
-import useTabDataCache from "@/hooks/useTabDataCache";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { getLoadDataTS } from "@/services/loaddata.service";
-import ToggleChartComponent from "@/components/ToggleChartComponent";
-import { View, Text, SafeAreaView, Platform } from "react-native";
 import {
 	exportTimeseriesToCSV,
 	exportTimeseriesToCSVForWeb,
 } from "@/components/exportcsv/exporttofile";
-import { StatusBar } from "expo-status-bar";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { useIsFocused } from "@react-navigation/native";
 import dayjs from "dayjs";
+import { st } from "@/utils/Styles";
+import { RootState } from "@/store/store";
+import { StatusBar } from "expo-status-bar";
+import { i18n } from "@/localization/config";
+import { useLocalSearchParams } from "expo-router";
+import useTabDataCache from "@/hooks/useTabDataCache";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { getLoadDataTS } from "@/services/loaddata.service";
+import React, { useCallback, useEffect, useState } from "react";
+import ToggleChartComponent from "@/components/ToggleChartComponent";
+import { View, Text, SafeAreaView, Platform } from "react-native";
 
 const LoadDataDetails = () => {
 	const isFocused = useIsFocused();
@@ -31,22 +31,6 @@ const LoadDataDetails = () => {
 	);
 	const locale = useSelector((state: RootState) => state.culture.locale);
 	const { fetchWithCache } = useTabDataCache();
-
-	// const fetchChartData = async (tab: string, payload: any) => {
-	// 	try {
-	// 		let fullPayload = {
-	// 			...JSON.parse(decodeURIComponent(id as string)),
-	// 			TimeFrame: tab,
-	// 			...payload,
-	// 		};
-	// 		const response: any = await getLoadDataTS(fullPayload);
-	// 		setloadDetails(response);
-	// 		return response;
-	// 	} catch (error) {
-	// 		console.error("Error fetching data:", error);
-	// 		return null;
-	// 	}
-	// };
 
 	const fetchChartData = useCallback(
 		async (tab: string, payload: any) => {

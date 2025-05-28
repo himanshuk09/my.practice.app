@@ -1,6 +1,6 @@
+import { useDispatch } from "react-redux";
 import NetInfo from "@react-native-community/netinfo";
 import { setNetworkStatus } from "@/store/networkSlice";
-import { useDispatch } from "react-redux";
 
 const useRetryNetwork = () => {
 	const dispatch = useDispatch();

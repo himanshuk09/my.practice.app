@@ -1,9 +1,9 @@
 import "../global.css";
 import "react-native-reanimated";
 import { Stack } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { AppState, Platform } from "react-native";
-import { useAuth } from "@/hooks/useAuth";
 
 const RootLayout = () => {
 	const [appState, setAppState] = useState(AppState.currentState);

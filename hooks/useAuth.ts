@@ -1,5 +1,3 @@
-import { RootState } from "@/store/store";
-import { useSelector, useDispatch } from "react-redux";
 import {
 	signIn,
 	signOut,
@@ -7,6 +5,8 @@ import {
 	setSession,
 	setUser,
 } from "@/store/authSlice";
+import { RootState } from "@/store/store";
+import { useSelector, useDispatch } from "react-redux";
 
 export function useAuth() {
 	const dispatch = useDispatch();

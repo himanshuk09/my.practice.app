@@ -1,3 +1,7 @@
+import {
+	exportTimeseriesToCSV,
+	exportTimeseriesToCSVForWeb,
+} from "@/components/exportcsv/exporttofile";
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -5,18 +9,15 @@ import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { englishLocale } from "@/localization/config";
 import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { fetchDataByToggle } from "@/services/auth.service";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
+import { stringChartData } from "@/constants/stringChartData";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { View, Text, SafeAreaView, Platform } from "react-native";
-import { stringChartData } from "@/constants/stringChartData";
-import {
-	exportTimeseriesToCSV,
-	exportTimeseriesToCSVForWeb,
-} from "@/components/exportcsv/exporttofile";
-import { useIsFocused } from "@react-navigation/native";
+
 const PFCDetails = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();

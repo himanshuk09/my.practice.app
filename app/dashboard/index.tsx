@@ -1,19 +1,19 @@
 import "nativewind";
-import { View, FlatList, SafeAreaView } from "react-native";
 import { useDispatch } from "react-redux";
+import { StatusBar } from "expo-status-bar";
 import MenuCard from "@/components/MenuCard";
 import React, { useLayoutEffect } from "react";
-import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 import { dashboardMenuItems } from "@/utils/MenuItemlist";
-import { StatusBar } from "expo-status-bar";
+import { View, FlatList, SafeAreaView } from "react-native";
 
 const Dashboard: React.FC = () => {
 	const isFocused = useIsFocused();
 	const dispatch = useDispatch();
 
 	useLayoutEffect(() => {
-		dispatch(inActiveLoading());
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 
 	return (

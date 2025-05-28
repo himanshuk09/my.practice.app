@@ -11,15 +11,14 @@ import {
 	Easing,
 	Platform,
 } from "react-native";
-import DateTimePickerComponents from "./DateTimePickerComponents";
 import dayjs, { Dayjs } from "dayjs";
-import { AntDesign } from "@expo/vector-icons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { englishLocale, germanyLocale, i18n } from "@/localization/config";
 import { DateType } from "react-native-ui-datepicker";
+import DateTimePickerComponents from "./DateTimePickerComponents";
+import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
+import { englishLocale, germanyLocale, i18n } from "@/localization/config";
+
 type initialViewProps = "day" | "month" | "year" | "time";
 
 interface PickerModelProps {

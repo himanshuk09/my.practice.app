@@ -1,3 +1,11 @@
+import {
+	View,
+	Text,
+	SafeAreaView,
+	FlatList,
+	TouchableOpacity,
+	RefreshControl,
+} from "react-native";
 import { st } from "@/utils/Styles";
 import { Href } from "expo-router";
 import { useRouter } from "expo-router";
@@ -7,19 +15,11 @@ import NoNetwork from "@/components/icons/NoNetwork";
 import { PricesItem } from "@/constants/constantData";
 import { useIsFocused } from "@react-navigation/native";
 import React, { memo, useEffect, useState } from "react";
+import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { ShimmerPrices, ShimmerPricesHeader } from "@/components/ShimmerEffect";
-import {
-	View,
-	Text,
-	SafeAreaView,
-	FlatList,
-	TouchableOpacity,
-	RefreshControl,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 
 const Prices = () => {
 	const router = useRouter();

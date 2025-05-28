@@ -18,7 +18,6 @@ import RatingStars from "@/components/RatingStars";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 import CustomAlert from "@/components/CustomAlert";
 import { StatusBar } from "expo-status-bar";
 

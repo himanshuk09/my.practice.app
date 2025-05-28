@@ -1,3 +1,7 @@
+import {
+	exportTimeseriesToCSV,
+	exportTimeseriesToCSVForWeb,
+} from "@/components/exportcsv/exporttofile";
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -10,12 +14,8 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { fetchDataByToggle } from "@/services/auth.service";
 import { stringChartData } from "@/constants/stringChartData";
-import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { View, Text, SafeAreaView, Platform } from "react-native";
-import {
-	exportTimeseriesToCSV,
-	exportTimeseriesToCSVForWeb,
-} from "@/components/exportcsv/exporttofile";
+import ToggleChartComponent from "@/components/ToggleChartComponent";
 
 const PricesDetails = () => {
 	const { id } = useLocalSearchParams();

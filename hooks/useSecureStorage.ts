@@ -1,6 +1,6 @@
-import * as SecureStore from "expo-secure-store";
-import { Platform } from "react-native";
 import { useCallback } from "react";
+import { Platform } from "react-native";
+import * as SecureStore from "expo-secure-store";
 
 function setCookie(key: string, value: string, days = 7) {
 	const expires = new Date(Date.now() + days * 864e5).toUTCString();

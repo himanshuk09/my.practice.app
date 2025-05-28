@@ -10,6 +10,7 @@ type FloatingActionMenuProps = {
 	captureWebView?: any;
 	isTooltipEnabled?: boolean;
 };
+
 export default function FloatingActionMenu({
 	webViewRef,
 	captureWebView,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import NetInfo from "@react-native-community/netinfo";
 import Toast from "react-native-toast-message";
+import NetInfo from "@react-native-community/netinfo";
 import { showToast } from "@/components/ToastConfig";
 
 /**

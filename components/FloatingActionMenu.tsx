@@ -6,16 +6,16 @@ import {
 	Text,
 	Platform,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { i18n } from "@/localization/config";
+import { MaterialIcons } from "@expo/vector-icons";
 
-export default function FloatingActionMenu({
+const FloatingActionMenu = ({
 	activeTab,
 	setActiveTab,
 	visibleTabs,
 	isLoading,
-}: any) {
+}: any) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [animation] = useState(new Animated.Value(0));
 	const toggleMenu = () => {
@@ -102,8 +102,9 @@ export default function FloatingActionMenu({
 			)}
 		</View>
 	);
-}
+};
 
+export default FloatingActionMenu;
 const styles = StyleSheet.create({
 	activeMenuText: {
 		color: "#e11935",

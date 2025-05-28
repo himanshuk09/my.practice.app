@@ -170,7 +170,7 @@ export const TranslationKeys: Translations | any = {
 		Ensure_your_device_supports_sharing:
 			"Ensure your device supports sharing",
 		LoggedIn_Successful: "LoggedIn Successful",
-		File_Downloading: "File Downloading....",
+		File_Downloading: "File Downloading",
 		Download_Failed: "Download Failed!",
 		Permission_Denied: "Permission Denied",
 		Media_library_access_required: "Media library access required.",
@@ -494,7 +494,7 @@ export const TranslationKeys: Translations | any = {
 		Ensure_your_device_supports_sharing:
 			"Stellen Sie sicher, dass Ihr Gerät die Freigabe unterstützt",
 		LoggedIn_Successful: "Eingeloggt erfolgreich",
-		File_Downloading: "Datei wird heruntergeladen...",
+		File_Downloading: "Datei wird heruntergeladen",
 		Download_Failed: "Download fehlgeschlagen!",
 		Permission_Denied: "Zugriff verweigert",
 		Media_library_access_required:

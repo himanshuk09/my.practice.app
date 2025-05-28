@@ -1,9 +1,3 @@
-import Header from "@/components/MainHeader";
-import { i18n } from "@/localization/config";
-import { activeLoading } from "@/store/navigationSlice";
-import { RootState } from "@/store/store";
-import { Tabs, useSegments } from "expo-router";
-import React, { useRef, useEffect } from "react";
 import {
 	Animated,
 	View,
@@ -13,15 +7,23 @@ import {
 	SafeAreaView,
 	Platform,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { StatusBar } from "expo-status-bar";
+import Header from "@/components/MainHeader";
+import { i18n } from "@/localization/config";
+import { Tabs, useSegments } from "expo-router";
+import React, { useRef, useEffect } from "react";
+import { activeLoading } from "@/store/navigationSlice";
+
 interface CustomTabBarProps {
 	state: any;
 	descriptors: any;
 	navigation: any;
 	notificationCounts: Record<string, number>;
 }
-import { StatusBar } from "expo-status-bar";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+export let isIdRoute: boolean;
+
 // Custom Tab Bar
 const CustomTabBar = ({
 	state,
@@ -142,7 +144,7 @@ const CustomTabBar = ({
 		</View>
 	);
 };
-export let isIdRoute: boolean;
+
 // Main Tab Navigator
 const TabNavigatorLayout = () => {
 	const segments = useSegments();

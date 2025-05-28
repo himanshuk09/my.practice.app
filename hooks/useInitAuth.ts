@@ -1,10 +1,10 @@
 // hooks/useInitAuth.ts
 import { useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { setLoading, setSession } from "@/store/authSlice";
 import { updateLocale } from "@/store/languageSlice";
 import { englishLocale } from "@/localization/config";
+import { setLoading, setSession } from "@/store/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useInitAuth = () => {
 	const dispatch = useDispatch();

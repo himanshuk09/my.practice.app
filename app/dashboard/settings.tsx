@@ -1,17 +1,17 @@
 import { st } from "@/utils/Styles";
-import { englishLocale, germanyLocale, i18n } from "@/localization/config";
+import { StatusBar } from "expo-status-bar";
 import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
+import { updateLocale } from "@/store/languageSlice";
+import CustomSwitch from "@/components/CustomSwitch";
 import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLocale } from "@/store/languageSlice";
-import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import CustomSwitch from "@/components/CustomSwitch";
-import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import { englishLocale, germanyLocale, i18n } from "@/localization/config";
 
 const Settings = () => {
 	const router = useRouter();

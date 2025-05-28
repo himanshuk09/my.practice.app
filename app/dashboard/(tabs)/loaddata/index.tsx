@@ -1,15 +1,15 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
-import { FlatList, RefreshControl, SafeAreaView } from "react-native";
 import { useDispatch } from "react-redux";
 import NoData from "@/components/icons/NoData";
 import NoNetwork from "@/components/icons/NoNetwork";
 import { useIsFocused } from "@react-navigation/native";
+import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 import { getLoadDataList } from "@/services/loaddata.service";
 import AccordionFlatlist from "@/components/AccordionFlatlist";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { FlatList, RefreshControl, SafeAreaView } from "react-native";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
-import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface DataItem {
 	id: string;

@@ -1,7 +1,7 @@
-import { useAuth } from "@/hooks/useAuth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
 import React, { ReactNode, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type ProtectedRouteProps = {
 	children: ReactNode;

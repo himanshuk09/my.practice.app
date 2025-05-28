@@ -1,4 +1,3 @@
-import React, { memo, useMemo, useRef, useState } from "react";
 import {
 	Text,
 	TouchableOpacity,
@@ -8,19 +7,21 @@ import {
 	View,
 	Platform,
 } from "react-native";
-import { MaterialIcons, Feather } from "@expo/vector-icons";
-import { Href, useRouter, useSegments } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
 import * as Linking from "expo-linking";
-import * as ScreenOrientation from "expo-screen-orientation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { RootState } from "@/store/store";
+import { useAuth } from "@/hooks/useAuth";
 import { i18n } from "@/localization/config";
 import { closeDrawer } from "@/store/drawerSlice";
-import { RootState } from "@/store/store";
-import { setOrientation } from "@/store/chartSlice";
-import { useAuth } from "@/hooks/useAuth";
 import { menuItems } from "@/utils/MenuItemlist";
 import CustomAlert from "@/components/CustomAlert";
+import { setOrientation } from "@/store/chartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Href, useRouter, useSegments } from "expo-router";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
+import * as ScreenOrientation from "expo-screen-orientation";
+import React, { memo, useMemo, useRef, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 // Helper Components
 const Submenu = memo(
 	({

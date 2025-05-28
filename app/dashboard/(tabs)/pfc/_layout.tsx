@@ -3,6 +3,7 @@ import { Platform } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import StackHeader from "@/components/StackHeader";
+
 const PFCLayout = () => {
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape

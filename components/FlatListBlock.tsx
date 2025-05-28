@@ -1,4 +1,3 @@
-import React, { memo, useCallback, useEffect, useRef } from "react";
 import {
 	View,
 	Text,
@@ -8,13 +7,14 @@ import {
 	Animated,
 	Easing,
 } from "react-native";
-import { Href, usePathname, useRouter } from "expo-router";
-import { useIsFocused } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import { activeLoading } from "@/store/navigationSlice";
-import { FontAwesome } from "@expo/vector-icons";
 import { st } from "@/utils/Styles";
+import { useDispatch } from "react-redux";
+import { FontAwesome } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
+import { activeLoading } from "@/store/navigationSlice";
+import { Href, usePathname, useRouter } from "expo-router";
 import { ShimmerFlatListBlock } from "@/components/ShimmerEffect";
+import React, { memo, useCallback, useEffect, useRef } from "react";
 
 const FlatListBlock = ({
 	title,
@@ -140,7 +140,7 @@ const FlatListBlock = ({
 				// Animate from 0 (or currentOffset) to safeOffset over 800ms
 				Animated.timing(scrollAnim, {
 					toValue: safeOffset,
-					duration: 3000, // You can change this duration
+					duration: 2000, // You can change this duration
 					easing: Easing.out(Easing.cubic),
 					useNativeDriver: false, // scrollToOffset needs false
 				}).start(() => {

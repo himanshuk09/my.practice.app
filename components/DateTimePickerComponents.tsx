@@ -5,10 +5,7 @@ import {
 	TouchableOpacity,
 	Platform,
 } from "react-native";
-import React, { useCallback, useState } from "react";
-import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import "dayjs/locale/en";
 import "dayjs/locale/de";
 import "dayjs/locale/es";
@@ -16,7 +13,10 @@ import "dayjs/locale/fr";
 import "dayjs/locale/tr";
 import "dayjs/locale/en-in";
 import { useSelector } from "react-redux";
+import React, { useCallback, useState } from "react";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { englishLocale, i18n } from "@/localization/config";
+import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
 
 type DateTimePickerComponentsProps = {
 	title?: String;

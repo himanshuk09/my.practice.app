@@ -1,18 +1,19 @@
-import * as Sharing from "expo-sharing";
-import * as FileSystem from "expo-file-system";
-import * as IntentLauncher from "expo-intent-launcher";
-import Toast, { ToastShowParams } from "react-native-toast-message";
-import { Linking, Platform, Text, TouchableOpacity, View } from "react-native";
 import {
 	Feather,
 	FontAwesome6,
 	Fontisto,
 	MaterialIcons,
 } from "@expo/vector-icons";
-import { i18n } from "@/localization/config";
 import React from "react";
+import * as Sharing from "expo-sharing";
+import { i18n } from "@/localization/config";
+import * as FileSystem from "expo-file-system";
 import Reload from "@/components/icons/Reload";
 import { getBottomInset } from "@/components/global";
+import * as IntentLauncher from "expo-intent-launcher";
+import ThreeDotLoader from "@/components/icons/ThreeDotLoader";
+import Toast, { ToastShowParams } from "react-native-toast-message";
+import { Linking, Platform, Text, TouchableOpacity, View } from "react-native";
 
 type ToastType = "success" | "error" | "info" | "download";
 
@@ -77,6 +78,7 @@ const openCSVFile = async (fileUri: string) => {
 		});
 	}
 };
+
 const openPNGFile = async (fileUri: string) => {
 	try {
 		// Fix 1: Always use content URI for Android
@@ -101,6 +103,7 @@ const openPNGFile = async (fileUri: string) => {
 		});
 	}
 };
+
 const shareFile = async (fileName: string, fileUri: string) => {
 	if (!(await Sharing.isAvailableAsync())) {
 		showToast({
@@ -129,6 +132,7 @@ const shareFile = async (fileName: string, fileUri: string) => {
 		});
 	}
 };
+
 const sharePNGFile = async (fileName: string) => {
 	try {
 		const cleanName = fileName.startsWith("file://")
@@ -248,7 +252,7 @@ const toastConfig: any = {
 				{/* Spinner */}
 				{props?.spinner && Platform.OS !== "web" && (
 					<View className="ml-2">
-						<Reload type="spinner" />
+						<ThreeDotLoader />
 					</View>
 				)}
 			</View>

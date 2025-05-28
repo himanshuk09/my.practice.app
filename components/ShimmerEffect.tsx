@@ -1,4 +1,3 @@
-import React, { useEffect, useRef } from "react";
 import {
 	View,
 	Animated,
@@ -7,12 +6,13 @@ import {
 	Dimensions,
 	FlatList,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { st } from "@/utils/Styles";
-import { useDispatch } from "react-redux";
-import { activeLoading } from "@/store/navigationSlice";
 import { useRouter } from "expo-router";
 import { Platform } from "react-native";
+import { useDispatch } from "react-redux";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useRef } from "react";
+import { activeLoading } from "@/store/navigationSlice";
 
 const ShimmerPrices = () => {
 	const shimmerValue = useRef(new Animated.Value(-1)).current;

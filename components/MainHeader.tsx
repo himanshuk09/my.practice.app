@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
 import Logo from "@/components/SVG/Logo";
-import { useRouter, useSegments } from "expo-router";
 import { useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 import { toggleDrawer } from "@/store/drawerSlice";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { useRouter, useSegments } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
 
 const Header = React.memo(({ navigation }: any) => {
 	const dispatch = useDispatch();

@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
 	View,
 	TextInput,
@@ -12,12 +11,13 @@ import {
 	TouchableWithoutFeedback,
 	ActivityIndicator,
 } from "react-native";
+import React, { useState } from "react";
 import { RootState } from "@/store/store";
 import { useAuth } from "@/hooks/useAuth";
 import Logo from "@/components/SVG/Logo";
 import { useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { loginUser } from "@/services/auth.service";
 import { showToast } from "@/components/ToastConfig";
 import FontAwesome from "@expo/vector-icons/FontAwesome";

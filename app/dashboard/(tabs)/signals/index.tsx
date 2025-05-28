@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, FlatList, RefreshControl } from "react-native";
-import FlatListBlock from "@/components/FlatListBlock";
-import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { useDispatch } from "react-redux";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { useIsFocused } from "@react-navigation/native";
-import NoNetwork from "@/components/icons/NoNetwork";
 import NoData from "@/components/icons/NoData";
+import React, { useEffect, useState } from "react";
+import NoNetwork from "@/components/icons/NoNetwork";
+import FlatListBlock from "@/components/FlatListBlock";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
+import { SafeAreaView, FlatList, RefreshControl } from "react-native";
+import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Signals = () => {
