@@ -11,3 +11,5 @@ jobs:
     environment: production
     params:
       prod: true
+
+#npx eas-cli@latest workflow:run deploy.yml
