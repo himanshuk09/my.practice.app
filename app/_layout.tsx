@@ -11,33 +11,13 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { AlertContainer } from "rn-custom-alert-prompt";
 import ToastProvider from "@/components/ToastProvider";
 import AuthInitializeWrapper from "@/components/Wrapper/AuthInitializeWrapper ";
+import UpdatesListener from "@/components/Wrapper/UpdatesListener";
 SplashScreen.preventAutoHideAsync();
 SplashScreen.setOptions({
 	fade: true,
 });
 
 const Layout = () => {
-	// useEffect(() => {
-	// 	let timer: NodeJS.Timeout | number;
-
-	// 	timer = setTimeout(() => {
-	// 		SplashScreen.hideAsync();
-	// 	}, 2000);
-
-	// 	if (Platform.OS !== "web") {
-	// 		ScreenOrientation.lockAsync(
-	// 			ScreenOrientation.OrientationLock.PORTRAIT_UP
-	// 		);
-	// 	}
-
-	// 	return () => {
-	// 		clearTimeout(timer);
-
-	// 		if (Platform.OS !== "web") {
-	// 			ScreenOrientation.unlockAsync();
-	// 		}
-	// 	};
-	// }, []);
 	useEffect(() => {
 		if (Platform.OS !== "web") {
 			ScreenOrientation.lockAsync(
@@ -57,6 +37,7 @@ const Layout = () => {
 				<NavigationWatcher>
 					<AppLoader>
 						<NetworkListener />
+						<UpdatesListener />
 						<RootLayout />
 						<AlertContainer
 							animationType="fade"

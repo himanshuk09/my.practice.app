@@ -8,7 +8,11 @@ import { setNetworkStatus } from "@/store/networkSlice";
 const NetworkListener = () => {
 	const dispatch = useDispatch();
 	const wasConnected = useRef(true); // track previous state
-
+	const retryNetworkCheck = async () => {
+		const state = await NetInfo.fetch();
+		const isConnected = !!state.isConnected;
+		dispatch(setNetworkStatus(isConnected));
+	};
 	useEffect(() => {
 		const unsubscribe = NetInfo.addEventListener((state) => {
 			const isConnected = !!state.isConnected;
@@ -25,7 +29,7 @@ const NetworkListener = () => {
 						subtitle: "Waiting_for_reconnection",
 						swipeable: false,
 						autoHide: false,
-						props: { network: true },
+						props: { network: true, onPress: retryNetworkCheck },
 					});
 				} else {
 					Toast.hide();

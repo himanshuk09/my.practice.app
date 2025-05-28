@@ -1,11 +1,9 @@
-import { Animated, Pressable } from "react-native";
 import React, { useRef } from "react";
-import useRetryNetwork from "@/hooks/useRetryNetwork";
-import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, Animated, Pressable } from "react-native";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 
-const NetworkRetry = () => {
+const Reload = ({ type = "", onPress = () => {} }: any) => {
 	const rotation = useRef(new Animated.Value(0)).current;
-	const retryNetworkCheck = useRetryNetwork();
 	const retryConnection = () => {
 		rotation.setValue(0); // reset before animating
 		Animated.timing(rotation, {
@@ -13,8 +11,7 @@ const NetworkRetry = () => {
 			duration: 600, // duration in ms
 			useNativeDriver: true,
 		}).start();
-		// trigger network retry
-		retryNetworkCheck();
+		onPress();
 	};
 
 	const spin = rotation.interpolate({
@@ -25,9 +22,15 @@ const NetworkRetry = () => {
 	return (
 		<Pressable onPress={retryConnection}>
 			<Animated.View style={{ transform: [{ rotate: spin }] }}>
-				<Ionicons name="reload-circle" size={35} color="white" />
+				{type === "network" ? (
+					<Ionicons name="reload-circle" size={35} color="white" />
+				) : type === "update" ? (
+					<FontAwesome name="refresh" size={25} color="white" />
+				) : (
+					<ActivityIndicator color="white" size="small" />
+				)}
 			</Animated.View>
 		</Pressable>
 	);
 };
-export default NetworkRetry;
+export default Reload;

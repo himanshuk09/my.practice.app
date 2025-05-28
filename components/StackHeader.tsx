@@ -27,7 +27,7 @@ const StackHeader = ({ title, closed = false }: any) => {
 			>
 				<MaterialIcons name="arrow-back" size={27} color="#9a9b9f" />
 			</TouchableOpacity>
-			<Text className="ml-2 font-thin text-2xl text-chartText">
+			<Text className="ml-2  text-2xl text-chartText">
 				{i18n.t(title)}
 			</Text>
 		</View>

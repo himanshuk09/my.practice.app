@@ -1,13 +1,4 @@
-import React, {
-	forwardRef,
-	memo,
-	useCallback,
-	useEffect,
-	useImperativeHandle,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import React, { memo, useCallback, useEffect, useRef } from "react";
 import {
 	View,
 	Text,
@@ -23,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { activeLoading } from "@/store/navigationSlice";
 import { FontAwesome } from "@expo/vector-icons";
 import { st } from "@/utils/Styles";
-import { ShimmerFlatListBlock } from "./ShimmerEffect";
+import { ShimmerFlatListBlock } from "@/components/ShimmerEffect";
 
 const FlatListBlock = ({
 	title,

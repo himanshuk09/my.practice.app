@@ -1,9 +1,9 @@
 //in used
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { showToast } from "../ToastConfig";
+import { showToast } from "@/components/ToastConfig";
 import dayjs from "dayjs";
-import { getLocale } from "../global";
+import { getLocale } from "@/components/global";
 import { englishLocale } from "@/localization/config";
 const DIRECTORY_URI_KEY = "SAVED_DIRECTORY_URI";
 

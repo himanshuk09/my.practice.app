@@ -1,6 +1,6 @@
 import { st } from "@/utils/Styles";
-import StackHeader from "./StackHeader";
-import { ChartLoaderPNG } from "./Loader";
+import StackHeader from "@/components/StackHeader";
+import { ChartLoaderPNG } from "@/components/Loader";
 import { useEffect, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { i18n } from "@/localization/config";
@@ -20,7 +20,7 @@ import NoData from "./icons/NoData";
 import {
 	exportDealsToCSV,
 	exportDealsToCSVWeb,
-} from "./exportcsv/exporttofile";
+} from "@/components/exportcsv/exporttofile";
 type DataRowPrpos = {
 	label?: string;
 	value: any;

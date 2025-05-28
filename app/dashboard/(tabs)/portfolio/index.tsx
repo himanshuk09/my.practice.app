@@ -16,7 +16,7 @@ import NoNetwork from "@/components/icons/NoNetwork";
 import NoData from "@/components/icons/NoData";
 import useIsComingFromPortfolioDetail from "@/hooks/useIsComingFromPortfolioDetail";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { isIdRoute } from "../_layout";
+import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 
 const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();

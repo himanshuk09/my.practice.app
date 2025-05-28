@@ -2,8 +2,8 @@
 import React, { useEffect } from "react";
 import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import toastConfig from "./ToastConfig";
-import { setBottomInset, setLocalebyhook } from "./global";
+import toastConfig from "@/components/ToastConfig";
+import { setBottomInset, setLocalebyhook } from "@/components/global";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 

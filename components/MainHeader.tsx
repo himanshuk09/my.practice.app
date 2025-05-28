@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
-import Logo from "./SVG/Logo";
+import Logo from "@/components/SVG/Logo";
 import { useRouter, useSegments } from "expo-router";
 import { useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";

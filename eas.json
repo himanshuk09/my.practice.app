@@ -1,33 +1,40 @@
 {
-	"cli": {
-		"version": ">= 14.5.0",
-		"appVersionSource": "remote"
-	},
-	"build": {
-		"development": {
-			"developmentClient": true,
-			"distribution": "internal",
-			"env": {
-				"APP_VARIANT": "development",
-				"EXPO_PUBLIC_BASE_URL": "https://eecapp-alpha.enexion-sys.de/eeCapp-202408"
-			}
-		},
-		"preview": {
-			"distribution": "internal",
-			"android": {
-				"buildType": "apk"
-			},
-			"env": {
-				"APP_VARIANT": "preview",
-				"EXPO_PUBLIC_BASE_URL": "https://eecapp-alpha.enexion-sys.de/eeCapp-202408"
-			},
-			"autoIncrement": true
-		},
-		"production": {
-			"autoIncrement": true
-		}
-	},
-	"submit": {
-		"production": {}
-	}
+    "cli": {
+        "version": ">= 14.5.0",
+        "appVersionSource": "remote"
+    },
+    "build": {
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "env": {
+                "APP_VARIANT": "development",
+                "EXPO_PUBLIC_BASE_URL": "https://eecapp-alpha.enexion-sys.de/eeCapp-202408"
+            },
+            "channel": "development"
+        },
+        "preview": {
+            "distribution": "internal",
+            "android": {
+                "buildType": "apk"
+            },
+            "env": {
+                "APP_VARIANT": "preview",
+                "EXPO_PUBLIC_BASE_URL": "https://eecapp-alpha.enexion-sys.de/eeCapp-202408"
+            },
+            "autoIncrement": true,
+            "channel": "preview"
+        },
+        "production": {
+            "env": {
+                "APP_VARIANT": "production",
+                "EXPO_PUBLIC_BASE_URL": "https://eecapp-alpha.enexion-sys.de/eeCapp-202408"
+            },
+            "autoIncrement": true,
+            "channel": "production"
+        }
+    },
+    "submit": {
+        "production": {}
+    }
 }

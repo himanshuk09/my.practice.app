@@ -184,6 +184,10 @@ export const TranslationKeys: Translations | any = {
 			"Please enable permission from settings.",
 		Open: "Open",
 		Share: "Share",
+		Update_Available: "Update Available",
+		Tap_to_roload_or_restart_the_app: "Tap to roload or restart the app",
+		Update_Failed: "Update_Failed",
+		Please_try_again_later: "Please try again later.",
 		imprints: {
 			company: "enexion GmbH",
 			address1: "Am Kronberger Hang 2A,",
@@ -506,6 +510,11 @@ export const TranslationKeys: Translations | any = {
 			"Bitte aktivieren Sie die Berechtigung in den Einstellungen.",
 		Open: "offen",
 		Share: "Aktie",
+		Update_Available: "Update verfügbar",
+		Tap_to_roload_or_restart_the_app:
+			"Tippen, um die App neu zu laden oder neu zu starten",
+		Update_Failed: "Update_Failed",
+		Please_try_again_later: "Bitte versuchen Sie es später erneut.",
 		imprints: {
 			company: "enexion GmbH",
 			address1: "Am Kronberger Hang 2A, ",

@@ -11,7 +11,7 @@ import { i18n } from "@/localization/config";
 import { st } from "@/utils/Styles";
 import StackHeader from "@/components/StackHeader";
 import { ChartLoaderPNG } from "@/components/Loader";
-import NoData from "./icons/NoData";
+import NoData from "@/components/icons/NoData";
 const Card = ({ title, data }: any) => {
 	return (
 		<View

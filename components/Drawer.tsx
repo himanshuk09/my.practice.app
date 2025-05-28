@@ -8,7 +8,7 @@ import {
 	Pressable,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import CustomDrawer from "./CustomDrawer";
+import CustomDrawer from "@/components/CustomDrawer";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

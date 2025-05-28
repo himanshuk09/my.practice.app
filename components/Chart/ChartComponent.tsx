@@ -11,7 +11,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 import { Platform, TouchableOpacity, BackHandler } from "react-native";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import { showToast } from "../ToastConfig";
+import { showToast } from "@/components/ToastConfig";
 
 type ChartComponentProps = {
 	webViewRef: React.RefObject<WebView | any>;

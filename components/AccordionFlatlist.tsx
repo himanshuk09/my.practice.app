@@ -9,7 +9,7 @@ import {
 	Platform,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
-import { ShimmerAccordion } from "./ShimmerEffect";
+import { ShimmerAccordion } from "@/components/ShimmerEffect";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 const AccordionFlatlist = ({

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const RatingStars = ({ maxStars = 5 }: any) => {

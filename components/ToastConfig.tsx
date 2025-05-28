@@ -1,7 +1,7 @@
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
-import Toast, { ToastShowParams } from "react-native-toast-message";
 import * as IntentLauncher from "expo-intent-launcher";
+import Toast, { ToastShowParams } from "react-native-toast-message";
 import { Linking, Platform, Text, TouchableOpacity, View } from "react-native";
 import {
 	Feather,
@@ -11,9 +11,8 @@ import {
 } from "@expo/vector-icons";
 import { i18n } from "@/localization/config";
 import React from "react";
-import NetworkRetry from "./icons/Network";
-import Spinner from "./icons/Spinner";
-import { getBottomInset } from "./global";
+import Reload from "@/components/icons/Reload";
+import { getBottomInset } from "@/components/global";
 
 type ToastType = "success" | "error" | "info" | "download";
 
@@ -194,11 +193,13 @@ const toastConfig: any = {
 			</View>
 			{/* Right side: Action Buttons */}
 			<View className="flex-row gap-3 ml-3">
-				{props?.network && Platform.OS !== "web" && <NetworkRetry />}
+				{props?.network && Platform.OS !== "web" && (
+					<Reload type={"network"} onPress={props.onPress} />
+				)}
 			</View>
 		</View>
 	),
-	info: ({ text1, text2, ...rest }: any) => (
+	info: ({ text1, text2, props }: any) => (
 		<View className="flex-row items-center py-3 px-5 w-full bg-[#5D5D5D] rounded-sm">
 			<MaterialIcons
 				name="info"
@@ -213,6 +214,11 @@ const toastConfig: any = {
 				{text2 ? (
 					<Text className="text-sm text-white">{text2}</Text>
 				) : null}
+			</View>
+			<View className="flex-row gap-3 ml-3">
+				{props?.update && Platform.OS !== "web" && (
+					<Reload type={"update"} onPress={props.onPress} />
+				)}
 			</View>
 		</View>
 	),
@@ -242,7 +248,7 @@ const toastConfig: any = {
 				{/* Spinner */}
 				{props?.spinner && Platform.OS !== "web" && (
 					<View className="ml-2">
-						<Spinner />
+						<Reload type="spinner" />
 					</View>
 				)}
 			</View>

@@ -19,7 +19,7 @@ import {
 	RefreshControl,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { isIdRoute } from "../_layout";
+import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 
 const Prices = () => {
 	const router = useRouter();

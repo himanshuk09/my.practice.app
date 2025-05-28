@@ -7,7 +7,7 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import NoNetwork from "@/components/icons/NoNetwork";
 import NoData from "@/components/icons/NoData";
-import { isIdRoute } from "../_layout";
+import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Signals = () => {

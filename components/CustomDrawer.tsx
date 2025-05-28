@@ -20,9 +20,7 @@ import { RootState } from "@/store/store";
 import { setOrientation } from "@/store/chartSlice";
 import { useAuth } from "@/hooks/useAuth";
 import { menuItems } from "@/utils/MenuItemlist";
-
-import CustomAlert from "./CustomAlert";
-import { activeLoading } from "@/store/navigationSlice";
+import CustomAlert from "@/components/CustomAlert";
 // Helper Components
 const Submenu = memo(
 	({

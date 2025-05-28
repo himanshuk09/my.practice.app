@@ -2,7 +2,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Redirect, Slot } from "expo-router";
 import React, { ReactNode } from "react";
-import { View } from "react-native";
 
 type PublicAuthRouteProps = {
 	children: ReactNode;

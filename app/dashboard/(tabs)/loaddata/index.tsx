@@ -8,7 +8,7 @@ import { getLoadDataList } from "@/services/loaddata.service";
 import AccordionFlatlist from "@/components/AccordionFlatlist";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
-import { isIdRoute } from "../_layout";
+import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface DataItem {
