@@ -84,7 +84,6 @@ const SignIn: React.FC = () => {
 
 			if (response?.success) {
 				setSessionValue(true);
-				router.push("/dashboard" as Href);
 				setTimeout(() => {
 					showToast({
 						type: "success",
