@@ -15,7 +15,6 @@ const Dashboard: React.FC = () => {
 	useLayoutEffect(() => {
 		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
-	console.log("testing");
 
 	return (
 		<SafeAreaView className="flex-1 bg-white">
