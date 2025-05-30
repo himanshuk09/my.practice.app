@@ -12,6 +12,7 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import { englishLocale, germanyLocale, i18n } from "@/localization/config";
+import NotificationScreen from "@/components/NotificationScreen";
 
 const Settings = () => {
 	const router = useRouter();
@@ -28,6 +29,7 @@ const Settings = () => {
 		return () => clearTimeout(timer);
 	}, [isFocused]);
 
+	return <NotificationScreen />;
 	return (
 		<SafeAreaView
 			className="flex-1 bg-white"

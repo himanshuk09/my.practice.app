@@ -42,3 +42,6 @@ app-example
 /android
 /ios
 
+#notification
+#google-services.json
+#enexion-eec-firebase-adminsdk-fbsvc-5274a27073.json

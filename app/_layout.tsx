@@ -12,6 +12,10 @@ import UpdatesListener from "@/components/Wrapper/UpdatesListener";
 import NetworkListener from "@/components/Wrapper/NetworkListener";
 import NavigationWatcher from "@/components/Wrapper/NavigationWatcher";
 import AuthInitializeWrapper from "@/components/Wrapper/AuthInitializeWrapper ";
+import {
+	cleanupNotificationListeners,
+	initializeNotifications,
+} from "@/components/services/notificationService";
 
 SplashScreen.preventAutoHideAsync();
 SplashScreen.setOptions({
@@ -24,11 +28,13 @@ const Layout = () => {
 			ScreenOrientation.lockAsync(
 				ScreenOrientation.OrientationLock.PORTRAIT_UP
 			);
+			initializeNotifications();
 		}
 
 		return () => {
 			if (Platform.OS !== "web") {
 				ScreenOrientation.unlockAsync();
+				cleanupNotificationListeners();
 			}
 		};
 	}, []);

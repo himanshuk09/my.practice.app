@@ -29,7 +29,8 @@ const getAppName = () => {
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
 	...config,
-	name: getAppName(),
+	// name: getAppName(),
+	name: "eeC Noti",
 	slug: "eec-cockpit",
 	version: "1.0.0",
 	orientation: "portrait",
@@ -51,7 +52,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			monochromeImage: "./assets/icons/adaptive-icon.png",
 			backgroundImage: "./assets/icons/adaptive-icon-bg.png",
 		},
-		package: getUniqueIdentifier(),
+		// package: getUniqueIdentifier(),
+		package: "com.eec.noti",
 		permissions: [
 			"WRITE_EXTERNAL_STORAGE",
 			"READ_EXTERNAL_STORAGE",
@@ -59,6 +61,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 		],
 		softwareKeyboardLayoutMode: "pan",
 		edgeToEdgeEnabled: true,
+		googleServicesFile: "./google-services.json",
+		intentFilters: [
+			{
+				action: "VIEW",
+				autoVerify: true,
+				data: [
+					{
+						scheme: "https",
+						host: "eec-cockpit.expo.app",
+						pathPrefix: "/",
+					},
+				],
+				category: ["BROWSABLE", "DEFAULT"],
+			},
+		],
 	},
 	web: {
 		bundler: "metro",
@@ -68,6 +85,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	plugins: [
 		"expo-router",
 		"expo-localization",
+		"expo-notifications",
 		[
 			"expo-splash-screen",
 			{

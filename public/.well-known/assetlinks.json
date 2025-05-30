@@ -1,0 +1,12 @@
+[
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "com.eec.noti",
+			"sha256_cert_fingerprints": [
+				"73:C2:19:B9:D1:9E:9C:51:AD:F8:7C:01:A4:2E:3E:AC:CF:A7:1D:81:B2:0C:9D:E3:38:E4:24:C1:D9:16:BC:D6"
+			]
+		}
+	}
+]
