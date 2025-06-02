@@ -1,16 +1,16 @@
 import React, { memo } from "react";
 import { router } from "expo-router";
-import PFC from "@/components/SVG/PFC";
-import Load from "@/components/SVG/Load";
+import PFC from "@/components/svg/PFC";
+import Load from "@/components/svg/Load";
 import { useDispatch } from "react-redux";
 import { i18n } from "@/localization/config";
-import Prices from "@/components/SVG/Prices";
-import Signals from "@/components/SVG/Signals";
-import Settings from "@/components/SVG/Settings";
-import Portfolio from "@/components/SVG/Portfolio";
+import Prices from "@/components/svg/Prices";
+import Signals from "@/components/svg/Signals";
+import Settings from "@/components/svg/Settings";
+import Portfolio from "@/components/svg/Portfolio";
 import { activeLoading } from "@/store/navigationSlice";
 import { View, Text, Pressable, Platform } from "react-native";
-import NotificationIcon from "@/components/SVG/NotificationIcon";
+import NotificationIcon from "@/components/svg/NotificationIcon";
 
 interface MenuCardProps {
 	item: {

@@ -12,7 +12,9 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import { englishLocale, germanyLocale, i18n } from "@/localization/config";
-
+import * as Clipboard from "expo-clipboard";
+import { getCurrentPushToken } from "@/components/services/notificationService";
+import CustomAlert from "@/components/CustomAlert";
 const Settings = () => {
 	const router = useRouter();
 	const isFocused = useIsFocused();
@@ -22,11 +24,24 @@ const Settings = () => {
 	const [isNotificationEnabled, setIsNotificationEnabled] =
 		useState<boolean>(true);
 	const [isSignalsEnabled, setIsSignalsEnabled] = useState<boolean>(false);
+	const [copiedText, setCopiedText] = useState("");
+	const copyToClipboard = async () => {
+		await Clipboard.setStringAsync(copiedText);
+		CustomAlert({
+			title: "Copied",
+		});
+	};
+	// {   "userId": "abc123",   "action": "test",   "priority": "low",   "url": "https://eec-cockpit.expo.app/dashboard" }
 	const insets = useSafeAreaInsets();
 	useEffect(() => {
+		const currentToken: any = getCurrentPushToken();
+		setCopiedText(currentToken);
 		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 
+	useEffect(() => {
+		copyToClipboard();
+	}, [isNotificationEnabled]);
 	return (
 		<SafeAreaView
 			className="flex-1 bg-white"
@@ -108,6 +123,7 @@ const Settings = () => {
 					</View>
 				</View>
 			</View>
+
 			<View className="bottom-0 bg-white w-full right-0 left-0 absolute flex flex-row justify-evenly border-y-2 border-primary">
 				<TouchableOpacity
 					className="items-center p-5 w-[50%]"

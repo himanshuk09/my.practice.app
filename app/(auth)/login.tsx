@@ -14,7 +14,7 @@ import {
 import React, { useState } from "react";
 import { RootState } from "@/store/store";
 import { useAuth } from "@/hooks/useAuth";
-import Logo from "@/components/SVG/Logo";
+import Logo from "@/components/svg/Logo";
 import { useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
 import { useRouter } from "expo-router";

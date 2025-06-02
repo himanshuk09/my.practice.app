@@ -1,7 +1,7 @@
 import {
 	updateApexChart,
 	updateEmptyChart,
-} from "@/components/Chart/chartUpdateFunctions";
+} from "@/components/chart/chartUpdateFunctions";
 import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
 import { RootState } from "@/store/store";
@@ -13,13 +13,13 @@ import React, { useEffect, useRef, useState } from "react";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import { ChartGraphSimmer } from "@/components/ChartShimmer";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import ChartComponent from "@/components/Chart/ChartComponent";
+import ChartComponent from "@/components/chart/ChartComponent";
 import FloatingActionMenu from "@/components/FloatingActionMenu";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View, Text, Platform, TouchableOpacity } from "react-native";
 import { englishLocale, germanyLocale, i18n } from "@/localization/config";
-import iframeLineHtmlContent from "@/components/Chart/config/Linechart.web";
-import webviewLineHtmlContent from "@/components/Chart/config/Linechart.android";
+import iframeLineHtmlContent from "@/components/chart/config/Linechart.web";
+import webviewLineHtmlContent from "@/components/chart/config/Linechart.android";
 
 type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
 

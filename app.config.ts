@@ -118,9 +118,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	updates: {
 		url: "https://u.expo.dev/ccdfe2b9-660f-4bf0-8feb-2edaebc5e910",
 	},
-	runtimeVersion: {
-		policy: "appVersion",
-	},
+	runtimeVersion: "1.0.0",
+	// runtimeVersion: {
+	// 	policy: "appVersion",
+	// },
 	extra: {
 		router: {
 			origin: false,

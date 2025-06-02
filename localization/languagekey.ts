@@ -1,6 +1,4 @@
-import { Translations } from "@/types/chartConfigtypes";
-
-export const TranslationKeys: Translations | any = {
+export const TranslationKeys: any = {
 	en: {
 		unit: "kWh",
 		tooltip: "Tooltip",

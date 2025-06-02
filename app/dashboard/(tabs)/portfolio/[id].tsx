@@ -16,7 +16,7 @@ import {
 import {
 	updateApexChart,
 	updateEmptyChart,
-} from "@/components/Chart/chartUpdateFunctions";
+} from "@/components/chart/chartUpdateFunctions";
 import {
 	exportBase64ToPDF,
 	exportBase64ToPDFWeb,
@@ -26,7 +26,7 @@ import {
 	iframeDonutChartHtmlContent,
 	webviewAreaHtmlContent,
 	webviewDonutChartHtmlContent,
-} from "@/components/Chart/config";
+} from "@/components/chart/config";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/config";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -37,7 +37,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { Toast, showToast } from "@/components/ToastConfig";
 import { ChartGraphSimmer } from "@/components/ChartShimmer";
-import ChartComponent from "@/components/Chart/ChartComponent";
+import ChartComponent from "@/components/chart/ChartComponent";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import React, { useEffect, useMemo, useRef, useState } from "react";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Logo from "@/components/SVG/Logo";
+import Logo from "@/components/svg/Logo";
 import { useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 import { toggleDrawer } from "@/store/drawerSlice";

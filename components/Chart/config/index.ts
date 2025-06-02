@@ -1,9 +1,9 @@
-import webviewAreaHtmlContent from "@/components/Chart/config/Areachart.android";
-import iframeAreaHtmlContent from "@/components/Chart/config/Areachart.web";
-import webviewDonutChartHtmlContent from "@/components/Chart/config/Donutchart.android";
-import iframeDonutChartHtmlContent from "@/components/Chart/config/Donutchart.web";
-import iframeLineHtmlContent from "@/components/Chart/config/Linechart.web";
-import webviewLineHtmlContent from "@/components/Chart/config/Linechart.android";
+import webviewAreaHtmlContent from "@/components/chart/config/Areachart.android";
+import iframeAreaHtmlContent from "@/components/chart/config/Areachart.web";
+import webviewDonutChartHtmlContent from "@/components/chart/config/Donutchart.android";
+import iframeDonutChartHtmlContent from "@/components/chart/config/Donutchart.web";
+import iframeLineHtmlContent from "@/components/chart/config/Linechart.web";
+import webviewLineHtmlContent from "@/components/chart/config/Linechart.android";
 
 export {
 	webviewAreaHtmlContent,

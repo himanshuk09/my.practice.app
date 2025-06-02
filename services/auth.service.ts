@@ -4,7 +4,7 @@ import {
 	filterByMonthYearUTC,
 	filterCurrentDayDataUTC,
 	filterCurrentWeekDataUTC,
-} from "@/components/Chart/filterFunction";
+} from "@/components/chart/filterFunction";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { stringChartData } from "@/constants/stringChartData";
 import { loginPayloadProps, AuthResponse } from "@/types/apiTypes";

@@ -5,13 +5,13 @@ import React, { useEffect } from "react";
 import RootLayout from "@/app/RootLayout";
 import * as SplashScreen from "expo-splash-screen";
 import ToastProvider from "@/components/ToastProvider";
-import AppLoader from "@/components/Wrapper/AppLoader";
+import AppLoader from "@/components/wrapper/AppLoader";
 import { AlertContainer } from "rn-custom-alert-prompt";
 import * as ScreenOrientation from "expo-screen-orientation";
-import UpdatesListener from "@/components/Wrapper/UpdatesListener";
-import NetworkListener from "@/components/Wrapper/NetworkListener";
-import NavigationWatcher from "@/components/Wrapper/NavigationWatcher";
-import AuthInitializeWrapper from "@/components/Wrapper/AuthInitializeWrapper ";
+import UpdatesListener from "@/components/wrapper/UpdatesListener";
+import NetworkListener from "@/components/wrapper/NetworkListener";
+import NavigationWatcher from "@/components/wrapper/NavigationWatcher";
+import AuthInitializeWrapper from "@/components/wrapper/AuthInitializeWrapper ";
 import {
 	cleanupNotificationListeners,
 	initializeNotifications,

@@ -3,7 +3,7 @@ import React from "react";
 import { Stack } from "expo-router";
 import Drawer from "@/components/Drawer";
 import Header from "@/components/MainHeader";
-import SwipeDetectionWrapper from "@/components/Wrapper/SwipeDetectionWrapper";
+import SwipeDetectionWrapper from "@/components/wrapper/SwipeDetectionWrapper";
 
 const DashboardLayout = () => {
 	return (
