@@ -22,8 +22,8 @@ const Settings = () => {
 	const { locale } = useSelector((state: RootState) => state.culture);
 	const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
 	const [isNotificationEnabled, setIsNotificationEnabled] =
-		useState<boolean>(true);
-	const [isSignalsEnabled, setIsSignalsEnabled] = useState<boolean>(false);
+		useState<boolean>(false);
+	const [isSignalsEnabled, setIsSignalsEnabled] = useState<boolean>(true);
 	const [copiedText, setCopiedText] = useState("");
 	const copyToClipboard = async () => {
 		await Clipboard.setStringAsync(copiedText);
@@ -40,7 +40,7 @@ const Settings = () => {
 	}, [isFocused]);
 
 	useEffect(() => {
-		copyToClipboard();
+		if (isNotificationEnabled) copyToClipboard();
 	}, [isNotificationEnabled]);
 	return (
 		<SafeAreaView

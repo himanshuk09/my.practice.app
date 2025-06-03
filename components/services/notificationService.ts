@@ -205,7 +205,7 @@ export const registerForPushNotificationsAsync = async () => {
 		if (Platform.OS === "android") {
 			await Notifications.setNotificationChannelAsync("default", {
 				name: "default",
-				importance: Notifications.AndroidImportance.MAX,
+				importance: Notifications.AndroidImportance.HIGH,
 				vibrationPattern: [0, 250, 250, 250],
 				lightColor: "#FF231F7C",
 			});
@@ -261,7 +261,9 @@ export const registerForPushNotificationsAsync = async () => {
  * @returns
  */
 export const scheduleNotification = async (
-	content: Notifications.NotificationContentInput | any = {
+	content: Notifications.NotificationContentInput & {
+		to?: string;
+	} = {
 		to: "",
 		title: "",
 		body: "",
@@ -363,14 +365,9 @@ export const sendNotificationUsingToken = async (notificationContent: {
  * @returns
  */
 export const sendMultipleNotificationUsingTokens = async (
-	notificationContent: [
-		{
-			to: any;
-			title: any;
-			body: any;
-			data: any;
-		},
-	]
+	notificationContent: (Notifications.NotificationContentInput & {
+		to?: string;
+	})[]
 ) => {
 	try {
 		const response = await fetch(

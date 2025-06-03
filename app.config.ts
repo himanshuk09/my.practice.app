@@ -85,7 +85,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 	plugins: [
 		"expo-router",
 		"expo-localization",
-		"expo-notifications",
+		[
+			"expo-notifications",
+			{
+				icon: "./assets/icons/notification-icon.png",
+				color: "#ffffff",
+				defaultChannel: "default",
+				sounds: ["./assets/sounds/notification_sound.wav"],
+			},
+		],
 		[
 			"expo-splash-screen",
 			{

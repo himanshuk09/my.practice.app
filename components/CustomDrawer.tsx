@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Href, useRouter, useSegments } from "expo-router";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import * as ScreenOrientation from "expo-screen-orientation";
-import React, { memo, useMemo, useRef, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Helper Components
@@ -153,6 +153,22 @@ const CustomDrawer = memo(() => {
 			{menuItems.map((menu: any, index) => {
 				// Check if there are items in the submenu
 				const hasItems = menu.items?.length > 0;
+				// ✅ Define animation state per menu item
+				const rotateAnim = useRef(new Animated.Value(0)).current;
+
+				useEffect(() => {
+					Animated.timing(rotateAnim, {
+						toValue: activeSubmenu === menu?.key ? 1 : 0,
+						duration: 100,
+						easing: Easing.inOut(Easing.ease),
+						useNativeDriver: true,
+					}).start();
+				}, [activeSubmenu === menu?.key]);
+
+				const rotation = rotateAnim.interpolate({
+					inputRange: [0, 1],
+					outputRange: ["0deg", "-180deg"],
+				});
 				return (
 					<View key={index}>
 						{/* Render simple View if no submenu items */}
@@ -169,17 +185,19 @@ const CustomDrawer = memo(() => {
 								>
 									{i18n.t(menu?.label)}
 								</Text>
-								<Feather
-									className="mr-10"
-									name={
-										activeSubmenu === menu?.key
-											? "chevron-up"
-											: "chevron-down"
-									}
-									size={18}
-									color="#9a9b9f"
-									onPress={() => toggleSubmenu(menu?.key)}
-								/>
+								<Animated.View
+									style={{
+										transform: [{ rotate: rotation }],
+										marginRight: 10,
+									}}
+								>
+									<Feather
+										name="chevron-down"
+										size={18}
+										color="#9a9b9f"
+										onPress={() => toggleSubmenu(menu?.key)}
+									/>
+								</Animated.View>
 							</TouchableOpacity>
 						) : (
 							// Render the default View if no submenu items

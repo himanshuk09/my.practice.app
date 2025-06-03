@@ -86,7 +86,7 @@ const ToggleChartComponent = ({
 	showValueRange,
 	yaxisunit = "€/MWh",
 	isSignaleScreen = false,
-	setActiveTabForFileName,
+	setActiveTabForFileName = () => "cockpit",
 }: ToggleChartComponentProps) => {
 	const webViewRef = useRef<WebView | any>(null);
 	const iFrameRef = useRef<HTMLIFrameElement | any>(null);

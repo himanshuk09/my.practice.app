@@ -58,13 +58,24 @@ export default function NotificationScreen() {
 		}
 
 		// Prepare notifications array
-		const notifications: any = tokens.map((tok) => ({
+		const notifications: (Notifications.NotificationContentInput & {
+			to?: string;
+		})[] = tokens.map((tok) => ({
 			to: tok,
 			title: title,
 			body: body,
 			categoryIdentifier: "message_category",
 			categoryId: "message_category",
 			data: data ? JSON.parse(data) : {},
+			autoDismiss: true,
+			badge: 2,
+			color: "#e31837",
+			interruptionLevel: "active",
+			priority: Notifications.AndroidNotificationPriority.HIGH,
+			sticky: true,
+			launchImageName: "hello",
+			subtitle: "hellooo",
+			sound: "default",
 		}));
 
 		try {
