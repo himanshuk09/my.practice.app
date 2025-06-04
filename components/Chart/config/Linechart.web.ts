@@ -232,11 +232,11 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 		var options = {
 			series: [{ name: "Energy Use", data: [{ "x": "01/01/2000 00:00", "y": 1 }] }],
 			chart: {
-				height: "100%",
+				height: "90%",
 				type: "line",
 				offsetX: 0,
 				offsetY: 30,
-				background: "url('https://i.ibb.co/ryQkmKq/new.png') no-repeat center center",
+				// background: "url('https://i.ibb.co/ryQkmKq/new.png') no-repeat center center",
 				backgroundSize: "cover",
 				stacked: false,
 				zoom: { type: "x", enabled: true, autoScaleYaxis: true },
@@ -590,7 +590,7 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 					options: {
 						chart: {
 							// height: 550,
-							background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
+							// background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
 							toolbar: {
 								show: true,
 								offsetX: 2,
@@ -615,7 +615,7 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 					options: {
 						chart: {
 							// height: 500,
-							background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
+							// background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
 							toolbar: {
 								show: true,
 								offsetX: 2,
@@ -638,8 +638,8 @@ const iframeLineHtmlContent = `<!DOCTYPE html>
 					breakpoint: 600, // For mobile phones
 					options: {
 						chart: {
-							height: "88%",
-							background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
+							height: "90%",
+							// background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
 							toolbar: {
 								show: true,
 								offsetX: 2,

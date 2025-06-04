@@ -82,7 +82,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                         type: "x",
                         autoScaleYaxis: true,
                     },
-                    background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 500px",
+                    // background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 500px",
                     toolbar: {
                         show: false,
                         offsetX: 0,

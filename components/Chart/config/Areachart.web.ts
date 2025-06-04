@@ -181,7 +181,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 					enabled: true,
 					type: "x",
 				},
-				background: "url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center",
+				// background: "url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center",
 				toolbar: {
 					show: true,
 					offsetX: 0,
@@ -352,7 +352,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 								enabled: true,
 								type: "x",
 							},
-							background: "url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center",
+							// background: "url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center",
 							toolbar: {
 								show: true,
 								offsetX: 0,

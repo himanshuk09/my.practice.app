@@ -384,7 +384,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 			chart: {
 				type: "line",
 				height: "285",
-				background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
+				// background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
 				stacked: false,
 				selection: {
 					enabled: true,
@@ -925,7 +925,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 					options: {
 						chart: {
 							height: "95%",
-							background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
+							// background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
 						},
 					},
 				},
@@ -1026,7 +1026,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 						options: {
 							chart: {
 								height: "95%",
-								background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
+								// background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
 							},
 						},
 					},
