@@ -1,31 +1,34 @@
-import { st } from "@/utils/Styles";
-import { i18n } from "@/localization/config";
-import React, { useEffect, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, LayoutChangeEvent } from "react-native";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withTiming,
+	Easing,
 } from "react-native-reanimated";
+import { st } from "@/utils/Styles";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { i18n } from "@/localization/config";
+import React, { useEffect, useRef, useState } from "react";
+import { tabsType } from "@/components/ToggleChartComponent";
+import { View, Text, TouchableOpacity, LayoutChangeEvent } from "react-native";
 
 interface TabToggleButtonsProps {
 	activeTab: string;
 	setActiveTab: any;
-	visibleTabs: any;
-	setLoading?: any;
-	timeoutRef?: any;
-	isLoading?: boolean;
+	visibleTabs: tabsType[] | undefined;
+	isLoading: boolean;
 }
 
 const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 	({ activeTab, setActiveTab, visibleTabs, isLoading }) => {
+		const globalLoader = useSelector(
+			(state: RootState) => state?.navigation?.loading
+		);
 		const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
 		const tabs = visibleTabs || allTabs;
-
 		const tabLayouts = useRef<{ x: number; width: number }[]>([]);
 		const translateX = useSharedValue(0);
 		const underlineWidth = useSharedValue(0);
-
 		const [isMeasured, setIsMeasured] = useState(false);
 
 		const onTabLayout = (index: number) => (event: LayoutChangeEvent) => {
@@ -38,17 +41,20 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 		};
 
 		useEffect(() => {
-			if (!isMeasured) return;
+			if (!isMeasured && activeTab !== "" && !globalLoader) return;
 
 			const index = tabs.findIndex((tab: string) => tab === activeTab);
 			const layout = tabLayouts.current[index];
 			if (layout) {
-				translateX.value = withTiming(layout.x, { duration: 200 });
+				translateX.value = withTiming(layout.x, {
+					duration: 200,
+					easing: Easing.linear,
+				});
 				underlineWidth.value = withTiming(layout.width, {
 					duration: 200,
 				});
 			}
-		}, [activeTab, isMeasured]);
+		}, [activeTab, isMeasured, globalLoader]);
 
 		const animatedStyle = useAnimatedStyle(() => ({
 			transform: [{ translateX: translateX.value }],
@@ -66,6 +72,7 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 							className={`py-3 text-center rounded-sm h-14 flex-1 ${
 								activeTab === tab ? "bg-white" : "bg-gray-100"
 							}`}
+							style={st.tabShadow}
 							disabled={isLoading}
 						>
 							<Text
@@ -80,7 +87,7 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 						</TouchableOpacity>
 					))}
 				</View>
-				{isMeasured && (
+				{isMeasured && activeTab !== "" && !globalLoader && (
 					<Animated.View
 						style={[
 							{
@@ -99,8 +106,6 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 		);
 	}
 );
-
-export default TabToggleButtons;
 
 //without animation
 const TabToggleButtons1: React.FC<TabToggleButtonsProps> = React.memo(
@@ -139,3 +144,4 @@ const TabToggleButtons1: React.FC<TabToggleButtonsProps> = React.memo(
 		);
 	}
 );
+export default TabToggleButtons;

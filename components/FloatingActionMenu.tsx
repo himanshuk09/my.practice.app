@@ -1,16 +1,168 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
 	View,
-	StyleSheet,
+	Text,
 	TouchableOpacity,
 	Animated,
-	Text,
+	StyleSheet,
 	Platform,
+	LayoutChangeEvent,
 } from "react-native";
-import { useState } from "react";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
 import { MaterialIcons } from "@expo/vector-icons";
+import { tabsType } from "@/components/ToggleChartComponent";
 
+interface FloatingActionMenuProps {
+	activeTab: string;
+	setActiveTab: any;
+	visibleTabs: tabsType[] | undefined;
+	isLoading: boolean;
+}
 const FloatingActionMenu = ({
+	activeTab,
+	setActiveTab,
+	visibleTabs,
+	isLoading,
+}: FloatingActionMenuProps) => {
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [animation] = useState(new Animated.Value(0));
+	const [isMeasured, setIsMeasured] = useState(false);
+
+	const globalLoader = useSelector(
+		(state: RootState) => state?.navigation?.loading
+	);
+	const tabLayouts = useRef<{ x: number; width: number }[]>([]);
+	const translateX = useRef(new Animated.Value(0)).current;
+	const underlineWidth = useRef(new Animated.Value(0)).current;
+
+	const toggleMenu = () => {
+		const toValue = isMenuOpen ? 0 : 1;
+
+		Animated.timing(animation, {
+			toValue,
+			duration: 100,
+			useNativeDriver: Platform.OS !== "web",
+		}).start();
+
+		setIsMenuOpen(!isMenuOpen);
+	};
+
+	const menuOpacity = animation.interpolate({
+		inputRange: [0, 1],
+		outputRange: [0, 1],
+	});
+
+	const menuTranslateX = animation.interpolate({
+		inputRange: [0, 1],
+		outputRange: [-100, 0],
+	});
+
+	const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
+	const tabs = visibleTabs || allTabs;
+
+	const onTabLayout = (index: number) => (event: LayoutChangeEvent) => {
+		const { x, width } = event.nativeEvent.layout;
+		tabLayouts.current[index] = { x, width };
+		if (tabLayouts.current.filter(Boolean).length === tabs.length) {
+			setIsMeasured(true);
+		}
+	};
+
+	useEffect(() => {
+		if (!isMeasured && activeTab !== "" && !globalLoader) return;
+		const index = tabs.findIndex((tab: string) => tab === activeTab);
+		const layout = tabLayouts.current[index];
+		if (layout) {
+			Animated.timing(translateX, {
+				toValue: layout.x,
+				duration: 200,
+				useNativeDriver: false,
+			}).start();
+			Animated.timing(underlineWidth, {
+				toValue: layout.width - 4,
+				duration: 200,
+				useNativeDriver: false,
+			}).start();
+		}
+	}, [activeTab, isMeasured, globalLoader]);
+
+	const formatTabLabel = (tab: string) => {
+		if (tab === "Year_3") return "Y3";
+		return tab.charAt(0);
+	};
+
+	return (
+		<View className="absolute top-0 left-6 pt-1 pl-1 z-[1000]">
+			<TouchableOpacity
+				className="bg-[#e11935] w-[30px] h-[30px] rounded-full justify-center items-center shadow-md"
+				onPress={toggleMenu}
+			>
+				<MaterialIcons
+					name={isMenuOpen ? "filter-alt-off" : "filter-alt"}
+					size={15}
+					color="white"
+				/>
+			</TouchableOpacity>
+
+			{isMenuOpen && (
+				<Animated.View
+					style={{
+						opacity: menuOpacity,
+						transform: [{ translateX: menuTranslateX }],
+					}}
+					className="absolute top-1 left-[50px] flex-row items-center"
+				>
+					<View className="relative flex-row">
+						{isMeasured && activeTab !== "" && (
+							<Animated.View
+								style={{
+									transform: [{ translateX }],
+									width: underlineWidth,
+								}}
+								className="absolute bottom-0 h-[30px] rounded-full border-2 border-[#e11935] z-[100]"
+							/>
+						)}
+
+						{tabs.map((tab: any, index: number) => (
+							<View
+								key={index}
+								onLayout={onTabLayout(index)}
+								className="flex-row items-center mx-[1px]"
+							>
+								<TouchableOpacity
+									className={`w-[30px] h-[30px] rounded-full justify-center items-center mr-1 ${
+										activeTab === tab
+											? "bg-white"
+											: "bg-gray-100"
+									}`}
+									onPress={() => setActiveTab(tab)}
+									disabled={isLoading}
+								>
+									<Text
+										className={`uppercase text-[16px] ${
+											activeTab === tab
+												? "text-[#e11935] font-semibold"
+												: "text-black"
+										}`}
+									>
+										{i18n.t(formatTabLabel(tab))}
+									</Text>
+								</TouchableOpacity>
+							</View>
+						))}
+					</View>
+				</Animated.View>
+			)}
+		</View>
+	);
+};
+
+export default FloatingActionMenu;
+
+//Without Animation
+const FloatingActionMenu1 = ({
 	activeTab,
 	setActiveTab,
 	visibleTabs,
@@ -104,7 +256,6 @@ const FloatingActionMenu = ({
 	);
 };
 
-export default FloatingActionMenu;
 const styles = StyleSheet.create({
 	activeMenuText: {
 		color: "#e11935",

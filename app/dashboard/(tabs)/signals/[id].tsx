@@ -26,7 +26,6 @@ const SignalDetails = () => {
 	const { id } = useLocalSearchParams();
 	const [isEnabled, setIsEnabled] = useState<boolean>(true);
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
-	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
 	const [signalDetail, setSignalDetails] = useState<any>([]);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
@@ -101,8 +100,6 @@ const SignalDetails = () => {
 						<ToggleChartComponent
 							isSignaleScreen={true}
 							fetchChartData={fetchChartData}
-							isChartLoaded={isChartLoaded}
-							setIsChartLoaded={setIsChartLoaded}
 						/>
 					</View>
 				</View>

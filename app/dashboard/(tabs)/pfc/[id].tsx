@@ -15,7 +15,9 @@ import { fetchDataByToggle } from "@/services/auth.service";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import { stringChartData } from "@/constants/stringChartData";
-import ToggleChartComponent from "@/components/ToggleChartComponent";
+import ToggleChartComponent, {
+	tabsType,
+} from "@/components/ToggleChartComponent";
 import { View, Text, SafeAreaView, Platform } from "react-native";
 
 const PFCDetails = () => {
@@ -23,9 +25,14 @@ const PFCDetails = () => {
 	const isFocused = useIsFocused();
 	const { id } = useLocalSearchParams();
 	const locale = useSelector((state: RootState) => state.culture.locale);
-	let visibleTabs = ["Week", "Month", "Quarter", "Year", "Year_3"];
+	let visibleTabs: tabsType[] = [
+		"Week",
+		"Month",
+		"Quarter",
+		"Year",
+		"Year_3",
+	];
 	const [pfcDetails, setPfcDetails] = useState<any>([]);
-	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
@@ -52,6 +59,7 @@ const PFCDetails = () => {
 			return null;
 		}
 	};
+
 	useEffect(() => {
 		const filteredItem =
 			PFCGas.find((item: any) => item.id === Number(id)) ||
@@ -106,8 +114,6 @@ const PFCDetails = () => {
 				<ToggleChartComponent
 					visibleTabs={visibleTabs}
 					fetchChartData={fetchChartData}
-					isChartLoaded={isChartLoaded}
-					setIsChartLoaded={setIsChartLoaded}
 				/>
 			</View>
 		</SafeAreaView>

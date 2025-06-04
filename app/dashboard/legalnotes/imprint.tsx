@@ -8,8 +8,8 @@ import {
 import { useDispatch } from "react-redux";
 import { i18n } from "@/localization/config";
 import React, { useEffect, useState } from "react";
-import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 
 const imprintDetails = [
 	"company",

@@ -12,14 +12,14 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
+import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { FontAwesome } from "@expo/vector-icons";
+import CustomAlert from "@/components/CustomAlert";
 import RatingStars from "@/components/RatingStars";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import CustomAlert from "@/components/CustomAlert";
-import { StatusBar } from "expo-status-bar";
 
 const Rate = () => {
 	const router = useRouter();

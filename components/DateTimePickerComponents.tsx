@@ -17,20 +17,24 @@ import React, { useCallback, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { englishLocale, i18n } from "@/localization/config";
 import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
+type DateTimeRange = {
+	startDate?: DateType | any;
+	endDate?: DateType | any;
+};
 
 type DateTimePickerComponentsProps = {
 	title?: String;
-	timePicker?: boolean | undefined;
+	timePicker?: boolean;
 	pickerMode?: ModeType;
-	open?: Boolean;
-	setOpen?: any;
-	setSingleDate?: any;
+	open?: boolean;
+	setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+	setSingleDate?: (date: DateType) => void;
 	defaultDate?: DateType;
 	initialView?: "day" | "month" | "year" | "time";
 	setSelectedStartDate?: any;
 	setSelectedEndDate?: any;
-	rangeDate?: any;
-	setRangeDate?: any;
+	range?: DateTimeRange;
+	setRange?: (range: DateTimeRange) => void;
 };
 const DateTimePickerComponents = ({
 	title = "Select",
@@ -41,40 +45,26 @@ const DateTimePickerComponents = ({
 	setSingleDate,
 	defaultDate,
 	initialView = "day",
-	setSelectedStartDate,
-	setSelectedEndDate,
-	rangeDate,
-	setRangeDate,
+	range,
+	setRange,
 }: DateTimePickerComponentsProps) => {
 	const [mode] = useState<ModeType>(pickerMode);
-	const [date, setDate] = useState<DateType | undefined>(
-		dayjs(defaultDate).isValid() ? defaultDate : dayjs()
-	);
-	const [range, setRange] = React.useState<{
-		startDate: DateType;
-		endDate: DateType;
-	}>(rangeDate);
-	const [dates, setDates] = useState<DateType[] | undefined>();
 	const locale = useSelector((state: any) => state.culture.locale);
+	const [date, setDate] = useState<DateType | undefined>(
+		dayjs(defaultDate).isValid() ? defaultDate : dayjs().add(5)
+	);
+	const [dates, setDates] = useState<DateType[] | undefined>();
 
 	const onChange = useCallback(
 		(params: any) => {
 			if (mode === "single") {
 				setDate(params.date);
-				setSingleDate(params.date);
+				setSingleDate?.(params.date);
 			} else if (mode === "range") {
-				setRange(params);
-				setRangeDate(params);
-
-				// Only update start date if it has changed
-				setSelectedStartDate((prev: any) =>
-					params?.startDate !== prev ? params?.startDate : prev
-				);
-
-				// Only update end date if it has changed
-				setSelectedEndDate((prev: any) =>
-					params?.endDate !== prev ? params?.endDate : prev
-				);
+				setRange?.({
+					startDate: params.startDate,
+					endDate: params.endDate,
+				});
 			} else if (mode === "multiple") {
 				setDates(params.dates);
 			}
@@ -93,7 +83,7 @@ const DateTimePickerComponents = ({
 				</Text>
 				<TouchableOpacity
 					className="m-1"
-					onPress={() => setOpen(!open)}
+					onPress={() => setOpen?.(!open)}
 				>
 					<AntDesign name="close" size={22} color="#E63757" />
 				</TouchableOpacity>
@@ -152,7 +142,7 @@ const DateTimePickerComponents = ({
 							<Pressable
 								onPress={() => {
 									setDate(new Date());
-									setSingleDate(new Date());
+									setSingleDate?.(new Date());
 								}}
 								accessibilityRole="button"
 								accessibilityLabel="Today"
@@ -166,7 +156,7 @@ const DateTimePickerComponents = ({
 							{date && (
 								<Pressable
 									onPress={() => {
-										setTimeout(() => setOpen(false), 100);
+										setTimeout(() => setOpen?.(false), 100);
 									}}
 									accessibilityRole="button"
 									accessibilityLabel="select"
@@ -217,8 +207,8 @@ const DateTimePickerComponents = ({
 								{i18n.t("To")} :
 							</Text>
 							<Text className="mx-3">
-								{range.endDate
-									? dayjs(range.endDate)
+								{range?.endDate
+									? dayjs(range?.endDate)
 											.locale(locale)
 											.format(
 												locale === englishLocale
@@ -235,7 +225,7 @@ const DateTimePickerComponents = ({
 						{range && (
 							<Pressable
 								onPress={() => {
-									setTimeout(() => setOpen(false), 100);
+									setTimeout(() => setOpen?.(false), 100);
 								}}
 								accessibilityRole="button"
 								accessibilityLabel="select"

@@ -20,7 +20,6 @@ import ToggleChartComponent from "@/components/ToggleChartComponent";
 const PricesDetails = () => {
 	const { id } = useLocalSearchParams();
 	const [pricesDetail, setPricesDetails] = useState<any>([]);
-	const [isChartLoaded, setIsChartLoaded] = useState<any>(false);
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const isLandscape = useSelector(
@@ -108,8 +107,6 @@ const PricesDetails = () => {
 				<ToggleChartComponent
 					showRangePicker={true}
 					fetchChartData={fetchChartData}
-					isChartLoaded={isChartLoaded}
-					setIsChartLoaded={setIsChartLoaded}
 				/>
 			</View>
 		</SafeAreaView>

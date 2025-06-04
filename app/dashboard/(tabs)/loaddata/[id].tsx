@@ -25,7 +25,6 @@ const LoadDataDetails = () => {
 	const [loadDetail, setloadDetails] = useState<any>({});
 	const [activeTabForFileName, setActiveTabForFileName] =
 		useState<any>("Week");
-	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
@@ -147,8 +146,6 @@ const LoadDataDetails = () => {
 					showValueRange={true}
 					fetchChartData={fetchChartData}
 					yaxisunit="kWh"
-					isChartLoaded={isChartLoaded}
-					setIsChartLoaded={setIsChartLoaded}
 					setActiveTabForFileName={setActiveTabForFileName}
 				/>
 			</View>

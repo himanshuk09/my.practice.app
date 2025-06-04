@@ -9,6 +9,7 @@ import WebView from "react-native-webview";
 import { useSelector } from "react-redux";
 import PickerModel from "@/components/PickerModel";
 import { ChartLoaderPNG } from "@/components/Loader";
+import { DateType } from "react-native-ui-datepicker";
 import React, { useEffect, useRef, useState } from "react";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import { ChartGraphSimmer } from "@/components/ChartShimmer";
@@ -21,12 +22,26 @@ import { englishLocale, germanyLocale, i18n } from "@/localization/config";
 import iframeLineHtmlContent from "@/components/chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/chart/config/Linechart.android";
 
-type tabsType = "Day" | "Week" | "Month" | "Quarter" | "Year" | "Year_3" | "";
-
+export type tabsType =
+	| "Day"
+	| "Week"
+	| "Month"
+	| "Quarter"
+	| "Year"
+	| "Year_3"
+	| "";
+type ToggleChartComponentProps = {
+	visibleTabs?: tabsType[];
+	fetchChartData?: any;
+	showRangePicker?: boolean;
+	showValueRange?: boolean;
+	yaxisunit?: string;
+	isSignaleScreen?: boolean;
+	setActiveTabForFileName?: React.Dispatch<React.SetStateAction<string>>;
+};
 const formatNumber = (value: number, locale: string): string => {
 	return new Intl.NumberFormat(locale, {
 		useGrouping: false,
-		// minimumFractionDigits: 0,
 		maximumFractionDigits: 2,
 	}).format(value);
 };
@@ -45,11 +60,14 @@ const parseNumber = (
 	return parseFloat(normalized);
 };
 
-//convert yyyy-mm-dd hh:mm to mm-dd-yyyy hh:mm
-const convertDateTime = (input: any) => {
-	const [month, day, yearAndTime] = input.split("/");
-	const [year, time] = yearAndTime.split(" ");
-	const originalDate = new Date(`${year}-${month}-${day}T${time}`);
+//convert mm/dd/yyy  hh:mm to string
+const convertDateTime = (input: string) => {
+	const [datePart, timePart] = input.split(" "); // ["05/28/2025", "00:00"]
+	const [month, day, year] = datePart.split("/"); // ["05", "28", "2025"]
+
+	const isoString = `${year}-${month}-${day}T${timePart}`; // "2025-05-28T00:00"
+	const originalDate = new Date(isoString);
+
 	return dayjs(originalDate);
 };
 
@@ -65,55 +83,60 @@ function formatDateTime(input: any) {
 	return `${day}■${month}■${year}■${hours}■${minutes}`;
 }
 
-type ToggleChartComponentProps = {
-	visibleTabs?: any;
-	fetchChartData?: any;
-	isChartLoaded?: boolean;
-	setIsChartLoaded?: any;
-	showRangePicker?: boolean;
-	showValueRange?: boolean;
-	yaxisunit?: string;
-	isSignaleScreen?: boolean;
-	setActiveTabForFileName?: any;
-};
-
 const ToggleChartComponent = ({
 	visibleTabs,
 	fetchChartData,
-	isChartLoaded,
-	setIsChartLoaded,
 	showRangePicker,
 	showValueRange,
 	yaxisunit = "€/MWh",
 	isSignaleScreen = false,
 	setActiveTabForFileName = () => "cockpit",
 }: ToggleChartComponentProps) => {
-	const webViewRef = useRef<WebView | any>(null);
-	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
-	const LoaderTimeoutRef = useRef<NodeJS.Timeout | number>(null);
+	// Hooks and state initialization
+	const insets = useSafeAreaInsets();
 	const isOnline = useSelector(
 		(state: RootState) => state.network.isConnected
 	);
-	const locale = useSelector((state: any) => state.culture.locale);
+	const locale = useSelector((state: RootState) => state.culture.locale);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-	const [isLoading, setLoading] = useState(false);
+
+	// Refs
+	const webViewRef = useRef<WebView | any>(null);
+	const iFrameRef = useRef<HTMLIFrameElement | any>(null);
+	const LoaderTimeoutRef = useRef<NodeJS.Timeout | number>(null);
+
+	// State
 	const [activeTab, setActiveTab] = useState<tabsType>("Week");
-	const [selectedStartDate, setSelectedStartDate] = useState<any>(); //yyyy-mm-dd hh:mm
-	const [selectedEndDate, setSelectedEndDate] = useState<any>(); //yyyy-mm-dd hh:mm
-	const [maxMinValues, setMaxMinValues] = useState<any>({
+	const [range, setRange] = useState<{
+		startDate: DateType | any;
+		endDate: DateType | any;
+	}>({
+		startDate: dayjs().subtract(1, "month"),
+		endDate: dayjs().add(1),
+	});
+	const [maxMinValues, setMaxMinValues] = useState<{
+		minX: number | string;
+		minY: number | string;
+		maxX: number | string;
+		maxY: number | string;
+	}>({
 		minX: 0,
 		minY: 0,
 		maxX: 0,
 		maxY: 0,
 	});
-	const [modalVisible, setModalVisible] = useState(false);
-	const [isChartZoomed, setIschartZoomed] = useState(false);
-	const [isTooltipEnabled, setIsTooltipEnabled] = useState(false);
-	const [isChartEmpty, setIsChartEmpty] = useState(false);
+
+	//booleans toggle states
+	const [isLoading, setLoading] = useState<boolean>(false);
+	const [modalVisible, setModalVisible] = useState<boolean>(false);
+	const [isChartEmpty, setIsChartEmpty] = useState<boolean>(false);
+	const [isChartZoomed, setIschartZoomed] = useState<boolean>(false);
+	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
 	const [showChartShimmer, setShowChartShimmer] = useState<boolean>(true);
-	const insets = useSafeAreaInsets();
+	const [isTooltipEnabled, setIsTooltipEnabled] = useState<boolean>(false);
+
 	//its trigger by webview on charts operations
 	const onMessage = async (event: any) => {
 		const message = JSON.parse(event.nativeEvent.data);
@@ -181,20 +204,11 @@ const ToggleChartComponent = ({
 			setIsTooltipEnabled(false);
 		}
 
-		const isYearlyView = false;
-		// ["Year", "Quarter", "Year_3"].includes(activeTab) ||
-		// ["Year", "Quarter", "Year_3"].includes(previousTab)
-
 		if (isChartZoomed) {
 			webViewRef?.current?.injectJavaScript("window.resetZoom(); true;");
 			setIschartZoomed(false);
-			if (!isYearlyView) setLoading(true);
+			setLoading(true);
 		}
-
-		const chartOptions = {
-			chart: { animations: { enabled: !isYearlyView } },
-			grid: { show: true },
-		};
 
 		updateApexChart("series", webViewRef, iFrameRef, filteredData);
 
@@ -220,62 +234,61 @@ const ToggleChartComponent = ({
 				},
 			});
 		} else {
-			if (webViewRef?.current) {
-				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}','${yaxisunit}');}`;
-				const updateFormateScript = `if (typeof updateFormate === 'function') {updateFormate('${activeTab}','${locale}');}`;
-				webViewRef.current.injectJavaScript(updateLocaleScript);
-				webViewRef.current.injectJavaScript(updateFormateScript);
-			}
+			const scripts = [
+				`if (typeof updateLocale === 'function') updateLocale('${locale}','${yaxisunit}');`,
+				`if (typeof updateFormate === 'function') updateFormate('${activeTab}','${locale}');`,
+			];
+			scripts.forEach((script) =>
+				webViewRef.current?.injectJavaScript(script)
+			);
 		}
 	};
 
 	const fetchData = async (rangePayload = {}) => {
-		if (fetchChartData) {
-			try {
-				const chartConfig = await fetchChartData(
-					activeTab,
-					rangePayload
-				);
-				if (chartConfig?.data?.length > 0) {
-					updateChartData(chartConfig?.data);
-
-					updateLocale();
-					setSelectedStartDate(
-						convertDateTime(chartConfig?.data[0]?.x)
-					);
-					setSelectedEndDate(
-						convertDateTime(
-							chartConfig?.data[chartConfig.data.length - 1]?.x
-						)
-					);
-					setMaxMinValues({
-						minX: 0,
-						minY: new Intl.NumberFormat(locale, {
-							useGrouping: false,
-							minimumFractionDigits: 0,
-							maximumFractionDigits: 2,
-						}).format(chartConfig?.MinValue),
-						maxX: 0,
-						maxY: new Intl.NumberFormat(locale, {
-							useGrouping: false,
-							minimumFractionDigits: 0,
-							maximumFractionDigits: 2,
-						}).format(chartConfig?.MaxValue),
-					});
-				} else {
-					updateChartData([]);
-					setSelectedStartDate("");
-					setSelectedEndDate("");
-					setMaxMinValues({
-						minX: 0,
-						minY: 0,
-						maxX: 0,
-						maxY: 0,
-					});
-				}
-			} catch (error) {
-				console.error("Error fetching data:", error);
+		if (!fetchChartData) return;
+		try {
+			const chartConfig = await fetchChartData(activeTab, rangePayload);
+			const chartData = chartConfig?.data || [];
+			if (chartData?.length > 0) {
+				updateChartData(chartData);
+				updateLocale();
+				setRange((prev: any) => ({
+					...prev,
+					startDate: convertDateTime(chartData[0]?.x),
+					endDate: convertDateTime(
+						chartData[chartData?.length - 1]?.x
+					),
+				}));
+				setMaxMinValues({
+					minX: 0,
+					minY: new Intl.NumberFormat(locale, {
+						useGrouping: false,
+						minimumFractionDigits: 0,
+						maximumFractionDigits: 2,
+					}).format(chartConfig?.MinValue),
+					maxX: 0,
+					maxY: new Intl.NumberFormat(locale, {
+						useGrouping: false,
+						minimumFractionDigits: 0,
+						maximumFractionDigits: 2,
+					}).format(chartConfig?.MaxValue),
+				});
+			} else {
+				updateChartData([]);
+				setRange((prev: any) => ({
+					...prev,
+					endDate: "",
+					startDate: "",
+				}));
+				setMaxMinValues({
+					minX: 0,
+					minY: 0,
+					maxX: 0,
+					maxY: 0,
+				});
 			}
+		} catch (error) {
+			console.error("Error fetching data:", error);
 		}
 	};
 
@@ -293,8 +306,8 @@ const ToggleChartComponent = ({
 				parseNumber(maxMinValues?.maxY, locale),
 				englishLocale
 			),
-			StartDate: formatDateTime(dayjs(selectedStartDate)),
-			EndDate: formatDateTime(dayjs(selectedEndDate)),
+			StartDate: formatDateTime(dayjs(range.startDate)),
+			EndDate: formatDateTime(dayjs(range.endDate)),
 		});
 	};
 
@@ -326,21 +339,19 @@ const ToggleChartComponent = ({
 				marginLeft: insets.left,
 			}}
 		>
-			{!isLandscape ? (
-				<TabToggleButtons
-					activeTab={activeTab}
-					setActiveTab={setActiveTab}
-					visibleTabs={visibleTabs}
-					isLoading={isLoading}
-					setLoading={setLoading}
-				/>
-			) : (
+			{isLandscape ? (
 				<FloatingActionMenu
 					activeTab={activeTab}
 					setActiveTab={setActiveTab}
 					visibleTabs={visibleTabs}
 					isLoading={isLoading}
-					setLoading={setLoading}
+				/>
+			) : (
+				<TabToggleButtons
+					activeTab={activeTab}
+					setActiveTab={setActiveTab}
+					visibleTabs={visibleTabs}
+					isLoading={isLoading}
 				/>
 			)}
 			{/* Chart  */}
@@ -349,18 +360,20 @@ const ToggleChartComponent = ({
 				{isLoading && <ChartLoaderPNG />}
 
 				<ChartComponent
-					isChartEmpty={isChartEmpty}
-					webViewRef={webViewRef}
-					iFrameRef={iFrameRef}
-					onMessage={onMessage}
 					activeTab={activeTab}
-					webViewhtmlContent={webviewLineHtmlContent}
-					iFramehtmlContent={iframeLineHtmlContent} // for web
-					setShowChartShimmer={setShowChartShimmer} //for web
-					setLoading={setLoading} // for web
+					setMaxMinValues={setMaxMinValues}
+					//for android
+					onMessage={onMessage}
+					webViewRef={webViewRef} // reference
+					isChartEmpty={isChartEmpty}
+					webViewhtmlContent={webviewLineHtmlContent} // for android html string
 					isTooltipEnabled={isTooltipEnabled}
 					setIsChartLoaded={setIsChartLoaded}
-					setMaxMinValues={setMaxMinValues}
+					//for web
+					iFrameRef={iFrameRef} // reference
+					setShowChartShimmer={setShowChartShimmer} // set for web
+					iFramehtmlContent={iframeLineHtmlContent} // for web html string
+					setLoading={setLoading} //set for web
 				/>
 			</View>
 
@@ -376,16 +389,17 @@ const ToggleChartComponent = ({
 						</Text>
 					</TouchableOpacity>
 					<PickerModel
+						//min max
 						maxMinValues={maxMinValues}
 						setMaxMinValues={setMaxMinValues}
+						//range picker and value
 						showRangePicker={showRangePicker}
 						showValueRange={showValueRange}
+						//picker state
 						modalVisible={modalVisible}
 						setModalVisible={setModalVisible}
-						selectedStartDate={selectedStartDate}
-						setSelectedStartDate={setSelectedStartDate}
-						selectedEndDate={selectedEndDate}
-						setSelectedEndDate={setSelectedEndDate}
+						range={range}
+						setRange={setRange}
 						handleRangeDataFilter={handleRangeDataFilter}
 					/>
 				</React.Fragment>

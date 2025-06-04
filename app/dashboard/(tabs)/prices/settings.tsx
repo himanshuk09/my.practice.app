@@ -153,15 +153,19 @@ const PricesSettings = () => {
 					selectedValue={selectedPlace}
 					onValueChange={(newValue) => setSelectedPlace(newValue)}
 					className="w-full p-3 border-b-2 bg-transparent rounded-sm"
+					mode="dropdown"
+					dropdownIconColor="#000"
+					dropdownIconRippleColor="#c1c1c1"
 				>
 					<Picker.Item
 						label="EEX"
 						value="EEX"
 						style={{
 							color: "#0f172a",
-							fontSize: 16,
+							fontSize: 15,
 							fontWeight: "900",
 							paddingLeft: 20,
+							backgroundColor: "white",
 						}}
 					/>
 					<Picker.Item
@@ -169,9 +173,10 @@ const PricesSettings = () => {
 						value="HUPX"
 						style={{
 							color: "#0f172a",
-							fontSize: 16,
-							fontWeight: "400",
+							fontSize: 15,
+							fontWeight: "900",
 							paddingLeft: 20,
+							backgroundColor: "white",
 						}}
 					/>
 				</Picker>

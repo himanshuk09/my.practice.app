@@ -1,52 +1,59 @@
-import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
-import * as ScreenOrientation from "expo-screen-orientation";
 import { RootState } from "@/store/store";
 import WebView from "react-native-webview";
 import ViewShot from "react-native-view-shot";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
 import { MaterialIcons } from "@expo/vector-icons";
 import { setOrientation } from "@/store/chartSlice";
+import { showToast } from "@/components/ToastConfig";
 import { useDispatch, useSelector } from "react-redux";
+import * as ScreenOrientation from "expo-screen-orientation";
 import React, { useCallback, useEffect, useRef } from "react";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 import { Platform, TouchableOpacity, BackHandler } from "react-native";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import { showToast } from "@/components/ToastConfig";
 
 type ChartComponentProps = {
 	webViewRef: React.RefObject<WebView | any>;
 	iFrameRef: React.RefObject<HTMLIFrameElement | any>;
-	webViewhtmlContent: any;
-	iFramehtmlContent: any;
+	webViewhtmlContent: string;
+	iFramehtmlContent: string;
 	onMessage?: (event: any) => void;
 	activeTab?: string;
-	showToggleOrientation?: boolean;
 	showToolbar?: boolean;
-	iFrameWidth?: string | number | undefined;
-	setShowChartShimmer?: any;
-	setLoading?: any;
-	isTooltipEnabled?: boolean;
 	isChartEmpty?: boolean;
-	setIsChartLoaded?: any;
-	setMaxMinValues?: any;
+	setMaxMinValues?: React.Dispatch<
+		React.SetStateAction<{
+			minX: number | string;
+			minY: number | string;
+			maxX: number | string;
+			maxY: number | string;
+		}>
+	>;
+	isTooltipEnabled?: boolean;
+	showToggleOrientation?: boolean;
+	iFrameWidth?: string | number | undefined;
+	setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsChartLoaded?: React.Dispatch<React.SetStateAction<boolean>>;
+	setShowChartShimmer?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
 	webViewRef,
 	iFrameRef,
-	onMessage,
-	activeTab,
 	webViewhtmlContent,
 	iFramehtmlContent,
-	showToggleOrientation = true,
-	showToolbar = true,
+	onMessage,
+	activeTab,
+	isTooltipEnabled,
 	iFrameWidth = "100%",
 	setShowChartShimmer,
 	setLoading = () => {},
-	isTooltipEnabled,
-	isChartEmpty = false,
 	setIsChartLoaded,
 	setMaxMinValues,
+	showToolbar = true,
+	isChartEmpty = false,
+	showToggleOrientation = true,
 }) => {
 	const dispatch = useDispatch();
 	const viewShotRef = useRef<any>(null);
@@ -68,28 +75,28 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 				);
 			}
 
-			// setTimeout(() => {
-			// 	(webViewRef?.current as any)?.injectJavaScript(
-			// 		`updateChartOptions(${JSON.stringify({
-			// 			chart: {
-			// 				height: 285,
-			// 			},
-			// 			xaxis: {
-			// 				labels: {
-			// 					show: true,
-			// 					rotate: 0,
-			// 					rotateAlways: true,
-			// 					position: "top",
-			// 					textAnchor: "end",
-			// 					hideOverlappingLabels: false,
-			// 					showDuplicates: false,
-			// 					trim: false,
-			// 					maxHeight: 120,
-			// 				},
-			// 			},
-			// 		})});`
-			// 	);
-			// }, 500);
+			setTimeout(() => {
+				(webViewRef?.current as any)?.injectJavaScript(
+					`updateChartOptions(${JSON.stringify({
+						chart: {
+							height: 290,
+						},
+						xaxis: {
+							labels: {
+								show: true,
+								rotate: 0,
+								rotateAlways: true,
+								position: "top",
+								textAnchor: "end",
+								hideOverlappingLabels: false,
+								showDuplicates: false,
+								trim: false,
+								maxHeight: 120,
+							},
+						},
+					})});`
+				);
+			}, 500);
 			setTimeout(() => {
 				dispatch(inActiveLoading());
 			}, 2000);
@@ -222,12 +229,21 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 			}
 			// Handle max/min values
 			else if (message === "highLightedMaxMin") {
-				setMaxMinValues(values ? values : "0");
+				setMaxMinValues?.(
+					values
+						? values
+						: {
+								minX: 0,
+								minY: 0,
+								maxX: 0,
+								maxY: 0,
+							}
+				);
 			} else if (message === "Empty Series") {
-				setShowChartShimmer(false);
+				setShowChartShimmer?.(false);
 			} else if (message === "animationEnd") {
 				setTimeout(() => {
-					setShowChartShimmer(false);
+					setShowChartShimmer?.(false);
 				}, 1000);
 			}
 			//console.log(`Message from ${source} iframe:`, event.data);
@@ -265,7 +281,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 							onLoadStart={() => {}}
 							onLoad={() => {}}
 							onLoadEnd={() => {
-								setIsChartLoaded(true);
+								setIsChartLoaded?.(true);
 							}}
 							onMessage={onMessage}
 							onFileDownload={({ nativeEvent }: any) => {
@@ -342,7 +358,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 						pointerEvents: "auto",
 						// margin: 1,
 					}}
-					onLoad={() => setIsChartLoaded(true)}
+					onLoad={() => setIsChartLoaded?.(true)}
 				/>
 			)}
 		</React.Fragment>
