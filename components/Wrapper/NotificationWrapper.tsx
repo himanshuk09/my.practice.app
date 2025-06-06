@@ -3,8 +3,8 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import { router } from "expo-router";
-import { Platform } from "react-native";
 import Constants from "expo-constants";
+import { Platform } from "react-native";
 
 // constants
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
@@ -22,6 +22,7 @@ Notifications.setNotificationHandler({
 		shouldShowList: true,
 		shouldPlaySound: true,
 		shouldSetBadge: true,
+		priority: Notifications.AndroidNotificationPriority.HIGH,
 	}),
 });
 
@@ -150,6 +151,7 @@ const registerForPushNotificationsAsync = async () => {
 				const pushTokenString = (
 					await Notifications.getExpoPushTokenAsync({ projectId })
 				).data;
+				// const token = (await Notifications.getDevicePushTokenAsync()).data;
 				expoPushToken = pushTokenString;
 				console.log("expoPushToken", expoPushToken);
 				return pushTokenString;
@@ -312,17 +314,17 @@ const getError = () => notificationError;
 
 const notificationListener = Notifications.addNotificationReceivedListener(
 	(notification) => {
-		console.log("🔔  Received: ", JSON.stringify(notification, null, 2));
+		// console.log("🔔  Received: ", JSON.stringify(notification, null, 2));
 	}
 );
 
 const responseListener = Notifications.addNotificationResponseReceivedListener(
 	async (response) => {
 		try {
-			console.log(
-				"🔔Response:User interact",
-				JSON.stringify(response, null, 2)
-			);
+			// console.log(
+			// 	"🔔Response:User interact",
+			// 	JSON.stringify(response, null, 2)
+			// );
 			const { actionIdentifier, notification } = response;
 			const notificationId = notification.request.identifier;
 
@@ -359,9 +361,14 @@ const initializeNotifications = async () => {
 			importance: Notifications.AndroidImportance.HIGH,
 			vibrationPattern: [0, 250, 250, 250],
 			lightColor: "#FF231F7C",
+			showBadge: true,
+			enableLights: true,
+			enableVibrate: true,
+			lockscreenVisibility:
+				Notifications.AndroidNotificationVisibility.PUBLIC,
 		});
-		// await registerForPushNotificationsAsync();
 		await setupNotificationCategories();
+		// await registerForPushNotificationsAsync();
 		Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 	} catch (error) {}
 };

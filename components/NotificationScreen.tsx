@@ -16,7 +16,6 @@ import { useDispatch } from "react-redux";
 import {
 	sendMultipleNotification,
 	sendNotification,
-	getCurrentPushToken,
 	scheduleNotification,
 	cancelAllScheduledNotifications,
 	registerForPushNotificationsAsync,
@@ -37,7 +36,6 @@ export default function NotificationScreen() {
 		dispatch(inActiveLoading());
 		async function getToken() {
 			const currentToken: any = await registerForPushNotificationsAsync();
-			console.log("crr", currentToken);
 			setToken(currentToken);
 		}
 		getToken();
@@ -69,7 +67,12 @@ export default function NotificationScreen() {
 			body: body,
 			categoryIdentifier: "message_category",
 			categoryId: "message_category",
-			data: data ? JSON.parse(data) : {},
+			data: data
+				? JSON.parse(data)
+				: {
+						url: "https://eec-cockpit.expo.app/dashboard/loaddata",
+						extraInfo: "You have a new alert",
+					},
 			autoDismiss: true,
 			badge: 2,
 			color: "#e31837",

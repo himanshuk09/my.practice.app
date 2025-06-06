@@ -7,7 +7,6 @@ import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { dashboardMenuItems } from "@/utils/MenuItemlist";
 import { View, FlatList, SafeAreaView } from "react-native";
-import NotificationScreen from "@/components/NotificationScreen";
 
 const Dashboard: React.FC = () => {
 	const isFocused = useIsFocused();
@@ -16,7 +15,7 @@ const Dashboard: React.FC = () => {
 	useLayoutEffect(() => {
 		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
-	return <NotificationScreen />;
+
 	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<StatusBar
