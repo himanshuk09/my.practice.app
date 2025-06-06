@@ -170,6 +170,11 @@ export const TranslationKeys: any = {
 		LoggedIn_Successful: "LoggedIn Successful",
 		File_Downloading: "File Downloading",
 		Download_Failed: "Download Failed!",
+		Open_Settings: "Open Settings",
+		Ask_Me_Later: "Ask Me Later",
+		Permission_Required: "Permission Required",
+		Please_enable_notifications_in_system_settings:
+			"Please enable notifications in system settings",
 		Permission_Denied: "Permission Denied",
 		Media_library_access_required: "Media library access required.",
 		Chart_saved: "Chart saved!",
@@ -494,6 +499,11 @@ export const TranslationKeys: any = {
 		LoggedIn_Successful: "Eingeloggt erfolgreich",
 		File_Downloading: "Datei wird heruntergeladen",
 		Download_Failed: "Download fehlgeschlagen!",
+		Open_Settings: "Einstellungen öffnen",
+		Ask_Me_Later: "Frag mich später",
+		Permission_Required: "Berechtigung erforderlich",
+		Please_enable_notifications_in_system_settings:
+			"Bitte aktivieren Sie Benachrichtigungen in den Systemeinstellungen",
 		Permission_Denied: "Zugriff verweigert",
 		Media_library_access_required:
 			"Zugriff auf die Mediathek erforderlich.",

@@ -4,13 +4,14 @@ import ViewShot from "react-native-view-shot";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { MaterialIcons } from "@expo/vector-icons";
+import CustomAlert from "@/components/CustomAlert";
 import { setOrientation } from "@/store/chartSlice";
 import { showToast } from "@/components/ToastConfig";
 import { useDispatch, useSelector } from "react-redux";
 import * as ScreenOrientation from "expo-screen-orientation";
 import React, { useCallback, useEffect, useRef } from "react";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
-import { Platform, TouchableOpacity, BackHandler } from "react-native";
+import { Platform, TouchableOpacity, BackHandler, Linking } from "react-native";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 type ChartComponentProps = {
@@ -109,10 +110,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 			const { status } = await MediaLibrary.requestPermissionsAsync();
 
 			if (status !== "granted") {
-				showToast({
-					type: "error",
-					title: "Permission_Denied",
-					subtitle: "Please_enable_permission_from_settings",
+				CustomAlert({
+					title: "Permission_Required",
+					description: "Please_enable_permission_from_settings",
+					cancelText: "Ask_Me_Later",
+					confirmText: "Open_Settings",
+					onConfirm: () => Linking.openSettings(),
 				});
 				return;
 			}

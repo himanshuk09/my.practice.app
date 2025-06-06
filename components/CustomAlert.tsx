@@ -26,29 +26,34 @@ type AlertProps = {
 const CustomAlert = ({
 	title,
 	description,
-	icon = "info",
-	iconColor = "#000",
+	icon,
+	iconColor,
 	buttons,
+	confirmText = "OK",
+	confirmColorText = "#e31837",
+	cancelText = "Cancel",
+	cancelColorText = "#94a3b8",
 	onCancel,
 	onConfirm,
+	showCancelButton = false,
 }: AlertProps) => {
-	// If no buttons passed, create default Cancel / OK buttons
 	const defaultButtons: Button[] = [
 		{
-			text: i18n.t("Cancel"),
+			text: i18n.t(cancelText),
 			textStyle: {
 				fontSize: 16,
 				fontWeight: "600",
-				color: "#94a3b8",
+				color: cancelColorText,
+				textTransform: "uppercase",
 			} as TextStyle,
 			onPress: onCancel ?? (() => null),
 		},
 		{
-			text: i18n.t("OK"),
+			text: i18n.t(confirmText),
 			textStyle: {
 				fontSize: 16,
 				fontWeight: "bold",
-				color: "#e31837",
+				color: confirmColorText,
 				textTransform: "uppercase",
 			} as TextStyle,
 			onPress: onConfirm ?? (() => null),
@@ -60,11 +65,11 @@ const CustomAlert = ({
 		description: i18n.t(description),
 		icon,
 		iconColor,
-		confirmText: "",
-		confirmColorText: "",
-		cancelText: "",
-		cancelColorText: "",
-		showCancelButton: false,
+		confirmText,
+		confirmColorText,
+		cancelText,
+		cancelColorText,
+		showCancelButton: !!showCancelButton,
 		buttons: buttons && buttons.length > 0 ? buttons : defaultButtons,
 	});
 };
