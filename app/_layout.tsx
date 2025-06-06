@@ -12,11 +12,7 @@ import UpdatesListener from "@/components/wrapper/UpdatesListener";
 import NetworkListener from "@/components/wrapper/NetworkListener";
 import NavigationWatcher from "@/components/wrapper/NavigationWatcher";
 import AuthInitializeWrapper from "@/components/wrapper/AuthInitializeWrapper ";
-import {
-	cleanupNotificationListeners,
-	initializeNotifications,
-} from "@/components/services/notificationService";
-
+import NotificationWrapper from "@/components/wrapper/NotificationWrapper";
 SplashScreen.preventAutoHideAsync();
 SplashScreen.setOptions({
 	fade: true,
@@ -28,13 +24,11 @@ const Layout = () => {
 			ScreenOrientation.lockAsync(
 				ScreenOrientation.OrientationLock.PORTRAIT_UP
 			);
-			initializeNotifications();
 		}
 
 		return () => {
 			if (Platform.OS !== "web") {
 				ScreenOrientation.unlockAsync();
-				cleanupNotificationListeners();
 			}
 		};
 	}, []);
@@ -43,17 +37,19 @@ const Layout = () => {
 		<Provider store={store}>
 			<AuthInitializeWrapper>
 				<NavigationWatcher>
-					<AppLoader>
-						<NetworkListener />
-						<UpdatesListener />
-						<RootLayout />
-						<AlertContainer
-							animationType="fade"
-							appearance="light"
-							theme="ios"
-						/>
-						<ToastProvider />
-					</AppLoader>
+					<NotificationWrapper>
+						<AppLoader>
+							<NetworkListener />
+							<UpdatesListener />
+							<RootLayout />
+							<AlertContainer
+								animationType="fade"
+								appearance="light"
+								theme="ios"
+							/>
+							<ToastProvider />
+						</AppLoader>
+					</NotificationWrapper>
 				</NavigationWatcher>
 			</AuthInitializeWrapper>
 		</Provider>

@@ -14,19 +14,19 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import {
-	cancelAllScheduledNotifications,
+	sendMultipleNotification,
+	sendNotification,
 	getCurrentPushToken,
 	scheduleNotification,
-	sendMultipleNotificationUsingTokens,
-	sendNotificationUsingToken,
-} from "@/components/services/notificationService";
+	cancelAllScheduledNotifications,
+	registerForPushNotificationsAsync,
+} from "@/components/wrapper/NotificationWrapper";
 
 export default function NotificationScreen() {
 	const [token, setToken] = useState("");
 	const [title, setTitle] = useState("");
 	const [body, setBody] = useState("");
 	const [data, setData] = useState("");
-	const [expoPushToken, setExpoPushToken] = useState("");
 	const [isScheduled, setIsScheduled] = useState(false);
 	const [delayValue, setDelayValue] = useState("5");
 	const [isMinutes, setIsMinutes] = useState(false);
@@ -35,9 +35,12 @@ export default function NotificationScreen() {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(inActiveLoading());
-		const currentToken: any = getCurrentPushToken();
-		setExpoPushToken(currentToken);
-		setToken(currentToken);
+		async function getToken() {
+			const currentToken: any = await registerForPushNotificationsAsync();
+			console.log("crr", currentToken);
+			setToken(currentToken);
+		}
+		getToken();
 	}, [isScheduled, isFocused]);
 	const handleMultipleSendNotification = async () => {
 		if (!token) {
@@ -109,7 +112,7 @@ export default function NotificationScreen() {
 				);
 			} else {
 				// Send push notifications via Expo to multiple tokens
-				sendMultipleNotificationUsingTokens(notifications);
+				sendMultipleNotification(notifications);
 				Alert.alert("Success", "Notifications sent successfully :) !");
 			}
 		} catch (error) {
@@ -160,7 +163,7 @@ export default function NotificationScreen() {
 					}`
 				);
 			} else {
-				sendNotificationUsingToken(notificationContent);
+				sendNotification(notificationContent);
 				Alert.alert("Success", "Notification sent successfully :) !");
 			}
 		} catch (error) {
@@ -176,11 +179,11 @@ export default function NotificationScreen() {
 			<Text style={styles.header}>Send a notification</Text>
 
 			<View style={styles.inputContainer}>
-				<Text style={styles.label}>Token *</Text>
+				<Text style={styles.label}>Token * {token}</Text>
 				<TextInput
 					style={styles.input}
 					placeholder="ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]"
-					value={token || expoPushToken}
+					value={token}
 					onChangeText={setToken}
 					placeholderTextColor="#999"
 				/>
@@ -290,7 +293,7 @@ export default function NotificationScreen() {
 			</TouchableOpacity>
 			<View style={styles.tokenContainer}>
 				<Text style={styles.label}>Your Expo Push Token:</Text>
-				<Text style={styles.tokenText}>{expoPushToken}</Text>
+				<Text style={styles.tokenText}>{token}</Text>
 			</View>
 		</ScrollView>
 	);

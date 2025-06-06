@@ -1,7 +1,22 @@
+import {
+	View,
+	Text,
+	SafeAreaView,
+	TouchableOpacity,
+	Linking,
+	Platform,
+} from "react-native";
+import {
+	getCurrentPushToken,
+	registerForPushNotificationsAsync,
+} from "@/components/wrapper/NotificationWrapper";
 import { st } from "@/utils/Styles";
 import { StatusBar } from "expo-status-bar";
+import * as Clipboard from "expo-clipboard";
 import { Href, useRouter } from "expo-router";
+import CustomAlert from "@/components/CustomAlert";
 import React, { useEffect, useState } from "react";
+import * as Notifications from "expo-notifications";
 import { Picker } from "@react-native-picker/picker";
 import { updateLocale } from "@/store/languageSlice";
 import CustomSwitch from "@/components/CustomSwitch";
@@ -10,38 +25,168 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { englishLocale, germanyLocale, i18n } from "@/localization/config";
-import * as Clipboard from "expo-clipboard";
-import { getCurrentPushToken } from "@/components/services/notificationService";
-import CustomAlert from "@/components/CustomAlert";
+
 const Settings = () => {
 	const router = useRouter();
 	const isFocused = useIsFocused();
+	const insets = useSafeAreaInsets();
 	const dispatch: AppDispatch = useDispatch();
 	const { locale } = useSelector((state: RootState) => state.culture);
 	const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
+	const [isSignalsEnabled, setIsSignalsEnabled] = useState<boolean>(false);
 	const [isNotificationEnabled, setIsNotificationEnabled] =
 		useState<boolean>(false);
-	const [isSignalsEnabled, setIsSignalsEnabled] = useState<boolean>(true);
+
 	const [copiedText, setCopiedText] = useState("");
 	const copyToClipboard = async () => {
 		await Clipboard.setStringAsync(copiedText);
-		CustomAlert({
-			title: "Copied",
-		});
 	};
-	// {   "userId": "abc123",   "action": "test",   "priority": "low",   "url": "https://eec-cockpit.expo.app/dashboard" }
-	const insets = useSafeAreaInsets();
 	useEffect(() => {
-		const currentToken: any = getCurrentPushToken();
-		setCopiedText(currentToken);
-		if (isFocused) dispatch(inActiveLoading());
-	}, [isFocused]);
-
-	useEffect(() => {
+		const token: any = getCurrentPushToken();
+		setCopiedText(token);
 		if (isNotificationEnabled) copyToClipboard();
 	}, [isNotificationEnabled]);
+
+	const handleNotificationSwitchToggle = async (newValue: boolean) => {
+		const enableKey = newValue ? "enabled" : "disabled";
+
+		setIsNotificationEnabled(newValue);
+		setIsSignalsEnabled(newValue);
+		await AsyncStorage.setItem("notification_preference", enableKey);
+		await AsyncStorage.setItem("signal_preference", enableKey);
+
+		if (!newValue) return;
+
+		try {
+			const { status } = await Notifications.getPermissionsAsync();
+			const wasPromptedBefore = await AsyncStorage.getItem(
+				"notification_prompted"
+			);
+
+			if (status !== "granted") {
+				if (!wasPromptedBefore) {
+					// First time asking permission
+					await AsyncStorage.setItem("notification_prompted", "true");
+					const { status: newStatus } =
+						await Notifications.requestPermissionsAsync();
+
+					if (newStatus !== "granted") {
+						// Don't show alert on first-time denial
+						setIsNotificationEnabled(false);
+						setIsSignalsEnabled(false);
+						await AsyncStorage.setItem(
+							"notification_preference",
+							"disabled"
+						);
+						await AsyncStorage.setItem(
+							"signal_preference",
+							"disabled"
+						);
+						return;
+					}
+				} else {
+					// User already denied before, show custom alert
+					setIsNotificationEnabled(false);
+					setIsSignalsEnabled(false);
+					await AsyncStorage.setItem(
+						"notification_preference",
+						"disabled"
+					);
+					await AsyncStorage.setItem("signal_preference", "disabled");
+
+					CustomAlert({
+						title: "Permission_Required",
+						description:
+							"Please_enable_notifications_in_system_settings",
+						cancelText: "Ask_Me_Later",
+						confirmText: "Open_Settings",
+						onConfirm: () => {
+							if (Platform.OS !== "web") {
+								Linking.openSettings();
+							}
+						},
+					});
+					return;
+				}
+			}
+
+			// Permission is granted; try getting token
+			const token = await registerForPushNotificationsAsync();
+			if (!token) {
+				setIsNotificationEnabled(false);
+				setIsSignalsEnabled(false);
+				await AsyncStorage.setItem(
+					"notification_preference",
+					"disabled"
+				);
+				await AsyncStorage.setItem("signal_preference", "disabled");
+
+				if (wasPromptedBefore === "true") {
+					CustomAlert({
+						title: "Permission_Required",
+						description:
+							"Please_enable_notifications_in_system_settings",
+						cancelText: "Ask_Me_Later",
+						confirmText: "Open_Settings",
+						onConfirm: () => {
+							if (Platform.OS !== "web") {
+								Linking.openSettings();
+							}
+						},
+					});
+				}
+			}
+		} catch (error: any) {
+			console.error("Notification error:", error);
+			setIsNotificationEnabled(false);
+			setIsSignalsEnabled(false);
+			await AsyncStorage.setItem("notification_preference", "disabled");
+			await AsyncStorage.setItem("signal_preference", "disabled");
+
+			CustomAlert({
+				title: "Error",
+				description: error.message || "Something went wrong",
+				cancelText: "OK",
+				confirmText: "",
+				onConfirm: () => {},
+			});
+		}
+	};
+
+	// Handle signals toggle (only allowed when notifications are on)
+	const handleSignalsToggle = async (newValue: boolean) => {
+		if (isNotificationEnabled) {
+			setIsSignalsEnabled(newValue);
+			await AsyncStorage.setItem(
+				"signal_preference",
+				newValue ? "enabled" : "disabled"
+			);
+		}
+	};
+
+	useEffect(() => {
+		const loadInitialState = async () => {
+			const { status } = await Notifications.getPermissionsAsync();
+
+			const notipref = await AsyncStorage.getItem(
+				"notification_preference"
+			);
+			const signalpref = await AsyncStorage.getItem("signal_preference");
+			if (status == "granted") {
+				setIsNotificationEnabled(notipref === "enabled");
+
+				if (notipref === "enabled")
+					setIsSignalsEnabled(signalpref === "enabled");
+			}
+		};
+		if (isFocused) {
+			dispatch(inActiveLoading());
+			loadInitialState();
+		}
+	}, [isFocused]);
+
 	return (
 		<SafeAreaView
 			className="flex-1 bg-white"
@@ -107,7 +252,7 @@ const Settings = () => {
 					<View className="w-20 mr-3">
 						<CustomSwitch
 							isEnabled={isNotificationEnabled}
-							setIsEnabled={setIsNotificationEnabled}
+							setIsEnabled={handleNotificationSwitchToggle}
 						/>
 					</View>
 				</View>
@@ -118,7 +263,7 @@ const Settings = () => {
 					<View className="w-20 mr-3">
 						<CustomSwitch
 							isEnabled={isSignalsEnabled}
-							setIsEnabled={setIsSignalsEnabled}
+							setIsEnabled={handleSignalsToggle}
 						/>
 					</View>
 				</View>

@@ -1,49 +1,54 @@
-import * as Notifications from "expo-notifications";
+import React, { useEffect } from "react";
 import * as Device from "expo-device";
-import Constants from "expo-constants";
-import { Platform } from "react-native";
+import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import { router } from "expo-router";
+import { Platform } from "react-native";
+import Constants from "expo-constants";
 
-/**
- * State variables
- */
+// constants
+const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+
+//State variables
 let expoPushToken: string | null = null;
 let currentNotification: Notifications.Notification | null = null;
 let notificationError: Error | null | any = null;
 null;
-// constants
-const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 
-/**
- * Background task setup
- */
+// Initialize notification handler
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowBanner: true,
+		shouldShowList: true,
+		shouldPlaySound: true,
+		shouldSetBadge: true,
+	}),
+});
+
+//Background task setup
 TaskManager.defineTask<Notifications.NotificationResponse>(
 	BACKGROUND_NOTIFICATION_TASK,
 	async ({ data, error, executionInfo }) => {
 		try {
-			// console.log(
-			// 	"🔔 Received a notification in the background!",
-			// 	JSON.stringify(
-			// 		{
-			// 			data,
-			// 			error,
-			// 			executionInfo,
-			// 		},
-			// 		null,
-			// 		2
-			// 	)
-			// );
+			console.log(
+				" Received 🔔 in the background!",
+				JSON.stringify(
+					{
+						data,
+						error,
+						executionInfo,
+					},
+					null,
+					2
+				)
+			);
 			return Promise.resolve();
 		} catch (e) {
 			return Promise.reject(e);
 		}
 	}
 );
-
-/**
- * Notification categories configuration
- */
+//Notification categories configuration
 const categories = [
 	{
 		id: "message_category",
@@ -106,93 +111,15 @@ const categories = [
 	},
 ];
 
-/**
- * Initialize notification handler
- */
-Notifications.setNotificationHandler({
-	handleNotification: async () => ({
-		shouldShowBanner: true,
-		shouldShowList: true,
-		shouldPlaySound: true,
-		shouldSetBadge: true,
-	}),
-});
-
-/**
- * Listeners
- */
-const notificationListener = Notifications.addNotificationReceivedListener(
-	(notification) => {
-		// console.log(
-		// 	"🔔 Notification Received: ",
-		// 	JSON.stringify(notification, null, 2)
-		// );
-		currentNotification = notification;
-	}
-);
-
-const responseListener = Notifications.addNotificationResponseReceivedListener(
-	async (response) => {
-		try {
-			console.log(
-				"🔔Notification Response:User interact",
-				JSON.stringify(response, null, 2)
-			);
-			const { actionIdentifier, notification } = response;
-			const notificationId = notification.request.identifier;
-
-			if (
-				actionIdentifier === "DELETE" ||
-				actionIdentifier === "IGNORE_ACTION" ||
-				actionIdentifier === "MARK_AS_READ"
-			) {
-				console.log("Delete button pressed", notificationId);
-				await Notifications.dismissNotificationAsync(notificationId); // 👈 dismiss it manually
-			}
-
-			if (actionIdentifier === "REPLY") {
-				const userInput =
-					response.userText ??
-					response.notification.request.content.data?.userText ??
-					null;
-				console.log("User input:", userInput, notificationId);
-				await Notifications.dismissNotificationAsync(notificationId); // 👈 dismiss it manually
-			}
-
-			const url: any = response.notification.request.content.data?.url;
-			if (url) router.push(url);
-		} catch (error) {
-			notificationError = error;
-		}
-	}
-);
-
-/**
- * Initialize function (call this when your app starts)
- */
-export const initializeNotifications = async () => {
-	try {
-		await registerForPushNotificationsAsync();
-		await setupNotificationCategories();
-		Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
-	} catch (error) {
-		notificationError = error;
-	}
-};
-
-/**
- *  Cleanup function (call this when your app is closing)
- */
-export const cleanupNotificationListeners = () => {
-	notificationListener.remove();
-	responseListener.remove();
-};
-
-export const setupNotificationCategories = async () => {
+const setupNotificationCategories = async () => {
 	await Promise.all(
-		categories.map(({ id, actions }) =>
-			Notifications.setNotificationCategoryAsync(id, actions)
-		)
+		categories.map(async ({ id, actions }) => {
+			try {
+				await Notifications.setNotificationCategoryAsync(id, actions);
+			} catch (error) {
+				console.error(`Failed to set category ${id}:`, error);
+			}
+		})
 	);
 };
 
@@ -200,32 +127,16 @@ export const setupNotificationCategories = async () => {
  * Check the permission / device and then give expoPushToken
  * @returns expoPushToken
  */
-export const registerForPushNotificationsAsync = async () => {
+const registerForPushNotificationsAsync = async () => {
 	try {
-		if (Platform.OS === "android") {
-			await Notifications.setNotificationChannelAsync("default", {
-				name: "default",
-				importance: Notifications.AndroidImportance.HIGH,
-				vibrationPattern: [0, 250, 250, 250],
-				lightColor: "#FF231F7C",
-			});
-		}
-
 		if (Device.isDevice) {
-			const { status: existingStatus } =
-				await Notifications.getPermissionsAsync();
-			let finalStatus = existingStatus;
-
-			if (existingStatus !== "granted") {
-				const { status } =
+			const { status } = await Notifications.getPermissionsAsync();
+			if (status !== "granted") {
+				const { status: newStatus } =
 					await Notifications.requestPermissionsAsync();
-				finalStatus = status;
-			}
-
-			if (finalStatus !== "granted") {
-				throw new Error(
-					"Permission not granted to get push token for push notification!"
-				);
+				if (newStatus !== "granted") {
+					throw new Error("Permission denied");
+				}
 			}
 
 			const projectId =
@@ -256,11 +167,11 @@ export const registerForPushNotificationsAsync = async () => {
 
 /**
  * Schedule Notification
- * @param content
- * @param trigger
+ * @param content  Notifications.NotificationContentInput
+ * @param trigger  Notifications.NotificationTriggerInput
  * @returns
  */
-export const scheduleNotification = async (
+const scheduleNotification = async (
 	content: Notifications.NotificationContentInput & {
 		to?: string;
 	} = {
@@ -290,7 +201,7 @@ export const scheduleNotification = async (
  *  Cancel the Schedule Notification by identifier
  * @param identifier
  */
-export const cancelScheduledNotification = async (identifier: string) => {
+const cancelScheduledNotification = async (identifier: string) => {
 	try {
 		await Notifications.cancelScheduledNotificationAsync(identifier);
 	} catch (error) {
@@ -301,7 +212,7 @@ export const cancelScheduledNotification = async (identifier: string) => {
 /**
  * Cancel All Schedule Notification
  */
-export const cancelAllScheduledNotifications = async () => {
+const cancelAllScheduledNotifications = async () => {
 	try {
 		await Notifications.cancelAllScheduledNotificationsAsync();
 	} catch (error) {
@@ -313,7 +224,7 @@ export const cancelAllScheduledNotifications = async () => {
  * Get All Scheduled Notifications
  * @returns
  */
-export const getAllScheduledNotifications = async () => {
+const getAllScheduledNotifications = async () => {
 	try {
 		return await Notifications.getAllScheduledNotificationsAsync();
 	} catch (error) {
@@ -327,7 +238,7 @@ export const getAllScheduledNotifications = async () => {
  * @param notificationContent
  * @returns
  */
-export const sendNotificationUsingToken = async (notificationContent: {
+const sendNotification = async (notificationContent: {
 	to?: any;
 	title?: string | null;
 	subtitle?: string | null;
@@ -364,7 +275,7 @@ export const sendNotificationUsingToken = async (notificationContent: {
  * @param notificationContent
  * @returns
  */
-export const sendMultipleNotificationUsingTokens = async (
+const sendMultipleNotification = async (
 	notificationContent: (Notifications.NotificationContentInput & {
 		to?: string;
 	})[]
@@ -395,6 +306,97 @@ export const sendMultipleNotificationUsingTokens = async (
 /**
  * Getter
  */
-export const getCurrentPushToken = () => expoPushToken;
-export const getCurrentNotification = () => currentNotification;
-export const getError = () => notificationError;
+const getCurrentPushToken = () => expoPushToken;
+const getCurrentNotification = () => currentNotification;
+const getError = () => notificationError;
+
+const notificationListener = Notifications.addNotificationReceivedListener(
+	(notification) => {
+		console.log("🔔  Received: ", JSON.stringify(notification, null, 2));
+	}
+);
+
+const responseListener = Notifications.addNotificationResponseReceivedListener(
+	async (response) => {
+		try {
+			console.log(
+				"🔔Response:User interact",
+				JSON.stringify(response, null, 2)
+			);
+			const { actionIdentifier, notification } = response;
+			const notificationId = notification.request.identifier;
+
+			if (
+				actionIdentifier === "DELETE" ||
+				actionIdentifier === "IGNORE_ACTION" ||
+				actionIdentifier === "MARK_AS_READ"
+			) {
+				console.log("Delete button pressed", notificationId);
+				await Notifications.dismissNotificationAsync(notificationId); // 👈 dismiss it manually
+			}
+
+			if (actionIdentifier === "REPLY") {
+				const userInput =
+					response.userText ??
+					response.notification.request.content.data?.userText ??
+					null;
+				console.log("User input:", userInput, notificationId);
+				await Notifications.dismissNotificationAsync(notificationId); // 👈 dismiss it manually
+			}
+
+			const url: any = response.notification.request.content.data?.url;
+			if (url) router.push(url);
+		} catch (error) {
+			console.log("error on response lister", error);
+		}
+	}
+);
+
+const initializeNotifications = async () => {
+	try {
+		await Notifications.setNotificationChannelAsync("default", {
+			name: "default",
+			importance: Notifications.AndroidImportance.HIGH,
+			vibrationPattern: [0, 250, 250, 250],
+			lightColor: "#FF231F7C",
+		});
+		// await registerForPushNotificationsAsync();
+		await setupNotificationCategories();
+		Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
+	} catch (error) {}
+};
+
+const cleanupNotificationListeners = () => {
+	notificationListener.remove();
+	responseListener.remove();
+};
+
+const NotificationWrapper = ({ children }: { children: React.ReactNode }) => {
+	useEffect(() => {
+		if (Platform.OS !== "web") {
+			initializeNotifications();
+		}
+
+		return () => {
+			if (Platform.OS !== "web") {
+				cleanupNotificationListeners();
+			}
+		};
+	}, []);
+	return <>{children}</>;
+};
+
+export default NotificationWrapper;
+export {
+	getError,
+	sendNotification,
+	getCurrentPushToken,
+	scheduleNotification,
+	getCurrentNotification,
+	sendMultipleNotification,
+	cancelScheduledNotification,
+	setupNotificationCategories,
+	getAllScheduledNotifications,
+	cancelAllScheduledNotifications,
+	registerForPushNotificationsAsync,
+};
