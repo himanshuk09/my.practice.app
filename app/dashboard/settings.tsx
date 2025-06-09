@@ -50,14 +50,10 @@ const Settings = () => {
 	}, [isNotificationEnabled]);
 
 	const handleNotificationSwitchToggle = async (newValue: boolean) => {
-		const enableKey = newValue ? "enabled" : "disabled";
-
 		setIsNotificationEnabled(newValue);
 		setIsSignalsEnabled(newValue);
-		await AsyncStorage.setItem("notification_preference", enableKey);
-		await AsyncStorage.setItem("signal_preference", enableKey);
 
-		if (!newValue) return;
+		if (!newValue || Platform.OS === "web") return;
 
 		try {
 			const { status } = await Notifications.getPermissionsAsync();
@@ -73,29 +69,13 @@ const Settings = () => {
 						await Notifications.requestPermissionsAsync();
 
 					if (newStatus !== "granted") {
-						// Don't show alert on first-time denial
 						setIsNotificationEnabled(false);
 						setIsSignalsEnabled(false);
-						await AsyncStorage.setItem(
-							"notification_preference",
-							"disabled"
-						);
-						await AsyncStorage.setItem(
-							"signal_preference",
-							"disabled"
-						);
 						return;
 					}
 				} else {
-					// User already denied before, show custom alert
 					setIsNotificationEnabled(false);
 					setIsSignalsEnabled(false);
-					await AsyncStorage.setItem(
-						"notification_preference",
-						"disabled"
-					);
-					await AsyncStorage.setItem("signal_preference", "disabled");
-
 					CustomAlert({
 						title: "Permission_Required",
 						description:
@@ -117,34 +97,23 @@ const Settings = () => {
 			if (!token) {
 				setIsNotificationEnabled(false);
 				setIsSignalsEnabled(false);
-				await AsyncStorage.setItem(
-					"notification_preference",
-					"disabled"
-				);
-				await AsyncStorage.setItem("signal_preference", "disabled");
-
-				if (wasPromptedBefore === "true") {
-					CustomAlert({
-						title: "Permission_Required",
-						description:
-							"Please_enable_notifications_in_system_settings",
-						cancelText: "Ask_Me_Later",
-						confirmText: "Open_Settings",
-						onConfirm: () => {
-							if (Platform.OS !== "web") {
-								Linking.openSettings();
-							}
-						},
-					});
-				}
+				CustomAlert({
+					title: "Permission_Required",
+					description:
+						"Please_enable_notifications_in_system_settings",
+					cancelText: "Ask_Me_Later",
+					confirmText: "Open_Settings",
+					onConfirm: () => {
+						if (Platform.OS !== "web") {
+							Linking.openSettings();
+						}
+					},
+				});
 			}
 		} catch (error: any) {
 			console.error("Notification error:", error);
 			setIsNotificationEnabled(false);
 			setIsSignalsEnabled(false);
-			await AsyncStorage.setItem("notification_preference", "disabled");
-			await AsyncStorage.setItem("signal_preference", "disabled");
-
 			CustomAlert({
 				title: "Error",
 				description: error.message || "Something went wrong",
@@ -159,10 +128,6 @@ const Settings = () => {
 	const handleSignalsToggle = async (newValue: boolean) => {
 		if (isNotificationEnabled) {
 			setIsSignalsEnabled(newValue);
-			await AsyncStorage.setItem(
-				"signal_preference",
-				newValue ? "enabled" : "disabled"
-			);
 		}
 	};
 
@@ -186,7 +151,26 @@ const Settings = () => {
 			loadInitialState();
 		}
 	}, [isFocused]);
+	const handleSave = async () => {
+		dispatch(updateLocale(selectedLanguage));
 
+		// Save language preference
+		await AsyncStorage.setItem("app_locale", selectedLanguage);
+
+		// Save notification preference
+		await AsyncStorage.setItem(
+			"notification_preference",
+			isNotificationEnabled ? "enabled" : "disabled"
+		);
+
+		// Save signals preference
+		await AsyncStorage.setItem(
+			"signal_preference",
+			isSignalsEnabled ? "enabled" : "disabled"
+		);
+
+		router.replace("/dashboard" as Href);
+	};
 	return (
 		<SafeAreaView
 			className="flex-1 bg-white"
@@ -214,7 +198,7 @@ const Settings = () => {
 				<Picker
 					selectedValue={selectedLanguage}
 					onValueChange={(newValue) => setSelectedLanguage(newValue)}
-					className="w-full p-3 border-b-2 rounded-3xl"
+					className="w-full p-3 border-b-2"
 					mode="dropdown"
 					dropdownIconColor="#000"
 					dropdownIconRippleColor="#c1c1c1"
@@ -284,10 +268,7 @@ const Settings = () => {
 
 				<TouchableOpacity
 					className="items-center p-5  w-[50%] bg-primary"
-					onPress={() => {
-						dispatch(updateLocale(selectedLanguage));
-						router.replace("/dashboard" as Href);
-					}}
+					onPress={handleSave}
 				>
 					<Text className="text-center text-white uppercase font-normal">
 						{i18n.t("save")}

@@ -85,6 +85,8 @@ const PickerModel = ({
 		range: false,
 	});
 
+	const initialRangeRef = useRef(range);
+	const initialMaxMinRef = useRef(maxMinValues);
 	// Derived values
 	const isEng = locale === englishLocale;
 	const dateFormat = isEng ? "DD/MM/YYYY" : "DD.MM.YYYY";
@@ -199,7 +201,23 @@ const PickerModel = ({
 		)
 			return;
 
-		handleRangeDataFilter();
+		//Only Called if any change on dates or values range
+		const initialRange = initialRangeRef.current;
+		const initialMaxMin = initialMaxMinRef.current;
+
+		const rangeChanged =
+			dayjs(range?.startDate).valueOf() !==
+				dayjs(initialRange?.startDate).valueOf() ||
+			dayjs(range?.endDate).valueOf() !==
+				dayjs(initialRange?.endDate).valueOf();
+
+		const maxMinChanged =
+			maxMinValues.minY !== initialMaxMin.minY ||
+			maxMinValues.maxY !== initialMaxMin.maxY;
+
+		if (rangeChanged || maxMinChanged) {
+			handleRangeDataFilter();
+		}
 		setTimeout(() => setModalVisible?.(false), 100);
 	};
 
@@ -229,6 +247,12 @@ const PickerModel = ({
 		}).start();
 	}, [isKeyboardVisible]);
 
+	useEffect(() => {
+		if (modalVisible) {
+			initialRangeRef.current = range;
+			initialMaxMinRef.current = maxMinValues;
+		}
+	}, [modalVisible]);
 	// Render helpers
 	const renderDatePickerButton = (
 		date: any,
