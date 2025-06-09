@@ -31,11 +31,15 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 		.apexcharts-tooltip .apexcharts-tooltip-title {
 			font-weight: bold;
 		}
-
+        .svg_select_handle_r,
+        .svg_select_handle_l {
+            display: none;
+        }
 		.apexcharts-selection-rect {
 			transition: opacity 150ms ease-out;
 			opacity: 1;
 			pointer-events: none;
+            fill: rgba(0, 123, 255, 0.3);
 		}
 	</style>
 </head>
@@ -62,30 +66,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 		}
 
 
-		// Mouse move event handler (attach this to your chart container)
-		function handleChartMouseMove(e) {
-			if (chart.w.globals.selectionEnabled) {
-				const selectionRect = document.querySelector('.apexcharts-selection-rect');
-				if (selectionRect) {
-					selectionRect.style.display = 'block';
-					selectionRect.style.opacity = '1';
-				}
-			}
-			selectionHideTimeout = setTimeout(() => {
-				const selectionRect = document.querySelector('.apexcharts-selection-rect');
-				if (selectionRect) {
-					selectionRect.style.transition = 'opacity 150ms ease-out';
-					selectionRect.style.opacity = '0';
-					setTimeout(() => {
-						selectionRect.style.display = 'none';
-						selectionRect.style.opacity = '1';
-						selectionRect.style.transition = '';
-						isCurrentlySelecting = false;
-						chart.resetSelection();
-					}, 150);
-				}
-			}, 200);
-		}
+		
 
 
 
@@ -477,7 +458,6 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 
 					mouseMove: function () {
 						sendMsgToReactNative("mouseMove");
-						handleChartMouseMove();
 					},
 
 					mouseLeave: function () {
@@ -500,7 +480,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 						sendMsgToReactNative("xAxisLabelClick");
 					},
 
-					selection: function (chartContext, { xaxis, yaxis }) {
+					selection:async  function (chartContext, { xaxis, yaxis }) {
 						const chart = chartContext;
 
 						const currentMin = chart.w.globals.minX;
@@ -510,6 +490,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 						// Get selection coordinates
 						const selectedMin = xaxis.min;
 						const selectedMax = xaxis.max;
+                        
 						const selectionWidth = selectedMax - selectedMin;
 
 						// Minimum selection threshold (5% of current view)
@@ -535,33 +516,13 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 						const currentRange = currentMax - currentMin;
 						const newRange = newMax - newMin;
 
-						if (newRange > currentRange * 1.05) {
+                        await updateLocale();                
+                        if (newRange > currentRange * 1.05) {
 							chart.zoomX(
 								newMin,
 								newMax,
-								{
-									animation: {
-										enabled: true,
-										easing: 'easeout',
-										speed: 300
-									}
-								}
 							);
 						}
-							selectionHideTimeout = setTimeout(() => {
-							const selectionRect = document.querySelector('.apexcharts-selection-rect');
-							if (selectionRect) {
-								selectionRect.style.transition = 'opacity 150ms ease-out';
-								selectionRect.style.opacity = '0';
-								setTimeout(() => {
-									selectionRect.style.display = 'none';
-									selectionRect.style.opacity = '1';
-									selectionRect.style.transition = '';
-									isCurrentlySelecting = false;
-									chart.resetSelection();
-								}, 150);
-							}
-						}, 200);
 					},
 
 					dataPointMouseEnter: function () {
@@ -858,6 +819,7 @@ const webviewLineHtmlContent = `<!DOCTYPE html>
 				intersect: false,
 				hideEmptySeries: false,
 				fillSeriesColor: false,
+                followCursor: false,
 				offsetX: 10,
 				offsetY: 10,
 				style: {

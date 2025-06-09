@@ -24,6 +24,24 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
 			.apexcharts-tooltip .apexcharts-tooltip-title {
   				font-weight: bold;
 			}
+                .apexcharts-element-hidden {
+			opacity: 1 !important;
+			visibility: visible !important;
+		}
+
+		.apexcharts-tooltip .apexcharts-tooltip-title {
+			font-weight: bold;
+		}
+        .svg_select_handle_r,
+        .svg_select_handle_l {
+            display: none;
+        }
+		.apexcharts-selection-rect {
+			transition: opacity 150ms ease-out;
+			opacity: 1;
+			pointer-events: none;
+            fill: rgba(0, 123, 255, 0.3);
+		}
         </style>
     </head>
     <body>
@@ -77,6 +95,28 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                     type: "area",
                     offsetX: -5,
                     offsetY: 0,
+                    selection: {
+                        enabled: true,
+                        type: 'x',
+                        fill: {
+                            color: '#888',
+                            opacity: 0.15
+                        },
+                        stroke: {
+                            width: 1,
+                            dashArray: 0,
+                            color: '#555',
+                            opacity: 0.8
+                        },
+                        xaxis: {
+                            min: undefined,
+                            max: undefined
+                        },
+                        yaxis: {
+                            min: undefined,
+                            max: undefined
+                        }
+                    },
                     zoom: {
                         enabled: true,
                         type: "x",
@@ -124,16 +164,16 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                                 currentMax + zoomAmount,
                                 chart.w.globals.seriesX[0][chart.w.globals.seriesX[0].length - 1] // Series maximum
                             );
+                            categories = getLocalizedMonths(locale);
                             
                             // Update chart optionsata no
-                            chart.updateOptions({
+                             chart.updateOptions({
                                 xaxis: {
                                     min: newMinX,
                                     max: newMaxX,
-                                    
+                                    categories: categories,
                                 },
-                            });
-                            updateLocale(locale, title);
+                            })
                         },
                         animationEnd: function (chartContext, { xaxis, yaxis })
                         {
@@ -142,7 +182,6 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
 
                         mouseMove: function () {
                             sendMsgToReactNative("mouseMove");
-                            handleChartMouseMove();
                         },
 
                         mouseLeave: function () {

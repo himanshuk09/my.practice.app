@@ -29,6 +29,7 @@ import {
 } from "@/components/chart/config";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/config";
+import { useDebounce } from "@/hooks/useDebounce";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import NoNetwork from "@/components/icons/NoNetwork";
@@ -159,6 +160,7 @@ const PortfolioOverView = () => {
 		}
 	};
 
+	const debouncedExport = useDebounce(() => exportPortfolioReport(), 1000);
 	const exportPortfolioReport = async () => {
 		if (!isOnline || portfolioDetails?.message === "no data") return;
 
@@ -291,7 +293,7 @@ const PortfolioOverView = () => {
 						name="file-download"
 						size={25}
 						color="#ef4444"
-						onPress={exportPortfolioReport}
+						onPress={debouncedExport}
 					/>
 				</View>
 			</View>

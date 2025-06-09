@@ -137,7 +137,6 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 
 					mouseMove: function () {
 						sendMsgToReactNative("mouseMove");
-						handleChartMouseMove();
 					},
 
 					mouseLeave: function () {

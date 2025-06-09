@@ -2,9 +2,9 @@ import { st } from "@/utils/Styles";
 import { useEffect, useState } from "react";
 import { i18n } from "@/localization/config";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useDebounce } from "@/hooks/useDebounce";
 import StackHeader from "@/components/StackHeader";
 import { ChartLoaderPNG } from "@/components/Loader";
-
 import {
 	View,
 	Platform,
@@ -166,7 +166,13 @@ const Transactions = ({
 	const isOnline = useSelector(
 		(state: RootState) => state?.network.isConnected
 	);
-
+	const debouncedExport = useDebounce(() => {
+		if (!isOnline || cards?.length === 0) return;
+		setModalVisible(!modalVisible);
+		Platform.OS === "web"
+			? exportDealsToCSVWeb(cards, `${title}_deals.csv`)
+			: exportDealsToCSV(cards, `${title}_deals.csv`);
+	}, 1000);
 	useEffect(() => {
 		setTimeout(() => {
 			setLoadig(false);
@@ -191,19 +197,7 @@ const Transactions = ({
 						name="file-download"
 						size={25}
 						color="#ef4444"
-						onPress={() => {
-							if (!isOnline || cards?.length === 0) return;
-							setModalVisible(!modalVisible);
-							if (Platform.OS === "web") {
-								exportDealsToCSVWeb(
-									cards,
-									`${title}_deals.csv`
-								);
-							} else {
-								console.log("inside");
-								exportDealsToCSV(cards, `${title}_deals.csv`);
-							}
-						}}
+						onPress={debouncedExport}
 					/>
 				</View>
 			</View>

@@ -1,5 +1,6 @@
 import { Text } from "react-native";
 import WebView from "react-native-webview";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useEffect, useRef, useState } from "react";
 import { FontAwesome5, Octicons } from "@expo/vector-icons";
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
@@ -20,6 +21,7 @@ export default function FloatingActionMenu({
 	const [tooltip, setTooltip] = useState<boolean | any>(false);
 	const [tooltipLabel, setTooltipLabel] = useState<any>(null);
 	const intervalRef = useRef<NodeJS.Timeout | number>(null);
+	const debouncedExport = useDebounce((item: any) => item(), 1000);
 	const menuItems = [
 		{
 			icon: isZoomIn ? "search-plus" : "search-minus",
@@ -92,7 +94,7 @@ export default function FloatingActionMenu({
 							style={styles.menuIcon}
 							onPress={() => {
 								if (item.label === "Download") {
-									item?.action();
+									debouncedExport(item?.action);
 								} else {
 									(
 										webViewRef?.current as any

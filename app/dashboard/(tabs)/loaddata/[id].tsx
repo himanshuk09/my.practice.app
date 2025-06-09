@@ -7,6 +7,7 @@ import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
 import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useLocalSearchParams } from "expo-router";
 import useTabDataCache from "@/hooks/useTabDataCache";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +16,8 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { getLoadDataTS } from "@/services/loaddata.service";
 import React, { useCallback, useEffect, useState } from "react";
-import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { View, Text, SafeAreaView, Platform } from "react-native";
+import ToggleChartComponent from "@/components/ToggleChartComponent";
 
 const LoadDataDetails = () => {
 	const isFocused = useIsFocused();
@@ -30,7 +31,15 @@ const LoadDataDetails = () => {
 	);
 	const locale = useSelector((state: RootState) => state.culture.locale);
 	const { fetchWithCache } = useTabDataCache();
+	const debouncedExport = useDebounce((data: any, name: any) => {
+		if (!data || data.length === 0) return;
 
+		const filename = `_${name}_${dayjs().format("DD-MM-YYYY-HH-mm-ss")}`;
+
+		Platform.OS === "web"
+			? exportTimeseriesToCSVForWeb(data, filename)
+			: exportTimeseriesToCSV(data, filename);
+	}, 1000);
 	const fetchChartData = useCallback(
 		async (tab: string, payload: any) => {
 			let fullPayload = {
@@ -119,24 +128,12 @@ const LoadDataDetails = () => {
 								name="file-download"
 								size={30}
 								color="#e31837"
-								onPress={() => {
-									if (loadDetail?.data?.length === 0) return;
-									if (Platform.OS === "web") {
-										exportTimeseriesToCSVForWeb(
-											loadDetail?.data,
-											`_${activeTabForFileName}_${dayjs().format(
-												"DD-MM-YYYY-HH-mm-ss"
-											)}`
-										);
-									} else {
-										exportTimeseriesToCSV(
-											loadDetail?.data,
-											`_${activeTabForFileName}_${dayjs().format(
-												"DD-MM-YYYY-HH-mm-ss"
-											)}`
-										);
-									}
-								}}
+								onPress={() =>
+									debouncedExport(
+										loadDetail?.data,
+										activeTabForFileName
+									)
+								}
 							/>
 						</View>
 					</View>
