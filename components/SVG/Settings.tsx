@@ -9,8 +9,8 @@ const Settings = (props: SvgProps) => (
 		y="0px"
 		// width="593.65px"
 		// height="593.65px"
-		width={50}
-		height={50}
+		width={65}
+		height={64}
 		viewBox="0 0 593.65 593.65"
 		style={{
 			// enableBackground: "new 0 0 593.65 593.65",

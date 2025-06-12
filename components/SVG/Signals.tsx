@@ -3,8 +3,8 @@ import Svg, { G, Path } from "react-native-svg";
 const Signals = (props: any) => (
 	<Svg
 		xmlns="http://www.w3.org/2000/svg"
-		width="64"
-		height="64"
+		width={70}
+		height={70}
 		viewBox="0 0 108.000000 98.000000"
 		preserveAspectRatio="xMidYMid meet"
 		{...props}

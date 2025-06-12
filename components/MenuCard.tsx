@@ -53,14 +53,19 @@ const MenuCard = memo(({ item }: MenuCardProps) => {
 			}}
 		>
 			<View
-				className={`relative  bg-secondary  h-40  justify-center items-center ${
+				className={`relative bg-secondary justify-center items-center ${
 					Platform.OS === "web"
-						? "w-40 my-1"
-						: "w-[11.5rem] mx-px my-5"
-				}`}
+						? "w-[11.7rem] my-1"
+						: "w-[11.7rem] mx-px my-5"
+				} h-[11rem]`}
 			>
-				{routeToComponent(item?.icon)}
-				<Text className="text-xl text-fontColor font-medium uppercase mt-2">
+				{/* Icon Wrapper with fixed height to normalize SVG alignment */}
+				<View className="h-16 justify-center items-center">
+					{routeToComponent(item?.icon)}
+				</View>
+
+				{/* Title below icon */}
+				<Text className="text-xl text-fontColor font-medium uppercase mt-2 text-center">
 					{i18n.t(item?.title)}
 				</Text>
 				{item?.notificationCount > 0 && (

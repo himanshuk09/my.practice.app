@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Platform } from "react-native";
+import { Platform } from "react-native";
 import Svg, { Circle, G, Text as SvgText } from "react-native-svg";
 const NotificationIcon = ({ count }: { count: number }) => (
 	<Svg
@@ -7,7 +7,12 @@ const NotificationIcon = ({ count }: { count: number }) => (
 		style={{ position: "absolute", top: 14, right: 12, zIndex: 0 }}
 	>
 		<G>
-			<Circle cx="20" cy="20" r="10" fill="#e31837" />
+			<Circle
+				cx="20"
+				cy={Platform.OS === "web" ? 19 : 20}
+				r="10"
+				fill="#e31837"
+			/>
 			<SvgText
 				x="20"
 				y="20"

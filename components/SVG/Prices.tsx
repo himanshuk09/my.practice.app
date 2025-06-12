@@ -2,7 +2,7 @@ import * as React from "react";
 import Svg, { SvgProps, Defs, G, Path } from "react-native-svg";
 /* SVGR has dropped some elements not supported by react-native-svg: style */
 const Prices = (props: SvgProps) => (
-	<Svg viewBox="9172 243.793 51.05 47.207" width={49} height={46} {...props}>
+	<Svg viewBox="9172 243.793 51.05 47.207" width={55} height={52} {...props}>
 		<Defs></Defs>
 		<G
 			id="Group_317"

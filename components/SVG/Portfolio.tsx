@@ -8,8 +8,8 @@ const Portfolio = (props: any) => (
 		xmlnsXlink="http://www.w3.org/1999/xlink"
 		// Adjusted the viewBox to remove padding from the bottom
 		viewBox="9166 370 70.884 56.924" // Reduced the height by 5 to remove bottom padding
-		width={65}
-		height={48}
+		width={70}
+		height={70}
 		preserveAspectRatio="none" // Ensure it doesn't crop or distort
 		{...props}
 	>
