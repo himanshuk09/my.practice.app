@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { Animated, View, TouchableOpacity } from "react-native";
 
 const CustomSwitch = ({
@@ -27,12 +27,12 @@ const CustomSwitch = ({
 		Animated.parallel([
 			Animated.spring(translateX, {
 				toValue: isEnabled ? 30 : 0,
-				useNativeDriver: false,
+				useNativeDriver: Platform.OS === "android",
 			}),
 			Animated.timing(backgroundColorAnim, {
 				toValue: isEnabled ? 1 : 0,
 				duration: 200,
-				useNativeDriver: false,
+				useNativeDriver: Platform.OS === "android",
 			}),
 		]).start();
 

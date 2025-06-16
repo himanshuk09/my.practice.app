@@ -63,7 +63,7 @@ const Drawer = ({ drawerWidth = 280 }: any) => {
 		Animated.timing(translateX, {
 			toValue: isDrawerOpen ? 0 : -drawerWidth,
 			duration: 100,
-			useNativeDriver: Platform.OS !== "web" ? true : false,
+			useNativeDriver: Platform.OS === "android",
 		}).start();
 	}, [isDrawerOpen]);
 

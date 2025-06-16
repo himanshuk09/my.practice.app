@@ -244,9 +244,6 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 			],
 		};
 
-
-		sendMsgToWeb("iframeReady");
-
 		donutchart = new ApexCharts(document.querySelector("#donut-chart"), options);
 		donutchart.render();
 	</script>

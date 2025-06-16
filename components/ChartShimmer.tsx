@@ -11,7 +11,7 @@ const ShimmerPlaceholder = ({ style }: any) => {
 			Animated.timing(shimmerAnim, {
 				toValue: 1,
 				duration: 1000,
-				useNativeDriver: Platform.OS !== "web" ? true : false,
+				useNativeDriver: Platform.OS === "android",
 			})
 		).start();
 	}, []);

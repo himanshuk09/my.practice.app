@@ -161,7 +161,7 @@ const CustomDrawer = memo(() => {
 						toValue: activeSubmenu === menu?.key ? 1 : 0,
 						duration: 100,
 						easing: Easing.inOut(Easing.ease),
-						useNativeDriver: true,
+						useNativeDriver: Platform.OS === "android",
 					}).start();
 				}, [activeSubmenu === menu?.key]);
 

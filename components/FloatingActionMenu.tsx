@@ -43,7 +43,7 @@ const FloatingActionMenu = ({
 		Animated.timing(animation, {
 			toValue,
 			duration: 100,
-			useNativeDriver: Platform.OS !== "web",
+			useNativeDriver: Platform.OS === "android",
 		}).start();
 
 		setIsMenuOpen(!isMenuOpen);
@@ -78,12 +78,12 @@ const FloatingActionMenu = ({
 			Animated.timing(translateX, {
 				toValue: layout.x,
 				duration: 200,
-				useNativeDriver: false,
+				useNativeDriver: Platform.OS === "android",
 			}).start();
 			Animated.timing(underlineWidth, {
 				toValue: layout.width - 4,
 				duration: 200,
-				useNativeDriver: false,
+				useNativeDriver: Platform.OS === "android",
 			}).start();
 		}
 	}, [activeTab, isMeasured, globalLoader]);
@@ -96,7 +96,7 @@ const FloatingActionMenu = ({
 	return (
 		<View className="absolute top-0 left-6 pt-1 pl-1 z-[1000]">
 			<TouchableOpacity
-				className="bg-[#e11935] w-[30px] h-[30px] rounded-full justify-center items-center shadow-md"
+				className="bg-[#e11935] w-[30px] h-[30px] rounded-full justify-center items-center "
 				onPress={toggleMenu}
 			>
 				<MaterialIcons
@@ -176,7 +176,7 @@ const FloatingActionMenu1 = ({
 		Animated.timing(animation, {
 			toValue,
 			duration: 100,
-			useNativeDriver: Platform.OS !== "web" ? true : false,
+			useNativeDriver: Platform.OS === "android",
 		}).start();
 
 		setIsMenuOpen(!isMenuOpen);

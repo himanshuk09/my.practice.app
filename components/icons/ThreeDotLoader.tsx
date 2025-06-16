@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Animated, StyleSheet, View, Text } from "react-native";
+import { Animated, StyleSheet, View, Platform } from "react-native";
 
 const DOT_COUNT = 4;
 const DURATION = 200;
@@ -14,7 +14,7 @@ const ThreeDotLoader = () => {
 			Animated.timing(dot, {
 				toValue: 1,
 				duration: DURATION,
-				useNativeDriver: true,
+				useNativeDriver: Platform.OS === "android",
 				delay: index * DURATION,
 			})
 		);
@@ -23,7 +23,7 @@ const ThreeDotLoader = () => {
 			Animated.timing(dot, {
 				toValue: 0,
 				duration: 0,
-				useNativeDriver: true,
+				useNativeDriver: Platform.OS === "android",
 			})
 		);
 

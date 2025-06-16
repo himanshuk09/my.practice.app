@@ -39,7 +39,7 @@ const AccordionFlatlist = ({
 			Animated.timing(animation, {
 				toValue: 0,
 				duration: 250,
-				useNativeDriver: false,
+				useNativeDriver: Platform.OS === "android",
 			}).start(() => setExpandedMeterId(null));
 		} else {
 			setExpandedMeterId(uniqueKey);
@@ -60,7 +60,7 @@ const AccordionFlatlist = ({
 						android: baseValue,
 					}) ?? (Platform.OS === "web" ? baseValue : baseValue + 40),
 				duration: 250,
-				useNativeDriver: false,
+				useNativeDriver: Platform.OS === "android",
 			}).start();
 		}
 	};
@@ -74,7 +74,7 @@ const AccordionFlatlist = ({
 					Animated.timing(animations[key], {
 						toValue: 0,
 						duration: 250, // Faster
-						useNativeDriver: false,
+						useNativeDriver: Platform.OS === "android",
 					})
 				);
 			}

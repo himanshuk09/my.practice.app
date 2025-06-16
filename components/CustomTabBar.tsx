@@ -46,7 +46,7 @@ const CustomTabBar = ({
 			state.routes.forEach((_: any, index: any) => {
 				Animated.timing(animatedValues[index], {
 					toValue: state.index === index ? 1.05 : 1,
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 				}).start();
 			});
 		};

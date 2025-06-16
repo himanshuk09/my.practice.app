@@ -328,7 +328,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 					format: "MMMM",
 					formatter: (value) => {
 						const months = getLocalizedMonths(localeAfterMount);
-						return months[value] + "  " + titleAfterMount;
+						return months[value - 1] + "  " + titleAfterMount;
 					},
 				},
 				y: {
@@ -353,19 +353,6 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 								type: "x",
 							},
 							// background: "url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center",
-							toolbar: {
-								show: true,
-								offsetX: 0,
-								offsetY: 0,
-								tools: {
-									download: true,
-									selection: false,
-									zoom: false,
-									zoomin: true,
-									zoomout: true,
-									pan: false,
-								},
-							},
 						},
 					},
 				},

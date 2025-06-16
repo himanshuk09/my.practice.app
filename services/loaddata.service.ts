@@ -116,7 +116,6 @@ const getLoadDataTS = async (payload: EnergyDataRequest) => {
 		const response = await api.post(`/api/loadData/getLoadDataTS`, {
 			...payload,
 		});
-		console.log("response", response.data);
 		const formatedData = transformData(response?.data);
 		return formatedData;
 	} catch (error) {

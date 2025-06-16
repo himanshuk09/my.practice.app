@@ -23,7 +23,7 @@ const LoaderPNG = () => {
 				Animated.timing(rotation, {
 					toValue: 1,
 					duration: 1500, // 1.3 seconds for a full rotation
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 					easing: Easing.linear,
 				})
 			).start();
@@ -56,7 +56,7 @@ export const ChartLoaderPNG = () => {
 				Animated.timing(rotation, {
 					toValue: 1,
 					duration: 1800, // 1.5 seconds for a full rotation
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 					easing: Easing.linear,
 				})
 			).start();

@@ -24,7 +24,7 @@ const ShimmerPrices = () => {
 				Animated.timing(shimmerValue, {
 					toValue: 2,
 					duration: 1500,
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 				})
 			).start();
 		};
@@ -68,7 +68,7 @@ const ShimmerPricesHeader = () => {
 				Animated.timing(shimmerValue, {
 					toValue: 2,
 					duration: 1500,
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 				})
 			).start();
 		};
@@ -127,7 +127,7 @@ const ShimmerHeader = () => {
 				Animated.timing(shimmerValue, {
 					toValue: 2,
 					duration: 1500,
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 				})
 			).start();
 		};
@@ -168,7 +168,7 @@ const ShimmerAccordionListCard = () => {
 				Animated.timing(shimmerValue, {
 					toValue: 2,
 					duration: 1500,
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 				})
 			).start();
 		};
@@ -229,7 +229,7 @@ const ShimmerListCard = () => {
 				Animated.timing(shimmerValue, {
 					toValue: 2,
 					duration: 1500,
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 				})
 			).start();
 		};
@@ -291,7 +291,7 @@ const ShimmerScreenHeader = () => {
 				Animated.timing(shimmerValue, {
 					toValue: 2,
 					duration: 1500,
-					useNativeDriver: Platform.OS !== "web",
+					useNativeDriver: Platform.OS === "android",
 				})
 			).start();
 		};

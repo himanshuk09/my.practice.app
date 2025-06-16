@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { ActivityIndicator, Animated, Pressable } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Platform } from "react-native";
 
 const Reload = ({ type = "", onPress = () => {} }: any) => {
 	const rotation = useRef(new Animated.Value(0)).current;
@@ -9,7 +10,7 @@ const Reload = ({ type = "", onPress = () => {} }: any) => {
 		Animated.timing(rotation, {
 			toValue: 1,
 			duration: 600, // duration in ms
-			useNativeDriver: true,
+			useNativeDriver: Platform.OS === "android",
 		}).start();
 		onPress();
 	};

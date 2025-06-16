@@ -250,7 +250,7 @@ const toastConfig: any = {
 				</View>
 
 				{/* Spinner */}
-				{props?.spinner && Platform.OS !== "web" && (
+				{props?.spinner && (
 					<View className="ml-2">
 						<ThreeDotLoader />
 					</View>

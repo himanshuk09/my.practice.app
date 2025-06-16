@@ -458,8 +458,7 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                         format: "MMMM", // Display full month names
                         formatter: (value) => {
                             const months = getLocalizedMonths(locale, "long");
-						
-                            return months[value] + "  " + title;
+                            return months[value - 1] + "  " + title;
                         },
                     },
                     y: {
