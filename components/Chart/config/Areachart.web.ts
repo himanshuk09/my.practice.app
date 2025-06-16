@@ -181,6 +181,15 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 					enabled: true,
 					type: "x",
 				},
+                selection:{
+                    enabled: true,
+                    type: 'x',
+                },
+                pan: {
+					enabled: true,
+					type: "xy",
+					threshold: 0,
+				},
 				// background: "url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center",
 				toolbar: {
 					show: true,
@@ -353,6 +362,29 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 								type: "x",
 							},
 							// background: "url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center",
+						},
+					},
+				},
+                {
+					// Small screens (Phones)
+					breakpoint: 600, // For mobile phones
+					options: {
+						chart: {
+							height: "90%",
+							toolbar: {
+								show: true,
+								offsetX: 2,
+								offsetY: 0,
+								autoSelected: "zoom",
+								tools: {
+									download: true,
+									selection: false,
+									zoom: false,
+									zoomin: true,
+									zoomout: true,
+									pan: false,
+								},
+							},
 						},
 					},
 				},

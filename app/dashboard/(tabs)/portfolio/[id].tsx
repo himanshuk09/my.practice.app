@@ -168,6 +168,7 @@ const PortfolioOverView = () => {
 			type: "download",
 			text1: i18n.t("File_Downloading"),
 			position: "bottom",
+			bottomOffset: Platform.OS === "web" ? 0 : 40,
 			autoHide: false,
 			props: { spinner: true },
 		});
