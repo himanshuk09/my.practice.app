@@ -59,6 +59,8 @@ type EnergyDataRequest = {
 const getLoadDataList = async () => {
 	try {
 		const response = await api.get(`/api/loadData/getMeterChannelInfo`);
+		console.log("response", response);
+
 		return formateByEnergyType(response.data);
 	} catch (error) {
 		console.log(
