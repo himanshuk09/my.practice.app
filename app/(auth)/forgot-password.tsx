@@ -11,11 +11,11 @@ import {
 	ScrollView,
 	TouchableWithoutFeedback,
 } from "react-native";
+import Logo from "@/components/svg/Logo";
 import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-// import Logo from "@/components/svg/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
 
 const Forgotpassword = () => {
@@ -70,7 +70,7 @@ const Forgotpassword = () => {
 						<View className="flex-1 justify-center items-center bg-white">
 							<View className="w-11/12 max-w-md p-5">
 								<View className="items-center mb-10 w-full">
-									{/* <Logo /> */}
+									<Logo />
 								</View>
 
 								<View className="mb-5">
