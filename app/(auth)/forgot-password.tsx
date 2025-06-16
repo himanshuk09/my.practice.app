@@ -11,11 +11,11 @@ import {
 	ScrollView,
 	TouchableWithoutFeedback,
 } from "react-native";
-import Logo from "@/components/svg/Logo";
 import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import Logo from "@/components/svg/Logo";
 import Foundation from "@expo/vector-icons/Foundation";
 
 const Forgotpassword = () => {
