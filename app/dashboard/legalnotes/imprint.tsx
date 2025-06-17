@@ -57,7 +57,7 @@ const Imprint = () => {
 					/>
 				}
 			>
-				<View className="space-y-10 pl-4 pt-3">
+				<View className="space-y-10 pl-4 pt-3 pb-8">
 					{imprintDetails.map((detail, index) => (
 						<Text
 							key={index}

@@ -70,7 +70,8 @@ const PortfolioOverView = () => {
 	const paramsID = useMemo(() => {
 		try {
 			return rawId ? JSON.parse(decodeURIComponent(rawId)) : {};
-		} catch {
+		} catch (err) {
+			console.error("Failed to parse portfolio ID from route:", err);
 			return {};
 		}
 	}, [rawId]);
@@ -140,6 +141,7 @@ const PortfolioOverView = () => {
 					locale,
 					`${new Date(paramsID?.PortfolioDate).getFullYear()}`
 				);
+				iframe?.contentWindow?.setFileName?.(paramsID?.PortfolioName);
 			}
 			if (
 				donutIFrameRef?.current &&
@@ -150,7 +152,6 @@ const PortfolioOverView = () => {
 		} else {
 			if (areaWebViewRef?.current) {
 				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}', ${new Date(paramsID?.PortfolioDate).getFullYear()});}`;
-
 				areaWebViewRef.current.injectJavaScript(updateLocaleScript);
 			}
 			if (donutwebViewRef?.current) {

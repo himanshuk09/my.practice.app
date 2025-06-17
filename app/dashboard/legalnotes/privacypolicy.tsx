@@ -30,7 +30,7 @@ const PrivacyAndPolicy = () => {
 				</Text>
 			</View>
 			<ScrollView
-				className="flex-1 px-5 "
+				className="flex-1 px-5"
 				contentContainerStyle={{ flexGrow: 1 }}
 				nestedScrollEnabled={true}
 				showsVerticalScrollIndicator={false}
@@ -44,7 +44,7 @@ const PrivacyAndPolicy = () => {
 					/>
 				}
 			>
-				<View className="pl-2 pt-3">
+				<View className="pl-2 pt-3 pb-8">
 					<Text className="text-black py-2 text-lg font-medium">
 						{i18n.t("privacyAndPolicy.privacypolicy")}
 					</Text>

@@ -42,14 +42,19 @@ const LoadDataDetails = () => {
 	}, 1000);
 	const fetchChartData = useCallback(
 		async (tab: string, payload: any) => {
-			let fullPayload = {
-				...JSON.parse(decodeURIComponent(id as string)),
-				TimeFrame: tab,
-				...payload,
-			};
-			const data = await fetchWithCache(fullPayload, getLoadDataTS);
-			setloadDetails(data);
-			return data;
+			try {
+				let fullPayload = {
+					...JSON.parse(decodeURIComponent(id as string)),
+					TimeFrame: tab,
+					...payload,
+				};
+				const data = await fetchWithCache(fullPayload, getLoadDataTS);
+				setloadDetails(data);
+				return data;
+			} catch (error) {
+				console.error("Failed to load:", error);
+				return {};
+			}
 		},
 		[fetchWithCache, id]
 	);

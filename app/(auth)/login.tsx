@@ -143,6 +143,7 @@ const SignIn: React.FC = () => {
 										value={userName}
 										key={"username_input"}
 										autoCapitalize="none"
+										spellCheck={false}
 										autoComplete="username" // ✅ Enables username autofill
 										placeholderTextColor="#808080"
 										placeholder={i18n.t("username")}
@@ -230,6 +231,7 @@ const SignIn: React.FC = () => {
 										id="password"
 										value={password}
 										autoCapitalize="none"
+										spellCheck={false}
 										key={"password_input"}
 										textContentType="password"
 										placeholderTextColor="#808080"
@@ -292,6 +294,7 @@ const SignIn: React.FC = () => {
 													}
 												: null),
 										}}
+										onSubmitEditing={handleSubmit}
 									/>
 
 									<TouchableOpacity

@@ -43,7 +43,7 @@ const TermsAndConditionsScreen = () => {
 					/>
 				}
 			>
-				<View className="pl-2 pt-3">
+				<View className="pl-2 pt-3 pb-8">
 					<Text className="text-black py-2 text-lg font-medium">
 						{i18n.t("termsAndConditions.terms")}
 					</Text>
