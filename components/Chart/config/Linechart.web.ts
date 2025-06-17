@@ -376,7 +376,7 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
             }
 
             var options = {
-                series: [{ name: "Energy Use", data: [{ "x": "", "y": 0 }] }],
+                series: [],
                 chart: {
                     height: "90%",
                     type: "line",

@@ -16,6 +16,7 @@ import { menuItems } from "@/utils/MenuItemlist";
 import CustomAlert from "@/components/CustomAlert";
 import { setOrientation } from "@/store/chartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { activeLoading } from "@/store/navigationSlice";
 import { Href, useRouter, useSegments } from "expo-router";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -138,7 +139,7 @@ const CustomDrawer = memo(() => {
 				? window.open(item.route, "_blank")
 				: Linking.openURL(item.route);
 		} else if (segmentPath !== item.route) {
-			// dispatch(activeLoading());
+			dispatch(activeLoading());
 			setTimeout(() => router.replace(item.route as Href));
 			setActiveSubmenu(null);
 		}

@@ -357,7 +357,7 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
             }
 
             const options = {
-                series: [{ name: "Energy Use", data: [{"x":"","y":0}]}],
+                series: [],
                 chart: {
                     type: "line",
                     height: "285",
