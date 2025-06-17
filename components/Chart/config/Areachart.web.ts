@@ -1,4 +1,4 @@
-const iframeAreaHtmlContent = `<!DOCTYPE html>
+const iframeAreaHtmlContent = /*html*/ `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -24,6 +24,10 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 			position: absolute;
 			touch-action: none;
 		}
+
+        .apexcharts-tooltip .apexcharts-tooltip-title {
+  			font-weight: bold;
+		}
 	</style>
 </head>
 
@@ -35,9 +39,28 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 		let titleAfterMount = "";
 		let initialXAxisRange = {};
 		let categories;
-
 		let markersVisible = false; // Initial state
 
+        function setFileName (newFileName){
+            chart?.updateOptions({
+				chart: {
+					toolbar: {
+						export: {
+                            csv: {
+                                filename: newFileName,
+                            },
+                            svg: {
+                                filename: newFileName,
+                            },
+                            png: {
+                                filename: newFileName,
+                            }
+                        }
+					},
+				},
+			});
+        }
+        
 		function updateToggleMarker() {
 			const newSize = markersVisible ? 3 : 0;
 			const newColor = markersVisible ? "red" : "gray";
@@ -68,7 +91,6 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 					},
 				},
 			});
-			// chart?.updateSeries(chart?.w?.config?.series);
             updateLocale(localeAfterMount,titleAfterMount)
 		}
 
@@ -224,7 +246,7 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
                                         style: "decimal",
                                     }).format(y);
 
-                                const safeY = formattedY.includes(",") ? \`"\${formattedY}"\` : formattedY;
+                                 const safeY = formattedY.includes(",") ? '"' + formattedY + '"' : formattedY;
                                 return safeY;
                             }
                         },
@@ -309,6 +331,35 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 			xaxis: {
 				type: "category",
 				categories,
+                crosshairs: {
+                    show: false,
+                    width: 0,
+                    position: "back",
+                    opacity: 0.9,
+                    stroke: {
+                        color: "#b6b6b6",
+                        width: 0,
+                        dashArray: 1,
+                    },
+                    fill: {
+                        type: "solid",
+                        color: "#B1B9C4",
+                        gradient: {
+                            colorFrom: "#D8E3F0",
+                            colorTo: "#BED1E6",
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5,
+                        },
+                    },
+                    dropShadow: {
+                        enabled: false,
+                        top: 0,
+                        left: 0,
+                        blur: 0,
+                        opacity: 0.4,
+                    },
+                },
 			},
 			yaxis: {
 				title: {
@@ -332,6 +383,25 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 				opacity: [0.9, 0.8, 0.5, 0.1], // Adjust per dataset
 			},
 			tooltip: {
+                enabled: true,
+                shared: true,
+                followCursor: false,
+                intersect: false,
+                inverseOrder: false,
+                hideEmptySeries: false,
+                fillSeriesColor: false,
+                onDatasetHover: {
+                    highlightDataSeries: true,
+                },
+                style: {
+                    fontSize: "12px",
+                    fontFamily: "Arial, sans-serif",
+                    background: "#333",
+                    color: "#fff",
+                    borderRadius: "100px",
+                    padding: "10px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                },
 				x: {
 					show: true,
 					format: "MMMM",
@@ -349,6 +419,21 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 						formatter: (seriesName) => seriesName,
 					},
 				},
+                items: {
+                    display: "flex",
+                },
+                fixed: {
+                    enabled: false,
+                    position: "topRight",
+                    offsetX: 0,
+                    offsetY: 0,
+                },
+                legend: {
+                    markers: {
+                        shape: "line",
+                        offsetX: 0,
+                    },
+                },
 			},
 			responsive: [
 				{
@@ -390,8 +475,6 @@ const iframeAreaHtmlContent = `<!DOCTYPE html>
 				},
 			],
 		};
-
-
 
 		chart = new ApexCharts(document.querySelector("#chart"), options);
 		chart?.render();

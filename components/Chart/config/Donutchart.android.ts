@@ -1,4 +1,4 @@
-const webviewDonutChartHtmlContent = `<!DOCTYPE html>
+const webviewDonutChartHtmlContent = /*html*/ `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -19,7 +19,6 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 	<div id="donut-chart"></div>
 	<script>
 
-
 		var activeIndex = null;
 		let donutchart;
 
@@ -32,7 +31,6 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 			);
 		}
 		
-
 		function resetChartSeries() {
 			donutchart.resetSeries();
 			sendMsgToReactNative("resetChartSeries");
@@ -42,7 +40,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 			donutchart.appendData(data);
 		}
 
-		//Expose updateChartSeries 
+		//Expose updateChartSeries
 		function updateChartSeries(filteredData) {
 			donutchart.updateSeries(filteredData, true);
 			sendMsgToReactNative("updateChartSeries");
@@ -101,7 +99,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
                             
 							},
 							true,
-							true 
+							true
 						);
                         donutchart.updateSeries(donutchart.w.config.series);
 						} else {
@@ -111,7 +109,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 					dataPointMouseLeave: function (event, chartContext, config) {
 						if (activeIndex !== null) {
 							donutchart.toggleDataPointSelection(activeIndex);
-							activeIndex = null;        
+							activeIndex = null;
 						}
 						chartContext.updateOptions(
 							{
@@ -126,7 +124,7 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 								},
 							},
 							true,
-							true 
+							true
 						);
                         donutchart.updateSeries(donutchart.w.config.series);
 
@@ -174,8 +172,26 @@ const webviewDonutChartHtmlContent = `<!DOCTYPE html>
 					mounted: function (chartContext) {
 						sendMsgToReactNative("mounted");
 						highlightMinAndMax(chartContext);
-						document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true });
-					},
+						<!-- document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true }); -->
+                        const chartEl = document.querySelector(".apexcharts-canvas");
+                        if (chartEl) {
+                            chartEl.addEventListener(
+                                "touchstart",
+                                () => {}, // Or your handler
+                                { passive: true }
+                            );
+                            chartEl.addEventListener(
+                                "touchmove",
+                                () => {}, // Or your handler
+                                { passive: true }
+                            );
+                            chartEl.addEventListener(
+                                "wheel",
+                                () => {}, // Or your handler
+                                { passive: true }
+                            );
+                        }
+                    },
 					
 					updated: function (chartContext) {
 						sendMsgToReactNative("Pie Chart updated");

@@ -1,3 +1,7 @@
+/**
+ * Download es6-string-html for better html highlight
+ */
+
 import webviewAreaHtmlContent from "@/components/chart/config/Areachart.android";
 import iframeAreaHtmlContent from "@/components/chart/config/Areachart.web";
 import webviewDonutChartHtmlContent from "@/components/chart/config/Donutchart.android";

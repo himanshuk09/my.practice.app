@@ -1,4 +1,4 @@
-const iframeDonutChartHtmlContent = `<!DOCTYPE html>
+const iframeDonutChartHtmlContent = /*html*/ `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -35,8 +35,8 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 
 		//...Update chart options and series
 		function updateChart(filteredData, updatedOptions) {
-			donutchart?.updateSeries(filteredData, true);
 			donutchart?.updateOptions(updatedOptions);
+			donutchart?.updateSeries(filteredData, true);
 			sendMsgToWeb("updateChart");
 		}
 
@@ -100,8 +100,8 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 				animations: {
 					enabled: true,
 					easing: "easeout", // Try "easeout" or "linear" for smoother transitions
-					speed: 1000, // Reduce the main animation speed
-					dynamicAnimation: { enabled: true, speed: 1500 },
+					speed: 800, // Reduce the main animation speed
+					dynamicAnimation: { enabled: true, speed: 1000 },
 					animateGradually: { enabled: true, delay: 500 },
 					initialAnimation: { enabled: true },
 				},
@@ -174,6 +174,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 					expandOnClick: false,
 					startAngle: 0,
 					endAngle: 360,
+                    customScale: 1.1,
 					donut: {
 						labels: {
 							show: true,
@@ -226,7 +227,7 @@ const iframeDonutChartHtmlContent = `<!DOCTYPE html>
 				type: "gradient",
 			},
 			title: {
-				text: "",
+				text: "_",
 				align: "center",
 				style: {
 					fontSize: "14px",

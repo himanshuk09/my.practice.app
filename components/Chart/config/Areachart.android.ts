@@ -1,47 +1,53 @@
-const webviewAreaHtmlContent = `<!DOCTYPE html>
+const webviewAreaHtmlContent = /*html*/ `<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-        <title>Donut Chart with ApexCharts for webview</title>	
+        <title>Donut Chart with ApexCharts for webview</title>
 		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <style>
-        
             * {
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
             }
+
             body {
                 height: 100vh;
                 position: relative;
             }
+
             #chart {
                 width: 99%;
                 position: absolute;
                 touch-action: none;
             }
+
 			.apexcharts-tooltip .apexcharts-tooltip-title {
   				font-weight: bold;
 			}
-                .apexcharts-element-hidden {
-			opacity: 1 !important;
-			visibility: visible !important;
-		}
 
-		.apexcharts-tooltip .apexcharts-tooltip-title {
-			font-weight: bold;
-		}
-        .svg_select_handle_r,
-        .svg_select_handle_l {
-            display: none;
-        }
-		.apexcharts-selection-rect {
-			transition: opacity 150ms ease-out;
-			opacity: 1;
-			pointer-events: none;
-            fill: rgba(0, 123, 255, 0.3);
-		}
+            .apexcharts-element-hidden {
+                opacity: 1 !important;
+                visibility: visible !important;
+		    }
+
+            .apexcharts-tooltip .apexcharts-tooltip-title {
+                font-weight: bold;
+            }
+
+            .svg_select_handle_r,
+            .svg_select_handle_l {
+                display: none;
+            }
+
+            .apexcharts-selection-rect {
+                transition: opacity 150ms ease-out;
+                opacity: 1;
+                pointer-events: none;
+                fill: rgba(0, 123, 255, 0.3);
+            }
+
         </style>
     </head>
     <body>
@@ -86,6 +92,255 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                 });
             }
 
+            // toggle tooltip of chart or marker
+            function toggleMarkers() {
+                // Start loader
+                sendMsgToReactNative("startLoader");
+                const currentSize = chart.w.config.markers.size;
+                const newSize = currentSize === 0 ? 3 : 0;
+                // Update chart options
+                chart.updateOptions({
+                    markers: {
+                        size: newSize,
+                    },
+                });
+                // Stop loader after chart update
+                sendMsgToReactNative("stopLoader");
+                updateLocale();
+            }
+
+            //toggle zoom and selection
+            window.toggleZoomAndSelection = () => {
+                if (chart.w.globals.zoomEnabled) {
+                    // Switch to Selection mode
+                    chart.w.globals.zoomEnabled = false;
+                    chart.w.globals.selectionEnabled = true;
+                } else if (chart.w.globals.selectionEnabled) {
+                    // Switch to Zoom mode
+                    chart.w.globals.zoomEnabled = true;
+                    chart.w.globals.selectionEnabled = false;
+                } else {
+                    // Default to Zoom mode if neither is enabled
+                    chart.w.globals.zoomEnabled = true;
+                    chart.w.globals.selectionEnabled = false;
+                }
+            };
+            
+            //update chart series and options
+            function updateChart(filteredData, updatedOptions) {
+                chart.updateSeries(filteredData);
+                chart.updateOptions(updatedOptions);
+                sendMsgToReactNative("updateChart");
+            }
+
+            //update chart series
+            function updateChartSeries(filteredData) {
+                chart.updateSeries(filteredData, true);
+                sendMsgToReactNative("updateChartSeries");
+            }
+
+            //update chart options
+            function updateChartOptions(updatedOptions) {
+                chart.updateOptions(updatedOptions);
+                sendMsgToReactNative("updateChartOptions");
+            }
+
+            //reset chart series
+            function resetChartSeries() {
+                chart.resetSeries();
+                sendMsgToReactNative("resetChartSeries");
+            }
+
+            //append chart series
+            function appendChartData(data) {
+                chart.appendData(data);
+            }
+
+            // Export the chart as a PNG image
+            async function exportChart() {
+                try {
+                    const dataURI = await chart.dataURI(); // Get Base64 of chart
+                    sendMsgToReactNative(dataURI.imgURI); // Send to React Native
+                } catch (error) {
+                    console.error("Error exporting chart:", error);
+                }
+            }
+
+            window.exportChart = exportChart;
+
+            // Helper functions to get first and last data points
+            function getFirstDataPoint() {
+                const series = chart.w.config.series[0].data;
+                return series.length > 0 ? series[0] : null;
+            }
+
+            function getLastDataPoint() {
+                const series = chart.w.config.series[0].data;
+                return series.length > 0 ? series[series.length - 1] : null;
+            }
+            
+            function getCurrentXRange() {
+                return {
+                    min: chart.w.globals.minX,
+                    max: chart.w.globals.maxX,
+                };
+            }
+
+            function getFullDataRange() {
+                const seriesX = chart.w.globals.seriesX[0];
+                return {
+                    min: seriesX[0],
+                    max: seriesX[seriesX.length - 1],
+                };
+            }
+
+            // zoomin
+            function zoomIn1() {
+                if (!chart?.w?.globals) {
+                    console.warn("Zoom In action skipped: chart or required properties not available.");
+                    return;
+                }
+
+                sendMsgToReactNative("Zoom Start");
+
+                const currentRange = getCurrentXRange();
+                const range = currentRange.max - currentRange.min;
+                const newRange = range * 0.7; // Zoom in by 30%
+                const center = currentRange.min + range / 2;
+
+                const fullRange = getFullDataRange();
+                const newMin = Math.max(fullRange.min, center - newRange / 2);
+                const newMax = Math.min(fullRange.max, center + newRange / 2);
+
+                chart.zoomX(newMin, newMax);
+                
+            }
+            
+            //Zoom out
+            function zoomOut1() {
+                if (!chart?.w?.globals) {
+                    console.warn("Zoom Out action skipped: chart or required properties not available.");
+                    return;
+                }
+
+                sendMsgToReactNative("Zoomed");
+
+                const currentRange = getCurrentXRange();
+                const range = currentRange.max - currentRange.min;
+                const newRange = range * 1.3; // Zoom out by 30%
+                const center = currentRange.min + range / 2;
+
+                const fullRange = getFullDataRange();
+                const newMin = Math.max(fullRange.min, center - newRange / 2);
+                const newMax = Math.min(fullRange.max, center + newRange / 2);
+
+                chart.zoomX(newMin, newMax);
+            }
+
+            //New Optimized Function
+            //zoomIn
+            function zoomIn() {
+                if (!chart?.w?.globals) {
+                    console.warn("Zoom In action skipped: chart or required properties not available.");
+                    return;
+                }
+
+                sendMsgToReactNative("Zoom In");
+
+                const currentRange = getCurrentXRange();
+                const fullRange = getFullDataRange();
+
+                const minX = currentRange.min;
+                const maxX = currentRange.max;
+
+                const center = (minX + maxX) / 2;
+
+                // Zoom in by moving min/max halfway toward the center (50% zoom)
+                let newMin = (minX + center) / 2;
+                let newMax = (maxX + center) / 2;
+
+                // Clamp newMin and newMax to data bounds
+                newMin = Math.max(fullRange.min, newMin);
+                newMax = Math.min(fullRange.max, newMax);
+
+                chart.zoomX(newMin, newMax);
+            }
+            
+            //zoomOut
+            function zoomOut() {
+                if (!chart?.w?.globals) {
+                    console.warn("Zoom Out action skipped: chart or required properties not available.");
+                    return;
+                }
+
+                sendMsgToReactNative("Zoomed Out");
+
+                const currentRange = getCurrentXRange();
+                const fullRange = getFullDataRange();
+                const minX = currentRange.min;
+                const maxX = currentRange.max;
+                const center = (minX + maxX) / 2;
+
+                // Zoom out by moving min/max away from center (double the distance from center)
+                // Calculate new min by reflecting minX further away from center
+                let newMin = center - (center - minX) * 2;
+                
+                // Calculate new max by reflecting maxX further away from center
+                let newMax = center + (maxX - center) * 2;
+
+                // Clamp newMin and newMax to data bounds
+                newMin = Math.max(fullRange.min, newMin);
+                newMax = Math.min(fullRange.max, newMax);
+
+                chart.zoomX(newMin, newMax);
+            }
+
+            //resetzoom
+            function resetZoom() {
+                const fullRange = getFullDataRange();
+                chart.zoomX(fullRange.min, fullRange.max);
+            }
+
+            //left pan
+            function customPanLeft() {
+                if (!chart?.w?.globals) {
+                    console.warn("Pan Left action skipped: chart or required properties not available.");
+                    return;
+                }
+
+                const fullRange = getFullDataRange();
+                const currentRange = getCurrentXRange();
+                const range = currentRange.max - currentRange.min;
+                const moveFactor = range * 0.5;
+
+                const newMin = Math.max(fullRange.min, currentRange.min - moveFactor);
+                const newMax = newMin + range;
+
+                chart.zoomX(newMin, newMax);
+                
+            }
+
+            //right pan
+            
+            function customPanRight() {
+                if (!chart?.w?.globals) {
+                    console.warn("Pan Right action skipped: chart or required properties not available.");
+                    return;
+                }
+
+                const fullRange = getFullDataRange();
+                const currentRange = getCurrentXRange();
+                const range = currentRange.max - currentRange.min;
+                const moveFactor = range * 0.5;
+
+                const newMax = Math.min(fullRange.max, currentRange.max + moveFactor);
+                const newMin = newMax - range;
+
+                chart.zoomX(newMin, newMax);
+                
+            }
+
+            
             var options = {
                 series: [],
                 colors: ["#C2C1C3", "#DFDFDF", "#A4A4A5", "#E31837"],
@@ -219,7 +474,26 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                         mounted: function (chartContext) {
                             sendMsgToReactNative("mounted");
                             highlightMinAndMax(chartContext);
-                            document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true });
+
+                            const chartEl = document.querySelector(".apexcharts-canvas");
+
+                            if (chartEl) {
+                                chartEl.addEventListener(
+                                    "touchstart",
+                                    (e) => {}, // Or your handler
+                                    { passive: true }
+                                );
+                                chartEl.addEventListener(
+                                    "touchmove",
+                                    (e) => {}, // Or your handler
+                                    { passive: true }
+                                );
+                                chartEl.addEventListener(
+                                    "wheel",
+                                    (e) => {}, // Or your handler
+                                    { passive: true }
+                                );
+                            }
                         },
 
                         dataPointSelection: function () {
@@ -491,250 +765,6 @@ const webviewAreaHtmlContent = `<!DOCTYPE html>
                         },
                     },
                 },
-            };
-
-            // toggle tooltip of chart or marker
-            function toggleMarkers() {
-                // Start loader
-                sendMsgToReactNative("startLoader");
-                const currentSize = chart.w.config.markers.size;
-                const newSize = currentSize === 0 ? 3 : 0;
-                // Update chart options
-                chart.updateOptions({
-                    markers: {
-                        size: newSize,
-                    },
-                });
-                // Stop loader after chart update
-                sendMsgToReactNative("stopLoader");
-                updateLocale();
-            }
-
-            //update chart series and options
-            function updateChart(filteredData, updatedOptions) {
-                chart.updateSeries(filteredData);
-                chart.updateOptions(updatedOptions);
-                sendMsgToReactNative("updateChart");
-            }
-
-            //update chart series
-            function updateChartSeries(filteredData) {
-                chart.updateSeries(filteredData, true);
-                sendMsgToReactNative("updateChartSeries");
-            }
-
-            //update chart options
-            function updateChartOptions(updatedOptions) {
-                chart.updateOptions(updatedOptions);
-                sendMsgToReactNative("updateChartOptions");
-            }
-
-            //reset chart series
-            function resetChartSeries() {
-                chart.resetSeries();
-                sendMsgToReactNative("resetChartSeries");
-            }
-
-            //append chart series
-            function appendChartData(data) {
-                chart.appendData(data);
-            }
-
-            // Export the chart as a PNG image
-            async function exportChart() {
-                try {
-                    const dataURI = await chart.dataURI(); // Get Base64 of chart
-                    sendMsgToReactNative(dataURI.imgURI); // Send to React Native
-                } catch (error) {
-                    console.error("Error exporting chart:", error);
-                }
-            }
-            window.exportChart = exportChart;
-            // Helper functions to get first and last data points
-            function getFirstDataPoint() {
-                const series = chart.w.config.series[0].data;
-                return series.length > 0 ? series[0] : null;
-            }            
-
-            function getLastDataPoint() {
-                const series = chart.w.config.series[0].data;
-                return series.length > 0 ? series[series.length - 1] : null;
-            }            
-            function getCurrentXRange() {
-                return {
-                    min: chart.w.globals.minX,
-                    max: chart.w.globals.maxX,
-                };
-            }
-
-            function getFullDataRange() {
-                const seriesX = chart.w.globals.seriesX[0];
-                return {
-                    min: seriesX[0],
-                    max: seriesX[seriesX.length - 1],
-                };
-            }
-
-            // zoomin
-            function zoomIn1() {
-                if (!chart?.w?.globals) {
-                    console.warn("Zoom In action skipped: chart or required properties not available.");
-                    return;
-                }
-
-                sendMsgToReactNative("Zoom Start");
-
-                const currentRange = getCurrentXRange();
-                const range = currentRange.max - currentRange.min;
-                const newRange = range * 0.7; // Zoom in by 30%
-                const center = currentRange.min + range / 2;
-
-                const fullRange = getFullDataRange();
-                const newMin = Math.max(fullRange.min, center - newRange / 2);
-                const newMax = Math.min(fullRange.max, center + newRange / 2);
-
-                chart.zoomX(newMin, newMax);
-                
-            }
-            //Zoom out
-            function zoomOut1() {
-                if (!chart?.w?.globals) {
-                    console.warn("Zoom Out action skipped: chart or required properties not available.");
-                    return;
-                }
-
-                sendMsgToReactNative("Zoomed");
-
-                const currentRange = getCurrentXRange();
-                const range = currentRange.max - currentRange.min;
-                const newRange = range * 1.3; // Zoom out by 30%
-                const center = currentRange.min + range / 2;
-
-                const fullRange = getFullDataRange();
-                const newMin = Math.max(fullRange.min, center - newRange / 2);
-                const newMax = Math.min(fullRange.max, center + newRange / 2);
-
-                chart.zoomX(newMin, newMax);
-            }
-
-            //New Optimized Function
-            //zoomIn
-            function zoomIn() {
-                if (!chart?.w?.globals) {
-                    console.warn("Zoom In action skipped: chart or required properties not available.");
-                    return;
-                }
-
-                sendMsgToReactNative("Zoom In");
-
-                const currentRange = getCurrentXRange();
-                const fullRange = getFullDataRange();
-
-                const minX = currentRange.min;
-                const maxX = currentRange.max;
-
-                const center = (minX + maxX) / 2;
-
-                // Zoom in by moving min/max halfway toward the center (50% zoom)
-                let newMin = (minX + center) / 2;
-                let newMax = (maxX + center) / 2;
-
-                // Clamp newMin and newMax to data bounds
-                newMin = Math.max(fullRange.min, newMin);
-                newMax = Math.min(fullRange.max, newMax);
-
-                chart.zoomX(newMin, newMax);
-            }
-            //zoomOut
-            function zoomOut() {
-                if (!chart?.w?.globals) {
-                    console.warn("Zoom Out action skipped: chart or required properties not available.");
-                    return;
-                }
-
-                sendMsgToReactNative("Zoomed Out");
-
-                const currentRange = getCurrentXRange();
-                const fullRange = getFullDataRange();
-                const minX = currentRange.min;
-                const maxX = currentRange.max;
-                const center = (minX + maxX) / 2;
-
-                // Zoom out by moving min/max away from center (double the distance from center)
-                // Calculate new min by reflecting minX further away from center
-                let newMin = center - (center - minX) * 2;
-                
-                // Calculate new max by reflecting maxX further away from center
-                let newMax = center + (maxX - center) * 2;
-
-                // Clamp newMin and newMax to data bounds
-                newMin = Math.max(fullRange.min, newMin);
-                newMax = Math.min(fullRange.max, newMax);
-
-                chart.zoomX(newMin, newMax);
-            }
-
-            //resetzoom
-            function resetZoom() {
-                const fullRange = getFullDataRange();
-                chart.zoomX(fullRange.min, fullRange.max);
-            }
-
-            //left pan
-            function customPanLeft() {
-                if (!chart?.w?.globals) {
-                    console.warn("Pan Left action skipped: chart or required properties not available.");
-                    return;
-                }
-
-                const fullRange = getFullDataRange();
-                const currentRange = getCurrentXRange();
-                const range = currentRange.max - currentRange.min;
-                const moveFactor = range * 0.5;
-
-                const newMin = Math.max(fullRange.min, currentRange.min - moveFactor);
-                const newMax = newMin + range;
-
-                chart.zoomX(newMin, newMax);
-                
-            }
-
-            //right pan
-            
-            function customPanRight() {
-                if (!chart?.w?.globals) {
-                    console.warn("Pan Right action skipped: chart or required properties not available.");
-                    return;
-                }
-
-                const fullRange = getFullDataRange();
-                const currentRange = getCurrentXRange();
-                const range = currentRange.max - currentRange.min;
-                const moveFactor = range * 0.5;
-
-                const newMax = Math.min(fullRange.max, currentRange.max + moveFactor);
-                const newMin = newMax - range;
-
-                chart.zoomX(newMin, newMax);
-                
-            }
-
-                
-            //toggle zoom and selection
-            window.toggleZoomAndSelection = () => {
-                if (chart.w.globals.zoomEnabled) {
-                    // Switch to Selection mode
-                    chart.w.globals.zoomEnabled = false;
-                    chart.w.globals.selectionEnabled = true;
-                } else if (chart.w.globals.selectionEnabled) {
-                    // Switch to Zoom mode
-                    chart.w.globals.zoomEnabled = true;
-                    chart.w.globals.selectionEnabled = false;
-                } else {
-                    // Default to Zoom mode if neither is enabled
-                    chart.w.globals.zoomEnabled = true;
-                    chart.w.globals.selectionEnabled = false;
-                }
             };
 
             var chart = new ApexCharts(document.querySelector("#chart"), options);

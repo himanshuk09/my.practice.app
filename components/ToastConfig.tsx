@@ -205,12 +205,21 @@ const toastConfig: any = {
 	),
 	info: ({ text1, text2, props }: any) => (
 		<View className="flex-row items-center py-3 px-5 w-full bg-[#5D5D5D] rounded-sm">
-			<MaterialIcons
-				name="info"
-				size={24}
-				color="white"
-				className="mr-2"
-			/>
+			{props?.update && Platform.OS !== "web" ? (
+				<MaterialIcons
+					name="security-update"
+					size={24}
+					color="white"
+					className="mr-2"
+				/>
+			) : (
+				<MaterialIcons
+					name="info"
+					size={24}
+					color="white"
+					className="mr-2"
+				/>
+			)}
 			<View className="flex-1">
 				<Text className="text-lg font-semibold text-white">
 					{text1}
