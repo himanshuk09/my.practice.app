@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as ScreenOrientation from "expo-screen-orientation";
 import React, { useCallback, useEffect, useRef } from "react";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
-import { Platform, TouchableOpacity, BackHandler, Linking } from "react-native";
+import { Platform, TouchableOpacity, Linking } from "react-native";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 type ChartComponentProps = {
@@ -155,30 +155,9 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 		}
 	}, []);
 
-	useEffect(() => {
-		const handleBackPress = () => {
-			if (isLandscape) {
-				ScreenOrientation.lockAsync(
-					ScreenOrientation.OrientationLock.PORTRAIT
-				);
-				dispatch(setOrientation(false));
-				return true;
-			}
-			return false;
-		};
-
-		// Add the back button listener
-		const backHandler = BackHandler.addEventListener(
-			"hardwareBackPress",
-			handleBackPress
-		);
-
-		// Cleanup on unmount
-		return () => {
-			backHandler.remove();
-		};
-	}, [isLandscape, dispatch]);
-
+	/**
+	 * For only web Chart
+	 */
 	useEffect(() => {
 		if (Platform.OS !== "web") return;
 

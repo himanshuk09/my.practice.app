@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
+import { RootState } from "@/store/store";
+import { BackHandler } from "react-native";
 import { closeDrawer } from "@/store/drawerSlice";
-import { BackHandler, TextStyle } from "react-native";
-import { useDispatch, useStore } from "react-redux";
-import { useRouter, useSegments } from "expo-router";
-import { activeLoading } from "@/store/navigationSlice";
 import CustomAlert from "@/components/CustomAlert";
+import { setOrientation } from "@/store/chartSlice";
+import { useRouter, useSegments } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
+import { useDispatch, useSelector, useStore } from "react-redux";
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
 type NavigationWatcherProps = {
 	children: React.ReactNode;
@@ -24,6 +27,10 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 	const dispatch = useDispatch();
 	const segments = useSegments();
 	const currentPath = "/" + segments.join("/");
+	const isLandscape = useSelector(
+		(state: RootState) => state.orientation.isLandscape
+	);
+
 	const showAlert = async () => {
 		CustomAlert({
 			title: "exit_app",
@@ -46,6 +53,17 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 			// Handle drawer close first
 			if (isDrawerOpen) {
 				dispatch(closeDrawer());
+				return true;
+			}
+			if (isLandscape) {
+				ScreenOrientation.lockAsync(
+					ScreenOrientation.OrientationLock.PORTRAIT
+				);
+				dispatch(activeLoading());
+				dispatch(setOrientation(false));
+				setTimeout(() => {
+					dispatch(inActiveLoading());
+				}, 2000);
 				return true;
 			}
 
@@ -87,7 +105,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 		);
 
 		return () => backHandler.remove();
-	}, [currentPath, dispatch, router]);
+	}, [currentPath, dispatch, router, isLandscape]);
 	return children;
 };
 

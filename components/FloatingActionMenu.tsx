@@ -20,6 +20,7 @@ interface FloatingActionMenuProps {
 	visibleTabs: tabsType[] | undefined;
 	isLoading: boolean;
 }
+
 const FloatingActionMenu = ({
 	activeTab,
 	setActiveTab,
@@ -43,7 +44,7 @@ const FloatingActionMenu = ({
 		Animated.timing(animation, {
 			toValue,
 			duration: 100,
-			useNativeDriver: Platform.OS === "android",
+			useNativeDriver: false,
 		}).start();
 
 		setIsMenuOpen(!isMenuOpen);
@@ -78,12 +79,12 @@ const FloatingActionMenu = ({
 			Animated.timing(translateX, {
 				toValue: layout.x,
 				duration: 200,
-				useNativeDriver: Platform.OS === "android",
+				useNativeDriver: false,
 			}).start();
 			Animated.timing(underlineWidth, {
 				toValue: layout.width - 4,
 				duration: 200,
-				useNativeDriver: Platform.OS === "android",
+				useNativeDriver: false,
 			}).start();
 		}
 	}, [activeTab, isMeasured, globalLoader]);

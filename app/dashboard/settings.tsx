@@ -200,8 +200,10 @@ const Settings = () => {
 					onValueChange={(newValue) => setSelectedLanguage(newValue)}
 					className="w-full p-3 border-b-2"
 					mode="dropdown"
-					dropdownIconColor="#000"
-					dropdownIconRippleColor="#c1c1c1"
+					{...(Platform.OS !== "web" && {
+						dropdownIconColor: "#000",
+						dropdownIconRippleColor: "#c1c1c1",
+					})}
 				>
 					<Picker.Item
 						label="ENGLISH"

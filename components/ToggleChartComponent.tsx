@@ -311,23 +311,30 @@ const ToggleChartComponent = ({
 		});
 	};
 
-	useEffect(() => {
-		const handler = setTimeout(() => {
-			if (isChartLoaded && activeTab !== "" && isOnline) {
-				setLoading(true);
-				fetchData();
-				setActiveTabForFileName(activeTab);
-			}
-		}, 300);
+	// useEffect(() => {
+	// 	const handler = setTimeout(() => {
+	// 		if (isChartLoaded && activeTab !== "" && isOnline) {
+	// 			setLoading(true);
+	// 			fetchData();
+	// 			setActiveTabForFileName(activeTab);
+	// 		}
+	// 	}, 300);
 
-		return () => clearTimeout(handler);
-	}, [activeTab]);
+	// 	return () => clearTimeout(handler);
+	// }, [activeTab]);
+
+	// useEffect(() => {
+	// 	if (isChartLoaded && isOnline) {
+	// 		fetchData();
+	// 	}
+	// }, [locale, isChartLoaded, isOnline]);
 
 	useEffect(() => {
-		if (isChartLoaded && isOnline) {
-			fetchData();
-		}
-	}, [locale, isChartLoaded, isOnline]);
+		if (!isChartLoaded || !isOnline || activeTab === "") return;
+		setLoading(true);
+		fetchData();
+		setActiveTabForFileName(activeTab);
+	}, [activeTab, isChartLoaded, isOnline]);
 
 	return (
 		<View

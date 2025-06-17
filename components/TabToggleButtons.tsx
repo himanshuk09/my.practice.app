@@ -1,8 +1,7 @@
 import Animated, {
+	withSpring,
 	useSharedValue,
 	useAnimatedStyle,
-	withTiming,
-	Easing,
 } from "react-native-reanimated";
 import { st } from "@/utils/Styles";
 import { useSelector } from "react-redux";
@@ -24,6 +23,7 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 		const globalLoader = useSelector(
 			(state: RootState) => state?.navigation?.loading
 		);
+
 		const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
 		const tabs = visibleTabs || allTabs;
 		const tabLayouts = useRef<{ x: number; width: number }[]>([]);
@@ -31,34 +31,37 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 		const underlineWidth = useSharedValue(0);
 		const [isMeasured, setIsMeasured] = useState(false);
 
+		// Reset measurements when tabs change
 		const onTabLayout = (index: number) => (event: LayoutChangeEvent) => {
 			const { x, width } = event.nativeEvent.layout;
 			tabLayouts.current[index] = { x, width };
-
-			if (tabLayouts.current.filter(Boolean).length === tabs.length) {
-				setIsMeasured(true);
-			}
+			setIsMeasured(tabs.every((_, i) => tabLayouts.current[i]));
 		};
 
 		useEffect(() => {
-			if (!isMeasured && activeTab !== "" && !globalLoader) return;
+			if (!isMeasured || activeTab === "" || globalLoader) return;
 
-			const index = tabs.findIndex((tab: string) => tab === activeTab);
+			const index = tabs.findIndex((tab) => tab === activeTab);
 			const layout = tabLayouts.current[index];
-			if (layout) {
-				translateX.value = withTiming(layout.x, {
-					duration: 200,
-					easing: Easing.linear,
-				});
-				underlineWidth.value = withTiming(layout.width, {
-					duration: 200,
-				});
+
+			if (!layout) {
+				setIsMeasured(false);
+				return;
 			}
-		}, [activeTab, isMeasured, globalLoader]);
+
+			translateX.value = withSpring(layout.x, {
+				damping: 25,
+				stiffness: 200,
+			});
+			underlineWidth.value = withSpring(layout.width, {
+				damping: 25,
+				stiffness: 200,
+			});
+		}, [activeTab, isMeasured, globalLoader, tabs]);
 
 		const animatedStyle = useAnimatedStyle(() => ({
 			transform: [{ translateX: translateX.value }],
-			width: underlineWidth.value,
+			width: underlineWidth.value > 10 ? underlineWidth.value : 10,
 		}));
 
 		return (

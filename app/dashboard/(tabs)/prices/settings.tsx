@@ -15,6 +15,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform } from "react-native";
 
 const PricesSettings = () => {
 	const [selectedPlace, setSelectedPlace] = useState();
@@ -154,8 +155,10 @@ const PricesSettings = () => {
 					onValueChange={(newValue) => setSelectedPlace(newValue)}
 					className="w-full p-3 border-b-2 bg-transparent rounded-sm"
 					mode="dropdown"
-					dropdownIconColor="#000"
-					dropdownIconRippleColor="#c1c1c1"
+					{...(Platform.OS !== "web" && {
+						dropdownIconColor: "#000",
+						dropdownIconRippleColor: "#c1c1c1",
+					})}
 				>
 					<Picker.Item
 						label="EEX"

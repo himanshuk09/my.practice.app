@@ -243,7 +243,7 @@ const PickerModel = ({
 			toValue: isKeyboardVisible ? 0 : Platform.OS === "web" ? 185 : 165,
 			duration: 200,
 			easing: Easing.inOut(Easing.linear),
-			useNativeDriver: Platform.OS === "android",
+			useNativeDriver: false,
 		}).start();
 	}, [isKeyboardVisible]);
 
