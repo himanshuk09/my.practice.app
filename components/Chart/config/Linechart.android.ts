@@ -518,6 +518,8 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                                     newMin,
                                     newMax,
                                 );
+                            }else{
+                                chart.resetSeries()
                             }
                         },
 
@@ -914,21 +916,22 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
 
                 locale = newLocale;
                 yaxisTitle=yAxisTitle;
-                // tooltip min/max 
+                // tooltip min/max
                 let yValues = chart.w.config.series[0].data.map((point) => point.y);
                 let maxY = Math.max(...yValues);
                 let minY = Math.min(...yValues);
+
                 // Find indices of max and min values
                 let maxIndex = yValues.indexOf(maxY);
                 let minIndex = yValues.indexOf(minY);
 
-                // title based on locale
-                let currentSeries = chart.w.config.series;
-                currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy Use: ";
+                // MIN MAX TOOLTIP TEXT
                 let MAX = newLocale === "de" ? "  Maximal" : "  Maximum";
                 let MIN = newLocale === "de" ? "  Minimum" : "  Minimum";
 
-                sendMsgToReactNative("updateLocale");
+                // title based on locale
+                let currentSeries = chart.w.config.series;
+                currentSeries[0].name = newLocale === "de" ? "Energieverbrauch: " : "Energy Use: ";
 
                 chart.updateOptions({
                     tooltip: {
@@ -956,10 +959,27 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                             },
                         },
                     },
+                    title: {
+			            show: true,
+                    },
                     xaxis: {
+                        show: true,
                         tickAmount: 4,
                         title: {
                             text: newLocale === "de" ? "Datum / Uhrzeit" : "Date / Time",
+                            style: {
+                                fontSize: "12px",
+                                fontFamily: "Helvetica, Arial, sans-serif",
+                            },
+                        },
+                        labels: {
+                            show: true,
+                        },
+                        axisTicks: {
+                            show: true,
+                        },
+                        axisBorder: {
+                            show: true,
                         },
                     },
                     yaxis: {
@@ -976,6 +996,8 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                         },
                         labels: {
                             show: true,
+                            minWidth: 0,
+						    maxWidth: 160,
                             formatter: (value) => {
                                 const locale = newLocale === "de" ? "de-DE" : "en-IN";
                                 return new Intl.NumberFormat(locale, {
@@ -984,6 +1006,17 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                             },
                         },
                     },
+                    responsive: [
+                        {
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    height: "95%",
+                                    // background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
+                                },
+                            },
+                        },
+				    ],
                 });
             }
 

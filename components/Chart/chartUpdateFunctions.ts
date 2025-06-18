@@ -1,28 +1,33 @@
 import { i18n } from "@/localization/config";
 import { Platform } from "react-native";
 type ChartUpdateType = "series" | "options" | "chart";
+type chartTypeProps = "line" | "donut" | "area";
 
-export const updateApexChart = (
-	type: ChartUpdateType,
-	webViewRef: any,
-	iframeRef: any,
-	data?: any,
-	options?: any
-) => {
+export const updateApexChart = ({
+	type,
+	webViewRef,
+	iFrameRef,
+	data,
+	options,
+}: {
+	type: ChartUpdateType;
+	webViewRef: any;
+	iFrameRef: any;
+	data: any;
+	options: any;
+}) => {
 	if (Platform.OS === "web") {
-		const iframe = iframeRef.current;
+		const iframe = iFrameRef.current;
 		if (iframe && iframe?.contentWindow) {
 			switch (type) {
 				case "series":
 					iframe.contentWindow.updateChartSeries?.(data);
-
 					break;
 				case "options":
-					iframe.contentWindow.updateChartOptions?.(data);
+					iframe.contentWindow.updateChartOptions?.(options);
 					break;
 				case "chart":
 					iframe.contentWindow.updateChart?.(data, options);
-
 					break;
 				default:
 					console.error("Invalid chart update type");
@@ -38,7 +43,7 @@ export const updateApexChart = (
 				jsCommand = `updateChartSeries(${JSON.stringify(data)});`;
 				break;
 			case "options":
-				jsCommand = `updateChartOptions(${JSON.stringify(data)});`;
+				jsCommand = `updateChartOptions(${JSON.stringify(options)});`;
 				break;
 			case "chart":
 				jsCommand = `updateChart(${JSON.stringify(
@@ -54,10 +59,10 @@ export const updateApexChart = (
 	}
 };
 
-export const updateEmptyChart = (
+export const updateEmptyApexChart = (
 	webViewRef?: any,
-	iframeRef?: any,
-	chartType?: any
+	iFrameRef?: any,
+	chartType?: chartTypeProps
 ) => {
 	let options = {
 		chart: {
@@ -110,5 +115,89 @@ export const updateEmptyChart = (
 		},
 	};
 
-	updateApexChart("chart", webViewRef, iframeRef, [], options);
+	// updateApexChart("chart", webViewRef, iFrameRef, [], options);
+	updateApexChart({
+		type: "chart",
+		webViewRef,
+		iFrameRef,
+		data: [],
+		options,
+	});
+};
+
+export const updateLineApexChartLocale = ({
+	locale,
+	yaxisunit,
+	activeTab,
+	webViewRef,
+	iFrameRef,
+}: {
+	locale: string;
+	yaxisunit: string;
+	activeTab: string;
+	webViewRef: any;
+	iFrameRef: any;
+}) => {
+	if (Platform.OS === "web") {
+		const iframe = iFrameRef.current;
+		if (iframe?.contentWindow) {
+			iframe.contentWindow.updateLocale?.(locale, yaxisunit, activeTab);
+			iframe.contentWindow.updateFormate?.(activeTab, locale);
+			iframe.contentWindow.setFileName?.("hello");
+		}
+	} else {
+		const scripts = [
+			`if (typeof updateLocale === 'function') updateLocale('${locale}','${yaxisunit}','${activeTab}');`,
+			`if (typeof updateFormate === 'function') updateFormate('${activeTab}','${locale}');`,
+		];
+		scripts.forEach((script) => {
+			webViewRef.current?.injectJavaScript(script);
+		});
+	}
+};
+
+export const updateAreaApexChartLocale = ({
+	locale,
+	date,
+	fileName,
+	webViewRef,
+	iFrameRef,
+}: {
+	locale: string;
+	date: string;
+	fileName: string;
+	webViewRef: any;
+	iFrameRef: any;
+}) => {
+	const year = new Date(date).getFullYear();
+	if (Platform.OS === "web") {
+		const iframe = iFrameRef.current;
+		if (iframe?.contentWindow) {
+			iframe.contentWindow.updateLocale?.(locale, `${year}`);
+			iframe.contentWindow.setFileName?.(fileName);
+		}
+	} else {
+		const script = `if (typeof updateLocale === 'function') { updateLocale('${locale}', ${year}); }`;
+		webViewRef.current?.injectJavaScript(script);
+	}
+};
+
+export const updateDonutApexChartLocale = ({
+	locale,
+	webViewRef,
+	iFrameRef,
+}: {
+	locale: string;
+	webViewRef: any;
+	iFrameRef: any;
+}) => {
+	if (Platform.OS === "web") {
+		const iframe = iFrameRef.current;
+		if (iframe?.contentWindow) {
+			iframe.contentWindow.updateLocale?.(locale);
+		}
+	} else {
+		const script = `if (typeof updateLocale === 'function') { updateLocale('${locale}'); }`;
+		webViewRef.current?.injectJavaScript(script);
+	}
 };

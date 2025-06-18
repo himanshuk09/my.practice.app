@@ -160,75 +160,54 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 	 */
 	useEffect(() => {
 		if (Platform.OS !== "web") return;
-
-		const handleChartUpdate = () => {
-			setLoading(true);
-		};
-
-		const handleChartUpdated = () => {
-			if (LoaderTimeoutRef?.current) {
-				clearTimeout(LoaderTimeoutRef.current);
-			}
-			LoaderTimeoutRef.current = setTimeout(() => {
-				setLoading(false);
-			}, 1000);
-		};
-
-		const handleLoaderAction = (shouldStart: boolean) => {
-			if (shouldStart) {
-				setLoading(true);
-			} else {
-				setTimeout(() => setLoading(false), 2000);
-			}
-		};
-
 		const receiveMessage = (event: MessageEvent) => {
 			const { message, source, values } = event?.data;
 			if (source === "react-devtools-bridge") return;
 
-			const isYearTab = activeTab === "Year" || activeTab === "Year_3";
-
 			// Handle chart updates
-			if (
-				message === "updateChartSeries" ||
-				message === "updateChartOptions"
-			) {
-				handleChartUpdate();
-			} else if (message === "Chart updated") {
-				handleChartUpdated();
+			switch (message) {
+				case "updateChartSeries":
+				case "updateChartOptions":
+					setLoading(true);
+					break;
+
+				case "Chart updated":
+					if (LoaderTimeoutRef?.current) {
+						clearTimeout(LoaderTimeoutRef.current);
+					}
+					LoaderTimeoutRef.current = setTimeout(() => {
+						setLoading(false);
+					}, 500);
+					break;
+
+				case "startLoader":
+					// setLoading(true);
+					break;
+
+				case "stopLoader":
+					// setTimeout(() => setLoading(false), 2000);
+					break;
+
+				case "highLightedMaxMin":
+					setMaxMinValues?.(
+						values || {
+							minX: 0,
+							minY: 0,
+							maxX: 0,
+							maxY: 0,
+						}
+					);
+					break;
+				case "animationEnd":
+				case "Empty Series":
+					setTimeout(() => {
+						setShowChartShimmer?.(false);
+					}, 500);
+					break;
+
+				default:
+					break;
 			}
-			// Handle loader actions
-			else if (
-				message === "startLoader" ||
-				(isYearTab && message === "Zoom Start")
-			) {
-				handleLoaderAction(true);
-			} else if (
-				message === "stopLoader" ||
-				(isYearTab && message === "Zoomed")
-			) {
-				handleLoaderAction(false);
-			}
-			// Handle max/min values
-			else if (message === "highLightedMaxMin") {
-				setMaxMinValues?.(
-					values
-						? values
-						: {
-								minX: 0,
-								minY: 0,
-								maxX: 0,
-								maxY: 0,
-							}
-				);
-			} else if (message === "Empty Series") {
-				setShowChartShimmer?.(false);
-			} else if (message === "animationEnd") {
-				setTimeout(() => {
-					setShowChartShimmer?.(false);
-				}, 1000);
-			}
-			//console.log(`Message from ${source} iframe:`, event.data);
 		};
 
 		window.addEventListener("message", receiveMessage);

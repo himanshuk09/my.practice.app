@@ -11,7 +11,17 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                 padding: 0;
                 box-sizing: border-box;
             }
-            
+            body {
+                height: 100vh;
+                position: relative;
+            }
+
+            #chart {
+                position: absolute;
+                width: 99%;
+                touch-action: none;
+                padding-top:10px;
+            }
             .apexcharts-element-hidden {
                 opacity: 1 !important;
                 visibility: visible !important;
@@ -36,7 +46,29 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
             let yaxisTitle="";
             let updatedLocale;
             let markersVisible = false;
+            let activeTab = "";
 
+
+            function setFileName (newFileName){
+                chart?.updateOptions({
+                    chart: {
+                        toolbar: {
+                            export: {
+                                csv: {
+                                    filename: newFileName,
+                                },
+                                svg: {
+                                    filename: newFileName,
+                                },
+                                png: {
+                                    filename: newFileName,
+                                }
+                            }
+                        },
+                    },
+                });
+            }
+        
             function updateToggleMarker() {
                 const newSize = markersVisible ? 3 : 0;
                 const newColor = markersVisible ? "red" : "gray";
@@ -270,8 +302,8 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                 let MAX = newLocale === "de" ? "  Maximal" : "  Maximum";
                 let MIN = newLocale === "de" ? "  Minimum" : "  Minimum";
                 
+                
                 chart.updateOptions({
-                    chart: {},
                     tooltip: {
                         y: {
                             formatter: (value) => {
@@ -302,18 +334,60 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                         tickAmount: 5,
                         title: {
                             text: newLocale === "de" ? "Datum / Uhrzeit" : "Date / Time",
+                            style: {
+                                fontSize: "12px",
+                                fontFamily: "Helvetica, Arial, sans-serif",
+                            },
+                        },
+                        labels: {
+                            show: true,
+                        },
+                        axisTicks: {
+                            show: true,
+                        },
+                        axisBorder: {
+                            show: true,
                         },
                     },
                     yaxis: {
+                        min: function (min) {
+						    return min - (min * 0.1);
+					    },
+					    max: function (max) {
+						    return max + (max * 0.1);
+					    },
+                        forceNiceScale: true,
+                        title: {
+                            show:true,
+                            text: yAxisTitle,
+                        },
                         labels: {
                             show: true,
+                            style: {
+                                fontSize: "12px",
+                                fontFamily: "Helvetica, Arial, sans-serif",
+                                fontWeight: 500,
+                            },
                             formatter: (value) => {
                                 const locale = newLocale === "de" ? "de-DE" : "en-IN";
-                                return value.toLocaleString(locale, { maximumFractionDigits: 0 });
+                                return new Intl.NumberFormat(locale, {
+                                    maximumFractionDigits: 0,
+                                }).format(value);
                             },
                         },
-                        title: {
-                            text: yAxisTitle,
+                        axisBorder: {
+                            show: false,
+                            color: "#78909C",
+                            offsetX: 0,
+                            offsetY: 0,
+                        },
+                        axisTicks: {
+                            show: false,
+                            borderType: "solid",
+                            color: "#78909C",
+                            width: 6,
+                            offsetX: 0,
+                            offsetY: 0,
                         },
                     },
                 });
@@ -415,8 +489,8 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                         mounted: function (chartContext) {
                             updateToggleMarker();
                             sendMsgToWeb("mounted");
-                            <!-- document.querySelector(".apexcharts-canvas")?.addEventListener("touchstart", (e) => { }, { passive: true }); -->
-                        const chartEl = document.querySelector(".apexcharts-canvas");
+
+                            const chartEl = document.querySelector(".apexcharts-canvas");
 
                             if (chartEl) {
                                 chartEl.addEventListener(
@@ -586,7 +660,7 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                     strokeWidth: 0.7,
                     strokeOpacity: 0.2,
                     strokeDashArray: 0,
-                    fillOpacity: 2,
+                    fillOpacity: 1,
                     discrete: [],
                     shape: "circle",
                     offsetX: 0,
@@ -595,18 +669,20 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                     onDblClick: undefined,
                     showNullDataPoints: false,
                     hover: {
-                        size: undefined,
-                        sizeOffset: 5,
+                        size: 5,
+                        sizeOffset: 4,
                     },
                 },
                 fill: {
                     colors: ["#e31837"],
-                    gradient: {
-                        shadeIntensity: 1,
-                        inverseColors: false,
-                        opacityFrom: 0.2,
-                        opacityTo: 0,
-                    },
+                    //gradient: {
+                    //    shadeIntensity: 1,
+                    //    inverseColors: false,
+                    //    opacityFrom: 0.2,
+                    //    opacityTo: 0,
+                    //},
+                    opacity: 1,
+                    type: 'solid',
                 },
                 xaxis: {
                     type: "datetime",
@@ -757,7 +833,7 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                         breakpoint: 1000, // For laptop and large screens
                         options: {
                             chart: {
-                                // height: 550,
+                                 height: 550,
                                 // background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
                                 toolbar: {
                                     show: true,
@@ -782,7 +858,7 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                         breakpoint: 950, // For tablets and smaller laptops
                         options: {
                             chart: {
-                                // height: 500,
+                                height: "90%",
                                 // background: "url('https://i.ibb.co/sKQJv9t/resize-17319237671164076911defaultlargechart.png') no-repeat center center",
                                 toolbar: {
                                     show: true,
@@ -816,7 +892,7 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                                     tools: {
                                         download: true,
                                         selection: false,
-                                        zoom: false,
+                                        zoom: true,
                                         zoomin: true,
                                         zoomout: true,
                                         pan: false,
@@ -869,7 +945,14 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
             })();
 
             chart = new ApexCharts(document.querySelector("#chart"), options);
-            chart.render();
+            chart
+                .render()
+                .then(() => {
+                        chart.w.globals.isTouchDevice = false;
+                })
+                .catch((error) => {
+                        console.error("Chart failed to render:", error);
+                });;
         </script>
     </body>
 

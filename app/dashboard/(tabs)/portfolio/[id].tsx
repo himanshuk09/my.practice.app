@@ -15,7 +15,9 @@ import {
 } from "@/services/portfolio.service";
 import {
 	updateApexChart,
-	updateEmptyChart,
+	updateAreaApexChartLocale,
+	updateDonutApexChartLocale,
+	updateEmptyApexChart,
 } from "@/components/chart/chartUpdateFunctions";
 import {
 	exportBase64ToPDF,
@@ -37,7 +39,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { Toast, showToast } from "@/components/ToastConfig";
-import { ChartGraphSimmer } from "@/components/ChartShimmer";
+import { ChartGraphShimmer } from "@/components/ChartShimmer";
 import ChartComponent from "@/components/chart/ChartComponent";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
@@ -134,31 +136,18 @@ const PortfolioOverView = () => {
 	};
 
 	const updateLocale = () => {
-		if (Platform.OS === "web") {
-			const iframe = areaIFrameRef.current;
-			if (iframe && iframe?.contentWindow) {
-				iframe?.contentWindow?.updateLocale?.(
-					locale,
-					`${new Date(paramsID?.PortfolioDate).getFullYear()}`
-				);
-				iframe?.contentWindow?.setFileName?.(paramsID?.PortfolioName);
-			}
-			if (
-				donutIFrameRef?.current &&
-				donutIFrameRef?.current?.contentWindow
-			) {
-				donutIFrameRef?.current?.contentWindow?.updateLocale?.(locale);
-			}
-		} else {
-			if (areaWebViewRef?.current) {
-				const updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}', ${new Date(paramsID?.PortfolioDate).getFullYear()});}`;
-				areaWebViewRef.current.injectJavaScript(updateLocaleScript);
-			}
-			if (donutwebViewRef?.current) {
-				let updateLocaleScript = `if (typeof updateLocale === 'function') {updateLocale('${locale}');}`;
-				donutwebViewRef?.current.injectJavaScript(updateLocaleScript);
-			}
-		}
+		updateAreaApexChartLocale({
+			locale,
+			date: paramsID?.PortfolioDate,
+			fileName: paramsID?.PortfolioName,
+			webViewRef: areaWebViewRef,
+			iFrameRef: areaIFrameRef,
+		});
+		updateDonutApexChartLocale({
+			locale,
+			webViewRef: donutwebViewRef,
+			iFrameRef: donutIFrameRef,
+		});
 	};
 
 	const debouncedExport = useDebounce(() => exportPortfolioReport(), 1000);
@@ -202,8 +191,8 @@ const PortfolioOverView = () => {
 	useEffect(() => {
 		if (portfolioDetails && isChartLoaded && isDonutChartLoaded) {
 			if (portfolioDetails?.message === "no data") {
-				updateEmptyChart(donutwebViewRef, donutIFrameRef, "donut");
-				updateEmptyChart(areaWebViewRef, areaIFrameRef, "area");
+				updateEmptyApexChart(donutwebViewRef, donutIFrameRef, "donut");
+				updateEmptyApexChart(areaWebViewRef, areaIFrameRef, "area");
 				setEnabledToCallDeals(false);
 				if (Platform.OS === "web") {
 					setShowAreaChart(true);
@@ -213,20 +202,20 @@ const PortfolioOverView = () => {
 			}
 
 			updateLocale();
-			updateApexChart(
-				"chart",
-				donutwebViewRef,
-				donutIFrameRef,
-				portfolioDetails?.donotChartData,
-				{ title: { text: paramsID?.PortfolioName } }
-			);
-
-			updateApexChart(
-				"series",
-				areaWebViewRef,
-				areaIFrameRef,
-				portfolioDetails?.areaChartData
-			);
+			updateApexChart({
+				type: "chart",
+				webViewRef: donutwebViewRef,
+				iFrameRef: donutIFrameRef,
+				data: portfolioDetails?.donotChartData,
+				options: { title: { text: paramsID?.PortfolioName } },
+			});
+			updateApexChart({
+				type: "series",
+				webViewRef: areaWebViewRef,
+				iFrameRef: areaIFrameRef,
+				data: portfolioDetails?.areaChartData,
+				options: {},
+			});
 
 			setEnabledToCallDeals(true);
 			if (Platform.OS === "web") {
@@ -260,7 +249,7 @@ const PortfolioOverView = () => {
 				className="flex flex-row justify-between"
 				style={{ height: 160 }} // Use reasonable fixed height for top
 			>
-				{!showPieChart && !showAreaChart && <ChartGraphSimmer />}
+				{!showPieChart && !showAreaChart && <ChartGraphShimmer />}
 
 				<ChartComponent
 					webViewRef={donutwebViewRef}
@@ -311,7 +300,7 @@ const PortfolioOverView = () => {
 					padding: 3,
 				}}
 			>
-				{!showPieChart && !showAreaChart && <ChartGraphSimmer />}
+				{!showPieChart && !showAreaChart && <ChartGraphShimmer />}
 				<ChartComponent
 					isChartEmpty={portfolioDetails?.message === "no data"}
 					webViewRef={areaWebViewRef}

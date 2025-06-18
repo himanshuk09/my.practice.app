@@ -1,6 +1,7 @@
 import {
 	updateApexChart,
-	updateEmptyChart,
+	updateEmptyApexChart,
+	updateLineApexChartLocale,
 } from "@/components/chart/chartUpdateFunctions";
 import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
@@ -12,7 +13,7 @@ import { ChartLoaderPNG } from "@/components/Loader";
 import { DateType } from "react-native-ui-datepicker";
 import React, { useEffect, useRef, useState } from "react";
 import TabToggleButtons from "@/components/TabToggleButtons";
-import { ChartGraphSimmer } from "@/components/ChartShimmer";
+import { ChartGraphShimmer } from "@/components/ChartShimmer";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import ChartComponent from "@/components/chart/ChartComponent";
 import FloatingActionMenu from "@/components/FloatingActionMenu";
@@ -160,9 +161,8 @@ const ToggleChartComponent = ({
 				// setLoading(true);
 				break;
 
-			// case "stopLoader":
-			case "Empty":
-				setTimeout(() => setLoading(false), 2000);
+				// case "stopLoader":
+				setTimeout(() => setLoading(false), 200);
 				break;
 
 			case "chartZoomed":
@@ -176,8 +176,6 @@ const ToggleChartComponent = ({
 				//setMaxMinValues(values)
 				break;
 			case "animationEnd":
-				setShowChartShimmer(false);
-				break;
 			case "Empty Series":
 				setShowChartShimmer(false);
 				break;
@@ -189,7 +187,7 @@ const ToggleChartComponent = ({
 	// its used to update chart options and series based on data
 	const updateChartData = (filteredData: any) => {
 		if (filteredData?.length === 0) {
-			updateEmptyChart(webViewRef, iFrameRef);
+			updateEmptyApexChart(webViewRef, iFrameRef, "line");
 			setIsChartEmpty(true);
 			setTimeout(() => {
 				setLoading(false);
@@ -198,8 +196,12 @@ const ToggleChartComponent = ({
 		}
 
 		if (isTooltipEnabled) {
-			updateApexChart("options", webViewRef, iFrameRef, {
-				markers: { size: 0 },
+			updateApexChart({
+				type: "options",
+				webViewRef,
+				iFrameRef,
+				data: [],
+				options: { markers: { size: 0 } },
 			});
 			setIsTooltipEnabled(false);
 		}
@@ -210,7 +212,13 @@ const ToggleChartComponent = ({
 			setLoading(true);
 		}
 
-		updateApexChart("series", webViewRef, iFrameRef, filteredData);
+		updateApexChart({
+			type: "series",
+			webViewRef,
+			iFrameRef,
+			data: filteredData,
+			options: {},
+		});
 
 		if (iFrameRef?.current?.contentWindow?.isChartZoomed?.()) {
 			iFrameRef.current.contentWindow.resetZoom();
@@ -221,27 +229,13 @@ const ToggleChartComponent = ({
 
 	//its used to update charts culture and x axis formate
 	const updateLocale = () => {
-		if (Platform.OS === "web") {
-			const iframe = iFrameRef.current;
-			if (iframe && iframe.contentWindow) {
-				iframe.contentWindow.updateLocale?.(locale);
-				iframe.contentWindow.updateFormate?.(activeTab, locale);
-			}
-
-			updateApexChart("options", webViewRef, iFrameRef, {
-				xaxis: {
-					title: { text: i18n.t("datetime") },
-				},
-			});
-		} else {
-			const scripts = [
-				`if (typeof updateLocale === 'function') updateLocale('${locale}','${yaxisunit}');`,
-				`if (typeof updateFormate === 'function') updateFormate('${activeTab}','${locale}');`,
-			];
-			scripts.forEach((script) =>
-				webViewRef.current?.injectJavaScript(script)
-			);
-		}
+		updateLineApexChartLocale({
+			locale,
+			yaxisunit,
+			activeTab,
+			webViewRef,
+			iFrameRef,
+		});
 	};
 
 	const fetchData = async (rangePayload = {}) => {
@@ -311,24 +305,6 @@ const ToggleChartComponent = ({
 		});
 	};
 
-	// useEffect(() => {
-	// 	const handler = setTimeout(() => {
-	// 		if (isChartLoaded && activeTab !== "" && isOnline) {
-	// 			setLoading(true);
-	// 			fetchData();
-	// 			setActiveTabForFileName(activeTab);
-	// 		}
-	// 	}, 300);
-
-	// 	return () => clearTimeout(handler);
-	// }, [activeTab]);
-
-	// useEffect(() => {
-	// 	if (isChartLoaded && isOnline) {
-	// 		fetchData();
-	// 	}
-	// }, [locale, isChartLoaded, isOnline]);
-
 	useEffect(() => {
 		if (!isChartLoaded || !isOnline || activeTab === "") return;
 		setLoading(true);
@@ -363,8 +339,15 @@ const ToggleChartComponent = ({
 			)}
 			{/* Chart  */}
 			<View className="flex-1  border-gray-300 relative">
-				{showChartShimmer && <ChartGraphSimmer />}
-				{isLoading && <ChartLoaderPNG />}
+				{
+					/** On Chart Animation End then show ChartGraphShimmer */
+					showChartShimmer && <ChartGraphShimmer />
+				}
+
+				{
+					/** On chart Tabs Change then Show Loader */
+					isLoading && <ChartLoaderPNG />
+				}
 
 				<ChartComponent
 					activeTab={activeTab}

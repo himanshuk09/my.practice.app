@@ -79,7 +79,7 @@ const PortFolioChartShimmer = () => {
 		</View>
 	);
 };
-const ChartGraphSimmer = () => {
+const ChartGraphShimmer = () => {
 	return (
 		<View
 			style={[
@@ -146,4 +146,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export { ChartShimmer, PortFolioChartShimmer, ChartGraphSimmer };
+export { ChartShimmer, PortFolioChartShimmer, ChartGraphShimmer };
