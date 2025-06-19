@@ -2,11 +2,17 @@ import { useEffect, useRef } from "react";
 import { Platform, StyleSheet } from "react-native";
 import { Animated, View, TouchableOpacity } from "react-native";
 
+interface CustomSwitchProps {
+	isEnabled: boolean;
+	disabled?: boolean;
+	setIsEnabled: any;
+}
+
 const CustomSwitch = ({
 	isEnabled = true,
 	setIsEnabled,
 	disabled = false,
-}: any) => {
+}: CustomSwitchProps) => {
 	// Initialize translateX based on current isEnabled state
 	const translateX = useRef(new Animated.Value(isEnabled ? 30 : 0)).current;
 
@@ -43,8 +49,6 @@ const CustomSwitch = ({
 		if (!disabled) {
 			const newValue = !currentEnabled.current;
 			setIsEnabled(newValue);
-
-			// No need to trigger animations here - the useEffect will handle it
 		}
 	};
 

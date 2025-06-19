@@ -1,3 +1,6 @@
+/**
+ * Root Layout
+ */
 import "../global.css";
 import "react-native-reanimated";
 import { Stack } from "expo-router";
@@ -27,6 +30,7 @@ const RootLayout = () => {
 			subscription.remove();
 		};
 	}, [appState]);
+
 	return (
 		<Stack
 			screenOptions={{

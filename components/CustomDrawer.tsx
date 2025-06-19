@@ -88,7 +88,7 @@ const CustomDrawer = memo(() => {
 		[segments]
 	);
 
-	const clearStorageAndNavigate = async (router: any) => {
+	const clearStorageAndNavigate = async () => {
 		try {
 			await AsyncStorage.multiRemove([
 				"session",
@@ -108,7 +108,7 @@ const CustomDrawer = memo(() => {
 		if (typeof window !== "undefined" && Platform.OS === "web") {
 			const isConfirmed = window.confirm(i18n.t("logout_message"));
 			if (isConfirmed) {
-				clearStorageAndNavigate(router);
+				clearStorageAndNavigate();
 			}
 		} else {
 			CustomAlert({
@@ -118,7 +118,7 @@ const CustomDrawer = memo(() => {
 				icon: "question",
 				iconColor: "#e31837",
 				onConfirm() {
-					clearStorageAndNavigate(router);
+					clearStorageAndNavigate();
 				},
 			});
 		}

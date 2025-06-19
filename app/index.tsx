@@ -1,3 +1,7 @@
+/**
+ *First scren that  Redirect to login or dashboard based on session
+ */
+
 import { Redirect } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
 

@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface AuthStatePro {
 	loading: boolean;
 	session: boolean;
-	user: any;
+	user: null;
 }
 
 const initialState: AuthStatePro = {
@@ -24,10 +24,10 @@ const authSlicePro = createSlice({
 			state.session = action.payload;
 			AsyncStorage.setItem("session", action?.payload.toString());
 		},
-		setUser: (state, action: PayloadAction<any>) => {
+		setUser: (state, action: PayloadAction<null>) => {
 			state.user = action.payload;
 		},
-		signIn: (state, action: PayloadAction<any>) => {
+		signIn: (state, action: PayloadAction<null>) => {
 			state.session = true;
 			state.user = action.payload;
 		},

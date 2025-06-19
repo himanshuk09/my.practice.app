@@ -21,18 +21,17 @@ type DateTimeRange = {
 	startDate?: DateType | any;
 	endDate?: DateType | any;
 };
+type DatePickerViews = "day" | "month" | "year" | "time";
 
 type DateTimePickerComponentsProps = {
-	title?: String;
+	title?: string;
 	timePicker?: boolean;
 	pickerMode?: ModeType;
 	open?: boolean;
 	setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 	setSingleDate?: (date: DateType) => void;
 	defaultDate?: DateType;
-	initialView?: "day" | "month" | "year" | "time";
-	setSelectedStartDate?: any;
-	setSelectedEndDate?: any;
+	initialView?: DatePickerViews;
 	range?: DateTimeRange;
 	setRange?: (range: DateTimeRange) => void;
 };

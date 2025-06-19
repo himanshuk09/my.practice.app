@@ -2,8 +2,12 @@ import React, { useRef } from "react";
 import { ActivityIndicator, Animated, Pressable } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
-
-const Reload = ({ type = "", onPress = () => {} }: any) => {
+// Define prop types
+interface ReloadProps {
+	type?: "network" | "update" | ""; // limit valid types
+	onPress?: () => void;
+}
+const Reload: React.FC<ReloadProps> = ({ type = "", onPress = () => {} }) => {
 	const rotation = useRef(new Animated.Value(0)).current;
 	const retryConnection = () => {
 		rotation.setValue(0); // reset before animating

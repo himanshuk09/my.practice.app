@@ -62,7 +62,7 @@ const CustomAlert = ({
 
 	Alert.alert({
 		title: i18n.t(title),
-		description: i18n.t(description),
+		description: description ? i18n.t(description) : "",
 		icon,
 		iconColor,
 		confirmText,

@@ -1,4 +1,15 @@
-export const TranslationKeys: any = {
+type TranslationValue = string | { [nestedKey: string]: string };
+
+type TranslationMap = {
+	[key: string]: TranslationValue;
+};
+
+type SupportedLanguages = "en" | "de";
+
+type Translations = {
+	[lang in SupportedLanguages]: TranslationMap;
+};
+export const TranslationKeys: Translations = {
 	en: {
 		unit: "kWh",
 		tooltip: "Tooltip",
@@ -15,6 +26,8 @@ export const TranslationKeys: any = {
 		Y: "Y",
 		Q: "Q",
 		Y3: "3Y",
+		gas: "Gas",
+		power: "Power",
 		show: "Show Chart",
 		January: "January",
 		February: "February",
@@ -342,6 +355,8 @@ export const TranslationKeys: any = {
 		Y: "J",
 		Q: "Q",
 		Y3: "3J",
+		gas: "Gas",
+		power: "Strom",
 		show: "Chart Anzeigen",
 		January: "Januar",
 		February: "Februar",

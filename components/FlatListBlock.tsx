@@ -9,14 +9,23 @@ import {
 } from "react-native";
 import { st } from "@/utils/Styles";
 import { useDispatch } from "react-redux";
+import Title from "@/components//ui/Title";
 import { FontAwesome } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { activeLoading } from "@/store/navigationSlice";
-import { Href, usePathname, useRouter } from "expo-router";
+import { Href, Router, usePathname, useRouter } from "expo-router";
 import { ShimmerFlatListBlock } from "@/components/ShimmerEffect";
 import React, { memo, useCallback, useEffect, useRef } from "react";
-
-const FlatListBlock = ({
+interface FlatListBlockProps<T = any> {
+	title: string;
+	items: T[];
+	enableAutoScroll?: boolean;
+	height?: number | string;
+	keyExtractor?: (item: T, index: number | string) => string;
+	NavigateTo?: string | Href;
+	renderType: "pfc" | "portfolio" | "signal";
+}
+const FlatListBlock = <T,>({
 	title,
 	items,
 	enableAutoScroll = false,
@@ -24,66 +33,88 @@ const FlatListBlock = ({
 	keyExtractor,
 	NavigateTo,
 	renderType,
-}: any) => {
+}: FlatListBlockProps<T>) => {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const currentRoute = usePathname(); // Provides the current route path
-	const flatListRef = useRef<any>(null);
+	const flatListRef = useRef<FlatList>(null);
 	const currentYear = new Date().getFullYear();
-	const previousRouteRef = useRef<string | null>(null);
+	const previousRouteRef = useRef<string>("");
 	const ITEM_HEIGHT = Platform.OS === "web" ? 83 : 72.8;
-	const previousRoute: any = previousRouteRef.current;
+	const previousRoute: string = previousRouteRef.current;
 
-	const ListItem = memo(({ item, router, renderType, index }: any) => {
-		const handlePress = () => {
-			dispatch(activeLoading());
+	const ListItem = memo(
+		({
+			item,
+			router,
+			renderType,
+			index,
+		}: {
+			item: any;
+			router: Router;
+			renderType: string;
+			index: number | string;
+		}) => {
+			const handlePress = () => {
+				dispatch(activeLoading());
 
-			setTimeout(() => {
-				if (renderType === "Portfolio") {
-					router.push({
-						pathname: `dashboard/(tabs)/portfolio/[id]`,
-						params: {
-							id: encodeURIComponent(JSON.stringify(item)),
-						},
-					});
-				} else if (renderType === "pfc") {
-					router.push(`${NavigateTo}/1` as Href);
-				} else {
-					router.push(`${NavigateTo}/${index + 1}` as Href);
-				}
-			});
-		};
+				setTimeout(() => {
+					if (renderType === "portfolio") {
+						router.push({
+							pathname: `/dashboard/(tabs)/portfolio/[id]`,
+							params: {
+								id: encodeURIComponent(JSON.stringify(item)),
+							},
+						});
+					} else if (renderType === "pfc") {
+						router.push({
+							pathname: `/dashboard/(tabs)/pfc/[id]`,
+							params: {
+								id: 1,
+							},
+						});
+					} else {
+						router.push({
+							pathname: `/dashboard/(tabs)/signals/[id]`,
+							params: {
+								id: 1,
+							},
+						});
+					}
+				});
+			};
 
-		const title =
-			renderType === "Portfolio"
-				? item?.PortfolioName
-				: renderType === "pfc"
-					? item?.PriceForwardCurveName
-					: item?.title;
+			const title =
+				renderType === "portfolio"
+					? item?.PortfolioName
+					: renderType === "pfc"
+						? item?.PriceForwardCurveName
+						: item?.title;
 
-		return (
-			<TouchableOpacity
-				key={item.id}
-				className="flex justify-start flex-row px-5 py-6 text-lg font-serif font-medium rounded-sm my-1 mx-2 bg-white h-[4.7rem]"
-				style={st.boxShadow}
-				onPress={handlePress}
-			>
-				{item?.notificationCount && (
-					<FontAwesome
-						name="circle"
-						size={8}
-						color="#e31837"
-						className="mr-1 mt-[0.4rem]"
-					/>
-				)}
-				<Text className="text-listText text-sm">{title}</Text>
-			</TouchableOpacity>
-		);
-	});
+			return (
+				<TouchableOpacity
+					key={item.id}
+					className="flex justify-start flex-row px-5 py-6 text-lg font-serif font-medium rounded-sm my-1 mx-2 bg-white h-[4.7rem]"
+					style={st.boxShadow}
+					onPress={handlePress}
+				>
+					{item?.notificationCount && (
+						<FontAwesome
+							name="circle"
+							size={8}
+							color="#e31837"
+							className="mr-1 mt-[0.4rem]"
+						/>
+					)}
+					<Text className="text-listText text-sm">{title}</Text>
+				</TouchableOpacity>
+			);
+		}
+	);
 
 	const renderItem = useCallback(
-		({ item, index }: any) => (
+		({ item, index }: { item: T; index: number }) => (
 			<ListItem
 				item={item}
 				router={router}
@@ -159,11 +190,7 @@ const FlatListBlock = ({
 				height: height ?? undefined,
 			}}
 		>
-			<View className="top-0 w-[100%] z-50 p-3 bg-[#e31837]">
-				<Text className="flex justify-start font-normal py-2 p-3 mb-4 items-center h-12 text-xl rounded-sm text-white">
-					{title}
-				</Text>
-			</View>
+			<Title title={title} />
 
 			<FlatList
 				ref={flatListRef}

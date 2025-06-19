@@ -2,24 +2,34 @@ import { I18n } from "i18n-js";
 import * as Localization from "expo-localization";
 import { TranslationKeys } from "@/localization/languagekey";
 
-const supportedLocales = ["en", "de"]; // English and German
+// Supported locales
+const supportedLocales = ["en", "de"] as const;
+type SupportedLocale = (typeof supportedLocales)[number]; // "en" | "de"
 
+// Regional variants
 const englishIN = "en-IN";
-const germany = "de-DE";
 const englishUS = "en-US";
-const englishLocale = "en";
-const germanyLocale = "de";
+const englishLocale: SupportedLocale = "en";
+const germany = "de-DE";
+const germanyLocale: SupportedLocale = "de";
 
-const i18n: any = new I18n(TranslationKeys); // assign  keys
+// Initialize i18n instance
+const i18n = new I18n(TranslationKeys);
 
-const locales = Localization.getLocales(); // get devices support languages
+// Get device locales (ordered by priority)
+const locales = Localization.getLocales();
 
-const deviceLang: any = locales?.[0]?.languageCode; // get the devices default language
+// Extract device language (e.g., "en", "de", "fr", etc.)
+const deviceLang = locales?.[0]?.languageCode;
 
-const deviceLocale = supportedLocales.includes(deviceLang) ? deviceLang : "en"; // fallback to English
+// Validate and assign locale
+const deviceLocale: SupportedLocale = supportedLocales.includes(
+	deviceLang as SupportedLocale
+)
+	? (deviceLang as SupportedLocale)
+	: "en"; // fallback
 
 i18n.locale = deviceLocale;
-
 i18n.enableFallback = true;
 
 export { i18n, englishIN, englishUS, englishLocale, germany, germanyLocale };

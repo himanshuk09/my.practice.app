@@ -11,27 +11,18 @@ import { englishLocale } from "@/localization/config";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
-import { fetchDataByToggle } from "@/services/auth.service";
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
 import { stringChartData } from "@/constants/stringChartData";
-import ToggleChartComponent, {
-	tabsType,
-} from "@/components/ToggleChartComponent";
 import { View, Text, SafeAreaView, Platform } from "react-native";
+import ToggleChartComponent from "@/components/ToggleChartComponent";
 
 const PFCDetails = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const { id } = useLocalSearchParams();
 	const locale = useSelector((state: RootState) => state.culture.locale);
-	let visibleTabs: tabsType[] = [
-		"Week",
-		"Month",
-		"Quarter",
-		"Year",
-		"Year_3",
-	];
+
 	const [pfcDetails, setPfcDetails] = useState<any>([]);
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
@@ -53,7 +44,7 @@ const PFCDetails = () => {
 	};
 	const fetchChartData = async (tab: string) => {
 		try {
-			return fetchDataByToggle(tab);
+			return [];
 		} catch (error) {
 			console.error("Error fetching data:", error);
 			return null;
@@ -68,13 +59,15 @@ const PFCDetails = () => {
 			setPfcDetails(filteredItem);
 		}, 1000);
 	}, [id]);
+
 	useEffect(() => {
 		if (isFocused) {
 			setTimeout(() => {
 				dispatch(inActiveLoading());
 			}, 500);
 		}
-	}, [isFocused, id]);
+	}, [isFocused]);
+
 	return (
 		<SafeAreaView className="flex-1 ">
 			<View className="flex-1  bg-white">
@@ -112,7 +105,7 @@ const PFCDetails = () => {
 					</View>
 				)}
 				<ToggleChartComponent
-					visibleTabs={visibleTabs}
+					screenName="pfc"
 					fetchChartData={fetchChartData}
 				/>
 			</View>

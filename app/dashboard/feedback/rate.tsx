@@ -12,13 +12,15 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
+import Title from "@/components/ui/Title";
 import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { FontAwesome } from "@expo/vector-icons";
 import CustomAlert from "@/components/CustomAlert";
-import RatingStars from "@/components/RatingStars";
 import { useIsFocused } from "@react-navigation/native";
+import RatingStars from "@/components/icons/RatingStars";
 import { inActiveLoading } from "@/store/navigationSlice";
+import FooterActions from "@/components/ui/FooterActions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Rate = () => {
@@ -27,9 +29,11 @@ const Rate = () => {
 	const isFocused = useIsFocused();
 	const [ratingMsg, setRatingMsg] = useState<string>("");
 	const insets = useSafeAreaInsets();
+
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar
@@ -63,12 +67,8 @@ const Rate = () => {
 							networkActivityIndicatorVisible
 						/>
 						{/* Header */}
-						<View className="top-0 w-full z-50 p-3 bg-primary h-20">
-							<Text className="text-xl font-semibold text-white capitalize">
-								{i18n.t("rateus")}
-							</Text>
-						</View>
 
+						<Title title={"rateus"} />
 						{/* Main Content */}
 						<ScrollView
 							className="flex-1"
@@ -119,56 +119,42 @@ const Rate = () => {
 						</ScrollView>
 
 						{/* Footer Buttons */}
-						<View className="w-full flex flex-row justify-evenly border-y-2 border-primary">
-							<TouchableOpacity
-								className="items-center p-5 w-[50%] bg-white"
-								onPress={() => router.push("/dashboard")}
-							>
-								<Text className="text-center text-primary font-normal uppercase bg-white">
-									{i18n.t("cancel")}
-								</Text>
-							</TouchableOpacity>
-
-							<TouchableOpacity
-								className="items-center p-5 w-[50%] bg-primary"
-								onPress={async () => {
-									CustomAlert({
-										title: "submit",
-										description:
-											"thank_you_for_your_feedback",
-										showCancelButton: true,
-										icon: "success",
-										iconColor: "green",
-										buttons: [
-											{
-												text: i18n.t("Cancel"),
-												textStyle: {
-													fontSize: 16,
-													fontWeight: "600",
-													color: "#808080",
-												} as TextStyle,
-												onPress: () => null,
-											},
-											{
-												text: i18n.t("OK"),
-												textStyle: {
-													fontSize: 16,
-													fontWeight: "bold",
-													color: "#e31837",
-													textTransform: "uppercase",
-												} as TextStyle,
-												onPress: () =>
-													router.push("/dashboard"),
-											},
-										],
-									});
-								}}
-							>
-								<Text className="text-center text-white uppercase font-normal">
-									{i18n.t("save")}
-								</Text>
-							</TouchableOpacity>
-						</View>
+						<FooterActions
+							leftTitle="cancel"
+							leftOnPress={() => router.back()}
+							rightTitle="save"
+							rightOnPress={async () => {
+								CustomAlert({
+									title: "submit",
+									description: "thank_you_for_your_feedback",
+									showCancelButton: true,
+									icon: "success",
+									iconColor: "#e31837",
+									buttons: [
+										{
+											text: i18n.t("Cancel"),
+											textStyle: {
+												fontSize: 16,
+												fontWeight: "600",
+												color: "#808080",
+											} as TextStyle,
+											onPress: () => null,
+										},
+										{
+											text: i18n.t("OK"),
+											textStyle: {
+												fontSize: 16,
+												fontWeight: "bold",
+												color: "#e31837",
+												textTransform: "uppercase",
+											} as TextStyle,
+											onPress: () =>
+												router.push("/dashboard"),
+										},
+									],
+								});
+							}}
+						/>
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>

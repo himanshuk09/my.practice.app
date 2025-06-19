@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 
-const RatingStars = ({ maxStars = 5 }: any) => {
+const RatingStars = ({ maxStars = 5 }: { maxStars: number }) => {
 	const [rating, setRating] = useState(0);
 	const [halfStar, setHalfStar] = useState(false);
 
 	// Function to handle star press
-	const handleRating = (index: any) => {
+	const handleRating = (index: number) => {
 		if (halfStar) {
 			setRating(index - 0.5);
 		} else {
@@ -15,7 +15,7 @@ const RatingStars = ({ maxStars = 5 }: any) => {
 		}
 		setHalfStar(!halfStar);
 	};
-	const renderStar = (index: any) => {
+	const renderStar = (index: number) => {
 		const full = rating >= index;
 		const half = rating >= index - 0.5 && rating < index;
 

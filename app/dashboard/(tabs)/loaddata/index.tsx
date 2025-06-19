@@ -18,11 +18,12 @@ interface DataItem {
 }
 
 const LoadData = () => {
-	const mainFlatListRef = useRef<FlatList<DataItem>>(null);
 	const isFocused = useIsFocused();
 	const dispatch = useDispatch();
+	const mainFlatListRef = useRef<FlatList<DataItem>>(null);
 	const [expandedMeterId, setExpandedMeterId] = useState<string | null>(null); // 🔑 Shared state
 	const insets = useSafeAreaInsets();
+
 	const { data, loading, error, refetch, isOnline } =
 		useNetworkAwareApiRequest(getLoadDataList, {
 			autoFetch: true,
@@ -36,8 +37,8 @@ const LoadData = () => {
 	};
 
 	const listData: DataItem[] = [
-		{ id: "1", title: "Gas", data: data?.gas || [] },
-		{ id: "2", title: "Power", data: data?.strom || [] },
+		{ id: "1", title: "gas", data: data?.gas || [] },
+		{ id: "2", title: "power", data: data?.strom || [] },
 	];
 
 	useLayoutEffect(() => {
@@ -50,6 +51,7 @@ const LoadData = () => {
 	 */
 	if (error) return <NoNetwork />;
 	if (data?.gas?.length === 0) return <NoData />;
+
 	return (
 		<SafeAreaView
 			className="flex-1 bg-white"

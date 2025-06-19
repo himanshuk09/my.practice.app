@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
 
-const Header = React.memo(({ navigation }: any) => {
+const Header = React.memo(() => {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const segment = useSegments().join("/");

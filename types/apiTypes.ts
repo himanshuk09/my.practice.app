@@ -5,7 +5,7 @@ interface loginPayloadProps {
 interface AuthResponse {
 	expires?: number;
 	issued?: string;
-	ApiApkVersion?: string | undefined | any;
+	ApiApkVersion?: string;
 	ApkPlayStoreLink?: string;
 	ClientName?: string;
 	IpaAppStoreLink?: string;

@@ -6,16 +6,19 @@ import {
 	Platform,
 	Pressable,
 } from "react-native";
+import { RootState } from "@/store/store";
 import React, { useEffect, useRef } from "react";
 import CustomDrawer from "@/components/CustomDrawer";
 import { useSelector, useDispatch } from "react-redux";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const Drawer = ({ drawerWidth = 280 }: any) => {
+const Drawer = ({ drawerWidth = 280 }: { drawerWidth: string | number }) => {
 	const dispatch = useDispatch();
-	let debounceTimeout: any = null;
-	const isDrawerOpen = useSelector((state: any) => state.drawer.isDrawerOpen);
+	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+	const isDrawerOpen = useSelector(
+		(state: RootState) => state.drawer.isDrawerOpen
+	);
 	const translateX = useRef(new Animated.Value(-drawerWidth)).current;
 	const insets = useSafeAreaInsets();
 	const handleCloseDrawer = () => {
@@ -138,8 +141,8 @@ const styles = StyleSheet.create({
 		zIndex: 99,
 	},
 	webDrawer: {
-		position: "fixed" as any,
-		height: "100vh" as any,
+		position: "fixed",
+		height: "100vh",
 		boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
 		willChange: "transform",
 	},

@@ -8,16 +8,17 @@ import { RootState } from "@/store/store";
 import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { useDebounce } from "@/hooks/useDebounce";
+import { tabsType } from "@/types/chartComponent";
 import { useLocalSearchParams } from "expo-router";
 import useTabDataCache from "@/hooks/useTabDataCache";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { getLoadDataTS } from "@/services/loaddata.service";
 import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, SafeAreaView, Platform } from "react-native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
+import { EnergyDataRequest, getLoadDataTS } from "@/services/loaddata.service";
 
 const LoadDataDetails = () => {
 	const isFocused = useIsFocused();
@@ -25,13 +26,14 @@ const LoadDataDetails = () => {
 	const { id, title } = useLocalSearchParams();
 	const [loadDetail, setloadDetails] = useState<any>({});
 	const [activeTabForFileName, setActiveTabForFileName] =
-		useState<any>("Week");
+		useState<tabsType>("Week");
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
 	const locale = useSelector((state: RootState) => state.culture.locale);
 	const { fetchWithCache } = useTabDataCache();
-	const debouncedExport = useDebounce((data: any, name: any) => {
+
+	const debouncedExport = useDebounce((data: any, name: string) => {
 		if (!data || data.length === 0) return;
 
 		const filename = `_${name}_${dayjs().format("DD-MM-YYYY-HH-mm-ss")}`;
@@ -40,10 +42,11 @@ const LoadDataDetails = () => {
 			? exportTimeseriesToCSVForWeb(data, filename)
 			: exportTimeseriesToCSV(data, filename);
 	}, 1000);
+
 	const fetchChartData = useCallback(
 		async (tab: string, payload: any) => {
 			try {
-				let fullPayload = {
+				let fullPayload: EnergyDataRequest = {
 					...JSON.parse(decodeURIComponent(id as string)),
 					TimeFrame: tab,
 					...payload,
@@ -58,6 +61,7 @@ const LoadDataDetails = () => {
 		},
 		[fetchWithCache, id]
 	);
+
 	useEffect(() => {
 		if (isFocused) {
 			setTimeout(() => {
@@ -65,6 +69,7 @@ const LoadDataDetails = () => {
 			}, 500);
 		}
 	}, [isFocused, id]);
+
 	return (
 		<SafeAreaView className="flex-1 ">
 			<StatusBar
@@ -145,7 +150,7 @@ const LoadDataDetails = () => {
 				)}
 				{/**chart component */}
 				<ToggleChartComponent
-					showValueRange={true}
+					screenName={"loaddata"}
 					fetchChartData={fetchChartData}
 					yaxisunit="kWh"
 					setActiveTabForFileName={setActiveTabForFileName}

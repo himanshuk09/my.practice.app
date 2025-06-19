@@ -8,12 +8,13 @@ import {
 import { st } from "@/utils/Styles";
 import { i18n } from "@/localization/config";
 import NoData from "@/components/icons/NoData";
-import StackHeader from "@/components/StackHeader";
+import StackHeader from "@/components/ui/StackHeader";
 import React, { useEffect, useState } from "react";
 import CustomSwitch from "@/components/CustomSwitch";
 import { ChartLoaderPNG } from "@/components/Loader";
+import PrimaryButton from "./ui/PrimaryButton";
 
-const Card = ({ title, data }: any) => {
+const Card = ({ title, data }: { title: string; data: any }) => {
 	return (
 		<View
 			className="bg-[#ebebeb] rounded-lg p-3 my-1 "
@@ -72,18 +73,25 @@ const Card = ({ title, data }: any) => {
 
 const SignalSettings = ({
 	cards,
-	setModalVisible,
 	modalVisible,
+	setModalVisible,
 	signalDetail,
 	isEnabled,
 	setIsEnabled,
-}: any) => {
+}: {
+	cards: any[];
+	modalVisible: boolean;
+	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+	signalDetail: any;
+	isEnabled: boolean;
+	setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
 	const [loading, setLoadig] = useState<any>(true);
 
 	useEffect(() => {
 		setTimeout(() => {
 			setLoadig(false);
-		}, 1000);
+		}, 500);
 	}, []);
 	return (
 		<View
@@ -140,14 +148,16 @@ const SignalSettings = ({
 						maxToRenderPerBatch={5}
 					/>
 				)}
-				<TouchableOpacity
-					className={`bg-[#e31836]   h-12 py-3 mx-5 rounded-sm my-2 ${loading && "absolute bottom-0 left-0 right-0 "} `}
+
+				<PrimaryButton
+					title={"View_Signal_Chart"}
 					onPress={() => setModalVisible(!modalVisible)}
-				>
-					<Text className="text-white text-center text-base font-medium uppercase">
-						{i18n.t("View_Signal_Chart")}
-					</Text>
-				</TouchableOpacity>
+					style={
+						loading
+							? "absolute bottom-0 left-0 right-0 mt-2"
+							: "mt-2"
+					}
+				/>
 			</View>
 		</View>
 	);

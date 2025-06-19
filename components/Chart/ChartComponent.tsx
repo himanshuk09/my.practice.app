@@ -8,36 +8,12 @@ import CustomAlert from "@/components/CustomAlert";
 import { setOrientation } from "@/store/chartSlice";
 import { showToast } from "@/components/ToastConfig";
 import { useDispatch, useSelector } from "react-redux";
+import { ChartComponentProps } from "@/types/chartComponent";
 import * as ScreenOrientation from "expo-screen-orientation";
 import React, { useCallback, useEffect, useRef } from "react";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";
 import { Platform, TouchableOpacity, Linking } from "react-native";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-
-type ChartComponentProps = {
-	webViewRef: React.RefObject<WebView | any>;
-	iFrameRef: React.RefObject<HTMLIFrameElement | any>;
-	webViewhtmlContent: string;
-	iFramehtmlContent: string;
-	onMessage?: (event: any) => void;
-	activeTab?: string;
-	showToolbar?: boolean;
-	isChartEmpty?: boolean;
-	setMaxMinValues?: React.Dispatch<
-		React.SetStateAction<{
-			minX: number | string;
-			minY: number | string;
-			maxX: number | string;
-			maxY: number | string;
-		}>
-	>;
-	isTooltipEnabled?: boolean;
-	showToggleOrientation?: boolean;
-	iFrameWidth?: string | number | undefined;
-	setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
-	setIsChartLoaded?: React.Dispatch<React.SetStateAction<boolean>>;
-	setShowChartShimmer?: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
 	webViewRef,

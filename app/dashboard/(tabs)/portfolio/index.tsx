@@ -54,24 +54,24 @@ const Portfolio: React.FC = () => {
 			}}
 		>
 			<FlatListBlock
-				title="Gas"
+				title="gas"
 				items={gasList}
 				enableAutoScroll={!isFromDetail}
 				height={Platform.OS === "web" ? height * 0.45 : "50%"}
 				NavigateTo={NavigateTo}
-				renderType={"Portfolio"}
-				keyEndxtractor={(item: Portfolioprops) =>
+				renderType={"portfolio"}
+				keyExtractor={(item: Portfolioprops, index: number | string) =>
 					item?.PortfolioId.toString()
 				}
 			/>
 			<FlatListBlock
-				title="Power"
+				title="power"
 				items={stromList}
 				enableAutoScroll={!isFromDetail}
 				height={Platform.OS === "web" ? height * 0.45 : "50%"}
 				NavigateTo={NavigateTo}
-				renderType={"Portfolio"}
-				keyExtractor={(item: Portfolioprops) =>
+				renderType={"portfolio"}
+				keyExtractor={(item: Portfolioprops, index: number | string) =>
 					item?.PortfolioId.toString()
 				}
 			/>

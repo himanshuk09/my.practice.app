@@ -1,8 +1,8 @@
 import React, { memo } from "react";
-import { router } from "expo-router";
 import PFC from "@/components/svg/PFC";
 import Load from "@/components/svg/Load";
 import { useDispatch } from "react-redux";
+import { Href, router } from "expo-router";
 import { i18n } from "@/localization/config";
 import Prices from "@/components/svg/Prices";
 import Signals from "@/components/svg/Signals";
@@ -18,7 +18,7 @@ interface MenuCardProps {
 		title: string;
 		icon: string;
 		notificationCount: number;
-		route: any;
+		route: string | Href;
 	};
 	index: number;
 }
@@ -49,7 +49,7 @@ const MenuCard = memo(({ item }: MenuCardProps) => {
 			className="m-1 items-center"
 			onPressIn={() => {
 				dispatch(activeLoading());
-				setTimeout(() => router.push(item.route));
+				setTimeout(() => router.push(item.route as Href));
 			}}
 		>
 			<View

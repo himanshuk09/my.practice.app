@@ -1,3 +1,6 @@
+/**
+ *  Auth Layout
+ */
 import { Stack } from "expo-router";
 
 const AuthLayout = () => {

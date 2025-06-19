@@ -256,7 +256,7 @@ const ShimmerListCard = () => {
 		</TouchableOpacity>
 	);
 };
-const ShimmerFlatListBlock = ({ height }: any) => {
+const ShimmerFlatListBlock = ({ height }: { height: number | string }) => {
 	return (
 		<View
 			style={{

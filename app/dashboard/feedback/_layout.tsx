@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import Header from "@/components/MainHeader";
+import Header from "@/components/ui/MainHeader";
 
 const FeedBackLayout = () => {
 	return (
@@ -9,9 +9,7 @@ const FeedBackLayout = () => {
 				options={{
 					headerShown: true,
 					animation: "slide_from_right",
-					header: ({ navigation }) => (
-						<Header navigation={navigation} />
-					),
+					header: ({ navigation }) => <Header />,
 				}}
 			/>
 			<Stack.Screen
@@ -19,9 +17,7 @@ const FeedBackLayout = () => {
 				options={{
 					headerShown: true,
 					animation: "slide_from_right",
-					header: ({ navigation }) => (
-						<Header navigation={navigation} />
-					),
+					header: ({ navigation }) => <Header />,
 				}}
 			/>
 		</Stack>

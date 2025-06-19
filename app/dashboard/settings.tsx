@@ -1,16 +1,10 @@
-import {
-	View,
-	Text,
-	SafeAreaView,
-	TouchableOpacity,
-	Linking,
-	Platform,
-} from "react-native";
+import { View, Text, Linking, Platform, SafeAreaView } from "react-native";
 import {
 	getCurrentPushToken,
 	registerForPushNotificationsAsync,
 } from "@/components/wrapper/NotificationWrapper";
 import { st } from "@/utils/Styles";
+import Title from "@/components/ui/Title";
 import { StatusBar } from "expo-status-bar";
 import * as Clipboard from "expo-clipboard";
 import { Href, useRouter } from "expo-router";
@@ -24,6 +18,7 @@ import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
+import FooterActions from "@/components/ui/FooterActions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { englishLocale, germanyLocale, i18n } from "@/localization/config";
@@ -39,15 +34,13 @@ const Settings = () => {
 	const [isNotificationEnabled, setIsNotificationEnabled] =
 		useState<boolean>(false);
 
-	const [copiedText, setCopiedText] = useState("");
-	const copyToClipboard = async () => {
-		await Clipboard.setStringAsync(copiedText);
+	const [copiedText, setCopiedText] = useState<string | null>(null);
+
+	const copyToClipboard = async (): Promise<void> => {
+		if (copiedText !== null) {
+			await Clipboard.setStringAsync(copiedText);
+		}
 	};
-	useEffect(() => {
-		const token: any = getCurrentPushToken();
-		setCopiedText(token);
-		if (isNotificationEnabled) copyToClipboard();
-	}, [isNotificationEnabled]);
 
 	const handleNotificationSwitchToggle = async (newValue: boolean) => {
 		setIsNotificationEnabled(newValue);
@@ -110,13 +103,16 @@ const Settings = () => {
 					},
 				});
 			}
-		} catch (error: any) {
+		} catch (error: unknown) {
 			console.error("Notification error:", error);
 			setIsNotificationEnabled(false);
 			setIsSignalsEnabled(false);
 			CustomAlert({
 				title: "Error",
-				description: error.message || "Something went wrong",
+				description:
+					error instanceof Error
+						? error.message
+						: "Something went wrong",
 				cancelText: "OK",
 				confirmText: "",
 				onConfirm: () => {},
@@ -129,6 +125,21 @@ const Settings = () => {
 		if (isNotificationEnabled) {
 			setIsSignalsEnabled(newValue);
 		}
+	};
+
+	const handleSave = async () => {
+		// Save language preference, notification preference, signals preference
+		await AsyncStorage.multiSet([
+			["app_locale", selectedLanguage],
+			[
+				"notification_preference",
+				isNotificationEnabled ? "enabled" : "disabled",
+			],
+			["signal_preference", isSignalsEnabled ? "enabled" : "disabled"],
+		]);
+
+		router.replace("/dashboard" as Href);
+		dispatch(updateLocale(selectedLanguage));
 	};
 
 	useEffect(() => {
@@ -151,26 +162,12 @@ const Settings = () => {
 			loadInitialState();
 		}
 	}, [isFocused]);
-	const handleSave = async () => {
-		dispatch(updateLocale(selectedLanguage));
 
-		// Save language preference
-		await AsyncStorage.setItem("app_locale", selectedLanguage);
-
-		// Save notification preference
-		await AsyncStorage.setItem(
-			"notification_preference",
-			isNotificationEnabled ? "enabled" : "disabled"
-		);
-
-		// Save signals preference
-		await AsyncStorage.setItem(
-			"signal_preference",
-			isSignalsEnabled ? "enabled" : "disabled"
-		);
-
-		router.replace("/dashboard" as Href);
-	};
+	useEffect(() => {
+		const token: string | null = getCurrentPushToken();
+		setCopiedText(token);
+		if (isNotificationEnabled) copyToClipboard();
+	}, [isNotificationEnabled]);
 	return (
 		<SafeAreaView
 			className="flex-1 bg-white"
@@ -185,11 +182,8 @@ const Settings = () => {
 				hideTransitionAnimation="fade"
 				networkActivityIndicatorVisible
 			/>
-			<View className=" w-full z-50 p-3 mt-1 bg-primary">
-				<Text className="flex justify-start font-normal  py-2 p-3  items-center  h-16 text-xl capitalize rounded-sm text-white">
-					{i18n.t("settings")}
-				</Text>
-			</View>
+
+			<Title title={"settings"} />
 			<View className="p-2 mb-2 pl-5 bg-white" style={st.boxShadow}>
 				<Text className="text-base font-semibold capitalize text-dropdownSecondTitle">
 					{i18n.t("language")}
@@ -255,28 +249,14 @@ const Settings = () => {
 				</View>
 			</View>
 
-			<View className="bottom-0 bg-white w-full right-0 left-0 absolute flex flex-row justify-evenly border-y-2 border-primary">
-				<TouchableOpacity
-					className="items-center p-5 w-[50%]"
-					onPress={() => {
-						router.back();
-						setSelectedLanguage(locale);
-					}}
-				>
-					<Text className="text-center text-primary font-normal uppercase ">
-						{i18n.t("cancel")}
-					</Text>
-				</TouchableOpacity>
-
-				<TouchableOpacity
-					className="items-center p-5  w-[50%] bg-primary"
-					onPress={handleSave}
-				>
-					<Text className="text-center text-white uppercase font-normal">
-						{i18n.t("save")}
-					</Text>
-				</TouchableOpacity>
-			</View>
+			<FooterActions
+				leftTitle="cancel"
+				leftOnPress={() => {
+					router.back();
+				}}
+				rightTitle="save"
+				rightOnPress={handleSave}
+			/>
 		</SafeAreaView>
 	);
 };

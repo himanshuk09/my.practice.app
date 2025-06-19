@@ -6,9 +6,9 @@ import FlatListBlock from "@/components/FlatListBlock";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
-import { SafeAreaView, FlatList, RefreshControl } from "react-native";
-import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SignalsGas, SignalsStrom } from "@/constants/constantData";
+import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 
 const Signals = () => {
 	const dispatch = useDispatch();
@@ -20,8 +20,8 @@ const Signals = () => {
 	const [signalsStrom, setSignalsStrom] = useState<any>();
 	const insets = useSafeAreaInsets();
 	const combinedData = [
-		{ type: "header", title: "Gas", data: signalsGas },
-		{ type: "header", title: "Strom", data: signalsStrom },
+		{ type: "header", title: "gas", data: signalsGas },
+		{ type: "header", title: "power", data: signalsStrom },
 	];
 	const renderItem = ({ item }: any) => {
 		if (item.type === "header") {
@@ -32,6 +32,7 @@ const Signals = () => {
 					enableAutoScroll={false}
 					height={"auto"}
 					NavigateTo={NavigateTo}
+					renderType={"signal"}
 				/>
 			);
 		}
@@ -53,6 +54,7 @@ const Signals = () => {
 	 */
 	if (error) return <NoNetwork />;
 	if (signalsGas?.length === 0) return <NoData />;
+
 	return (
 		<SafeAreaView
 			className="flex-1 bg-white"

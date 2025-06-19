@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface NavigationState {
-	history: any;
+	history: string[];
 	loading: boolean;
 }
 // Initial state for the navigation history

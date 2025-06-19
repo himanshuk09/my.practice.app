@@ -16,6 +16,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Platform } from "react-native";
+import FooterActions from "@/components/ui/FooterActions";
 
 const PricesSettings = () => {
 	const [selectedPlace, setSelectedPlace] = useState();
@@ -212,29 +213,13 @@ const PricesSettings = () => {
 					)}
 				</View>
 			</View>
-			<View className="bottom-0 w-full right-0 left-0 absolute flex flex-row justify-evenly border-y-2 border-primary">
-				<TouchableOpacity
-					className="items-center p-6 w-[50%]"
-					onPress={() => {
-						router.back();
-					}}
-				>
-					<Text className="text-center text-primary font-normal uppercase bg-white">
-						{i18n.t("cancel")}
-					</Text>
-				</TouchableOpacity>
 
-				<TouchableOpacity
-					className="items-center p-6  w-[50%] bg-primary"
-					onPress={() => {
-						router.back();
-					}}
-				>
-					<Text className="text-center text-white uppercase font-normal">
-						{i18n.t("save")}
-					</Text>
-				</TouchableOpacity>
-			</View>
+			<FooterActions
+				leftTitle="cancel"
+				leftOnPress={() => router.back()}
+				rightTitle="save"
+				rightOnPress={() => router.back()}
+			/>
 		</SafeAreaView>
 	);
 };

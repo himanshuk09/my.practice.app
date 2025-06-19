@@ -1,3 +1,7 @@
+/**
+ * Forgot password Screen
+ */
+
 import {
 	View,
 	Text,
@@ -7,7 +11,6 @@ import {
 	Pressable,
 	ScrollView,
 	SafeAreaView,
-	TouchableOpacity,
 	KeyboardAvoidingView,
 } from "react-native";
 import Logo from "@/components/svg/Logo";
@@ -16,15 +19,16 @@ import { i18n } from "@/localization/config";
 import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import Foundation from "@expo/vector-icons/Foundation";
+import RoundedButton from "@/components/ui/RoundedButton";
 
 const Forgotpassword = () => {
 	const router = useRouter();
 	let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const [email, setEmail] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
-	const [isEmailFocused, setIsEmailFocused] = useState(false);
+	const [isEmailFocused, setIsEmailFocused] = useState<boolean>(false);
 
-	const validateEmail = (text: string) => {
+	const validateEmail = (text: string): void => {
 		if (emailRegex.test(text)) {
 			setErrorMessage("");
 		} else {
@@ -148,11 +152,13 @@ const Forgotpassword = () => {
 										{i18n.t(errorMessage)}
 									</Text>
 								) : null}
-								<TouchableOpacity className="bg-primary p-3 mt-9 rounded-full items-center">
-									<Text className="text-white text-lg font-semibold  uppercase">
-										{i18n.t("send")}
-									</Text>
-								</TouchableOpacity>
+
+								{/**Forgot Password Send Mail Botton */}
+								<RoundedButton
+									title="send"
+									onPress={() => {}}
+									disabled={false}
+								/>
 
 								<Pressable
 									onPress={() => {

@@ -1,27 +1,30 @@
+/**
+ * Login Screen
+ */
 import {
 	View,
-	TextInput,
 	Text,
-	TouchableOpacity,
 	Keyboard,
-	Pressable,
 	Platform,
-	KeyboardAvoidingView,
+	Pressable,
+	TextInput,
 	ScrollView,
-	ActivityIndicator,
+	TouchableOpacity,
+	KeyboardAvoidingView,
 } from "react-native";
-import React, { useState } from "react";
-import { RootState } from "@/store/store";
-import { useAuth } from "@/hooks/useAuth";
-import Logo from "@/components/svg/Logo";
-import { useSelector } from "react-redux";
-import { i18n } from "@/localization/config";
 import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import Logo from "@/components/svg/Logo";
+import { useAuth } from "@/hooks/useAuth";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import { StatusBar } from "expo-status-bar";
+import { i18n } from "@/localization/config";
 import { loginUser } from "@/services/auth.service";
 import { showToast } from "@/components/ToastConfig";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import RoundedButton from "@/components/ui/RoundedButton";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
 
 const SignIn: React.FC = () => {
 	const router = useRouter();
@@ -34,8 +37,8 @@ const SignIn: React.FC = () => {
 	const [password, setPassword] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
 	const [hidePassword, setHidePassword] = useState<boolean>(true);
-	const [isUserNameFocused, setIsUserNameFocused] = useState(false);
-	const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+	const [isUserNameFocused, setIsUserNameFocused] = useState<boolean>(false);
+	const [isPasswordFocused, setIsPasswordFocused] = useState<boolean>(false);
 
 	const validateInput = (userName: string, password: string): string => {
 		if (userName.trim() === "" && password.trim() === "") {
@@ -329,22 +332,11 @@ const SignIn: React.FC = () => {
 								) : null}
 
 								{/**Login Button */}
-								<TouchableOpacity
-									className="mt-9 p-3 rounded-full items-center bg-primary"
+								<RoundedButton
+									title="login"
 									onPress={handleSubmit}
 									disabled={loading}
-								>
-									{loading ? (
-										<ActivityIndicator
-											size={25}
-											color={"white"}
-										/>
-									) : (
-										<Text className="text-white font-medium text-xl uppercase">
-											{i18n.t("login")}
-										</Text>
-									)}
-								</TouchableOpacity>
+								/>
 								{/** Forget password screen redirector */}
 								<Pressable
 									onPress={() => {

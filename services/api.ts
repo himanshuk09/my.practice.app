@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { router } from "expo-router";
 import { checkInternetConnection } from "./helper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,8 +17,13 @@ const api = axios.create({
 
 // Queue for storing API requests
 api.interceptors.request.use(
-	async (config: any) => {
-		if (!(await checkInternetConnection)) return;
+	async (config: InternalAxiosRequestConfig) => {
+		const isConnected = await checkInternetConnection();
+		if (!isConnected) {
+			// Optionally throw a custom error here
+			throw new AxiosError("No internet connection", "ERR_NETWORK");
+		}
+
 		let token = await AsyncStorage.getItem("token");
 		let UserId = await AsyncStorage.getItem("UserId");
 		let ApkVersion = await AsyncStorage.getItem("ApkVersion");

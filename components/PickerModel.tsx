@@ -17,24 +17,7 @@ import { RootState } from "@/store/store";
 import DateTimePickerComponents from "./DateTimePickerComponents";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
 import { englishLocale, germanyLocale, i18n } from "@/localization/config";
-import { DateType } from "react-native-ui-datepicker";
-
-type initialViewProps = "day" | "month" | "year" | "time";
-type DateTimeRange = {
-	startDate?: DateType | any;
-	endDate?: DateType | any;
-};
-interface PickerModelProps {
-	maxMinValues?: any;
-	setMaxMinValues?: any;
-	showRangePicker?: boolean;
-	showValueRange?: boolean;
-	modalVisible?: boolean;
-	setModalVisible?: React.Dispatch<React.SetStateAction<boolean>>;
-	handleRangeDataFilter?: any;
-	range?: DateTimeRange;
-	setRange: (range: DateTimeRange | any) => void;
-}
+import { initialViewProps, PickerModelProps } from "@/types/chartComponent";
 
 const formatNumber = (value: number, locale: string): string => {
 	return new Intl.NumberFormat(locale, {
@@ -56,16 +39,16 @@ const parseNumber = (
 			: value;
 	return parseFloat(normalized);
 };
+
 const PickerModel = ({
-	maxMinValues,
-	setMaxMinValues,
-	showRangePicker = false,
-	showValueRange = false,
-	modalVisible,
-	setModalVisible,
-	handleRangeDataFilter,
 	range,
 	setRange,
+	screenName,
+	modalVisible,
+	setModalVisible,
+	maxMinValues,
+	setMaxMinValues,
+	handleRangeDataFilter,
 }: PickerModelProps) => {
 	const animationHeight = useRef(new Animated.Value(0)).current;
 	const locale = useSelector((state: RootState) => state.culture.locale);
@@ -196,10 +179,11 @@ const PickerModel = ({
 	const handleApply = () => {
 		if (!validateStartEndDate(range?.startDate, range?.endDate)) return;
 		if (
-			showValueRange &&
+			screenName != "prices" &&
 			!validateMinMax(maxMinValues.minY, maxMinValues.maxY)
-		)
+		) {
 			return;
+		}
 
 		//Only Called if any change on dates or values range
 		const initialRange = initialRangeRef.current;
@@ -253,6 +237,7 @@ const PickerModel = ({
 			initialMaxMinRef.current = maxMinValues;
 		}
 	}, [modalVisible]);
+
 	// Render helpers
 	const renderDatePickerButton = (
 		date: any,
@@ -327,8 +312,13 @@ const PickerModel = ({
 							<AntDesign name="close" size={23} color="#E63757" />
 						</TouchableOpacity>
 					</View>
+					{/**
+					 * load data Screen ---> Single picker and custom value
+					 * PFC ---> Single  picker
+					 * Prices ---> Range picker
+					 */}
 
-					{showRangePicker ? (
+					{screenName === "prices" ? (
 						<View className="p-5">
 							<View className="flex-row justify-between items-center mb-2">
 								<View className="flex-1 mr-2">
@@ -436,7 +426,7 @@ const PickerModel = ({
 						</Animated.View>
 					)}
 
-					{showValueRange && (
+					{screenName === "loaddata" && (
 						<View>
 							<Text className="text-chartText font-bold text-lg p-3 pl-5 bg-[#ebebeb]">
 								{i18n.t("Value_Range")}

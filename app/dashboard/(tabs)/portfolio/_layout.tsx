@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import StackHeader from "@/components/StackHeader";
+import StackHeader from "@/components/ui/StackHeader";
 
 const PortfolioLayout = () => {
 	return (

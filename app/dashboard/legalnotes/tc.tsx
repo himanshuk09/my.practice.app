@@ -6,6 +6,7 @@ import {
 	View,
 } from "react-native";
 import { RootState } from "@/store/store";
+import Title from "@/components/ui/Title";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
@@ -21,15 +22,12 @@ const TermsAndConditionsScreen = () => {
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
+
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			<View className="top-0 w-full z-50 p-5 bg-primary h-24">
-				<Text className="text-2xl uppercase font-normal text-white ">
-					{i18n.t("termsConditions")}
-				</Text>
-			</View>
+			<Title title={"termsConditions"} />
 			<ScrollView
-				className="px-5"
+				className="px-5 mb-5"
 				contentContainerStyle={{ flexGrow: 1 }}
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}

@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SignalSettings from "@/components/SignalSettings";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
-import { fetchDataByToggle } from "@/services/auth.service";
+import PrimaryButton from "@/components/ui/PrimaryButton";
 import { PricesItem, signalsCards } from "@/constants/constantData";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -42,7 +42,7 @@ const SignalDetails = () => {
 
 	const fetchChartData = async (tab: string) => {
 		try {
-			return fetchDataByToggle(tab);
+			return [];
 		} catch (error) {
 			console.error("Error fetching data:", error);
 			return null;
@@ -98,7 +98,7 @@ const SignalDetails = () => {
 						} `}
 					>
 						<ToggleChartComponent
-							isSignaleScreen={true}
+							screenName="signals"
 							fetchChartData={fetchChartData}
 						/>
 					</View>
@@ -121,15 +121,10 @@ const SignalDetails = () => {
 				</Modal>
 			</View>
 			{!isLandscape && (
-				<TouchableOpacity
-					className={`bg-[#e31836]  bottom-0  h-12 py-3 mx-5 rounded-sm my-2   
-						`}
+				<PrimaryButton
+					title={"View_Signal_Settings"}
 					onPress={() => setModalVisible(!modalVisible)}
-				>
-					<Text className="text-white text-center text-base font-medium uppercase">
-						{i18n.t("View_Signal_Settings")}
-					</Text>
-				</TouchableOpacity>
+				/>
 			)}
 		</SafeAreaView>
 	);

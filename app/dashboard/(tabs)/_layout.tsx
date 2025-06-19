@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import Header from "@/components/MainHeader";
+import Header from "@/components/ui/MainHeader";
 import { i18n } from "@/localization/config";
 import { Tabs, useSegments } from "expo-router";
 import CustomTabBar from "@/components/CustomTabBar";

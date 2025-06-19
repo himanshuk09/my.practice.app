@@ -23,6 +23,15 @@ interface ShowToastParams
 	title: string;
 	subtitle?: string;
 	position?: "bottom" | "top";
+	props?: {
+		update?: boolean;
+		network?: boolean;
+		spinner?: boolean;
+		onPress?: () => void;
+		fileUri?: string;
+		fileName?: string;
+		type?: any;
+	};
 }
 
 /**

@@ -5,12 +5,14 @@ import {
 } from "@/components/chart/chartUpdateFunctions";
 import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
+import { View } from "react-native";
 import { RootState } from "@/store/store";
 import WebView from "react-native-webview";
 import { useSelector } from "react-redux";
 import PickerModel from "@/components/PickerModel";
 import { ChartLoaderPNG } from "@/components/Loader";
 import { DateType } from "react-native-ui-datepicker";
+import PrimaryButton from "@/components/ui/PrimaryButton";
 import React, { useEffect, useRef, useState } from "react";
 import TabToggleButtons from "@/components/TabToggleButtons";
 import { ChartGraphShimmer } from "@/components/ChartShimmer";
@@ -18,28 +20,11 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import ChartComponent from "@/components/chart/ChartComponent";
 import FloatingActionMenu from "@/components/FloatingActionMenu";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, Text, Platform, TouchableOpacity } from "react-native";
-import { englishLocale, germanyLocale, i18n } from "@/localization/config";
+import { englishLocale, germanyLocale } from "@/localization/config";
 import iframeLineHtmlContent from "@/components/chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/chart/config/Linechart.android";
+import { tabsType, ToggleChartComponentProps } from "@/types/chartComponent";
 
-export type tabsType =
-	| "Day"
-	| "Week"
-	| "Month"
-	| "Quarter"
-	| "Year"
-	| "Year_3"
-	| "";
-type ToggleChartComponentProps = {
-	visibleTabs?: tabsType[];
-	fetchChartData?: any;
-	showRangePicker?: boolean;
-	showValueRange?: boolean;
-	yaxisunit?: string;
-	isSignaleScreen?: boolean;
-	setActiveTabForFileName?: React.Dispatch<React.SetStateAction<string>>;
-};
 const formatNumber = (value: number, locale: string): string => {
 	return new Intl.NumberFormat(locale, {
 		useGrouping: false,
@@ -85,12 +70,9 @@ function formatDateTime(input: any) {
 }
 
 const ToggleChartComponent = ({
-	visibleTabs,
 	fetchChartData,
-	showRangePicker,
-	showValueRange,
 	yaxisunit = "€/MWh",
-	isSignaleScreen = false,
+	screenName = "loaddata",
 	setActiveTabForFileName = () => "cockpit",
 }: ToggleChartComponentProps) => {
 	// Hooks and state initialization
@@ -111,8 +93,8 @@ const ToggleChartComponent = ({
 	// State
 	const [activeTab, setActiveTab] = useState<tabsType>("Week");
 	const [range, setRange] = useState<{
-		startDate: DateType | any;
-		endDate: DateType | any;
+		startDate: DateType | string;
+		endDate: DateType | string;
 	}>({
 		startDate: dayjs().subtract(1, "month"),
 		endDate: dayjs().add(1),
@@ -187,7 +169,7 @@ const ToggleChartComponent = ({
 	// its used to update chart options and series based on data
 	const updateChartData = (filteredData: any) => {
 		if (filteredData?.length === 0) {
-			updateEmptyApexChart(webViewRef, iFrameRef, "line");
+			updateEmptyApexChart({ webViewRef, iFrameRef, chartType: "line" });
 			setIsChartEmpty(true);
 			setTimeout(() => {
 				setLoading(false);
@@ -326,14 +308,14 @@ const ToggleChartComponent = ({
 				<FloatingActionMenu
 					activeTab={activeTab}
 					setActiveTab={setActiveTab}
-					visibleTabs={visibleTabs}
+					screenName={screenName}
 					isLoading={isLoading}
 				/>
 			) : (
 				<TabToggleButtons
 					activeTab={activeTab}
 					setActiveTab={setActiveTab}
-					visibleTabs={visibleTabs}
+					screenName={screenName}
 					isLoading={isLoading}
 				/>
 			)}
@@ -368,23 +350,17 @@ const ToggleChartComponent = ({
 			</View>
 
 			{/* Bottom Button */}
-			{!isLandscape && !isSignaleScreen && (
+			{!isLandscape && screenName !== "signals" && (
 				<React.Fragment>
-					<TouchableOpacity
-						className="bg-[#e31836] py-3 mx-5 rounded-sm mb-2"
+					<PrimaryButton
+						title={"Customize_View"}
 						onPress={() => setModalVisible(!modalVisible)}
-					>
-						<Text className="text-white text-center text-base font-normal uppercase">
-							{i18n.t("Customize_View")}
-						</Text>
-					</TouchableOpacity>
+					/>
 					<PickerModel
+						screenName={screenName}
 						//min max
 						maxMinValues={maxMinValues}
 						setMaxMinValues={setMaxMinValues}
-						//range picker and value
-						showRangePicker={showRangePicker}
-						showValueRange={showValueRange}
 						//picker state
 						modalVisible={modalVisible}
 						setModalVisible={setModalVisible}

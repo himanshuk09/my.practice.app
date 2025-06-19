@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { cockpitChartData } from "@/constants/cockpitchart";
-import { fetchDataByToggle } from "@/services/auth.service";
 import { stringChartData } from "@/constants/stringChartData";
 import { View, Text, SafeAreaView, Platform } from "react-native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
@@ -49,7 +48,7 @@ const PricesDetails = () => {
 
 	const fetchChartData = async (tab: string) => {
 		try {
-			return fetchDataByToggle(tab);
+			return [];
 		} catch (error) {
 			console.error("Error fetching data:", error);
 			return null;
@@ -105,7 +104,7 @@ const PricesDetails = () => {
 					</View>
 				)}
 				<ToggleChartComponent
-					showRangePicker={true}
+					screenName="prices"
 					fetchChartData={fetchChartData}
 				/>
 			</View>

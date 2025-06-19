@@ -1,10 +1,5 @@
 import api from "./api";
-import {
-	filterByCurrentQuarterUTC,
-	filterByMonthYearUTC,
-	filterCurrentDayDataUTC,
-	filterCurrentWeekDataUTC,
-} from "@/components/chart/filterFunction";
+
 import { cockpitChartData } from "@/constants/cockpitchart";
 import { stringChartData } from "@/constants/stringChartData";
 import { loginPayloadProps, AuthResponse } from "@/types/apiTypes";
@@ -20,11 +15,15 @@ const loginUser = async (payload: loginPayloadProps) => {
 		const { access_token, UserId, cultureId, clientId, ApiApkVersion } =
 			response?.data;
 
+		if (!access_token || !UserId || !ApiApkVersion) {
+			throw new Error("Invalid response data from login API.");
+		}
+
 		// Store token
 		await AsyncStorage.multiSet([
 			["token", JSON.stringify(access_token)],
 			["UserId", UserId],
-			["ApkVersion", ApiApkVersion],
+			["ApkVersion", ApiApkVersion.toString()],
 		]);
 		return {
 			success: true,
@@ -40,31 +39,6 @@ const loginUser = async (payload: loginPayloadProps) => {
 				error instanceof Error ? error.message : JSON.stringify(error),
 		};
 	}
-};
-
-const fetchDataByToggle = async (tab: any) => {
-	let response;
-	if (tab === "Year") {
-		return cockpitChartData;
-	}
-	if (tab === "Month") {
-		return filterByMonthYearUTC();
-	}
-	if (tab === "Day") {
-		return [];
-		return filterCurrentDayDataUTC();
-	}
-	if (tab === "Week") {
-		return filterCurrentWeekDataUTC();
-	}
-	if (tab === "Quarter") {
-		return stringChartData;
-		return filterByCurrentQuarterUTC();
-	}
-	if (tab === "Year_3") {
-		return cockpitChartData;
-	}
-	return response;
 };
 
 // Logout function to clear token and user data
@@ -83,4 +57,4 @@ export const logout = async () => {
 	}
 };
 
-export { loginUser, fetchDataByToggle };
+export { loginUser };

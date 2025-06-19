@@ -8,9 +8,20 @@ import {
 } from "react-native";
 import { st } from "@/utils/Styles";
 import { useRouter } from "expo-router";
+import Title from "@/components//ui/Title";
 import React, { useEffect, useRef } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ShimmerAccordion } from "@/components/ShimmerEffect";
+
+interface AccordionFlatlistProps {
+	data: any[];
+	title: string;
+	index: number;
+	scrollToIndex: (index: number) => void;
+	startLoader: () => void;
+	expandedMeterId: string | null;
+	setExpandedMeterId: (id: string | null) => void;
+}
 
 const AccordionFlatlist = ({
 	data,
@@ -20,7 +31,7 @@ const AccordionFlatlist = ({
 	index,
 	expandedMeterId,
 	setExpandedMeterId,
-}: any) => {
+}: AccordionFlatlistProps) => {
 	const router = useRouter();
 	const animations = useRef<any>({}).current;
 
@@ -168,11 +179,7 @@ const AccordionFlatlist = ({
 		<ShimmerAccordion />
 	) : (
 		<>
-			<View className="w-full p-3 bg-primary">
-				<Text className="flex justify-start font-normal py-2 p-3 items-center mb-4 h-14 text-xl rounded-sm text-white">
-					{title}
-				</Text>
-			</View>
+			<Title title={title} />
 			<FlatList
 				showsHorizontalScrollIndicator={false}
 				showsVerticalScrollIndicator={false}

@@ -1,3 +1,6 @@
+/**
+ * Main Layout that render Rootlayout
+ */
 import { store } from "@/store/store";
 import { Provider } from "react-redux";
 import { Platform } from "react-native";

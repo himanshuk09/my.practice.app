@@ -1,21 +1,21 @@
-import { useDispatch } from "react-redux";
-import NoData from "@/components/icons/NoData";
-import React, { useEffect } from "react";
-import NoNetwork from "@/components/icons/NoNetwork";
-import { getPFCList } from "@/services/pfc.service";
-import { PriceForwardCurveArray } from "@/types/type";
-import FlatListBlock from "@/components/FlatListBlock";
-import { useIsFocused } from "@react-navigation/native";
-import { inActiveLoading } from "@/store/navigationSlice";
-import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest"; // 👈 your shared hook
 import {
 	FlatList,
 	RefreshControl,
 	SafeAreaView,
 	ListRenderItem,
 } from "react-native";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import NoData from "@/components/icons/NoData";
+import { getPFCList } from "@/services/pfc.service";
+import { PriceForwardCurveArray } from "@/types/type";
+import NoNetwork from "@/components/icons/NoNetwork";
+import FlatListBlock from "@/components/FlatListBlock";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
 import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 
 interface CombinedData {
 	type: "header";
@@ -28,6 +28,7 @@ const PFC = () => {
 	const NavigateTo = "dashboard/pfc";
 	const dispatch = useDispatch();
 	const insets = useSafeAreaInsets();
+
 	const {
 		data: pfcResponse,
 		error,
@@ -42,8 +43,8 @@ const PFC = () => {
 	});
 
 	const combinedData: CombinedData[] = [
-		{ type: "header", title: "Gas", data: pfcResponse?.gas || [] },
-		{ type: "header", title: "Strom", data: pfcResponse?.strom || [] },
+		{ type: "header", title: "gas", data: pfcResponse?.gas || [] },
+		{ type: "header", title: "power", data: pfcResponse?.strom || [] },
 	];
 
 	const renderItem: ListRenderItem<CombinedData> = ({ item }) => {
@@ -60,6 +61,7 @@ const PFC = () => {
 		}
 		return null;
 	};
+
 	useEffect(() => {
 		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
@@ -70,6 +72,7 @@ const PFC = () => {
 	 */
 	if (error) return <NoNetwork />;
 	if (pfcResponse?.gas?.length === 0) return <NoData />;
+
 	return (
 		<SafeAreaView
 			className="flex-1 bg-white"

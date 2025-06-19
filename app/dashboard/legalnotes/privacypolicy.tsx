@@ -6,6 +6,7 @@ import {
 	View,
 } from "react-native";
 import { RootState } from "@/store/store";
+import Title from "@/components/ui/Title";
 import React, { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,13 +25,9 @@ const PrivacyAndPolicy = () => {
 
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			<View className="top-0 w-full z-50 p-5 bg-[#e31837] h-24">
-				<Text className="text-2xl font-normal text-white capitalize">
-					{i18n.t("privacypolicy")}
-				</Text>
-			</View>
+			<Title title={"privacypolicy"} />
 			<ScrollView
-				className="flex-1 px-5"
+				className="flex-1 px-5 mb-5"
 				contentContainerStyle={{ flexGrow: 1 }}
 				nestedScrollEnabled={true}
 				showsVerticalScrollIndicator={false}

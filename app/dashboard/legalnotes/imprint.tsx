@@ -5,6 +5,7 @@ import {
 	ScrollView,
 	RefreshControl,
 } from "react-native";
+import Title from "@/components/ui/Title";
 import { useDispatch } from "react-redux";
 import { i18n } from "@/localization/config";
 import React, { useEffect, useState } from "react";
@@ -37,11 +38,7 @@ const Imprint = () => {
 	}, [isFocused]);
 	return (
 		<SafeAreaView className="flex-1 bg-white">
-			<View className="top-0 w-full z-50 p-5 bg-primary h-24">
-				<Text className="text-2xl font-normal text-white capitalize">
-					{i18n.t("imprint")}
-				</Text>
-			</View>
+			<Title title={"imprint"} />
 			<ScrollView
 				className="flex-1 px-5 mb-5"
 				contentContainerStyle={{ flexGrow: 1 }}

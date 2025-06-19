@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { i18n } from "@/localization/config";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useDebounce } from "@/hooks/useDebounce";
-import StackHeader from "@/components/StackHeader";
+import StackHeader from "@/components/ui/StackHeader";
 import { ChartLoaderPNG } from "@/components/Loader";
 import {
 	View,
@@ -21,13 +21,14 @@ import {
 	exportDealsToCSV,
 	exportDealsToCSVWeb,
 } from "@/components/exportcsv/exporttofile";
+import PrimaryButton from "./ui/PrimaryButton";
 type DataRowPrpos = {
 	label?: string;
 	value: any;
 	unit: string;
 	locale?: string;
 };
-const Card = ({ title, deals }: any) => {
+const Card = ({ title, deals }: { title: string; deals: any }) => {
 	return (
 		<View className="bg-cardBg  mx-1 p-3 my-1 " style={st.boxShadow}>
 			<Text className="text-sm text-cardTextHeader font-medium mb-2">
@@ -161,8 +162,15 @@ const Transactions = ({
 	title,
 	onRefresh,
 	isRefreshing,
-}: any) => {
-	const [loading, setLoadig] = useState<any>(true);
+}: {
+	cards: any;
+	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+	modalVisible: boolean;
+	title: string;
+	onRefresh: () => void;
+	isRefreshing: boolean;
+}) => {
+	const [loading, setLoadig] = useState<boolean>(true);
 	const isOnline = useSelector(
 		(state: RootState) => state?.network.isConnected
 	);
@@ -233,15 +241,15 @@ const Transactions = ({
 					/>
 				)}
 			</View>
-			<TouchableOpacity
-				className={`bg-primary  mx-2 mb-1 py-3 flex justify-center items-center rounded-sm    
-						${loading || cards?.length === 0 ? "absolute bottom-1 left-0 right-0 " : ""}}`}
+			<PrimaryButton
+				title={"View_Portfolio"}
 				onPress={() => setModalVisible(!modalVisible)}
-			>
-				<Text className="text-white text-center text-base font-medium uppercase">
-					{i18n.t("View_Portfolio")}
-				</Text>
-			</TouchableOpacity>
+				style={
+					loading || cards?.length === 0
+						? "absolute bottom-1 left-0 right-0 "
+						: ""
+				}
+			/>
 		</View>
 	);
 };

@@ -5,13 +5,28 @@ import {
 	Ionicons,
 	FontAwesome6,
 } from "@expo/vector-icons";
+import { ReactNode } from "react";
+import { Href } from "expo-router";
 
-const menuItems = [
+interface MenuSubItem {
+	label: string;
+	route: string;
+}
+
+export interface MenuItem {
+	label: string;
+	key: string;
+	route?: Href;
+	items?: MenuSubItem[];
+	icon: ReactNode;
+	height?: number;
+}
+const menuItems: MenuItem[] = [
 	{
 		label: "start",
 		key: "",
 		items: [],
-		route: "dashboard",
+		route: "/dashboard",
 		icon: <FontAwesome name="home" size={23} />,
 	},
 	{
@@ -36,12 +51,12 @@ const menuItems = [
 		label: "portfolio",
 		key: "",
 		items: [],
-		route: "dashboard/(tabs)/portfolio",
+		route: "/dashboard/(tabs)/portfolio",
 		icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
 	},
 	{
 		label: "settings",
-		route: "dashboard/settings",
+		route: "/dashboard/settings",
 		key: "",
 		items: [],
 		icon: (

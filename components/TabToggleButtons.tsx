@@ -8,24 +8,23 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/config";
 import React, { useEffect, useRef, useState } from "react";
-import { tabsType } from "@/components/ToggleChartComponent";
+import { tabsType, getTabsForScreen } from "@/types/chartComponent";
 import { View, Text, TouchableOpacity, LayoutChangeEvent } from "react-native";
 
 interface TabToggleButtonsProps {
 	activeTab: string;
-	setActiveTab: any;
-	visibleTabs: tabsType[] | undefined;
+	setActiveTab: React.Dispatch<React.SetStateAction<tabsType>>;
+	screenName: string;
 	isLoading: boolean;
 }
 
 const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
-	({ activeTab, setActiveTab, visibleTabs, isLoading }) => {
+	({ activeTab, setActiveTab, screenName, isLoading }) => {
 		const globalLoader = useSelector(
 			(state: RootState) => state?.navigation?.loading
 		);
 
-		const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
-		const tabs = visibleTabs || allTabs;
+		const tabs = getTabsForScreen(screenName);
 		const tabLayouts = useRef<{ x: number; width: number }[]>([]);
 		const translateX = useSharedValue(0);
 		const underlineWidth = useSharedValue(0);
@@ -67,7 +66,7 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 		return (
 			<View className="relative w-full">
 				<View className="flex-row justify-between w-full">
-					{tabs.map((tab: string, index: number) => (
+					{tabs.map((tab: tabsType, index: number) => (
 						<TouchableOpacity
 							key={tab}
 							onLayout={onTabLayout(index)}
@@ -111,40 +110,40 @@ const TabToggleButtons: React.FC<TabToggleButtonsProps> = React.memo(
 );
 
 //without animation
-const TabToggleButtons1: React.FC<TabToggleButtonsProps> = React.memo(
-	({ activeTab, setActiveTab, visibleTabs, isLoading }) => {
-		const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
-		const tabs = visibleTabs || allTabs;
+// const TabToggleButtons1: React.FC<TabToggleButtonsProps> = React.memo(
+// 	({ activeTab, setActiveTab, visibleTabs, isLoading }) => {
+// 		const allTabs = ["Day", "Week", "Month", "Quarter", "Year"];
+// 		const tabs = visibleTabs || allTabs;
 
-		return (
-			<View className="flex-row justify-between  w-full">
-				{tabs.map((tab: any) => (
-					<TouchableOpacity
-						key={tab}
-						onPress={() => {
-							setActiveTab(tab);
-						}}
-						className={`flex-1 py-3 text-center rounded-sm h-14 ${
-							activeTab === tab
-								? "border-b-4 border-primary bg-white "
-								: "bg-gray-100  "
-						}`}
-						disabled={isLoading}
-						style={st.tabShadow}
-					>
-						<Text
-							className={`text-lg text-center font-semibold ${
-								activeTab === tab
-									? "text-primary"
-									: "text-[#898a8c]"
-							}`}
-						>
-							{i18n.t(tab)}
-						</Text>
-					</TouchableOpacity>
-				))}
-			</View>
-		);
-	}
-);
+// 		return (
+// 			<View className="flex-row justify-between  w-full">
+// 				{tabs.map((tab: any) => (
+// 					<TouchableOpacity
+// 						key={tab}
+// 						onPress={() => {
+// 							setActiveTab(tab);
+// 						}}
+// 						className={`flex-1 py-3 text-center rounded-sm h-14 ${
+// 							activeTab === tab
+// 								? "border-b-4 border-primary bg-white "
+// 								: "bg-gray-100  "
+// 						}`}
+// 						disabled={isLoading}
+// 						style={st.tabShadow}
+// 					>
+// 						<Text
+// 							className={`text-lg text-center font-semibold ${
+// 								activeTab === tab
+// 									? "text-primary"
+// 									: "text-[#898a8c]"
+// 							}`}
+// 						>
+// 							{i18n.t(tab)}
+// 						</Text>
+// 					</TouchableOpacity>
+// 				))}
+// 			</View>
+// 		);
+// 	}
+// );
 export default TabToggleButtons;

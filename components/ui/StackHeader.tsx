@@ -2,10 +2,18 @@ import React from "react";
 import { useRouter } from "expo-router";
 import { i18n } from "@/localization/config";
 import { MaterialIcons } from "@expo/vector-icons";
-import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 
-const StackHeader = ({ title, closed = false }: any) => {
+const StackHeader = ({
+	title,
+	navigation,
+	closed = false,
+}: {
+	title: string;
+	navigation?: any;
+	closed?: boolean;
+}) => {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	return (

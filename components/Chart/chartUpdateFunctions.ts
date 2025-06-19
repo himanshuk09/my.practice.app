@@ -2,6 +2,37 @@ import { i18n } from "@/localization/config";
 import { Platform } from "react-native";
 type ChartUpdateType = "series" | "options" | "chart";
 type chartTypeProps = "line" | "donut" | "area";
+type updateApexChartProps = {
+	type: ChartUpdateType;
+	webViewRef: any;
+	iFrameRef: any;
+	data: any;
+	options: any;
+};
+type updateEmptyApexChartProps = {
+	webViewRef?: any;
+	iFrameRef?: any;
+	chartType?: chartTypeProps;
+};
+type updateLineApexChartLocaleProps = {
+	locale: string;
+	yaxisunit: string;
+	activeTab: string;
+	webViewRef: any;
+	iFrameRef: any;
+};
+type updateAreaApexChartLocaleProps = {
+	locale: string;
+	date: string;
+	fileName: string;
+	webViewRef: any;
+	iFrameRef: any;
+};
+type updateDonutApexChartLocaleProps = {
+	locale: string;
+	webViewRef: any;
+	iFrameRef: any;
+};
 
 export const updateApexChart = ({
 	type,
@@ -9,13 +40,7 @@ export const updateApexChart = ({
 	iFrameRef,
 	data,
 	options,
-}: {
-	type: ChartUpdateType;
-	webViewRef: any;
-	iFrameRef: any;
-	data: any;
-	options: any;
-}) => {
+}: updateApexChartProps) => {
 	if (Platform.OS === "web") {
 		const iframe = iFrameRef.current;
 		if (iframe && iframe?.contentWindow) {
@@ -59,11 +84,11 @@ export const updateApexChart = ({
 	}
 };
 
-export const updateEmptyApexChart = (
-	webViewRef?: any,
-	iFrameRef?: any,
-	chartType?: chartTypeProps
-) => {
+export const updateEmptyApexChart = ({
+	webViewRef,
+	iFrameRef,
+	chartType,
+}: updateEmptyApexChartProps) => {
 	let options = {
 		chart: {
 			series: [],
@@ -131,13 +156,7 @@ export const updateLineApexChartLocale = ({
 	activeTab,
 	webViewRef,
 	iFrameRef,
-}: {
-	locale: string;
-	yaxisunit: string;
-	activeTab: string;
-	webViewRef: any;
-	iFrameRef: any;
-}) => {
+}: updateLineApexChartLocaleProps) => {
 	if (Platform.OS === "web") {
 		const iframe = iFrameRef.current;
 		if (iframe?.contentWindow) {
@@ -162,13 +181,7 @@ export const updateAreaApexChartLocale = ({
 	fileName,
 	webViewRef,
 	iFrameRef,
-}: {
-	locale: string;
-	date: string;
-	fileName: string;
-	webViewRef: any;
-	iFrameRef: any;
-}) => {
+}: updateAreaApexChartLocaleProps) => {
 	const year = new Date(date).getFullYear();
 	if (Platform.OS === "web") {
 		const iframe = iFrameRef.current;
@@ -186,11 +199,7 @@ export const updateDonutApexChartLocale = ({
 	locale,
 	webViewRef,
 	iFrameRef,
-}: {
-	locale: string;
-	webViewRef: any;
-	iFrameRef: any;
-}) => {
+}: updateDonutApexChartLocaleProps) => {
 	if (Platform.OS === "web") {
 		const iframe = iFrameRef.current;
 		if (iframe?.contentWindow) {

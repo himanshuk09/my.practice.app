@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import {
 	View,
 	Text,
-	TextInput,
-	TouchableOpacity,
-	StyleSheet,
-	ScrollView,
 	Alert,
 	Switch,
+	TextInput,
+	StyleSheet,
+	ScrollView,
+	TouchableOpacity,
 } from "react-native";
+import { useDispatch } from "react-redux";
 import * as Notifications from "expo-notifications";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useIsFocused } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
 import {
 	sendMultipleNotification,
 	sendNotification,

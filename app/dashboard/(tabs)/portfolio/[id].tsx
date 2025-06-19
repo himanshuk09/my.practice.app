@@ -1,14 +1,4 @@
 import {
-	View,
-	Platform,
-	SafeAreaView,
-	Text,
-	TouchableOpacity,
-	Dimensions,
-	StyleSheet,
-	Modal,
-} from "react-native";
-import {
 	getPortfolioDeals,
 	getPortfolioDetails,
 	getPortfolioReportBase64PDF,
@@ -37,6 +27,7 @@ import { useLocalSearchParams } from "expo-router";
 import NoNetwork from "@/components/icons/NoNetwork";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
+import PrimaryButton from "@/components/ui/PrimaryButton";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { Toast, showToast } from "@/components/ToastConfig";
 import { ChartGraphShimmer } from "@/components/ChartShimmer";
@@ -46,6 +37,7 @@ import WebView, { WebViewMessageEvent } from "react-native-webview";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Transactions, { DataDisplay } from "@/components/TranscationCard";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
+import { View, Modal, Platform, StyleSheet, SafeAreaView } from "react-native";
 
 const PortfolioOverView = () => {
 	const insets = useSafeAreaInsets();
@@ -55,9 +47,8 @@ const PortfolioOverView = () => {
 	const isFocused = useIsFocused();
 	const donutwebViewRef = useRef<WebView | null>(null);
 	const areaWebViewRef = useRef<WebView | null>(null);
-	const donutIFrameRef = useRef<HTMLIFrameElement | any>(null);
-	const areaIFrameRef = useRef<HTMLIFrameElement | any>(null);
-	const screenHeight = Dimensions.get("window").height;
+	const donutIFrameRef = useRef<HTMLIFrameElement>(null);
+	const areaIFrameRef = useRef<HTMLIFrameElement>(null);
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
 	const [isChartLoaded, setIsChartLoaded] = useState<boolean>(false);
 	const [isDonutChartLoaded, setIsDonutChartLoaded] =
@@ -66,9 +57,15 @@ const PortfolioOverView = () => {
 		useState<boolean>(false);
 	const [showPieChart, setShowPieChart] = useState<boolean>(false);
 	const [showAreaChart, setShowAreaChart] = useState<boolean>(false);
+
 	const locale = useSelector((state: RootState) => state.culture.locale);
-	const LoaderPieTimeoutRef = useRef<NodeJS.Timeout | null | any>(null);
-	const LoaderAreaTimeoutRef = useRef<NodeJS.Timeout | null | any>(null);
+	const LoaderPieTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+		null
+	);
+	const LoaderAreaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+		null
+	);
+
 	const paramsID = useMemo(() => {
 		try {
 			return rawId ? JSON.parse(decodeURIComponent(rawId)) : {};
@@ -191,8 +188,16 @@ const PortfolioOverView = () => {
 	useEffect(() => {
 		if (portfolioDetails && isChartLoaded && isDonutChartLoaded) {
 			if (portfolioDetails?.message === "no data") {
-				updateEmptyApexChart(donutwebViewRef, donutIFrameRef, "donut");
-				updateEmptyApexChart(areaWebViewRef, areaIFrameRef, "area");
+				updateEmptyApexChart({
+					webViewRef: donutwebViewRef,
+					iFrameRef: donutIFrameRef,
+					chartType: "donut",
+				});
+				updateEmptyApexChart({
+					webViewRef: areaWebViewRef,
+					iFrameRef: areaIFrameRef,
+					chartType: "area",
+				});
 				setEnabledToCallDeals(false);
 				if (Platform.OS === "web") {
 					setShowAreaChart(true);
@@ -224,6 +229,7 @@ const PortfolioOverView = () => {
 			}
 		}
 	}, [isChartLoaded, isDonutChartLoaded, portfolioDetails]);
+
 	useEffect(() => {
 		if (isFocused) {
 			setTimeout(() => {
@@ -313,15 +319,11 @@ const PortfolioOverView = () => {
 				/>
 			</View>
 
-			{/* Bottom CTA */}
-			<TouchableOpacity
-				className="bg-[#e31836] py-3 mx-5 mb-2 rounded-sm"
+			{/* Bottom  Botton*/}
+			<PrimaryButton
+				title={"View_Deals"}
 				onPress={() => setModalVisible(!modalVisible)}
-			>
-				<Text className="text-white text-center text-base font-normal uppercase">
-					{i18n.t("View_Deals")}
-				</Text>
-			</TouchableOpacity>
+			/>
 
 			{/* Modal */}
 			<Modal

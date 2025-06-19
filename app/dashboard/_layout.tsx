@@ -1,8 +1,11 @@
+/**
+ * Dashboard Layout
+ */
 import "react-native-reanimated";
 import React from "react";
 import { Stack } from "expo-router";
 import Drawer from "@/components/Drawer";
-import Header from "@/components/MainHeader";
+import Header from "@/components/ui/MainHeader";
 import SwipeDetectionWrapper from "@/components/wrapper/SwipeDetectionWrapper";
 
 const DashboardLayout = () => {
@@ -24,9 +27,7 @@ const DashboardLayout = () => {
 						options={{
 							headerShown: true,
 							animation: "slide_from_left",
-							header: ({ navigation }) => (
-								<Header navigation={navigation} />
-							),
+							header: ({ navigation }) => <Header />,
 						}}
 					/>
 					<Stack.Screen
@@ -41,9 +42,7 @@ const DashboardLayout = () => {
 						options={{
 							headerShown: true,
 							animation: "slide_from_right",
-							header: ({ navigation }) => (
-								<Header navigation={navigation} />
-							),
+							header: ({ navigation }) => <Header />,
 						}}
 					/>
 					<Stack.Screen
