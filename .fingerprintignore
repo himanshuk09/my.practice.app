@@ -1,0 +1,9 @@
+# Ignore the entire /app/ios folder
+/app/ios/**/*
+
+# But still keep /app/ios/Podfile and /app/ios/Podfile.lock
+!/app/ios/Podfile
+!/app/ios/Podfile.lock
+
+/android
+/ios
