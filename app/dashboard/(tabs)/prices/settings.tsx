@@ -5,17 +5,16 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	Image,
+	Platform,
 } from "react-native";
 import { st } from "@/utils/Styles";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
-import { i18n } from "@/localization/config";
 import { StatusBar } from "expo-status-bar";
 import { Picker } from "@react-native-picker/picker";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Platform } from "react-native";
 import FooterActions from "@/components/ui/FooterActions";
 
 const PricesSettings = () => {

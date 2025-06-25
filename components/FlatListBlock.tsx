@@ -24,7 +24,6 @@ interface FlatListBlockProps<T = any> {
 	enableAutoScroll?: boolean;
 	height?: number | string | any;
 	keyExtractor?: (item: T, index: number | string) => string;
-	NavigateTo?: string | Href;
 	renderType: "pfc" | "portfolio" | "signal";
 }
 
@@ -34,7 +33,6 @@ const FlatListBlock = <T,>({
 	enableAutoScroll = false,
 	height = "100%",
 	keyExtractor,
-	NavigateTo,
 	renderType,
 }: FlatListBlockProps<T>) => {
 	const router = useRouter();

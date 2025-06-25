@@ -25,7 +25,6 @@ interface CombinedData {
 
 const PFC = () => {
 	const isFocused = useIsFocused();
-	const NavigateTo = "dashboard/pfc";
 	const dispatch = useDispatch();
 	const insets = useSafeAreaInsets();
 
@@ -54,7 +53,6 @@ const PFC = () => {
 					title={item.title}
 					items={item.data || []}
 					height={"auto"}
-					NavigateTo={NavigateTo}
 					renderType="pfc"
 				/>
 			);

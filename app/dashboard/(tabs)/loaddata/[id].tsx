@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
 import { StatusBar } from "expo-status-bar";
-import { i18n } from "@/localization/config";
+import { DATE_FORMAT_PATTERNS, i18n } from "@/localization/config";
 import { useDebounce } from "@/hooks/useDebounce";
 import { tabsType } from "@/types/chartComponent";
 import { useLocalSearchParams } from "expo-router";
@@ -36,7 +36,7 @@ const LoadDataDetails = () => {
 	const debouncedExport = useDebounce((data: any, name: string) => {
 		if (!data || data.length === 0) return;
 
-		const filename = `_${name}_${dayjs().format("DD-MM-YYYY-HH-mm-ss")}`;
+		const filename = `_${name}_${dayjs().format(DATE_FORMAT_PATTERNS.DATE_TIME_FULL_DASHED)}`;
 
 		Platform.OS === "web"
 			? exportTimeseriesToCSVForWeb(data, filename)

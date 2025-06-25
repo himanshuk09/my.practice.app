@@ -4,6 +4,7 @@ import {
 } from "@/components/exportcsv/exporttofile";
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
+import dayjs from "dayjs";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -15,6 +16,10 @@ import { cockpitChartData } from "@/constants/cockpitchart";
 import { stringChartData } from "@/constants/stringChartData";
 import { View, Text, SafeAreaView, Platform } from "react-native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
+import utc from "dayjs/plugin/utc";
+import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
+
+dayjs.extend(utc);
 
 const PricesDetails = () => {
 	const { id } = useLocalSearchParams();
@@ -24,6 +29,12 @@ const PricesDetails = () => {
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
+	const { locale } = useSelector((state: RootState) => state.culture);
+	const isEng = locale === englishLocale;
+	const dateFormate = isEng
+		? DATE_FORMAT_PATTERNS.DATE_TIME_SLASHED_DD_MM_YYYY_HH_MM
+		: DATE_FORMAT_PATTERNS.DATE_TIME_DOTTED_DD_MM_YYYY_HH_MM;
+
 	useEffect(() => {
 		const filteredItem = PricesItem.filter(
 			(item: any) => item.id === Number(id)
@@ -33,19 +44,6 @@ const PricesDetails = () => {
 		}, 1000);
 	}, [id]);
 
-	const getCurrentUTCDateTime = () => {
-		const now = new Date();
-		// Extract UTC components
-		const day = String(now.getUTCDate()).padStart(2, "0");
-		const month = String(now.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
-		const year = now.getUTCFullYear();
-		const hours = String(now.getUTCHours()).padStart(2, "0");
-		const minutes = String(now.getUTCMinutes()).padStart(2, "0");
-
-		// Format as DD/MM/YYYY HH:mm
-		return `${day}/${month}/${year} ${hours}:${minutes}`;
-	};
-
 	const fetchChartData = async (tab: string) => {
 		try {
 			return [];
@@ -54,6 +52,7 @@ const PricesDetails = () => {
 			return null;
 		}
 	};
+
 	useEffect(() => {
 		if (isFocused) {
 			setTimeout(() => {
@@ -61,6 +60,7 @@ const PricesDetails = () => {
 			}, 500);
 		}
 	}, [isFocused]);
+
 	return (
 		<SafeAreaView className="flex-1 ">
 			<View className="flex-1  bg-white">
@@ -76,7 +76,7 @@ const PricesDetails = () => {
 							</Text>
 							<View className="flex-row justify-between w-[90%]">
 								<Text className=" text-md text-mainCardHeaderText ">
-									{getCurrentUTCDateTime()}
+									{dayjs().utc().format(dateFormate)}
 								</Text>
 								<Text className="text-mainCardHeaderText  text-sm font-normal">
 									{pricesDetail?.unit} €/MWh

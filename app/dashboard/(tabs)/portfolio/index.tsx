@@ -12,12 +12,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Platform, SafeAreaView, useWindowDimensions } from "react-native";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 import useIsComingFromPortfolioDetail from "@/hooks/useIsComingFromPortfolioDetail";
+import { ROUTEKEYS } from "@/utils/messages";
 
 const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const { height } = useWindowDimensions();
-	const NavigateTo = "dashboard/portfolio";
 	const isFromDetail = useIsComingFromPortfolioDetail();
 	const insets = useSafeAreaInsets();
 
@@ -58,7 +58,6 @@ const Portfolio: React.FC = () => {
 				items={gasList}
 				enableAutoScroll={!isFromDetail}
 				height={Platform.OS === "web" ? height * 0.45 : "50%"}
-				NavigateTo={NavigateTo}
 				renderType={"portfolio"}
 				keyExtractor={(item: Portfolioprops, index: number | string) =>
 					item?.PortfolioId.toString()
@@ -69,7 +68,6 @@ const Portfolio: React.FC = () => {
 				items={stromList}
 				enableAutoScroll={!isFromDetail}
 				height={Platform.OS === "web" ? height * 0.45 : "50%"}
-				NavigateTo={NavigateTo}
 				renderType={"portfolio"}
 				keyExtractor={(item: Portfolioprops, index: number | string) =>
 					item?.PortfolioId.toString()

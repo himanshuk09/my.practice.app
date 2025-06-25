@@ -17,29 +17,13 @@ import { RootState } from "@/store/store";
 import { PICKERVALIDATEMESSAGE } from "@/utils/messages";
 import DateTimePickerComponents from "./DateTimePickerComponents";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
-import { englishLocale, germanyLocale, i18n } from "@/localization/config";
+import {
+	DATE_FORMAT_PATTERNS,
+	englishLocale,
+	i18n,
+} from "@/localization/config";
 import { initialViewProps, PickerModelProps } from "@/types/chartComponent";
-
-const formatNumber = (value: number, locale: string): string => {
-	return new Intl.NumberFormat(locale, {
-		useGrouping: false,
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 10,
-	}).format(value);
-};
-const parseNumber = (
-	value: string | number | null | undefined | any,
-	locale: string
-): number => {
-	if (value === null || value === undefined || value === 0) {
-		return 0;
-	}
-	const normalized =
-		locale === germanyLocale
-			? value?.replace(/\./g, "").replace(",", ".")
-			: value;
-	return parseFloat(normalized);
-};
+import { formatNumber, parseNumber } from "@/utils/formatting-utils";
 
 const PickerModel = ({
 	range,
@@ -71,11 +55,18 @@ const PickerModel = ({
 
 	const initialRangeRef = useRef(range);
 	const initialMaxMinRef = useRef(maxMinValues);
+
 	// Derived values
 	const isEng = locale === englishLocale;
-	const dateFormat = isEng ? "DD/MM/YYYY" : "DD.MM.YYYY";
-	const emptyDatePlaceholder = isEng ? "-- / -- /----" : "-- . -- . ----";
-	const numberPlaceholder = isEng ? "00.00" : "00,00";
+	const dateFormat = isEng
+		? DATE_FORMAT_PATTERNS.DATE_SLASHED_DD_MM_YYYY
+		: DATE_FORMAT_PATTERNS.DATE_DOTTED_DD_MM_YYYY;
+	const emptyDatePlaceholder = isEng
+		? DATE_FORMAT_PATTERNS.DATE_PLACEHOLDER_SLASHED
+		: DATE_FORMAT_PATTERNS.DATE_PLACEHOLDER_DOTTED;
+	const numberPlaceholder = isEng
+		? DATE_FORMAT_PATTERNS.DECIMAL_DOT
+		: DATE_FORMAT_PATTERNS.DECIMAL_COMMA;
 
 	// Validation functions
 	const validateMinMax = (minInput: any, maxInput: any): boolean => {
@@ -385,7 +376,7 @@ const PickerModel = ({
 												"time"
 											),
 										true,
-										"HH:mm"
+										DATE_FORMAT_PATTERNS.TIME_PARSE_HH_MM
 									)}
 								</View>
 							</View>
@@ -412,7 +403,7 @@ const PickerModel = ({
 												"time"
 											),
 										true,
-										"HH:mm"
+										DATE_FORMAT_PATTERNS.TIME_PARSE_HH_MM
 									)}
 								</View>
 							</View>

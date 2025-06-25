@@ -59,6 +59,8 @@ export const PERMISSIONKEYS = {
 	DOWNLOAD_FAILED: "Download_Failed",
 	EXIT_APP: "exit_app",
 	EXIT_MESSAGE: "exit_msg",
+	ENABLED: "enabled",
+	DISABLED: "disabled",
 } as const;
 
 export const LOCALSTORAGEKEYS = {

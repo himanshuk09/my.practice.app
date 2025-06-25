@@ -13,7 +13,7 @@ const RootLayout = () => {
 	const { session } = useAuth();
 
 	useEffect(() => {
-		if (Platform.OS === "web") return; // ❌ Don't apply on web
+		if (Platform.OS === "web") return;
 		const handleAppStateChange = (nextAppState: any) => {
 			if (
 				appState.match(/inactive|background/) &&

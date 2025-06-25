@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showToast } from "@/components/ToastConfig";
 import dayjs from "dayjs";
 import { getLocale } from "@/components/global";
-import { englishLocale } from "@/localization/config";
+import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
 import { LOCALSTORAGEKEYS, PERMISSIONKEYS } from "@/utils/messages";
 
 // -------------------- Helpers ------------------------
@@ -125,10 +125,18 @@ const splitTimeSeriesString = (timeseries: string) => {
 	const [hours, minutes] = timePart.split(":");
 	const locale = getLocale();
 	return {
-		formattedDate: dayjs(datePart, "MM/DD/YYYY").format(
-			locale === englishLocale ? "YYYY/MM/DD" : "YYYY.MM.DD"
+		formattedDate: dayjs(
+			datePart,
+			DATE_FORMAT_PATTERNS.DATE_SLASHED_MM_DD_YYY
+		).format(
+			locale === englishLocale
+				? DATE_FORMAT_PATTERNS.DATE_SLASHED_YYYY_MM_DD
+				: DATE_FORMAT_PATTERNS.DATE_DOTTED_YYYY_MM_DD
 		),
-		formattedTime: dayjs(`${timePart}:00`, "HH:mm:ss").format("HH:mm:ss"),
+		formattedTime: dayjs(
+			`${timePart}:00`,
+			DATE_FORMAT_PATTERNS.TIME_PARSE_HH_MM_SS
+		).format(DATE_FORMAT_PATTERNS.TIME_PARSE_HH_MM_SS),
 	};
 };
 

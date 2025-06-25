@@ -1,3 +1,7 @@
+/**
+ * when any routes hit that not exist then this screen appear
+ */
+
 import React from "react";
 import { Link, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";

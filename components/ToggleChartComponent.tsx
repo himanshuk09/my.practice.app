@@ -1,4 +1,10 @@
 import {
+	convertDateTime,
+	formatDateTime,
+	formatNumber,
+	parseNumber,
+} from "@/utils/formatting-utils";
+import {
 	updateApexChart,
 	updateEmptyApexChart,
 	updateLineApexChartLocale,
@@ -24,50 +30,6 @@ import { englishLocale, germanyLocale } from "@/localization/config";
 import iframeLineHtmlContent from "@/components/chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/chart/config/Linechart.android";
 import { tabsType, ToggleChartComponentProps } from "@/types/chartComponent";
-
-const formatNumber = (value: number, locale: string): string => {
-	return new Intl.NumberFormat(locale, {
-		useGrouping: false,
-		maximumFractionDigits: 2,
-	}).format(value);
-};
-
-const parseNumber = (
-	value: string | number | null | undefined | any,
-	locale: string
-): number => {
-	if (value === null || value === undefined || value === 0) {
-		return 0;
-	}
-	const normalized =
-		locale === germanyLocale
-			? value?.replace(/\./g, "").replace(",", ".")
-			: value;
-	return parseFloat(normalized);
-};
-
-//convert mm/dd/yyy  hh:mm to string
-const convertDateTime = (input: string) => {
-	const [datePart, timePart] = input.split(" "); // ["05/28/2025", "00:00"]
-	const [month, day, year] = datePart.split("/"); // ["05", "28", "2025"]
-
-	const isoString = `${year}-${month}-${day}T${timePart}`; // "2025-05-28T00:00"
-	const originalDate = new Date(isoString);
-
-	return dayjs(originalDate);
-};
-
-// formate to dd■mm■$yy■hh■mm
-function formatDateTime(input: any) {
-	const date = new Date(input);
-	const day = date.getDate();
-	const month = date.getMonth();
-	const year = date.getFullYear();
-	const hours = date.getHours();
-	const minutes = date.getMinutes();
-
-	return `${day}■${month}■${year}■${hours}■${minutes}`;
-}
 
 const ToggleChartComponent = ({
 	fetchChartData,

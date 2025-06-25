@@ -7,9 +7,9 @@ import {
 	RefreshControl,
 } from "react-native";
 import { st } from "@/utils/Styles";
-import { Href } from "expo-router";
+import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ROUTEKEYS } from "@/utils/messages";
 import NoData from "@/components/icons/NoData";
 import NoNetwork from "@/components/icons/NoNetwork";
@@ -21,6 +21,8 @@ import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 import { ShimmerPrices, ShimmerPricesHeader } from "@/components/ShimmerEffect";
+import { RootState } from "@/store/store";
+import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
 
 const Prices = () => {
 	const router = useRouter();
@@ -31,6 +33,11 @@ const Prices = () => {
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const insets = useSafeAreaInsets();
+	const { locale } = useSelector((state: RootState) => state.culture);
+	const isEng = locale === englishLocale;
+	const dateFormate = isEng
+		? DATE_FORMAT_PATTERNS.DATE_SLASHED_DD_MM_YYYY
+		: DATE_FORMAT_PATTERNS.DATE_DOTTED_DD_MM_YYYY;
 	const ListItem = memo(({ item }: any) => (
 		<TouchableOpacity
 			key={item.id}
@@ -114,7 +121,7 @@ const Prices = () => {
 							EEX Power Auction
 						</Text>
 						<Text className="flex justify-start font-normal items-center  text-sm  text-white">
-							24/07/5468
+							{dayjs().locale(locale).format(dateFormate)}
 						</Text>
 					</View>
 

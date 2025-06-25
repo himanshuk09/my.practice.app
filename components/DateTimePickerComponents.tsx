@@ -15,7 +15,11 @@ import "dayjs/locale/en-in";
 import { useSelector } from "react-redux";
 import React, { useCallback, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { englishLocale, i18n } from "@/localization/config";
+import {
+	DATE_FORMAT_PATTERNS,
+	englishLocale,
+	i18n,
+} from "@/localization/config";
 import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
 type DateTimeRange = {
 	startDate?: DateType | any;
@@ -70,7 +74,15 @@ const DateTimePickerComponents = ({
 		},
 		[mode]
 	);
-
+	const isEng = locale === englishLocale;
+	const singleDateFormate = isEng
+		? DATE_FORMAT_PATTERNS.DATE_TIME_SLASHED_DD_MM_YYYY_HH_MM
+		: DATE_FORMAT_PATTERNS.DATE_TIME_DOTTED_DD_MM_YYYY_HH_MM;
+	const rangeDateFormate = isEng
+		? DATE_FORMAT_PATTERNS.DATE_SLASHED_DD_MM_YYYY
+		: DATE_FORMAT_PATTERNS.DATE_DOTTED_DD_MM_YYYY;
+	const multipleDateFormate =
+		DATE_FORMAT_PATTERNS.DATE_MONTH_NAME_MMM_DD_YYYY;
 	if (!open) return null;
 	return (
 		<Pressable
@@ -125,15 +137,7 @@ const DateTimePickerComponents = ({
 								{date
 									? dayjs(date)
 											.locale(locale)
-											.format(
-												locale === englishLocale
-													? timePicker
-														? "DD/MM/YYYY HH:mm"
-														: "DD/MM/YYYY"
-													: timePicker
-														? "DD.MM.YYYY HH:mm"
-														: "DD.MM.YYYY"
-											)
+											.format(singleDateFormate)
 									: "..."}
 							</Text>
 						</View>
@@ -184,15 +188,7 @@ const DateTimePickerComponents = ({
 								{range?.startDate
 									? dayjs(range?.startDate)
 											.locale(locale)
-											.format(
-												locale === englishLocale
-													? timePicker
-														? "DD/MM/YYYY HH:mm"
-														: "DD/MM/YYYY"
-													: timePicker
-														? "DD.MM.YYYY HH:mm"
-														: "DD.MM.YYYY"
-											)
+											.format(rangeDateFormate)
 									: "..."}
 							</Text>
 						</View>
@@ -209,15 +205,7 @@ const DateTimePickerComponents = ({
 								{range?.endDate
 									? dayjs(range?.endDate)
 											.locale(locale)
-											.format(
-												locale === englishLocale
-													? timePicker
-														? "DD/MM/YYYY HH:mm"
-														: "DD/MM/YYYY"
-													: timePicker
-														? "DD.MM.YYYY HH:mm"
-														: "DD.MM.YYYY"
-											)
+											.format(rangeDateFormate)
 									: "..."}
 							</Text>
 						</View>
@@ -248,7 +236,7 @@ const DateTimePickerComponents = ({
 								<Text key={index}>
 									{dayjs(d)
 										.locale(locale)
-										.format("MMM, DD, YYYY")}
+										.format(multipleDateFormate)}
 								</Text>
 							))}
 					</View>
