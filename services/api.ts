@@ -2,6 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { router } from "expo-router";
 import { checkInternetConnection } from "./helper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LOCALSTORAGEKEYS, ROUTEKEYS } from "@/utils/messages";
 
 const api = axios.create({
 	baseURL: process.env.EXPO_PUBLIC_BASE_URL,
@@ -24,9 +25,11 @@ api.interceptors.request.use(
 			throw new AxiosError("No internet connection", "ERR_NETWORK");
 		}
 
-		let token = await AsyncStorage.getItem("token");
-		let UserId = await AsyncStorage.getItem("UserId");
-		let ApkVersion = await AsyncStorage.getItem("ApkVersion");
+		let token = await AsyncStorage.getItem(LOCALSTORAGEKEYS.TOKEN);
+		let UserId = await AsyncStorage.getItem(LOCALSTORAGEKEYS.USERID);
+		let ApkVersion = await AsyncStorage.getItem(
+			LOCALSTORAGEKEYS.APKVERSION
+		);
 
 		if (token) {
 			config.headers.Authorization = `Bearer ${JSON.parse(token)}`;
@@ -46,8 +49,8 @@ api.interceptors.response.use(
 		if (error.response && error.response.status === 401) {
 			// 401 indicates token is invalid (expired or not matching)
 			console.log("Token expired or Unauthorized, please log in again");
-			await AsyncStorage.removeItem("token"); // Clear token
-			router.replace("/login"); // Redirect to login screen
+			await AsyncStorage.removeItem(LOCALSTORAGEKEYS.TOKEN); // Clear token
+			router.replace(ROUTEKEYS.LOGIN); // Redirect to login screen
 		} else if (error.response && error.response.status === 403) {
 			// 403 indicates insufficient permissions
 			console.log(

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import * as Updates from "expo-updates";
+import { UPDATEKEYS } from "@/utils/messages";
 import { showToast } from "@/components/ToastConfig";
 const isDev = __DEV__;
 const UpdatesListener = () => {
@@ -16,8 +17,8 @@ const UpdatesListener = () => {
 			console.error("Failed to apply update:", error);
 			showToast({
 				type: "error",
-				title: "Update_Failed",
-				subtitle: "Please_try_again_later",
+				title: UPDATEKEYS.UPDATE_FAILED,
+				subtitle: UPDATEKEYS.TRY_AGAIN,
 			});
 		}
 	};
@@ -28,8 +29,8 @@ const UpdatesListener = () => {
 				if (isUpdateAvailable || isUpdatePending) {
 					showToast({
 						type: "info",
-						title: "Update_Available",
-						subtitle: "Tap_to_roload_or_restart_the_app",
+						title: UPDATEKEYS.UPDATE_AVAILABLE,
+						subtitle: UPDATEKEYS.TAP_TO_RELOAD_RESTART,
 						autoHide: false,
 						swipeable: false,
 						props: {

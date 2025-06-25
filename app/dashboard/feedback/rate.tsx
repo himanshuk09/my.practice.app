@@ -17,6 +17,7 @@ import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { FontAwesome } from "@expo/vector-icons";
 import CustomAlert from "@/components/CustomAlert";
+import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
 import { useIsFocused } from "@react-navigation/native";
 import RatingStars from "@/components/icons/RatingStars";
 import { inActiveLoading } from "@/store/navigationSlice";
@@ -125,8 +126,8 @@ const Rate = () => {
 							rightTitle="save"
 							rightOnPress={async () => {
 								CustomAlert({
-									title: "submit",
-									description: "thank_you_for_your_feedback",
+									title: AUTHKEYS.SUBMIT,
+									description: AUTHKEYS.SUBMIT_FEEDBACK,
 									showCancelButton: true,
 									icon: "success",
 									iconColor: "#e31837",
@@ -149,7 +150,9 @@ const Rate = () => {
 												textTransform: "uppercase",
 											} as TextStyle,
 											onPress: () =>
-												router.push("/dashboard"),
+												router.push(
+													ROUTEKEYS.DASHBOARD
+												),
 										},
 									],
 								});

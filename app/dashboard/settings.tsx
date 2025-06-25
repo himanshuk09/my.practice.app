@@ -1,4 +1,9 @@
-import { View, Text, Linking, Platform, SafeAreaView } from "react-native";
+import {
+	LOCALSTORAGEKEYS,
+	AUTHKEYS,
+	PERMISSIONKEYS,
+	ROUTEKEYS,
+} from "@/utils/messages";
 import {
 	getCurrentPushToken,
 	registerForPushNotificationsAsync,
@@ -22,6 +27,7 @@ import FooterActions from "@/components/ui/FooterActions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { englishLocale, germanyLocale, i18n } from "@/localization/config";
+import { View, Text, Linking, Platform, SafeAreaView } from "react-native";
 
 const Settings = () => {
 	const router = useRouter();
@@ -51,13 +57,16 @@ const Settings = () => {
 		try {
 			const { status } = await Notifications.getPermissionsAsync();
 			const wasPromptedBefore = await AsyncStorage.getItem(
-				"notification_prompted"
+				LOCALSTORAGEKEYS.NOTIFICATION_PROMPTED
 			);
 
 			if (status !== "granted") {
 				if (!wasPromptedBefore) {
 					// First time asking permission
-					await AsyncStorage.setItem("notification_prompted", "true");
+					await AsyncStorage.setItem(
+						LOCALSTORAGEKEYS.NOTIFICATION_PROMPTED,
+						"true"
+					);
 					const { status: newStatus } =
 						await Notifications.requestPermissionsAsync();
 
@@ -70,11 +79,10 @@ const Settings = () => {
 					setIsNotificationEnabled(false);
 					setIsSignalsEnabled(false);
 					CustomAlert({
-						title: "Permission_Required",
-						description:
-							"Please_enable_notifications_in_system_settings",
-						cancelText: "Ask_Me_Later",
-						confirmText: "Open_Settings",
+						title: PERMISSIONKEYS.PERMISSION_REQUIRED,
+						description: PERMISSIONKEYS.ENABLE_NOTIFICATION,
+						cancelText: PERMISSIONKEYS.ASK_ME_LATER,
+						confirmText: PERMISSIONKEYS.OPEN_SETTINGS,
 						onConfirm: () => {
 							if (Platform.OS !== "web") {
 								Linking.openSettings();
@@ -91,11 +99,10 @@ const Settings = () => {
 				setIsNotificationEnabled(false);
 				setIsSignalsEnabled(false);
 				CustomAlert({
-					title: "Permission_Required",
-					description:
-						"Please_enable_notifications_in_system_settings",
-					cancelText: "Ask_Me_Later",
-					confirmText: "Open_Settings",
+					title: PERMISSIONKEYS.PERMISSION_REQUIRED,
+					description: PERMISSIONKEYS.ENABLE_NOTIFICATION,
+					cancelText: PERMISSIONKEYS.ASK_ME_LATER,
+					confirmText: PERMISSIONKEYS.OPEN_SETTINGS,
 					onConfirm: () => {
 						if (Platform.OS !== "web") {
 							Linking.openSettings();
@@ -108,11 +115,11 @@ const Settings = () => {
 			setIsNotificationEnabled(false);
 			setIsSignalsEnabled(false);
 			CustomAlert({
-				title: "Error",
+				title: AUTHKEYS.ERROR_TEXT,
 				description:
 					error instanceof Error
 						? error.message
-						: "Something went wrong",
+						: AUTHKEYS.SOMETHING_WORNG,
 				cancelText: "OK",
 				confirmText: "",
 				onConfirm: () => {},
@@ -130,15 +137,17 @@ const Settings = () => {
 	const handleSave = async () => {
 		// Save language preference, notification preference, signals preference
 		await AsyncStorage.multiSet([
-			["app_locale", selectedLanguage],
 			[
-				"notification_preference",
+				LOCALSTORAGEKEYS.NOTIFICATION_PREFERENCE,
 				isNotificationEnabled ? "enabled" : "disabled",
 			],
-			["signal_preference", isSignalsEnabled ? "enabled" : "disabled"],
+			[
+				LOCALSTORAGEKEYS.SIGNAL_PREFERENCE,
+				isSignalsEnabled ? "enabled" : "disabled",
+			],
 		]);
 
-		router.replace("/dashboard" as Href);
+		router.replace(ROUTEKEYS.DASHBOARD as Href);
 		dispatch(updateLocale(selectedLanguage));
 	};
 
@@ -147,9 +156,11 @@ const Settings = () => {
 			const { status } = await Notifications.getPermissionsAsync();
 
 			const notipref = await AsyncStorage.getItem(
-				"notification_preference"
+				LOCALSTORAGEKEYS.NOTIFICATION_PREFERENCE
 			);
-			const signalpref = await AsyncStorage.getItem("signal_preference");
+			const signalpref = await AsyncStorage.getItem(
+				LOCALSTORAGEKEYS.SIGNAL_PREFERENCE
+			);
 			if (status == "granted") {
 				setIsNotificationEnabled(notipref === "enabled");
 

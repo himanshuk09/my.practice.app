@@ -7,11 +7,13 @@ const RoundedButton = ({
 	title,
 	disabled,
 	style,
+	loading = false,
 }: {
 	onPress: () => void;
 	title: string;
 	disabled: boolean;
 	style?: string;
+	loading?: boolean;
 }) => {
 	return (
 		<TouchableOpacity
@@ -19,7 +21,7 @@ const RoundedButton = ({
 			onPress={onPress}
 			disabled={disabled}
 		>
-			{disabled ? (
+			{loading ? (
 				<ActivityIndicator size={25} color={"white"} />
 			) : (
 				<Text className="text-white font-medium text-xl uppercase">

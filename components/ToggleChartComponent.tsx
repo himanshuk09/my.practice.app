@@ -298,7 +298,7 @@ const ToggleChartComponent = ({
 		<View
 			className="flex-1  bg-white"
 			style={{
-				marginBottom: insets.bottom,
+				marginBottom: screenName !== "signals" ? insets.bottom : 0,
 				marginTop: isLandscape ? insets.top : 0,
 				marginRight: insets.right,
 				marginLeft: insets.left,

@@ -1,7 +1,5 @@
 import api from "./api";
-
-import { cockpitChartData } from "@/constants/cockpitchart";
-import { stringChartData } from "@/constants/stringChartData";
+import { LOCALSTORAGEKEYS } from "@/utils/messages";
 import { loginPayloadProps, AuthResponse } from "@/types/apiTypes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -19,11 +17,10 @@ const loginUser = async (payload: loginPayloadProps) => {
 			throw new Error("Invalid response data from login API.");
 		}
 
-		// Store token
 		await AsyncStorage.multiSet([
-			["token", JSON.stringify(access_token)],
-			["UserId", UserId],
-			["ApkVersion", ApiApkVersion.toString()],
+			[LOCALSTORAGEKEYS.TOKEN, JSON.stringify(access_token)],
+			[LOCALSTORAGEKEYS.USERID, UserId],
+			[LOCALSTORAGEKEYS.APKVERSION, ApiApkVersion.toString()],
 		]);
 		return {
 			success: true,
@@ -45,8 +42,8 @@ const loginUser = async (payload: loginPayloadProps) => {
 export const logout = async () => {
 	try {
 		// Remove token and user data from AsyncStorage
-		await AsyncStorage.removeItem("token");
-		await AsyncStorage.removeItem("user");
+		await AsyncStorage.removeItem(LOCALSTORAGEKEYS.TOKEN);
+		await AsyncStorage.removeItem(LOCALSTORAGEKEYS.USERID);
 		return { success: true };
 	} catch (error) {
 		console.error(

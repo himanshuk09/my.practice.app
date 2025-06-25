@@ -9,6 +9,7 @@ import {
 import { st } from "@/utils/Styles";
 import { useRouter } from "expo-router";
 import Title from "@/components//ui/Title";
+import { ROUTEKEYS } from "@/utils/messages";
 import React, { useEffect, useRef } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ShimmerAccordion } from "@/components/ShimmerEffect";
@@ -137,7 +138,7 @@ const AccordionFlatlist = ({
 									startLoader();
 									setTimeout(() =>
 										router.push({
-											pathname: `/dashboard/(tabs)/loaddata/[id]`,
+											pathname: ROUTEKEYS.LOADDATA_ID,
 											params: {
 												id: encodeURIComponent(
 													JSON.stringify({

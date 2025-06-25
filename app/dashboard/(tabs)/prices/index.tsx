@@ -10,6 +10,7 @@ import { st } from "@/utils/Styles";
 import { Href } from "expo-router";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
+import { ROUTEKEYS } from "@/utils/messages";
 import NoData from "@/components/icons/NoData";
 import NoNetwork from "@/components/icons/NoNetwork";
 import { PricesItem } from "@/constants/constantData";
@@ -38,7 +39,10 @@ const Prices = () => {
 			onPress={() => {
 				dispatch(activeLoading());
 				setTimeout(() =>
-					router.push(`dashboard/prices/${item.id}` as Href)
+					router.push({
+						pathname: ROUTEKEYS.PRICES_ID,
+						params: { id: item.id },
+					})
 				);
 			}}
 		>
@@ -123,7 +127,7 @@ const Prices = () => {
 								dispatch(activeLoading());
 
 								setTimeout(() =>
-									router.push("/dashboard/prices/settings")
+									router.push(ROUTEKEYS.PRICES_SETTINGS)
 								);
 							}}
 						/>

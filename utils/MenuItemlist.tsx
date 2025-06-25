@@ -7,6 +7,7 @@ import {
 } from "@expo/vector-icons";
 import { ReactNode } from "react";
 import { Href } from "expo-router";
+import { ROUTEKEYS } from "./messages";
 
 interface MenuSubItem {
 	label: string;
@@ -21,12 +22,12 @@ export interface MenuItem {
 	icon: ReactNode;
 	height?: number;
 }
-const menuItems: MenuItem[] = [
+export const menuItems: MenuItem[] = [
 	{
 		label: "start",
 		key: "",
 		items: [],
-		route: "/dashboard",
+		route: ROUTEKEYS.DASHBOARD,
 		icon: <FontAwesome name="home" size={23} />,
 	},
 	{
@@ -34,9 +35,9 @@ const menuItems: MenuItem[] = [
 		key: "marketInfo",
 		icon: <FontAwesome name="bar-chart-o" size={20} color="#9a9b9f" />,
 		items: [
-			{ label: "prices", route: "dashboard/(tabs)/prices" },
-			{ label: "pfc", route: "dashboard/(tabs)/pfc" },
-			{ label: "signals", route: "dashboard/(tabs)/signals" },
+			{ label: "prices", route: ROUTEKEYS.PRICES },
+			{ label: "pfc", route: ROUTEKEYS.PFC },
+			{ label: "signals", route: ROUTEKEYS.SIGNALS },
 		],
 		height: Platform.OS === "web" ? 156 : 137,
 	},
@@ -44,19 +45,19 @@ const menuItems: MenuItem[] = [
 		label: "consumption",
 		key: "consumption",
 		icon: <Ionicons name="speedometer-sharp" size={24} color="#9a9b9f" />,
-		items: [{ label: "loaddata", route: "dashboard/(tabs)/loaddata" }],
+		items: [{ label: "loaddata", route: ROUTEKEYS.LOADDATA }],
 		height: Platform.OS === "web" ? 52 : 45,
 	},
 	{
 		label: "portfolio",
 		key: "",
 		items: [],
-		route: "/dashboard/(tabs)/portfolio",
+		route: ROUTEKEYS.PORTFOLIO,
 		icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
 	},
 	{
 		label: "settings",
-		route: "/dashboard/settings",
+		route: ROUTEKEYS.SETTINGS,
 		key: "",
 		items: [],
 		icon: (
@@ -68,11 +69,11 @@ const menuItems: MenuItem[] = [
 		key: "feedback",
 		icon: <MaterialIcons name="message" size={24} color="#9a9b9f" />,
 		items: [
-			{ label: "rateus", route: "dashboard/feedback/rate" },
-			{ label: "contactus", route: "dashboard/feedback/contact" },
+			{ label: "rateus", route: ROUTEKEYS.RATE },
+			{ label: "contactus", route: ROUTEKEYS.CONTACT_US },
 			{
 				label: "visitwebsite",
-				route: "http://test-eec.enexion-sys.de/Cockpit.aspx",
+				route: ROUTEKEYS.ENEXION_WEB_LINK,
 			},
 		],
 		height: Platform.OS === "web" ? 156 : 136,
@@ -82,58 +83,58 @@ const menuItems: MenuItem[] = [
 		key: "legalNotes",
 		icon: <FontAwesome6 name="scale-balanced" size={24} color="#9a9b9f" />,
 		items: [
-			{ label: "imprint", route: "dashboard/legalnotes/imprint" },
-			{ label: "termsConditions", route: "dashboard/legalnotes/tc" },
+			{ label: "imprint", route: ROUTEKEYS.IMPRINT },
+			{ label: "termsConditions", route: ROUTEKEYS.TERMS_CONDITIONS },
 			{
 				label: "privacypolicy",
-				route: "dashboard/legalnotes/privacypolicy",
+				route: ROUTEKEYS.POLICY_PRIVACY,
 			},
 		],
 		height: Platform.OS === "web" ? 160 : 138,
 	},
 ];
+
 export const dashboardMenuItems = [
 	{
 		id: 1,
 		title: "prices",
 		icon: "PRICES",
 		notificationCount: 0,
-		route: "dashboard/(tabs)/prices",
+		route: ROUTEKEYS.PRICES,
 	},
 	{
 		id: 2,
 		title: "pfc",
 		icon: "PFC",
 		notificationCount: 0,
-		route: "dashboard/(tabs)/pfc",
+		route: ROUTEKEYS.PFC,
 	},
 	{
 		id: 3,
 		title: "loaddata",
 		icon: "LOAD",
 		notificationCount: 0,
-		route: "dashboard/(tabs)/loaddata",
+		route: ROUTEKEYS.LOADDATA,
 	},
 	{
 		id: 4,
 		title: "signals",
 		icon: "SIGNALS",
 		notificationCount: 3,
-		route: "dashboard/(tabs)/signals",
+		route: ROUTEKEYS.SIGNALS,
 	},
 	{
 		id: 5,
 		title: "portfolio",
 		icon: "PORTFOLIO",
 		notificationCount: 0,
-		route: "dashboard/(tabs)/portfolio",
+		route: ROUTEKEYS.PORTFOLIO,
 	},
 	{
 		id: 6,
 		title: "settings",
 		icon: "SETTINGS",
 		notificationCount: 0,
-		route: "dashboard/settings",
+		route: ROUTEKEYS.SETTINGS,
 	},
 ];
-export { menuItems };

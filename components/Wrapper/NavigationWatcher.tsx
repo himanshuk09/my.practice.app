@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { RootState } from "@/store/store";
 import { BackHandler } from "react-native";
+import { AUTHKEYS, PERMISSIONKEYS, ROUTEKEYS } from "@/utils/messages";
 import { closeDrawer } from "@/store/drawerSlice";
 import CustomAlert from "@/components/CustomAlert";
 import { setOrientation } from "@/store/chartSlice";
@@ -33,8 +34,8 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 
 	const showAlert = async () => {
 		CustomAlert({
-			title: "exit_app",
-			description: "exit_msg",
+			title: PERMISSIONKEYS.EXIT_APP,
+			description: PERMISSIONKEYS.EXIT_MESSAGE,
 			showCancelButton: true,
 			icon: "question",
 			iconColor: "#e31837",
@@ -69,21 +70,21 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 
 			// Handle specific route cases
 			switch (currentPath) {
-				case "/dashboard":
+				case ROUTEKEYS.DASHBOARD:
 					showAlert();
 					return true;
 
-				case "/(auth)/forgot-password":
-					router.replace("/(auth)/login");
+				case ROUTEKEYS.FORGOT_PASSWORD:
+					router.replace(ROUTEKEYS.LOGIN);
 					return true;
-				case "/(auth)/login":
+				case ROUTEKEYS.LOGIN:
 					showAlert();
 					return true;
 				default:
 					// Handle dashboard paths
 					if (dashboardPaths.includes(currentPath)) {
 						dispatch(activeLoading());
-						router.replace("/dashboard");
+						router.replace(ROUTEKEYS.DASHBOARD);
 						return true;
 					}
 

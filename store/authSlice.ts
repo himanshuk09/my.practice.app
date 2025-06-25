@@ -1,3 +1,4 @@
+import { LOCALSTORAGEKEYS } from "@/utils/messages";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -22,7 +23,10 @@ const authSlicePro = createSlice({
 		},
 		setSession: (state, action: PayloadAction<boolean>) => {
 			state.session = action.payload;
-			AsyncStorage.setItem("session", action?.payload.toString());
+			AsyncStorage.setItem(
+				LOCALSTORAGEKEYS.SESSION,
+				action?.payload.toString()
+			);
 		},
 		setUser: (state, action: PayloadAction<null>) => {
 			state.user = action.payload;

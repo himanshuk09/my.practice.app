@@ -21,6 +21,7 @@ import {
 } from "@/components/chart/config";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/config";
+import { PERMISSIONKEYS } from "@/utils/messages";
 import { useDebounce } from "@/hooks/useDebounce";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -177,7 +178,7 @@ const PortfolioOverView = () => {
 		} catch (error) {
 			showToast({
 				type: "error",
-				title: "Download_Failed",
+				title: PERMISSIONKEYS.DOWNLOAD_FAILED,
 			});
 			console.error("Error downloading portfolio report:", error);
 		} finally {

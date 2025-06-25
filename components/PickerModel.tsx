@@ -14,6 +14,7 @@ import {
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { PICKERVALIDATEMESSAGE } from "@/utils/messages";
 import DateTimePickerComponents from "./DateTimePickerComponents";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
 import { englishLocale, germanyLocale, i18n } from "@/localization/config";
@@ -83,7 +84,7 @@ const PickerModel = ({
 
 		if (minInput === "" || maxInput === "") {
 			setMinMaxError(true);
-			setMinMaxErrorText("Both_min_and_max_are_required");
+			setMinMaxErrorText(PICKERVALIDATEMESSAGE.MIN_MAX.BOTH_REQUIRED);
 			return false;
 		}
 
@@ -94,13 +95,13 @@ const PickerModel = ({
 			max === undefined
 		) {
 			setMinMaxError(true);
-			setMinMaxErrorText("Values_cannot_be_empty");
+			setMinMaxErrorText(PICKERVALIDATEMESSAGE.MIN_MAX.EMPTY_VALUES);
 			return false;
 		}
 
 		if (max < min) {
 			setMinMaxError(true);
-			setMinMaxErrorText("Max_value_must_be_greater_than_min");
+			setMinMaxErrorText(PICKERVALIDATEMESSAGE.MIN_MAX.MAX_LESS_THAN_MIN);
 			return false;
 		}
 
@@ -119,13 +120,13 @@ const PickerModel = ({
 			endDate === ""
 		) {
 			setDateError(true);
-			setDateErrorText("Please_enter_valid_start_and_end_dates");
+			setDateErrorText(PICKERVALIDATEMESSAGE.DATE.INVALID_DATES);
 			return false;
 		}
 
 		if (dayjs(startDate).isAfter(dayjs(endDate))) {
 			setDateError(true);
-			setDateErrorText("The_end_date_must_be_later_than_start_date");
+			setDateErrorText(PICKERVALIDATEMESSAGE.DATE.END_BEFORE_START);
 			return false;
 		}
 

@@ -21,6 +21,7 @@ import { useIsFocused } from "@react-navigation/native";
 import FooterActions from "@/components/ui/FooterActions";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
 
 const ContactUs = () => {
 	const router = useRouter();
@@ -170,8 +171,8 @@ const ContactUs = () => {
 							});
 
 							CustomAlert({
-								title: "submit",
-								description: "message_sent_successfully",
+								title: AUTHKEYS.SUBMIT,
+								description: AUTHKEYS.MESSAGE_SENT,
 								showCancelButton: true,
 								icon: "success",
 								iconColor: "#e31837",
@@ -194,7 +195,7 @@ const ContactUs = () => {
 											textTransform: "uppercase",
 										} as TextStyle,
 										onPress: () =>
-											router.push("/dashboard"),
+											router.push(ROUTEKEYS.DASHBOARD),
 									},
 								],
 							});

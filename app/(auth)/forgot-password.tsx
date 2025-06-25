@@ -18,21 +18,21 @@ import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
 import Foundation from "@expo/vector-icons/Foundation";
 import RoundedButton from "@/components/ui/RoundedButton";
 
 const Forgotpassword = () => {
 	const router = useRouter();
-	let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const [email, setEmail] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
 	const [isEmailFocused, setIsEmailFocused] = useState<boolean>(false);
 
 	const validateEmail = (text: string): void => {
-		if (emailRegex.test(text)) {
+		if (AUTHKEYS.EMAIL_REGEX.test(text)) {
 			setErrorMessage("");
 		} else {
-			setErrorMessage("Please_enter_a_valid_email_address");
+			setErrorMessage(AUTHKEYS.INVALID_EMAIL);
 		}
 	};
 
@@ -165,7 +165,7 @@ const Forgotpassword = () => {
 										if (Keyboard.isVisible()) {
 											Keyboard.dismiss();
 										}
-										router.replace(`/(auth)/login` as Href);
+										router.replace(ROUTEKEYS.LOGIN as Href);
 									}}
 									className="mx-auto my-5  p-4"
 								>

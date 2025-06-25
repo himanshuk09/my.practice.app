@@ -4,12 +4,13 @@
 
 import { Redirect } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
+import { ROUTEKEYS } from "@/utils/messages";
 
 export default function Home() {
 	const { session } = useAuth();
 	return session ? (
-		<Redirect href="/dashboard" />
+		<Redirect href={ROUTEKEYS.DASHBOARD} />
 	) : (
-		<Redirect href="/(auth)/login" />
+		<Redirect href={ROUTEKEYS.LOGIN} />
 	);
 }

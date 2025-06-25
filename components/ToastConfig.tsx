@@ -9,6 +9,7 @@ import * as Sharing from "expo-sharing";
 import { i18n } from "@/localization/config";
 import * as FileSystem from "expo-file-system";
 import Reload from "@/components/icons/Reload";
+import { PERMISSIONKEYS } from "@/utils/messages";
 import { getBottomInset } from "@/components/global";
 import * as IntentLauncher from "expo-intent-launcher";
 import ThreeDotLoader from "@/components/icons/ThreeDotLoader";
@@ -82,8 +83,8 @@ const openCSVFile = async (fileUri: string) => {
 	} catch (error) {
 		showToast({
 			type: "error",
-			title: "Cannot_Open_CSV",
-			subtitle: "Make_sure_a_CSV_viewer_is_installed",
+			title: PERMISSIONKEYS.CANT_OPEN_CSV,
+			subtitle: PERMISSIONKEYS.INSTALLED_CSV_VIEWER,
 		});
 	}
 };
@@ -107,8 +108,8 @@ const openPNGFile = async (fileUri: string) => {
 	} catch (error) {
 		showToast({
 			type: "error",
-			title: "Cannot_Open_File",
-			subtitle: "install_a_file_viewer",
+			title: PERMISSIONKEYS.CANT_OPEN_FILE,
+			subtitle: PERMISSIONKEYS.INSTALLED_FILE_VIEWER,
 		});
 	}
 };
@@ -117,7 +118,7 @@ const shareFile = async (fileName: string, fileUri: string) => {
 	if (!(await Sharing.isAvailableAsync())) {
 		showToast({
 			type: "error",
-			title: "Sharing_isnot_available_on_your_platform",
+			title: PERMISSIONKEYS.SHARING_NOT_AVAILABLE,
 		});
 		return;
 	}
@@ -137,7 +138,7 @@ const shareFile = async (fileName: string, fileUri: string) => {
 	} catch (error: any) {
 		showToast({
 			type: "error",
-			title: "Unabled_to_shared",
+			title: PERMISSIONKEYS.UNABLED_TO_SHARED,
 		});
 	}
 };
@@ -155,8 +156,8 @@ const sharePNGFile = async (fileName: string) => {
 		console.error("Failed to share file:", error);
 		showToast({
 			type: "error",
-			title: "Failed_to_Share_PNG",
-			subtitle: "Ensure_your_device_supports_sharing",
+			title: PERMISSIONKEYS.FAILED_TO_SHARED_PNG,
+			subtitle: PERMISSIONKEYS.ENSURE_SHARING,
 		});
 	}
 };

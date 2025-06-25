@@ -13,7 +13,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { closeDrawer, toggleDrawer } from "@/store/drawerSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const Drawer = ({ drawerWidth = 280 }: { drawerWidth: string | number }) => {
+const Drawer = ({
+	drawerWidth = 280,
+}: {
+	drawerWidth: string | number | any;
+}) => {
 	const dispatch = useDispatch();
 	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 	const isDrawerOpen = useSelector(
@@ -142,7 +146,6 @@ const styles = StyleSheet.create({
 	},
 	webDrawer: {
 		position: "fixed",
-		height: "100vh",
 		boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
 		willChange: "transform",
 	},

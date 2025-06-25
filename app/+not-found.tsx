@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { ROUTEKEYS } from "@/utils/messages";
 import { View, Text, Pressable, StyleSheet, Image } from "react-native";
 
 export default function NotFoundScreen() {
@@ -20,7 +21,7 @@ export default function NotFoundScreen() {
 					The page you’re looking for doesn’t exist or has been moved.
 				</Text>
 
-				<Link href="/" asChild>
+				<Link href={ROUTEKEYS.INITIAL} asChild>
 					<Pressable style={styles.button}>
 						<Ionicons
 							name="home-outline"

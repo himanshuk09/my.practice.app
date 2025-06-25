@@ -10,21 +10,24 @@ import {
 import { st } from "@/utils/Styles";
 import { useDispatch } from "react-redux";
 import Title from "@/components//ui/Title";
+import { ROUTEKEYS } from "@/utils/messages";
 import { FontAwesome } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { activeLoading } from "@/store/navigationSlice";
 import { Href, Router, usePathname, useRouter } from "expo-router";
 import { ShimmerFlatListBlock } from "@/components/ShimmerEffect";
 import React, { memo, useCallback, useEffect, useRef } from "react";
+
 interface FlatListBlockProps<T = any> {
 	title: string;
 	items: T[];
 	enableAutoScroll?: boolean;
-	height?: number | string;
+	height?: number | string | any;
 	keyExtractor?: (item: T, index: number | string) => string;
 	NavigateTo?: string | Href;
 	renderType: "pfc" | "portfolio" | "signal";
 }
+
 const FlatListBlock = <T,>({
 	title,
 	items,
@@ -62,21 +65,21 @@ const FlatListBlock = <T,>({
 				setTimeout(() => {
 					if (renderType === "portfolio") {
 						router.push({
-							pathname: `/dashboard/(tabs)/portfolio/[id]`,
+							pathname: ROUTEKEYS.PORTFOLIO_ID,
 							params: {
 								id: encodeURIComponent(JSON.stringify(item)),
 							},
 						});
 					} else if (renderType === "pfc") {
 						router.push({
-							pathname: `/dashboard/(tabs)/pfc/[id]`,
+							pathname: ROUTEKEYS.PFC_ID,
 							params: {
 								id: 1,
 							},
 						});
 					} else {
 						router.push({
-							pathname: `/dashboard/(tabs)/signals/[id]`,
+							pathname: ROUTEKEYS.SIGNALS_ID,
 							params: {
 								id: 1,
 							},

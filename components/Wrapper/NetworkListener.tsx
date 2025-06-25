@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import Toast from "react-native-toast-message";
+import { NETWORKKEYS } from "@/utils/messages";
 import { showToast } from "@/components/ToastConfig";
 import NetInfo from "@react-native-community/netinfo";
 import { setNetworkStatus } from "@/store/networkSlice";
@@ -25,8 +26,8 @@ const NetworkListener = () => {
 				if (!isConnected) {
 					showToast({
 						type: "error",
-						title: "No_Internet_Connection",
-						subtitle: "Waiting_for_reconnection",
+						title: NETWORKKEYS.NO_INTERNET,
+						subtitle: NETWORKKEYS.WAITING_FOR_CONNECTION,
 						swipeable: false,
 						autoHide: false,
 						props: { network: true, onPress: retryNetworkCheck },

@@ -12,7 +12,6 @@ import {
 	TouchableOpacity,
 	KeyboardAvoidingView,
 } from "react-native";
-import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import Logo from "@/components/svg/Logo";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,11 +19,13 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
+import { Href, useRouter } from "expo-router";
 import { loginUser } from "@/services/auth.service";
 import { showToast } from "@/components/ToastConfig";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RoundedButton from "@/components/ui/RoundedButton";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AUTHKEYS, NETWORKKEYS, ROUTEKEYS } from "@/utils/messages";
 
 const SignIn: React.FC = () => {
 	const router = useRouter();
@@ -42,23 +43,22 @@ const SignIn: React.FC = () => {
 
 	const validateInput = (userName: string, password: string): string => {
 		if (userName.trim() === "" && password.trim() === "") {
-			return "Please_enter_your_username_and_password";
+			return AUTHKEYS.MISSING_USERNAME_AND_PASSWORD;
 		}
 		if (userName.trim() === "") {
-			return "Please_enter_your_username";
+			return AUTHKEYS.MISSING_USERNAME;
 		}
 		if (password.trim() === "") {
-			return "Please_enter_your_password";
+			return AUTHKEYS.MISSING_PASSWORD;
 		}
 		if (!validateUserName(userName)) {
-			return "Username_should_not_contain_special_characters";
+			return AUTHKEYS.INVALID_USERNAME;
 		}
 		return ""; // No error
 	};
 
 	const validateUserName = (username: string): boolean => {
-		const regex = /^[a-zA-Z0-9]+$/;
-		return regex.test(username);
+		return AUTHKEYS.USERNAME_REGEX.test(username);
 	};
 
 	const handleSubmit = async (): Promise<void> => {
@@ -73,7 +73,7 @@ const SignIn: React.FC = () => {
 			Keyboard.dismiss();
 			setLoading(true);
 			if (!isOnline) {
-				setErrorMessage("No_Internet_Connection");
+				setErrorMessage(NETWORKKEYS.NO_INTERNET);
 				setLoading(false);
 				return;
 			}
@@ -89,25 +89,23 @@ const SignIn: React.FC = () => {
 				setTimeout(() => {
 					showToast({
 						type: "success",
-						title: "LoggedIn_Successful",
+						title: AUTHKEYS.SUCCESS,
 					});
 				}, 1000);
 			} else {
-				setErrorMessage("Login_failed_Please_check_your_credentials");
+				setErrorMessage(AUTHKEYS.FAILURE);
 			}
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				setErrorMessage(
-					err?.message || "An_error_occurred_Please_try_again"
-				);
+				setErrorMessage(err?.message || AUTHKEYS.ERROR);
 				setTimeout(() => {
 					showToast({
 						type: "error",
-						title: "Login_failed_Please_try_again",
+						title: AUTHKEYS.ERROR_TITLE,
 					});
 				}, 1000);
 			} else {
-				setErrorMessage("An unknown error occurred. Please try again.");
+				setErrorMessage(AUTHKEYS.UNKNOWN_ERROR);
 			}
 		} finally {
 			setLoading(false);
@@ -335,7 +333,12 @@ const SignIn: React.FC = () => {
 								<RoundedButton
 									title="login"
 									onPress={handleSubmit}
-									disabled={loading}
+									loading={loading}
+									disabled={
+										loading ||
+										(userName.trim() === "" &&
+											password.trim() === "")
+									}
 								/>
 								{/** Forget password screen redirector */}
 								<Pressable
@@ -344,7 +347,7 @@ const SignIn: React.FC = () => {
 											Keyboard.dismiss();
 										}
 										router.replace(
-											`/(auth)/forgot-password`
+											ROUTEKEYS.FORGOT_PASSWORD as Href
 										);
 									}}
 									className="mx-auto my-5  p-4"

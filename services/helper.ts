@@ -1,3 +1,4 @@
+import { NETWORKKEYS } from "@/utils/messages";
 import { showToast } from "@/components/ToastConfig";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -7,8 +8,8 @@ export const checkInternetConnection = async (): Promise<boolean> => {
 		if (!netInfo.isConnected) {
 			showToast({
 				type: "error",
-				title: "No_Internet_Connection",
-				subtitle: "Waiting_for_reconnection",
+				title: NETWORKKEYS.NO_INTERNET,
+				subtitle: NETWORKKEYS.WAITING_FOR_CONNECTION,
 				autoHide: false,
 			});
 			return false;

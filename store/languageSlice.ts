@@ -1,4 +1,5 @@
 import { i18n } from "@/localization/config";
+import { LOCALSTORAGEKEYS } from "@/utils/messages";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -15,7 +16,7 @@ const languageSlice = createSlice({
 	initialState,
 	reducers: {
 		updateLocale(state, action: PayloadAction<string>) {
-			AsyncStorage.setItem("culture", action.payload);
+			AsyncStorage.setItem(LOCALSTORAGEKEYS.CULTURE, action.payload);
 			state.locale = action.payload;
 			i18n.locale = action.payload; // Update the i18n locale
 		},

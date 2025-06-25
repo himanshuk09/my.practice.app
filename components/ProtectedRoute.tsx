@@ -1,5 +1,6 @@
 import { Redirect } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
+import { LOCALSTORAGEKEYS } from "@/utils/messages";
 import React, { ReactNode, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -12,7 +13,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
 	useEffect(() => {
 		const checkAuth = async () => {
-			const storedToken = await AsyncStorage.getItem("token");
+			const storedToken = await AsyncStorage.getItem(
+				LOCALSTORAGEKEYS.TOKEN
+			);
 
 			if (storedToken) {
 				if (!session) {

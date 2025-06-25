@@ -5,7 +5,7 @@ import { showToast } from "@/components/ToastConfig";
 import dayjs from "dayjs";
 import { getLocale } from "@/components/global";
 import { englishLocale } from "@/localization/config";
-const DIRECTORY_URI_KEY = "SAVED_DIRECTORY_URI";
+import { LOCALSTORAGEKEYS, PERMISSIONKEYS } from "@/utils/messages";
 
 // -------------------- Helpers ------------------------
 
@@ -15,17 +15,22 @@ const requestWritableDirectory = async (): Promise<string | null> => {
 	if (!permissions.granted) {
 		showToast({
 			type: "error",
-			title: "Permission_Denied",
-			subtitle: "Storage_access_not_granted",
+			title: PERMISSIONKEYS.PERMISSION_DENIED,
+			subtitle: PERMISSIONKEYS.PERMISSION_REQUIRED,
 		});
 		return null;
 	}
-	await AsyncStorage.setItem(DIRECTORY_URI_KEY, permissions.directoryUri);
+	await AsyncStorage.setItem(
+		LOCALSTORAGEKEYS.DIRECTORY_URI_KEY,
+		permissions.directoryUri
+	);
 	return permissions.directoryUri;
 };
 
 const getOrRequestDirectory = async (): Promise<string | null> => {
-	let savedDirectoryUri = await AsyncStorage.getItem(DIRECTORY_URI_KEY);
+	let savedDirectoryUri = await AsyncStorage.getItem(
+		LOCALSTORAGEKEYS.DIRECTORY_URI_KEY
+	);
 	if (savedDirectoryUri) {
 		try {
 			await FileSystem.StorageAccessFramework.createFileAsync(
@@ -36,7 +41,7 @@ const getOrRequestDirectory = async (): Promise<string | null> => {
 			return savedDirectoryUri;
 		} catch {
 			console.warn("Saved directory not writable, requesting new one...");
-			await AsyncStorage.removeItem(DIRECTORY_URI_KEY);
+			await AsyncStorage.removeItem(LOCALSTORAGEKEYS.DIRECTORY_URI_KEY);
 		}
 	}
 	return await requestWritableDirectory();
@@ -61,8 +66,8 @@ const saveToFile = async (
 
 		showToast({
 			type: "download",
-			title: "File_Saved",
-			subtitle: "Tap_to_open",
+			title: PERMISSIONKEYS.FILE_SAVED,
+			subtitle: PERMISSIONKEYS.TAP_TO_OPEN,
 			props: {
 				fileUri,
 				fileName,
@@ -72,8 +77,8 @@ const saveToFile = async (
 	} catch (error) {
 		showToast({
 			type: "error",
-			title: "Save_Failed",
-			subtitle: "An_error_occurred_while_saving",
+			title: PERMISSIONKEYS.SAVED_FAILED,
+			subtitle: PERMISSIONKEYS.ERROR_ON_SAVING,
 		});
 	}
 };

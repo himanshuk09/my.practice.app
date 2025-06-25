@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { setSession } from "@/store/authSlice";
 import { updateLocale } from "@/store/languageSlice";
 import { englishLocale } from "@/localization/config";
+import { LOCALSTORAGEKEYS } from "@/utils/messages";
 
 const AuthInitializeWrapper = ({ children }: { children: React.ReactNode }) => {
 	const [isReady, setIsReady] = useState(false);
@@ -14,9 +15,15 @@ const AuthInitializeWrapper = ({ children }: { children: React.ReactNode }) => {
 		const initAuth = async () => {
 			try {
 				// Assume "token" and "session" are stored in AsyncStorage
-				const token = await AsyncStorage.getItem("token");
-				const session = await AsyncStorage.getItem("session");
-				const culture = await AsyncStorage.getItem("culture");
+				const token = await AsyncStorage.getItem(
+					LOCALSTORAGEKEYS.TOKEN
+				);
+				const session = await AsyncStorage.getItem(
+					LOCALSTORAGEKEYS.SESSION
+				);
+				const culture = await AsyncStorage.getItem(
+					LOCALSTORAGEKEYS.CULTURE
+				);
 
 				if (token && session) {
 					dispatch(setSession(true));

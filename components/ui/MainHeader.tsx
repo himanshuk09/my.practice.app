@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Logo from "@/components/svg/Logo";
 import { useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
+import { ROUTEKEYS } from "@/utils/messages";
 import { toggleDrawer } from "@/store/drawerSlice";
 import { useRouter, useSegments } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -71,7 +72,7 @@ const Header = React.memo(() => {
 
 						// Navigate after a slight delay, ensuring loading starts first
 						setTimeout(() => {
-							router.push("/dashboard");
+							router.push(ROUTEKEYS.DASHBOARD);
 							setHeaderPress(false);
 						});
 					}}

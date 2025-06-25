@@ -10,6 +10,7 @@ import { st } from "@/utils/Styles";
 import { useRouter } from "expo-router";
 import { Platform } from "react-native";
 import { useDispatch } from "react-redux";
+import { ROUTEKEYS } from "@/utils/messages";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
 import { activeLoading } from "@/store/navigationSlice";
@@ -109,7 +110,7 @@ const ShimmerPricesHeader = () => {
 						dispatch(activeLoading());
 
 						setTimeout(() =>
-							router.push("/dashboard/prices/settings")
+							router.push(ROUTEKEYS.PRICES_SETTINGS)
 						);
 					}}
 				/>
@@ -256,7 +257,11 @@ const ShimmerListCard = () => {
 		</TouchableOpacity>
 	);
 };
-const ShimmerFlatListBlock = ({ height }: { height: number | string }) => {
+const ShimmerFlatListBlock = ({
+	height,
+}: {
+	height: number | string | any;
+}) => {
 	return (
 		<View
 			style={{

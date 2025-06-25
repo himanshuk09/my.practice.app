@@ -1,5 +1,6 @@
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
+import { AUTHKEYS, NETWORKKEYS } from "@/utils/messages";
 import { useCallback, useEffect, useState } from "react";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
 
@@ -43,7 +44,7 @@ export function useNetworkAwareApiRequest<T = any, P = any>(
 	const fetchApiData = useCallback(async () => {
 		// If offline and no data, show error and exit
 		if (!isOnline && !data) {
-			setError("No internet connection");
+			setError(NETWORKKEYS.NO_INTERNET);
 			return;
 		}
 
@@ -65,7 +66,7 @@ export function useNetworkAwareApiRequest<T = any, P = any>(
 				setData(response);
 			}
 		} catch (err: any) {
-			const errorMsg = err?.message || "Unknown error";
+			const errorMsg = err?.message || AUTHKEYS.UNKNOWN_ERROR;
 			console.error("API Request Error:", errorMsg);
 			setError(errorMsg);
 		} finally {

@@ -400,7 +400,7 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                         threshold: 0,
                     },
                     offsetX: 0,
-                    offsetY: 20,
+                    offsetY: 5,
                     animations: {
                         enabled: true,
                         easing: "easeinout",
@@ -903,7 +903,7 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                         breakpoint: 480,
                         options: {
                             chart: {
-                                height: "95%",
+                                height: "98%",
                                 // background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
                             },
                         },
@@ -1011,7 +1011,7 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                             breakpoint: 480,
                             options: {
                                 chart: {
-                                    height: "95%",
+                                    height: "98%",
                                     // background:" url('https://www05.enexion-sys.de/img/dotnetchart/default_large_chart.png') no-repeat center center / 500px 600px",
                                 },
                             },

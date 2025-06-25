@@ -20,8 +20,9 @@ import { activeLoading } from "@/store/navigationSlice";
 import { Href, useRouter, useSegments } from "expo-router";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import * as ScreenOrientation from "expo-screen-orientation";
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LOCALSTORAGEKEYS, AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 
 // Helper Components
 const Submenu = memo(
@@ -91,12 +92,12 @@ const CustomDrawer = memo(() => {
 	const clearStorageAndNavigate = async () => {
 		try {
 			await AsyncStorage.multiRemove([
-				"session",
-				"token",
-				"UserId",
-				"ApkVersion",
+				LOCALSTORAGEKEYS.SESSION,
+				LOCALSTORAGEKEYS.TOKEN,
+				LOCALSTORAGEKEYS.USERID,
+				LOCALSTORAGEKEYS.APKVERSION,
 			]);
-			router.push("/login");
+			router.push(ROUTEKEYS.LOGIN);
 			setSessionValue(false);
 		} catch (error) {
 			console.error("Error clearing AsyncStorage or navigating:", error);
@@ -106,14 +107,14 @@ const CustomDrawer = memo(() => {
 	const handleLogout = async () => {
 		dispatch(closeDrawer());
 		if (typeof window !== "undefined" && Platform.OS === "web") {
-			const isConfirmed = window.confirm(i18n.t("logout_message"));
+			const isConfirmed = window.confirm(i18n.t(AUTHKEYS.LOGOUT_MESSAGE));
 			if (isConfirmed) {
 				clearStorageAndNavigate();
 			}
 		} else {
 			CustomAlert({
-				title: "logout_title",
-				description: "logout_message",
+				title: AUTHKEYS.LOGOUT_TITLE,
+				description: AUTHKEYS.LOGOUT_MESSAGE,
 				showCancelButton: true,
 				icon: "question",
 				iconColor: "#e31837",

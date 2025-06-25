@@ -2,6 +2,7 @@ import { RootState } from "@/store/store";
 import WebView from "react-native-webview";
 import ViewShot from "react-native-view-shot";
 import * as FileSystem from "expo-file-system";
+import { PERMISSIONKEYS } from "@/utils/messages";
 import * as MediaLibrary from "expo-media-library";
 import { MaterialIcons } from "@expo/vector-icons";
 import CustomAlert from "@/components/CustomAlert";
@@ -87,10 +88,10 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
 			if (status !== "granted") {
 				CustomAlert({
-					title: "Permission_Required",
-					description: "Please_enable_permission_from_settings",
-					cancelText: "Ask_Me_Later",
-					confirmText: "Open_Settings",
+					title: PERMISSIONKEYS.PERMISSION_REQUIRED,
+					description: PERMISSIONKEYS.ENABLE_PERMISSION,
+					cancelText: PERMISSIONKEYS.ASK_ME_LATER,
+					confirmText: PERMISSIONKEYS.OPEN_SETTINGS,
 					onConfirm: () => Linking.openSettings(),
 				});
 				return;
@@ -118,15 +119,15 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 			await MediaLibrary.createAlbumAsync("cockpit", asset, false);
 			showToast({
 				type: "download",
-				title: "Chart_saved",
-				subtitle: "Tap_to_open",
+				title: PERMISSIONKEYS.CHART_SAVED,
+				subtitle: PERMISSIONKEYS.TAP_TO_OPEN,
 				props: { fileUri: fileUri, fileName: fileUri, type: "png" }, // Pass the correct URI
 			});
 		} catch (error) {
 			showToast({
 				type: "error",
-				title: "Permission_Denied",
-				subtitle: "Please_enable_permission_from_settings",
+				title: PERMISSIONKEYS.PERMISSION_DENIED,
+				subtitle: PERMISSIONKEYS.ENABLE_PERMISSION,
 			});
 		}
 	}, []);
