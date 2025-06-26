@@ -21,7 +21,7 @@ import {
 } from "@/components/chart/config";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/config";
-import { PERMISSIONKEYS } from "@/utils/messages";
+import { NETWORKKEYS, PERMISSIONKEYS } from "@/utils/messages";
 import { useDebounce } from "@/hooks/useDebounce";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -71,7 +71,6 @@ const PortfolioOverView = () => {
 		try {
 			return rawId ? JSON.parse(decodeURIComponent(rawId)) : {};
 		} catch (err) {
-			console.error("Failed to parse portfolio ID from route:", err);
 			return {};
 		}
 	}, [rawId]);
@@ -108,7 +107,7 @@ const PortfolioOverView = () => {
 		enabled: isEnabledToCallDeals,
 		autoFetch: isEnabledToCallDeals,
 		showGlobalLoader: false,
-		// deps: [modalVisible],
+		// deps: [],
 	});
 
 	const onMessage = (event: WebViewMessageEvent) => {
@@ -129,8 +128,6 @@ const PortfolioOverView = () => {
 				setShowPieChart(true);
 			}, 500);
 		}
-
-		//console.log(action, values);
 	};
 
 	const updateLocale = () => {
@@ -180,7 +177,6 @@ const PortfolioOverView = () => {
 				type: "error",
 				title: PERMISSIONKEYS.DOWNLOAD_FAILED,
 			});
-			console.error("Error downloading portfolio report:", error);
 		} finally {
 			Toast.hide(toastId);
 		}
@@ -242,7 +238,7 @@ const PortfolioOverView = () => {
 	/**
 	 * Return
 	 */
-	if (portfolioError === "No internet connection") {
+	if (portfolioError === NETWORKKEYS.NO_INTERNET) {
 		return <NoNetwork />;
 	}
 

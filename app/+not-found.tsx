@@ -5,13 +5,16 @@
 import React from "react";
 import { Link, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { ROUTEKEYS } from "@/utils/messages";
+import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
 import { View, Text, Pressable, StyleSheet, Image } from "react-native";
+import { i18n } from "@/localization/config";
 
 export default function NotFoundScreen() {
 	return (
 		<React.Fragment>
-			<Stack.Screen options={{ title: "Page Not Found" }} />
+			<Stack.Screen
+				options={{ title: i18n.t(AUTHKEYS.NOT_FOUND_ROUTES) }}
+			/>
 			<View style={styles.container}>
 				{/* Replace the require path with your image asset if necessary */}
 				<Image

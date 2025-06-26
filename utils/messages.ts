@@ -12,20 +12,31 @@ export const AUTHKEYS = {
 	FAILURE: "Login_failed_Please_check_your_credentials",
 	ERROR: "An_error_occurred_Please_try_again",
 	ERROR_TITLE: "Login_failed_Please_try_again",
-	UNKNOWN_ERROR: "An unknown error occurred. Please try again.",
+	UNKNOWN_ERROR: "An_unknown_error_occurred_Please_try_again",
 	LOGOUT_TITLE: "logout_title",
 	LOGOUT_MESSAGE: "logout_message",
 	MESSAGE_SENT: "message_sent_successfully",
 	SUCCESS_TEXT: "success",
 	ERROR_TEXT: "Error",
-	SOMETHING_WORNG: "Something went wrong",
+	SOMETHING_WORNG: "Something_went_wrong",
 	SUBMIT: "submit",
 	SUBMIT_FEEDBACK: "thank_you_for_your_feedback",
+	INVALID_RESPONSE: "Invalid_response_data_from_API",
+	SERVICE_UNAVAILABLE:
+		"Service_is_currently_unavailable_Please_try_again_later",
+	TECHNICAL_ISSUES:
+		"Were_experiencing_technical_issues_Please_try_again_later",
+	SESSION_EXPIRED: "Your_session_has_expired_Please_log_in_again",
+	PERMISSION_NOT_GRANTED: "You_dont_have_permission_to_perform_this_action",
+	REQUEST_TIMEOUT: "The_request_timed_out_Please_try_again",
+	TOO_MANY_REQUEST: "Too_many_requests_Please_wait_a_moment_and_try_again",
+	NOT_FOUND_ROUTES: "Page_Not_Found",
 } as const;
 
 export const NETWORKKEYS = {
 	NO_INTERNET: "No_Internet_Connection",
 	WAITING_FOR_CONNECTION: "Waiting_for_reconnection",
+	NETWORK_ERROR: "Network_error_Please_check_your_internet_connection",
 } as const;
 
 export const UPDATEKEYS = {
@@ -104,7 +115,7 @@ export const ROUTES: Href[] = [
 	"/dashboard/legalnotes/privacypolicy",
 	"/dashboard/legalnotes/termscondition",
 	"/dashboard/(tabs)/prices/settings",
-	"/",
+	"/_sitemap",
 ];
 
 export const ROUTEKEYS = {
@@ -130,4 +141,5 @@ export const ROUTEKEYS = {
 	POLICY_PRIVACY: "/dashboard/legalnotes/privacypolicy",
 	TERMS_CONDITIONS: "/dashboard/legalnotes/termscondition",
 	ENEXION_WEB_LINK: "http://test-eec.enexion-sys.de/Cockpit.aspx",
+	SITE_MAP: "/_sitemap",
 } as const satisfies Record<string, Href>;

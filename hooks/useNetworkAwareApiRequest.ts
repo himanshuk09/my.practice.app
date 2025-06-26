@@ -24,6 +24,7 @@ export function useNetworkAwareApiRequest<T = any, P = any>(
 	apiFunction: (params?: P) => Promise<T>,
 	options: UseNetworkAwareApiRequestOptions<P> = {}
 ): UseNetworkAwareApiRequestResult<T> {
+	//..
 	const dispatch = useDispatch();
 	const isOnline = useSelector(
 		(state: RootState) => state.network.isConnected

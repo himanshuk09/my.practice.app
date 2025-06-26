@@ -21,24 +21,8 @@ import {
 	i18n,
 } from "@/localization/config";
 import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
-type DateTimeRange = {
-	startDate?: DateType | any;
-	endDate?: DateType | any;
-};
-type DatePickerViews = "day" | "month" | "year" | "time";
+import { DateTimePickerComponentsProps } from "@/types/date-time-picker.type";
 
-type DateTimePickerComponentsProps = {
-	title?: string;
-	timePicker?: boolean;
-	pickerMode?: ModeType;
-	open?: boolean;
-	setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-	setSingleDate?: (date: DateType) => void;
-	defaultDate?: DateType;
-	initialView?: DatePickerViews;
-	range?: DateTimeRange;
-	setRange?: (range: DateTimeRange) => void;
-};
 const DateTimePickerComponents = ({
 	title = "Select",
 	timePicker = true,
@@ -74,6 +58,7 @@ const DateTimePickerComponents = ({
 		},
 		[mode]
 	);
+
 	const isEng = locale === englishLocale;
 	const singleDateFormate = isEng
 		? DATE_FORMAT_PATTERNS.DATE_TIME_SLASHED_DD_MM_YYYY_HH_MM
@@ -83,6 +68,7 @@ const DateTimePickerComponents = ({
 		: DATE_FORMAT_PATTERNS.DATE_DOTTED_DD_MM_YYYY;
 	const multipleDateFormate =
 		DATE_FORMAT_PATTERNS.DATE_MONTH_NAME_MMM_DD_YYYY;
+
 	if (!open) return null;
 	return (
 		<Pressable

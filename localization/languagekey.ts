@@ -80,6 +80,7 @@ export const TranslationKeys: Translations = {
 		email: "Email",
 		message: "Message",
 		poor: "Poor",
+		Page_Not_Found: "Page Not Found",
 		below_average: "Below Average",
 		fair: "Fair",
 		almost_average: "Almost Average",
@@ -181,7 +182,7 @@ export const TranslationKeys: Translations = {
 		Ensure_your_device_supports_sharing:
 			"Ensure your device supports sharing",
 		LoggedIn_Successful: "LoggedIn Successful",
-		File_Downloading: "File Downloading",
+		File_Downloading: "Downloading File",
 		Download_Failed: "Download Failed!",
 		Open_Settings: "Open Settings",
 		Ask_Me_Later: "Ask Me Later",
@@ -204,6 +205,24 @@ export const TranslationKeys: Translations = {
 		Tap_to_roload_or_restart_the_app: "Tap to roload or restart the app",
 		Update_Failed: "Update_Failed",
 		Please_try_again_later: "Please try again later.",
+		An_unknown_error_occurred_Please_try_again:
+			"An unknown error occurred. Please try again.",
+		Invalid_response_data_from_API: "Invalid response data from API.",
+		Service_is_currently_unavailable_Please_try_again_later:
+			"Service is currently unavailable. Please try again later",
+		Were_experiencing_technical_issues_Please_try_again_later:
+			"We're experiencing technical issues. Please try again later.",
+		Your_session_has_expired_Please_log_in_again:
+			"Your session has expired. Please log in again.",
+		You_dont_have_permission_to_perform_this_action:
+			"You don’t have permission to perform this action.",
+		The_request_timed_out_Please_try_again:
+			"The request timed out. Please try again.",
+		Too_many_requests_Please_wait_a_moment_and_try_again:
+			"Too many requests. Please wait a moment and try again.",
+		Network_error_Please_check_your_internet_connection:
+			"Network error. Please check your internet connection.",
+		Something_went_wrong: "Something went wrong",
 		imprints: {
 			company: "enexion GmbH",
 			address1: "Am Kronberger Hang 2A,",
@@ -409,6 +428,7 @@ export const TranslationKeys: Translations = {
 		email: "E-Mail",
 		message: "Ihre Nachricht",
 		poor: "Schlecht",
+		Page_Not_Found: "Seite nicht gefunden",
 		below_average: "Unterdurchschnittlich",
 		fair: "Fair",
 		almost_average: "Beinahe Durchschnittlich",
@@ -538,6 +558,24 @@ export const TranslationKeys: Translations = {
 			"Tippen, um die App neu zu laden oder neu zu starten",
 		Update_Failed: "Update_Failed",
 		Please_try_again_later: "Bitte versuchen Sie es später erneut.",
+		An_unknown_error_occurred_Please_try_again:
+			"Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+		Invalid_response_data_from_API: "Ungültige Antwortdaten von der API.",
+		Service_is_currently_unavailable_Please_try_again_later:
+			"Der Dienst ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.",
+		Were_experiencing_technical_issues_Please_try_again_later:
+			"Wir haben technische Probleme. Bitte versuchen Sie es später noch einmal.",
+		Your_session_has_expired_Please_log_in_again:
+			"Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+		You_dont_have_permission_to_perform_this_action:
+			"Sie haben keine Berechtigung, diese Aktion auszuführen.",
+		The_request_timed_out_Please_try_again:
+			"Die Anfrage ist abgelaufen. Bitte versuchen Sie es erneut.",
+		Too_many_requests_Please_wait_a_moment_and_try_again:
+			"Zu viele Anfragen. Bitte warten Sie einen Moment und versuchen Sie es erneut.",
+		Network_error_Please_check_your_internet_connection:
+			"Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.",
+		Something_went_wrong: "Etwas ist schiefgelaufen",
 		imprints: {
 			company: "enexion GmbH",
 			address1: "Am Kronberger Hang 2A, ",

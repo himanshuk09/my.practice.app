@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { AppState, Platform } from "react-native";
 
-const RootLayout = () => {
+const RootLayout: React.FC = () => {
 	const [appState, setAppState] = useState(AppState.currentState);
 	const { session } = useAuth();
 

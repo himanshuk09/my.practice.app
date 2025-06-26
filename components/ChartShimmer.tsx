@@ -15,6 +15,7 @@ interface ShimmerPlaceholderProps {
 	style?: StyleProp<ViewStyle>;
 }
 
+//helper component
 const ShimmerPlaceholder: React.FC<ShimmerPlaceholderProps> = ({ style }) => {
 	const shimmerAnim = useRef(new Animated.Value(-1)).current;
 
@@ -44,33 +45,7 @@ const ShimmerPlaceholder: React.FC<ShimmerPlaceholderProps> = ({ style }) => {
 		</View>
 	);
 };
-const ChartShimmer = () => {
-	return (
-		<View style={[styles.container]}>
-			{/* Header */}
-			<View style={[styles.header]}>
-				<View className="flex-col">
-					<ShimmerPlaceholder style={styles.title} />
-					<ShimmerPlaceholder style={styles.title} />
-				</View>
-				<ShimmerPlaceholder style={styles.switch} />
-			</View>
 
-			{/* Tabs */}
-			<View style={styles.tabs}>
-				{["Day", "Week", "Month", "Quarter", "Year"].map((_, index) => (
-					<ShimmerPlaceholder key={index} style={styles.tab} />
-				))}
-			</View>
-
-			{/* Graph Placeholder */}
-			<ShimmerPlaceholder style={styles.graph} />
-
-			{/* Button */}
-			<ShimmerPlaceholder style={[styles.button]} />
-		</View>
-	);
-};
 const PortFolioChartShimmer = () => {
 	return (
 		<View
@@ -91,6 +66,7 @@ const PortFolioChartShimmer = () => {
 		</View>
 	);
 };
+
 const ChartGraphShimmer = () => {
 	return (
 		<View
@@ -105,6 +81,7 @@ const ChartGraphShimmer = () => {
 		</View>
 	);
 };
+
 const styles = StyleSheet.create({
 	container: { flex: 1, padding: 16, backgroundColor: "#fff", margin: 1 },
 	header: {
@@ -158,4 +135,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export { ChartShimmer, PortFolioChartShimmer, ChartGraphShimmer };
+export { PortFolioChartShimmer, ChartGraphShimmer };

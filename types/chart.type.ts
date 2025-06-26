@@ -1,7 +1,66 @@
 import WebView from "react-native-webview";
-import { DateType } from "react-native-ui-datepicker";
+
 /**
- * ChartComponentProps
+ * Togglechart Props
+ */
+export type tabsType =
+	| "Day"
+	| "Week"
+	| "Month"
+	| "Quarter"
+	| "Year"
+	| "Year_3"
+	| "";
+
+export type ScreenName =
+	| "prices"
+	| "pfc"
+	| "signals"
+	| "loaddata"
+	| "portfolio";
+
+export type graphPriceUnit = [
+	" €/MWh",
+	" €/MWh",
+	" €/MWh",
+	" US$/ton",
+	" €/ton",
+	" TL/MWh",
+];
+export type currencySymbol = [" €", " €", " €", " US$", " €", " TL"];
+
+export type timeFrameText = [
+	"Day",
+	"Week",
+	"Month",
+	"Quarter",
+	"Year",
+	"ThreeYear",
+	"Custom",
+];
+
+export type TimeFrameString =
+	| "day"
+	| "Week"
+	| "Month"
+	| "Quarter"
+	| "Year"
+	| "ThreeYear"
+	| "Custom";
+
+export type TimeFrame = TimeFrameString | 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+export const getTabsForScreen = (screen: string): tabsType[] => {
+	switch (screen) {
+		case "pfc":
+			return ["Week", "Month", "Quarter", "Year", "Year_3"];
+		default:
+			return ["Day", "Week", "Month", "Quarter", "Year"];
+	}
+};
+
+/**
+ * ChartComponent  Props
  */
 
 export type ChartComponentProps = {
@@ -30,23 +89,8 @@ export type ChartComponentProps = {
 };
 
 /**
- * Togglechart Props
+ * Toggle ChartComponent  Props
  */
-export type tabsType =
-	| "Day"
-	| "Week"
-	| "Month"
-	| "Quarter"
-	| "Year"
-	| "Year_3"
-	| "";
-
-export type ScreenName =
-	| "prices"
-	| "pfc"
-	| "signals"
-	| "loaddata"
-	| "portfolio";
 
 export type ToggleChartComponentProps = {
 	screenName?: ScreenName;
@@ -54,29 +98,3 @@ export type ToggleChartComponentProps = {
 	yaxisunit?: string;
 	setActiveTabForFileName?: React.Dispatch<React.SetStateAction<tabsType>>;
 };
-
-export const getTabsForScreen = (screen: string): tabsType[] => {
-	switch (screen) {
-		case "pfc":
-			return ["Week", "Month", "Quarter", "Year", "Year_3"];
-		default:
-			return ["Day", "Week", "Month", "Quarter", "Year"];
-	}
-};
-
-///
-export type initialViewProps = "day" | "month" | "year" | "time";
-export type DateTimeRange = {
-	startDate?: DateType | string;
-	endDate?: DateType | string;
-};
-export interface PickerModelProps {
-	screenName?: ScreenName;
-	maxMinValues?: any;
-	setMaxMinValues?: any;
-	modalVisible?: boolean;
-	setModalVisible?: React.Dispatch<React.SetStateAction<boolean>>;
-	handleRangeDataFilter?: any;
-	range?: DateTimeRange;
-	setRange: (range: DateTimeRange | any) => void;
-}

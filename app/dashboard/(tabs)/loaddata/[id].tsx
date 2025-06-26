@@ -8,7 +8,7 @@ import { RootState } from "@/store/store";
 import { StatusBar } from "expo-status-bar";
 import { DATE_FORMAT_PATTERNS, i18n } from "@/localization/config";
 import { useDebounce } from "@/hooks/useDebounce";
-import { tabsType } from "@/types/chartComponent";
+import { tabsType } from "@/types/chart.type";
 import { useLocalSearchParams } from "expo-router";
 import useTabDataCache from "@/hooks/useTabDataCache";
 import { useDispatch, useSelector } from "react-redux";

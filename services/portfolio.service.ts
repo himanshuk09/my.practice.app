@@ -8,12 +8,17 @@ const getPortfolioList = async () => {
 	try {
 		const response = await api.get("/api/portfolio/GetPortfolioList");
 		return formateByEnergyType(response.data);
-	} catch (error) {
+	} catch (error: any) {
 		console.log(
 			"Error while Fetching PortfolioList",
 			error instanceof Error ? error.message : JSON.stringify(error)
 		);
-		return { gas: [], strom: [] };
+		return {
+			gas: [],
+			strom: [],
+			success: false,
+			error: error.errorMessage,
+		};
 	}
 };
 
@@ -139,11 +144,19 @@ const getPortfolioDetails = async (payload: any) => {
 		}
 		const filteredPortfolioDetails = formatePortfolioDetails(response.data);
 		return filteredPortfolioDetails;
-	} catch (error) {
+	} catch (error: any) {
 		console.log(
 			"Error while Fetching PortfolioDetails",
 			error instanceof Error ? error.message : JSON.stringify(error)
 		);
+		return {
+			areaChartData: [],
+			donotChartData: [0, 0],
+			closedData: [],
+			openData: [],
+			success: false,
+			error: error.errorMessage,
+		};
 	}
 };
 
@@ -159,11 +172,15 @@ const getPortfolioDeals = async (payload: any) => {
 			{ ...payload }
 		);
 		return response.data;
-	} catch (error) {
+	} catch (error: any) {
 		console.log(
 			"Error while Fetching PortfolioDeals",
 			error instanceof Error ? error.message : JSON.stringify(error)
 		);
+		return {
+			success: false,
+			error: error.errorMessage,
+		};
 	}
 };
 
@@ -180,11 +197,15 @@ const getPortfolioReportBase64PDF = async (payload: any) => {
 		);
 
 		return response.data;
-	} catch (error) {
+	} catch (error: any) {
 		console.log(
 			"Error while Fetching PortfolioReport",
 			error instanceof Error ? error.message : JSON.stringify(error)
 		);
+		return {
+			success: false,
+			error: error.errorMessage,
+		};
 	}
 };
 

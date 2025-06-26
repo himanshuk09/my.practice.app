@@ -22,7 +22,7 @@ const LoaddataLayout = () => {
 				}}
 			/>
 			<Stack.Screen
-				name="tc"
+				name="termscondition"
 				options={{
 					headerShown: true,
 					animation: "slide_from_right",

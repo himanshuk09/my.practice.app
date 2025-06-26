@@ -11,8 +11,8 @@ import { useRouter } from "expo-router";
 import Title from "@/components//ui/Title";
 import { ROUTEKEYS } from "@/utils/messages";
 import React, { useEffect, useRef } from "react";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { ShimmerAccordion } from "@/components/ShimmerEffect";
+import { Fontisto } from "@expo/vector-icons";
 
 interface AccordionFlatlistProps {
 	data: any[];
@@ -35,24 +35,35 @@ const AccordionFlatlist = ({
 }: AccordionFlatlistProps) => {
 	const router = useRouter();
 	const animations = useRef<any>({}).current;
+	const rotateAnimations = useRef<any>({}).current;
 
 	data?.forEach((item: any) => {
 		const uniqueKey = `${title}-${item?.MeterId}`;
 		if (!animations[uniqueKey]) {
 			animations[uniqueKey] = new Animated.Value(0);
 		}
+		if (!rotateAnimations[uniqueKey]) {
+			rotateAnimations[uniqueKey] = new Animated.Value(0); // 0 = down, 1 = up
+		}
 	});
 
 	const toggleExpand = (id: number, detailsLength: number) => {
 		const uniqueKey = `${title}-${id}`;
 		const animation = animations[uniqueKey];
-
+		const rotateAnim = rotateAnimations[uniqueKey];
 		if (expandedMeterId === uniqueKey) {
-			Animated.timing(animation, {
-				toValue: 0,
-				duration: 250,
-				useNativeDriver: false,
-			}).start(() => setExpandedMeterId(null));
+			Animated.parallel([
+				Animated.timing(animation, {
+					toValue: 0,
+					duration: 250,
+					useNativeDriver: false,
+				}),
+				Animated.timing(rotateAnim, {
+					toValue: 0, // collapse (rotate back down)
+					duration: 250,
+					useNativeDriver: Platform.OS === "android",
+				}),
+			]).start(() => setExpandedMeterId(null));
 		} else {
 			setExpandedMeterId(uniqueKey);
 
@@ -65,15 +76,23 @@ const AccordionFlatlist = ({
 						? 30
 						: 35;
 
-			Animated.timing(animation, {
-				toValue:
-					Platform.select({
-						ios: baseValue + 20,
-						android: baseValue,
-					}) ?? (Platform.OS === "web" ? baseValue : baseValue + 40),
-				duration: 250,
-				useNativeDriver: false,
-			}).start();
+			Animated.parallel([
+				Animated.timing(animation, {
+					toValue:
+						Platform.select({
+							ios: baseValue + 20,
+							android: baseValue,
+						}) ??
+						(Platform.OS === "web" ? baseValue : baseValue + 40),
+					duration: 250,
+					useNativeDriver: false,
+				}),
+				Animated.timing(rotateAnim, {
+					toValue: 1, // expand (rotate up)
+					duration: 250,
+					useNativeDriver: Platform.OS === "android",
+				}),
+			]).start();
 		}
 	};
 
@@ -90,6 +109,15 @@ const AccordionFlatlist = ({
 					})
 				);
 			}
+			if (key !== expandedMeterId && rotateAnimations[key]) {
+				collapseAnimations.push(
+					Animated.timing(rotateAnimations[key], {
+						toValue: 0, // reset icon rotation
+						duration: 250,
+						useNativeDriver: true,
+					})
+				);
+			}
 		});
 
 		if (collapseAnimations.length > 0) {
@@ -99,9 +127,12 @@ const AccordionFlatlist = ({
 
 	const renderItem = ({ item }: any) => {
 		const uniqueKey = `${title}-${item?.MeterId}`;
-		const isExpanded = expandedMeterId === uniqueKey;
 		const animation = animations[uniqueKey];
-
+		const rotateAnim = rotateAnimations[uniqueKey];
+		const rotate = rotateAnim.interpolate({
+			inputRange: [0, 1],
+			outputRange: ["0deg", "-180deg"],
+		});
 		return (
 			<View>
 				<TouchableOpacity
@@ -110,17 +141,15 @@ const AccordionFlatlist = ({
 						scrollToIndex(index);
 					}}
 					style={st.boxShadow}
-					className="flex flex-row justify-between items-center p-4 mx-2 text-lg font-serif font-medium rounded-sm my-1 bg-white space-x-1 h-20"
+					className="flex flex-row justify-between items-center p-4 mx-2 text-lg font-serif font-medium  my-1 bg-white space-x-1 h-20"
 					activeOpacity={0.6}
 				>
 					<Text className="text-listText w-[95%] text-base font-normal">
 						{item?.MeterName}
 					</Text>
-					<AntDesign
-						name={isExpanded ? "caretup" : "caretdown"}
-						size={10}
-						color="#484848"
-					/>
+					<Animated.View style={{ transform: [{ rotate }] }}>
+						<Fontisto name="caret-down" size={10} color="#484848" />
+					</Animated.View>
 				</TouchableOpacity>
 
 				<Animated.View
@@ -133,7 +162,7 @@ const AccordionFlatlist = ({
 						item?.ChannelList.map((channels: any) => (
 							<TouchableOpacity
 								key={channels?.ChannelId}
-								className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3 pl-4 items-start justify-center rounded-sm text-center border-y-4 border-y-white h-20"
+								className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3 pl-4 items-start justify-center  text-center border-y-4 border-y-white h-20"
 								onPress={() => {
 									startLoader();
 									setTimeout(() =>

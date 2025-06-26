@@ -26,10 +26,10 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import ChartComponent from "@/components/chart/ChartComponent";
 import FloatingActionMenu from "@/components/FloatingActionMenu";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { englishLocale, germanyLocale } from "@/localization/config";
+import { englishLocale } from "@/localization/config";
 import iframeLineHtmlContent from "@/components/chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/chart/config/Linechart.android";
-import { tabsType, ToggleChartComponentProps } from "@/types/chartComponent";
+import { tabsType, ToggleChartComponentProps } from "@/types/chart.type";
 
 const ToggleChartComponent = ({
 	fetchChartData,

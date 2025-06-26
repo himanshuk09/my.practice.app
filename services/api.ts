@@ -1,8 +1,8 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { router } from "expo-router";
-import { checkInternetConnection } from "./helper";
+import { LOCALSTORAGEKEYS, NETWORKKEYS, ROUTEKEYS } from "@/utils/messages";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LOCALSTORAGEKEYS, ROUTEKEYS } from "@/utils/messages";
+import { checkInternetConnection, getErrorMessageFromStatus } from "./helper";
 
 const api = axios.create({
 	baseURL: process.env.EXPO_PUBLIC_BASE_URL,
@@ -22,7 +22,7 @@ api.interceptors.request.use(
 		const isConnected = await checkInternetConnection();
 		if (!isConnected) {
 			// Optionally throw a custom error here
-			throw new AxiosError("No internet connection", "ERR_NETWORK");
+			throw new AxiosError(NETWORKKEYS.NO_INTERNET, "ERR_NETWORK");
 		}
 
 		let token = await AsyncStorage.getItem(LOCALSTORAGEKEYS.TOKEN);
@@ -45,23 +45,17 @@ api.interceptors.request.use(
 // Queue for storing API response
 api.interceptors.response.use(
 	(response) => response,
-	async (error) => {
+	async (error: any) => {
 		if (error.response && error.response.status === 401) {
-			// 401 indicates token is invalid (expired or not matching)
-			console.log("Token expired or Unauthorized, please log in again");
+			// 401 indicates token is invalid (expired or not matching) Token expired or Unauthorized
 			await AsyncStorage.removeItem(LOCALSTORAGEKEYS.TOKEN); // Clear token
 			router.replace(ROUTEKEYS.LOGIN); // Redirect to login screen
-		} else if (error.response && error.response.status === 403) {
-			// 403 indicates insufficient permissions
-			console.log(
-				"Access Denied: You do not have permission to perform this action."
-			);
-		} else if (error.response && error.response.status === 500) {
-			//console.log("Server error, please try again later");
-		} else {
-			// Handle other errors (network issues, etc.)
-			console.log("API Error:", error.message);
 		}
+
+		error.errorMessage = await getErrorMessageFromStatus(
+			error.response.status,
+			error
+		);
 		return Promise.reject(error); // Pass error to the calling code
 	}
 );

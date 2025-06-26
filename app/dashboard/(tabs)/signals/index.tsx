@@ -13,7 +13,6 @@ import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 const Signals = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
-	let NavigateTo = "dashboard/signals";
 	const [error, setError] = useState(false);
 	const [signalsGas, setSignalsGas] = useState<any>();
 	const [isRefreshing, setIsRefreshing] = useState(false);
@@ -31,7 +30,6 @@ const Signals = () => {
 					items={item.data === undefined ? [] : item.data}
 					enableAutoScroll={false}
 					height={"auto"}
-					NavigateTo={NavigateTo}
 					renderType={"signal"}
 				/>
 			);
@@ -48,6 +46,7 @@ const Signals = () => {
 			setSignalsStrom(SignalsStrom);
 		}, 500);
 	}, [isFocused]);
+
 	/**
 	 *
 	 * Return Based On Condition
@@ -73,7 +72,7 @@ const Signals = () => {
 					<RefreshControl
 						refreshing={isRefreshing}
 						onRefresh={() => setIsRefreshing(false)}
-						colors={["#e31837"]} // Optional: Set colors for the refresh indicator
+						colors={["#e31837"]}
 					/>
 				}
 				contentContainerStyle={{

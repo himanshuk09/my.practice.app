@@ -11,13 +11,13 @@ import {
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
-import { tabsType } from "@/types/chartComponent";
+import { getTabsForScreen, tabsType } from "@/types/chart.type";
 import { MaterialIcons } from "@expo/vector-icons";
 
 interface FloatingActionMenuProps {
 	activeTab: string;
 	setActiveTab: React.Dispatch<React.SetStateAction<tabsType>>;
-	screenName: string | undefined;
+	screenName: string;
 	isLoading: boolean;
 }
 
@@ -60,15 +60,7 @@ const FloatingActionMenu = ({
 		outputRange: [-100, 0],
 	});
 
-	const allTabs: tabsType[] = ["Day", "Week", "Month", "Quarter", "Year"];
-	let visibleTabs: tabsType[] = [
-		"Week",
-		"Month",
-		"Quarter",
-		"Year",
-		"Year_3",
-	];
-	const tabs = screenName === "pfc" ? visibleTabs : allTabs;
+	const tabs = getTabsForScreen(screenName);
 
 	const onTabLayout = (index: number) => (event: LayoutChangeEvent) => {
 		const { x, width } = event.nativeEvent.layout;

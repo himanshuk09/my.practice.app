@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/config";
 import React, { useEffect, useRef, useState } from "react";
-import { tabsType, getTabsForScreen } from "@/types/chartComponent";
+import { tabsType, getTabsForScreen } from "@/types/chart.type";
 import { View, Text, TouchableOpacity, LayoutChangeEvent } from "react-native";
 
 interface TabToggleButtonsProps {

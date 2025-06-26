@@ -1,11 +1,17 @@
 // useTabDataCache.ts
+
+import { RootState } from "@/store/store";
+import { tabsType, TimeFrame } from "@/types/chart.type";
 import { useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const useTabDataCache = () => {
 	const cacheRef = useRef<Record<string, any>>({});
 	const pendingRequestsRef: any = useRef<Record<string, Promise<any>>>({});
 	const isMountedRef = useRef(true);
-
+	const isOnline = useSelector(
+		(state: RootState) => state.network.isConnected
+	);
 	// Special keys
 	const CUSTOM_TAB_KEY = "__custom__";
 	const EMPTY_TAB_KEY = "__empty__";
@@ -24,7 +30,7 @@ const useTabDataCache = () => {
 	};
 
 	const fetchWithCache = async (
-		payload: { TimeFrame?: string | number } & Record<string, any>,
+		payload: { TimeFrame?: TimeFrame | tabsType } & Record<string, any>,
 		fetchFn: (payload: any) => Promise<any>,
 		options?: {
 			customCacheKey?: string;
@@ -38,6 +44,7 @@ const useTabDataCache = () => {
 		const isCustomTab = payload?.TimeFrame === 6;
 
 		// Only check cache if not the custom tab and not forcing refresh
+		// if Already call Api For this tab then get the data from cache and return
 		if (
 			!isCustomTab &&
 			!options?.forceRefresh &&
@@ -52,6 +59,10 @@ const useTabDataCache = () => {
 		}
 
 		try {
+			if (!isOnline) {
+				return;
+			}
+
 			const requestPromise = fetchFn(payload);
 
 			pendingRequestsRef.current[cacheKey] = requestPromise;

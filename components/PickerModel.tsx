@@ -11,18 +11,21 @@ import {
 	Easing,
 	Platform,
 } from "react-native";
+import {
+	initialDatePickerViewProps,
+	PickerModelProps,
+} from "@/types/date-time-picker.type";
+import {
+	DATE_FORMAT_PATTERNS,
+	englishLocale,
+	i18n,
+} from "@/localization/config";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { PICKERVALIDATEMESSAGE } from "@/utils/messages";
 import DateTimePickerComponents from "./DateTimePickerComponents";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
-import {
-	DATE_FORMAT_PATTERNS,
-	englishLocale,
-	i18n,
-} from "@/localization/config";
-import { initialViewProps, PickerModelProps } from "@/types/chartComponent";
 import { formatNumber, parseNumber } from "@/utils/formatting-utils";
 
 const PickerModel = ({
@@ -45,7 +48,7 @@ const PickerModel = ({
 	const [minMaxErrorText, setMinMaxErrorText] = useState<string>("");
 	const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
 	const [pickerInitialView, setPickerInitialView] =
-		useState<initialViewProps>("day");
+		useState<initialDatePickerViewProps>("day");
 
 	const [openPicker, setOpenPicker] = useState({
 		startDate: false,
@@ -152,7 +155,7 @@ const PickerModel = ({
 
 	const handlePickerToggle = (
 		pickerType: keyof typeof openPicker,
-		initialView?: initialViewProps
+		initialView?: initialDatePickerViewProps
 	) => {
 		if (initialView) setPickerInitialView(initialView);
 		setOpenPicker((prev) => ({

@@ -11,8 +11,8 @@ import * as Linking from "expo-linking";
 import { RootState } from "@/store/store";
 import { useAuth } from "@/hooks/useAuth";
 import { i18n } from "@/localization/config";
-import { closeDrawer } from "@/store/drawerSlice";
 import { menuItems } from "@/utils/MenuItemlist";
+import { closeDrawer } from "@/store/drawerSlice";
 import CustomAlert from "@/components/CustomAlert";
 import { setOrientation } from "@/store/chartSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +23,15 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LOCALSTORAGEKEYS, AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+
+interface MenuItemProps {
+	menu: any;
+	activeSubmenu: string | null;
+	toggleSubmenu: (key: string) => void;
+	segmentPath: string;
+	navigationToRoute: (menu: any) => void;
+	getTextAndIconStyle: (route: string) => any;
+}
 
 // Helper Components
 const Submenu = memo(
@@ -67,6 +76,119 @@ const Submenu = memo(
 	}
 );
 
+const SidebarMenuItem: React.FC<MenuItemProps> = memo(
+	({
+		menu,
+		activeSubmenu,
+		toggleSubmenu,
+		segmentPath,
+		navigationToRoute,
+		getTextAndIconStyle,
+	}) => {
+		const hasItems = menu.items?.length > 0;
+
+		const rotateAnim = useRef(new Animated.Value(0)).current;
+
+		useEffect(() => {
+			Animated.timing(rotateAnim, {
+				toValue: activeSubmenu === menu?.key ? 1 : 0,
+				duration: 100,
+				easing: Easing.inOut(Easing.ease),
+				useNativeDriver: Platform.OS === "android",
+			}).start();
+		}, [activeSubmenu === menu?.key]);
+
+		const rotation = rotateAnim.interpolate({
+			inputRange: [0, 1],
+			outputRange: ["0deg", "-180deg"],
+		});
+
+		return (
+			<View>
+				{hasItems ? (
+					<TouchableOpacity
+						activeOpacity={0.6}
+						className="flex-row items-center p-5 break-words"
+						onPress={() => toggleSubmenu(menu?.key)}
+					>
+						{menu?.icon}
+						<Text
+							className="text-lg font-semibold ml-4 text-chartText flex-1 break-words"
+							onPress={() => toggleSubmenu(menu?.key)}
+						>
+							{i18n.t(menu?.label)}
+						</Text>
+						<Animated.View
+							style={{
+								transform: [{ rotate: rotation }],
+								marginRight: 10,
+							}}
+						>
+							<Feather
+								name="chevron-down"
+								size={18}
+								color="#9a9b9f"
+								onPress={() => toggleSubmenu(menu?.key)}
+							/>
+						</Animated.View>
+					</TouchableOpacity>
+				) : (
+					<TouchableOpacity
+						activeOpacity={0.7}
+						className={`flex-row items-center p-5 ${
+							menu.route === segmentPath
+								? "bg-primary"
+								: "bg-transparent"
+						}`}
+						onPress={() => navigationToRoute(menu)}
+					>
+						{React.cloneElement(
+							menu?.icon,
+							getTextAndIconStyle(menu?.route)
+						)}
+						<Text
+							className={`text-lg font-semibold ml-4 text-chartText ${
+								menu?.label === "portfolio"
+									? "uppercase"
+									: "capitalize"
+							}`}
+							style={getTextAndIconStyle(menu?.route)}
+						>
+							{i18n.t(menu?.label)}
+						</Text>
+					</TouchableOpacity>
+				)}
+
+				{hasItems && (
+					<Submenu
+						isVisible={activeSubmenu === menu?.key}
+						height={menu?.height}
+					>
+						{menu?.items.map((submenu: any, subIndex: any) => (
+							<TouchableOpacity
+								activeOpacity={0.6}
+								key={subIndex}
+								className={`pl-16 py-3 ${
+									submenu.route === segmentPath
+										? "bg-primary"
+										: "bg-transparent"
+								}`}
+								onPress={() => navigationToRoute(submenu)}
+							>
+								<Text
+									className="text-lg font-normal text-chartText"
+									style={getTextAndIconStyle(submenu?.route)}
+								>
+									{i18n.t(submenu?.label)}
+								</Text>
+							</TouchableOpacity>
+						))}
+					</Submenu>
+				)}
+			</View>
+		);
+	}
+);
 const CustomDrawer = memo(() => {
 	const dispatch = useDispatch();
 	const router = useRouter();
@@ -152,122 +274,17 @@ const CustomDrawer = memo(() => {
 			className="flex-1 bg-[#fff] mt-5"
 			showsVerticalScrollIndicator={false}
 		>
-			{menuItems.map((menu: any, index) => {
-				// Check if there are items in the submenu
-				const hasItems = menu.items?.length > 0;
-				// ✅ Define animation state per menu item
-				const rotateAnim = useRef(new Animated.Value(0)).current;
-
-				useEffect(() => {
-					Animated.timing(rotateAnim, {
-						toValue: activeSubmenu === menu?.key ? 1 : 0,
-						duration: 100,
-						easing: Easing.inOut(Easing.ease),
-						useNativeDriver: Platform.OS === "android",
-					}).start();
-				}, [activeSubmenu === menu?.key]);
-
-				const rotation = rotateAnim.interpolate({
-					inputRange: [0, 1],
-					outputRange: ["0deg", "-180deg"],
-				});
-				return (
-					<View key={index}>
-						{/* Render simple View if no submenu items */}
-						{hasItems ? (
-							<TouchableOpacity
-								activeOpacity={0.6}
-								className={`flex-row items-center  p-5   break-words  `}
-								onPress={() => toggleSubmenu(menu?.key)}
-							>
-								{menu?.icon}
-								<Text
-									className={`text-lg font-semibold ml-4 text-chartText  flex-1 break-words `}
-									onPress={() => toggleSubmenu(menu?.key)}
-								>
-									{i18n.t(menu?.label)}
-								</Text>
-								<Animated.View
-									style={{
-										transform: [{ rotate: rotation }],
-										marginRight: 10,
-									}}
-								>
-									<Feather
-										name="chevron-down"
-										size={18}
-										color="#9a9b9f"
-										onPress={() => toggleSubmenu(menu?.key)}
-									/>
-								</Animated.View>
-							</TouchableOpacity>
-						) : (
-							// Render the default View if no submenu items
-							<View key={index}>
-								<TouchableOpacity
-									key={index}
-									activeOpacity={0.7}
-									className={`flex-row items-center p-5 ${
-										menu.route === segmentPath
-											? "bg-primary"
-											: "bg-transparent"
-									} `}
-									onPress={() => navigationToRoute(menu)}
-								>
-									{React.cloneElement(
-										menu?.icon,
-										getTextAndIconStyle(menu?.route)
-									)}
-									<Text
-										className={`text-lg font-semibold ml-4 bg-yellow text-chartText  ${
-											menu?.label === "portfolio"
-												? "uppercase"
-												: "capitalize"
-										}`}
-										style={getTextAndIconStyle(menu?.route)}
-									>
-										{i18n.t(menu?.label)}
-									</Text>
-								</TouchableOpacity>
-							</View>
-						)}
-
-						{/* Render submenu if items are present */}
-						{hasItems && (
-							<Submenu
-								isVisible={activeSubmenu === menu?.key}
-								height={menu?.height}
-							>
-								{menu?.items.map(
-									(submenu: any, subIndex: any) => (
-										<TouchableOpacity
-											activeOpacity={0.6}
-											key={subIndex}
-											className={`pl-16 py-3 ${
-												submenu.route === segmentPath
-													? "bg-primary"
-													: "bg-transparent"
-											}`}
-											onPress={() =>
-												navigationToRoute(submenu)
-											}
-										>
-											<Text
-												className="text-lg font-normal text-chartText"
-												style={getTextAndIconStyle(
-													submenu?.route
-												)}
-											>
-												{i18n.t(submenu?.label)}
-											</Text>
-										</TouchableOpacity>
-									)
-								)}
-							</Submenu>
-						)}
-					</View>
-				);
-			})}
+			{menuItems.map((menu: any, index: number) => (
+				<SidebarMenuItem
+					key={index}
+					menu={menu}
+					activeSubmenu={activeSubmenu}
+					toggleSubmenu={toggleSubmenu}
+					segmentPath={segmentPath}
+					navigationToRoute={navigationToRoute}
+					getTextAndIconStyle={getTextAndIconStyle}
+				/>
+			))}
 			{/**Divider */}
 			<View className="w-full h-px bg-gray-300 my-2 " />
 

@@ -45,3 +45,5 @@ app-example
 #notification
 #google-services.json
 #enexion-eec-firebase-adminsdk-fbsvc-5274a27073.json
+
+.vscode

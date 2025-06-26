@@ -17,6 +17,7 @@ export default function FloatingActionMenu({
 	captureWebView,
 	isTooltipEnabled,
 }: FloatingActionMenuProps) {
+	//
 	const [isZoomIn, setIsZoomIn] = useState(true);
 	const [tooltip, setTooltip] = useState<boolean | any>(false);
 	const [tooltipLabel, setTooltipLabel] = useState<any>(null);

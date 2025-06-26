@@ -1,10 +1,9 @@
 import {
 	View,
-	ActivityIndicator,
 	Animated,
 	Platform,
 	Easing,
-	StyleSheet,
+	ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 

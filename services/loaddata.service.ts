@@ -1,40 +1,7 @@
 import api from "./api";
+import dayjs from "dayjs";
 import { formateByEnergyType } from "./helper";
-
-/**
- *
- * Types
- *
- */
-var graphPriceUnit = [
-	" €/MWh",
-	" €/MWh",
-	" €/MWh",
-	" US$/ton",
-	" €/ton",
-	" TL/MWh",
-];
-var currencySymbol = [" €", " €", " €", " US$", " €", " TL"];
-var timeFrameText = [
-	"Day",
-	"Week",
-	"Month",
-	"Quarter",
-	"Year",
-	"ThreeYear",
-	"Custom",
-];
-
-type TimeFrameString =
-	| "day"
-	| "Week"
-	| "Month"
-	| "Quarter"
-	| "Year"
-	| "ThreeYear"
-	| "Custom";
-
-type TimeFrame = TimeFrameString | 0 | 1 | 2 | 3 | 4 | 5 | 6;
+import { TimeFrame } from "@/types/chart.type";
 
 type EnergyDataRequest = {
 	ChannelId?: number;
@@ -60,13 +27,16 @@ const getLoadDataList = async () => {
 	try {
 		const response = await api.get(`/api/loadData/getMeterChannelInfo`);
 		return formateByEnergyType(response.data);
-	} catch (error) {
+	} catch (error: any) {
 		console.log(
-			"Error while Fetching LoadDataList",
+			"Error while Fetching LoadDataTS",
 			error instanceof Error ? error.message : JSON.stringify(error)
 		);
 		return {
-			error: error instanceof Error ? error.message : "Unknown error",
+			gas: [],
+			strom: [],
+			success: false,
+			error: error.errorMessage,
 		};
 	}
 };
@@ -78,7 +48,7 @@ const getLoadDataList = async () => {
  * @returns { ValueArray:[],DateTimeArray:[],[key: string]: any;, data:[x:string,y:number]}
  */
 
-function transformData(input: {
+function transformData1(input: {
 	ValueArray: number[];
 	DateTimeArray: string[];
 	[key: string]: any;
@@ -107,8 +77,33 @@ function transformData(input: {
 	};
 }
 
+function transformData(input: {
+	ValueArray: number[];
+	DateTimeArray: string[];
+	[key: string]: any;
+}) {
+	const data = input.ValueArray.reduce((acc: any[], y, i) => {
+		if (y < 0) return acc;
+
+		const dateStr = input.DateTimeArray[i];
+		const parsed = dayjs(dateStr, "DD.MM.YYYY HH:mm:ss");
+
+		if (!parsed.isValid()) return acc;
+
+		const formatted = parsed.format("MM/DD/YYYY HH:mm"); // formatted without seconds
+		acc.push({ x: formatted, y });
+
+		return acc;
+	}, []);
+
+	return {
+		...input,
+		data,
+	};
+}
+
 /**
- * Get Load Data TS
+ * Get Load Data TS (chart data)
  * @returns
  */
 const getLoadDataTS = async (payload: EnergyDataRequest) => {
@@ -116,10 +111,15 @@ const getLoadDataTS = async (payload: EnergyDataRequest) => {
 		const response = await api.post(`/api/loadData/getLoadDataTS`, {
 			...payload,
 		});
+
 		const formatedData = transformData(response?.data);
 		return formatedData;
-	} catch (error) {
-		console.log("Error while Fetching LoadDataTS", error);
+	} catch (error: any) {
+		console.log(
+			"Error while Fetching LoadDataTS",
+			error instanceof Error ? error.message : JSON.stringify(error)
+		);
+		return { success: false, error: error.errorMessage };
 	}
 };
 export { getLoadDataList, getLoadDataTS, EnergyDataRequest };

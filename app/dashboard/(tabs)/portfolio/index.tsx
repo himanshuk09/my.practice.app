@@ -12,7 +12,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Platform, SafeAreaView, useWindowDimensions } from "react-native";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 import useIsComingFromPortfolioDetail from "@/hooks/useIsComingFromPortfolioDetail";
-import { ROUTEKEYS } from "@/utils/messages";
 
 const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();
@@ -40,6 +39,7 @@ const Portfolio: React.FC = () => {
 	useEffect(() => {
 		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
+
 	/**
 	 *Return Based On Condition
 	 */

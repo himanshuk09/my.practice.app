@@ -130,6 +130,7 @@ const FlatListBlock = <T,>({
 		previousRouteRef.current = currentRoute;
 	}, [currentRoute]);
 
+	const scrollY = useRef(0);
 	useEffect(() => {
 		if (
 			/^\/dashboard\/portfolio\/.+%/.test(previousRoute) ||
@@ -139,49 +140,41 @@ const FlatListBlock = <T,>({
 		}
 
 		if (enableAutoScroll && flatListRef.current && isFocused) {
-			const targetIndex = items.findIndex(
-				(item: any) =>
-					new Date(item.PortfolioDate).getFullYear() ===
-					Number(currentYear)
-			);
+			const targetIndex = items.findIndex((item: any) => {
+				const year = new Date(item.PortfolioDate).getFullYear();
+				return year === currentYear;
+			});
 
-			if (targetIndex !== -1) {
-				const offset = targetIndex * ITEM_HEIGHT;
-				const maxOffset = (items.length - 1) * ITEM_HEIGHT;
-				const safeOffset = Math.min(offset, maxOffset);
+			if (targetIndex === -1 || targetIndex <= 1) return;
 
-				// Animated scroll value starts from current scroll position
-				let currentOffset = 0;
+			const targetOffset = targetIndex * ITEM_HEIGHT;
+			const currentOffset = scrollY.current;
 
+			//  Skip if already within 10px of target offset
+			if (Math.abs(currentOffset - targetOffset) < 10) {
+				// Already near target, skipping scroll
+				return;
+			}
+
+			const scrollAnim = new Animated.Value(currentOffset);
+
+			const listenerId = scrollAnim.addListener(({ value }) => {
 				flatListRef.current?.scrollToOffset({
-					offset: 0,
+					offset: value,
 					animated: false,
 				});
+			});
 
-				const scrollAnim = new Animated.Value(0);
-
-				// Keep track of current scroll offset
-				const listenerId = scrollAnim.addListener(({ value }) => {
-					flatListRef.current?.scrollToOffset({
-						offset: value,
-						animated: false,
-					});
-					currentOffset = value;
-				});
-
-				// Animate from 0 (or currentOffset) to safeOffset over 800ms
-				Animated.timing(scrollAnim, {
-					toValue: safeOffset,
-					duration: 2000, // You can change this duration
-					easing: Easing.out(Easing.cubic),
-					useNativeDriver: false, // scrollToOffset needs false
-				}).start(() => {
-					scrollAnim.removeListener(listenerId);
-				});
-			}
+			Animated.timing(scrollAnim, {
+				toValue: targetOffset,
+				duration: 1200,
+				easing: Easing.inOut(Easing.cubic),
+				useNativeDriver: false,
+			}).start(() => {
+				scrollAnim.removeListener(listenerId);
+			});
 		}
-	}, [items, enableAutoScroll]);
-
+	}, [items]);
 	return items?.length <= 0 ? (
 		<ShimmerFlatListBlock height={height} />
 	) : (
@@ -214,9 +207,66 @@ const FlatListBlock = <T,>({
 				contentContainerStyle={{
 					paddingBottom: 40,
 				}}
+				onScroll={(event) => {
+					// for one time scroll
+					scrollY.current = event.nativeEvent.contentOffset.y;
+				}}
+				scrollEventThrottle={16}
 			/>
 		</View>
 	);
 };
 
 export default FlatListBlock;
+
+// useEffect(() => {
+// 	if (
+// 		/^\/dashboard\/portfolio\/.+%/.test(previousRoute) ||
+// 		items?.length <= 0
+// 	) {
+// 		return;
+// 	}
+
+// 	if (enableAutoScroll && flatListRef.current && isFocused) {
+// 		const targetIndex = items.findIndex(
+// 			(item: any) =>
+// 				new Date(item.PortfolioDate).getFullYear() ===
+// 				Number(currentYear)
+// 		);
+
+// 		if (targetIndex !== -1) {
+// 			const offset = targetIndex * ITEM_HEIGHT;
+// 			const maxOffset = (items.length - 1) * ITEM_HEIGHT;
+// 			const safeOffset = Math.min(offset, maxOffset);
+
+// 			// Animated scroll value starts from current scroll position
+// 			let currentOffset = 0;
+
+// 			flatListRef.current?.scrollToOffset({
+// 				offset: 0,
+// 				animated: false,
+// 			});
+
+// 			const scrollAnim = new Animated.Value(0);
+
+// 			// Keep track of current scroll offset
+// 			const listenerId = scrollAnim.addListener(({ value }) => {
+// 				flatListRef.current?.scrollToOffset({
+// 					offset: value,
+// 					animated: false,
+// 				});
+// 				currentOffset = value;
+// 			});
+
+// 			// Animate from 0 (or currentOffset) to safeOffset over 800ms
+// 			Animated.timing(scrollAnim, {
+// 				toValue: safeOffset,
+// 				duration: 2000, // You can change this duration
+// 				easing: Easing.out(Easing.cubic),
+// 				useNativeDriver: false, // scrollToOffset needs false
+// 			}).start(() => {
+// 				scrollAnim.removeListener(listenerId);
+// 			});
+// 		}
+// 	}
+// }, [items, enableAutoScroll]);

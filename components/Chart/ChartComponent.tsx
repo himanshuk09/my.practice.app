@@ -9,7 +9,7 @@ import CustomAlert from "@/components/CustomAlert";
 import { setOrientation } from "@/store/chartSlice";
 import { showToast } from "@/components/ToastConfig";
 import { useDispatch, useSelector } from "react-redux";
-import { ChartComponentProps } from "@/types/chartComponent";
+import { ChartComponentProps } from "@/types/chart.type";
 import * as ScreenOrientation from "expo-screen-orientation";
 import React, { useCallback, useEffect, useRef } from "react";
 import ToolBarFloatingActionMenu from "@/components/ToolBarFAB";

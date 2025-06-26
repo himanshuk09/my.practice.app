@@ -22,12 +22,7 @@ import {
 	exportDealsToCSVWeb,
 } from "@/components/exportcsv/exporttofile";
 import PrimaryButton from "./ui/PrimaryButton";
-type DataRowPrpos = {
-	label?: string;
-	value: any;
-	unit: string;
-	locale?: string;
-};
+
 const Card = ({ title, deals }: { title: string; deals: any }) => {
 	return (
 		<View className="bg-cardBg  mx-1 p-3 my-1 " style={st.boxShadow}>
@@ -105,7 +100,16 @@ const Card = ({ title, deals }: { title: string; deals: any }) => {
 		</View>
 	);
 };
-const DataRow = ({ value, unit, locale }: DataRowPrpos) => (
+const DataRow = ({
+	value,
+	unit,
+	locale,
+}: {
+	label?: string;
+	value: any;
+	unit: string;
+	locale?: string;
+}) => (
 	<View className="flex-row w-full">
 		<Text className="text-chartText text-xs font-normal flex-1 text-right">
 			{value ? new Intl.NumberFormat(locale).format(value) : "0"}
@@ -253,5 +257,6 @@ const Transactions = ({
 		</View>
 	);
 };
+
 export default Transactions;
 export { DataDisplay };

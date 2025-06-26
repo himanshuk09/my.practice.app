@@ -1,6 +1,6 @@
 import api from "./api";
-import { LOCALSTORAGEKEYS } from "@/utils/messages";
-import { loginPayloadProps, AuthResponse } from "@/types/apiTypes";
+import { AUTHKEYS, LOCALSTORAGEKEYS } from "@/utils/messages";
+import { AuthResponse, loginPayloadProps } from "@/types/auth.type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const loginUser = async (payload: loginPayloadProps) => {
@@ -14,7 +14,7 @@ const loginUser = async (payload: loginPayloadProps) => {
 			response?.data;
 
 		if (!access_token || !UserId || !ApiApkVersion) {
-			throw new Error("Invalid response data from login API.");
+			throw new Error(AUTHKEYS.INVALID_RESPONSE);
 		}
 
 		await AsyncStorage.multiSet([
@@ -28,12 +28,13 @@ const loginUser = async (payload: loginPayloadProps) => {
 			token: access_token,
 			clientId,
 		};
-	} catch (error) {
+	} catch (error: any) {
 		return {
 			success: false,
-			message: "Authentication failed. Please check your credentials.",
+			message: error.errorMessage,
 			error:
 				error instanceof Error ? error.message : JSON.stringify(error),
+			status: error?.status,
 		};
 	}
 };
@@ -42,15 +43,16 @@ const loginUser = async (payload: loginPayloadProps) => {
 export const logout = async () => {
 	try {
 		// Remove token and user data from AsyncStorage
-		await AsyncStorage.removeItem(LOCALSTORAGEKEYS.TOKEN);
-		await AsyncStorage.removeItem(LOCALSTORAGEKEYS.USERID);
+		await AsyncStorage.clear();
 		return { success: true };
-	} catch (error) {
-		console.error(
-			"Logout error:",
-			error instanceof Error ? error.message : JSON.stringify(error)
-		);
-		return { success: false, error: "Failed to log out" };
+	} catch (error: any) {
+		return {
+			success: false,
+			message: error.errorMessage,
+			error:
+				error instanceof Error ? error.message : JSON.stringify(error),
+			status: error?.status,
+		};
 	}
 };
 

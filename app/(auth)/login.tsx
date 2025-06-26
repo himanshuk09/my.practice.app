@@ -51,14 +51,10 @@ const SignIn: React.FC = () => {
 		if (password.trim() === "") {
 			return AUTHKEYS.MISSING_PASSWORD;
 		}
-		if (!validateUserName(userName)) {
+		if (!AUTHKEYS.USERNAME_REGEX.test(userName)) {
 			return AUTHKEYS.INVALID_USERNAME;
 		}
 		return ""; // No error
-	};
-
-	const validateUserName = (username: string): boolean => {
-		return AUTHKEYS.USERNAME_REGEX.test(username);
 	};
 
 	const handleSubmit = async (): Promise<void> => {
@@ -93,17 +89,13 @@ const SignIn: React.FC = () => {
 					});
 				}, 1000);
 			} else {
-				setErrorMessage(AUTHKEYS.FAILURE);
+				setErrorMessage(response?.message || AUTHKEYS.FAILURE);
 			}
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				setErrorMessage(err?.message || AUTHKEYS.ERROR);
-				setTimeout(() => {
-					showToast({
-						type: "error",
-						title: AUTHKEYS.ERROR_TITLE,
-					});
-				}, 1000);
+				setErrorMessage(
+					err instanceof Error ? err.message : AUTHKEYS.UNKNOWN_ERROR
+				);
 			} else {
 				setErrorMessage(AUTHKEYS.UNKNOWN_ERROR);
 			}
