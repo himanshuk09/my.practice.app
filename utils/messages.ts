@@ -31,6 +31,8 @@ export const AUTHKEYS = {
 	REQUEST_TIMEOUT: "The_request_timed_out_Please_try_again",
 	TOO_MANY_REQUEST: "Too_many_requests_Please_wait_a_moment_and_try_again",
 	NOT_FOUND_ROUTES: "Page_Not_Found",
+	ERROR_PAGE_NOT_FOUND: "error_page_not_found",
+	GO_TO_HOME: "go_to_home",
 } as const;
 
 export const NETWORKKEYS = {

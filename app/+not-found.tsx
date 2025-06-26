@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
 import { View, Text, Pressable, StyleSheet, Image } from "react-native";
 import { i18n } from "@/localization/config";
+import { I18n } from "i18n-js";
 
 export default function NotFoundScreen() {
 	return (
@@ -23,9 +24,11 @@ export default function NotFoundScreen() {
 					resizeMode="contain"
 				/>
 
-				<Text style={styles.title}>Oops! Page not found</Text>
+				<Text style={styles.title}>
+					Oops! {i18n.t(AUTHKEYS.NOT_FOUND_ROUTES)}
+				</Text>
 				<Text style={styles.subtitle}>
-					The page you’re looking for doesn’t exist or has been moved.
+					{i18n.t(AUTHKEYS.ERROR_PAGE_NOT_FOUND)}
 				</Text>
 
 				<Link href={ROUTEKEYS.INITIAL} asChild>
@@ -36,7 +39,9 @@ export default function NotFoundScreen() {
 							color="#fff"
 							style={styles.buttonIcon}
 						/>
-						<Text style={styles.buttonText}>Go to Home</Text>
+						<Text style={styles.buttonText}>
+							{i18n.t(AUTHKEYS.GO_TO_HOME)}
+						</Text>
 					</Pressable>
 				</Link>
 			</View>

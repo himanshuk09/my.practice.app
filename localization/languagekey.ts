@@ -223,6 +223,9 @@ export const TranslationKeys: Translations = {
 		Network_error_Please_check_your_internet_connection:
 			"Network error. Please check your internet connection.",
 		Something_went_wrong: "Something went wrong",
+		error_page_not_found:
+			"The page you’re looking for doesn’t exist or has been moved.",
+		go_to_home: "Go to Home",
 		imprints: {
 			company: "enexion GmbH",
 			address1: "Am Kronberger Hang 2A,",
@@ -576,6 +579,9 @@ export const TranslationKeys: Translations = {
 		Network_error_Please_check_your_internet_connection:
 			"Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.",
 		Something_went_wrong: "Etwas ist schiefgelaufen",
+		error_page_not_found:
+			"Die gesuchte Seite existiert nicht oder wurde verschoben.",
+		go_to_home: "Zur Startseite",
 		imprints: {
 			company: "enexion GmbH",
 			address1: "Am Kronberger Hang 2A, ",
