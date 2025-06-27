@@ -1,19 +1,35 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
-export function useDebounce(callback: any, delay = 500) {
-	const timeoutRef: any = useRef(null);
+type DebouncedFunction<T extends (...args: any[]) => void> = [
+	debouncedFn: T,
+	showIcon: boolean,
+];
 
-	const debouncedFunction = (...args: any) => {
-		clearTimeout(timeoutRef.current);
+export function useDebounce<T extends (...args: any[]) => void>(
+	callback: T,
+	delay = 500
+): DebouncedFunction<T> {
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const [showIcon, setShowIcon] = useState(true);
+
+	const debouncedFunction = ((...args: any[]) => {
+		setShowIcon(false);
+
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+
 		timeoutRef.current = setTimeout(() => {
 			callback(...args);
+			setShowIcon(true);
 		}, delay);
-	};
+	}) as T;
 
-	// Clean up on unmount
 	useEffect(() => {
-		return () => clearTimeout(timeoutRef.current);
+		return () => {
+			if (timeoutRef.current) clearTimeout(timeoutRef.current);
+		};
 	}, []);
 
-	return debouncedFunction;
+	return [debouncedFunction, showIcon];
 }

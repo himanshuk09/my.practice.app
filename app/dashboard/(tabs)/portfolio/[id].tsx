@@ -21,11 +21,10 @@ import {
 } from "@/components/chart/config";
 import { RootState } from "@/store/store";
 import { i18n } from "@/localization/config";
-import { NETWORKKEYS, PERMISSIONKEYS } from "@/utils/messages";
 import { useDebounce } from "@/hooks/useDebounce";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import NoNetwork from "@/components/icons/NoNetwork";
+import { getBottomInset } from "@/components/global";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import PrimaryButton from "@/components/ui/PrimaryButton";
@@ -33,6 +32,8 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { Toast, showToast } from "@/components/ToastConfig";
 import { ChartGraphShimmer } from "@/components/ChartShimmer";
 import ChartComponent from "@/components/chart/ChartComponent";
+import { NETWORKKEYS, PERMISSIONKEYS } from "@/utils/messages";
+import DownloadFIleIcon from "@/components/ui/DownloadFIleIcon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -145,15 +146,18 @@ const PortfolioOverView = () => {
 		});
 	};
 
-	const debouncedExport = useDebounce(() => exportPortfolioReport(), 1000);
+	const [debouncedExport, showIcon] = useDebounce(
+		() => exportPortfolioReport(),
+		1000
+	);
 	const exportPortfolioReport = async () => {
 		if (!isOnline || portfolioDetails?.message === "no data") return;
 
 		const toastId = Toast.show({
 			type: "download",
-			text1: i18n.t("File_Downloading"),
+			text1: i18n.t(PERMISSIONKEYS.FILE_DOWNLOADING),
 			position: "bottom",
-			bottomOffset: Platform.OS === "web" ? 0 : 40,
+			bottomOffset: getBottomInset(),
 			autoHide: false,
 			props: { spinner: true },
 		});
@@ -280,14 +284,15 @@ const PortfolioOverView = () => {
 				</View>
 
 				<View
-					className="ml-7 mt-3"
+					className=" mt-3"
 					style={{ marginRight: Platform.OS === "web" ? "10%" : 20 }}
 				>
-					<FontAwesome5
-						name="file-download"
-						size={25}
-						color="#ef4444"
+					<DownloadFIleIcon
 						onPress={debouncedExport}
+						showIcon={showIcon}
+						size={28}
+						height={28}
+						width={21}
 					/>
 				</View>
 			</View>

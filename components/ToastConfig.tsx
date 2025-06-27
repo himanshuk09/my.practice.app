@@ -11,6 +11,7 @@ import * as FileSystem from "expo-file-system";
 import Reload from "@/components/icons/Reload";
 import { PERMISSIONKEYS } from "@/utils/messages";
 import { getBottomInset } from "@/components/global";
+import AnimatedArrowSVG from "./svg/AnimatedArrowSVG";
 import * as IntentLauncher from "expo-intent-launcher";
 import ThreeDotLoader from "@/components/icons/ThreeDotLoader";
 import Toast, { ToastShowParams } from "react-native-toast-message";
@@ -251,12 +252,16 @@ const toastConfig: any = {
 			{/* Left side: Icon + Text + Spinner */}
 			<View className="flex-row items-center flex-1">
 				{/* Download Icon */}
-				<MaterialIcons
-					name="file-download"
-					size={24}
-					color="white"
-					className="mr-3"
-				/>
+				{props?.spinner ? (
+					<AnimatedArrowSVG height={25} width={25} color={"#fff"} />
+				) : (
+					<MaterialIcons
+						name="file-download"
+						size={24}
+						color="white"
+						className="mr-3"
+					/>
+				)}
 
 				{/* Text Content */}
 				<View className="flex-1">

@@ -1,3 +1,4 @@
+import { ROUTEKEYS } from "@/utils/messages";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useSegments } from "expo-router";
 
@@ -10,7 +11,7 @@ function useIsComingFromPortfolioDetail(): boolean {
 
 	useEffect(() => {
 		// Routes to match (with parameter placeholders)
-		const idRoutes = ["dashboard/(tabs)/portfolio/[id]"];
+		const idRoutes = "/" + ROUTEKEYS.PORTFOLIO_ID;
 
 		// Check if previousPath matches one of the id routes
 		const wasIdRoute = idRoutes.includes(previousPath.current ?? "");

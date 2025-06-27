@@ -5,18 +5,17 @@ import {
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
 import dayjs from "dayjs";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { useDebounce } from "@/hooks/useDebounce";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { PricesItem } from "@/constants/constantData";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
-import { cockpitChartData } from "@/constants/cockpitchart";
-import { stringChartData } from "@/constants/stringChartData";
+import utc from "dayjs/plugin/utc";
+import DownloadFIleIcon from "@/components/ui/DownloadFIleIcon";
 import { View, Text, SafeAreaView, Platform } from "react-native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
-import utc from "dayjs/plugin/utc";
 import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
 
 dayjs.extend(utc);
@@ -34,7 +33,19 @@ const PricesDetails = () => {
 	const dateFormate = isEng
 		? DATE_FORMAT_PATTERNS.DATE_TIME_SLASHED_DD_MM_YYYY_HH_MM
 		: DATE_FORMAT_PATTERNS.DATE_TIME_DOTTED_DD_MM_YYYY_HH_MM;
+	const [debouncedExport, showIcon] = useDebounce(
+		(data: any, name: string) => {
+			// if (!data || data.length === 0) return;
 
+			const filename = `_${name}_${dayjs().format(DATE_FORMAT_PATTERNS.DATE_TIME_FULL_DASHED)}`;
+
+			Platform.OS === "web"
+				? exportTimeseriesToCSVForWeb(data, filename)
+				: exportTimeseriesToCSV(data, filename);
+		},
+
+		200
+	);
 	useEffect(() => {
 		const filteredItem = PricesItem.filter(
 			(item: any) => item.id === Number(id)
@@ -85,20 +96,12 @@ const PricesDetails = () => {
 						</View>
 
 						<View className="px-2 justify-start ">
-							<FontAwesome5
-								classname="mr-2"
-								name="file-download"
+							<DownloadFIleIcon
+								showIcon={showIcon}
+								onPress={debouncedExport}
 								size={30}
-								color="#e31837"
-								onPress={() => {
-									if (Platform.OS === "web") {
-										exportTimeseriesToCSVForWeb(
-											cockpitChartData
-										);
-									} else {
-										exportTimeseriesToCSV(stringChartData);
-									}
-								}}
+								height={30}
+								width={27}
 							/>
 						</View>
 					</View>

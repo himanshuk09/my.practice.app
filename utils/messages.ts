@@ -74,6 +74,7 @@ export const PERMISSIONKEYS = {
 	EXIT_MESSAGE: "exit_msg",
 	ENABLED: "enabled",
 	DISABLED: "disabled",
+	FILE_DOWNLOADING: "File_Downloading",
 } as const;
 
 export const LOCALSTORAGEKEYS = {

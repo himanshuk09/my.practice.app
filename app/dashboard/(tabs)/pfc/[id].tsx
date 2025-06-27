@@ -2,20 +2,20 @@ import {
 	exportTimeseriesToCSV,
 	exportTimeseriesToCSVForWeb,
 } from "@/components/exportcsv/exporttofile";
+import dayjs from "dayjs";
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
-import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { englishLocale } from "@/localization/config";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
-import { cockpitChartData } from "@/constants/cockpitchart";
 import { PFCGas, PFCStrom } from "@/constants/constantData";
-import { stringChartData } from "@/constants/stringChartData";
+import DownloadFIleIcon from "@/components/ui/DownloadFIleIcon";
 import { View, Text, SafeAreaView, Platform } from "react-native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
+import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
 
 const PFCDetails = () => {
 	const dispatch = useDispatch();
@@ -42,6 +42,20 @@ const PFCDetails = () => {
 			? `${day}/${month}/${year} ${hours}:${minutes}`
 			: `${day}.${month}.${year} ${hours}:${minutes}`;
 	};
+
+	const [debouncedExport, showIcon] = useDebounce(
+		(data: any, name: string) => {
+			// if (!data || data.length === 0) return;
+
+			const filename = `_${name}_${dayjs().format(DATE_FORMAT_PATTERNS.DATE_TIME_FULL_DASHED)}`;
+
+			Platform.OS === "web"
+				? exportTimeseriesToCSVForWeb(data, filename)
+				: exportTimeseriesToCSV(data, filename);
+		},
+
+		200
+	);
 	const fetchChartData = async (tab: string) => {
 		try {
 			return [];
@@ -86,20 +100,12 @@ const PFCDetails = () => {
 							</Text>
 						</View>
 						<View className="px-2 justify-start">
-							<FontAwesome5
-								classname="mr-2"
-								name="file-download"
-								size={30}
-								color="#e11935"
-								onPress={() => {
-									if (Platform.OS === "web") {
-										exportTimeseriesToCSVForWeb(
-											cockpitChartData
-										);
-									} else {
-										exportTimeseriesToCSV(stringChartData);
-									}
-								}}
+							<DownloadFIleIcon
+								onPress={debouncedExport}
+								showIcon={showIcon}
+								size={25}
+								height={25}
+								width={25}
 							/>
 						</View>
 					</View>

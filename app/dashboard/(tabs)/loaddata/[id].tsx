@@ -6,17 +6,17 @@ import dayjs from "dayjs";
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
 import { StatusBar } from "expo-status-bar";
+import { tabsType } from "@/types/chart.type";
 import { DATE_FORMAT_PATTERNS, i18n } from "@/localization/config";
 import { useDebounce } from "@/hooks/useDebounce";
-import { tabsType } from "@/types/chart.type";
 import { useLocalSearchParams } from "expo-router";
 import useTabDataCache from "@/hooks/useTabDataCache";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, SafeAreaView, Platform } from "react-native";
+import DownloadFIleIcon from "@/components/ui/DownloadFIleIcon";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { EnergyDataRequest, getLoadDataTS } from "@/services/loaddata.service";
 
@@ -33,15 +33,18 @@ const LoadDataDetails = () => {
 	const locale = useSelector((state: RootState) => state.culture.locale);
 	const { fetchWithCache } = useTabDataCache();
 
-	const debouncedExport = useDebounce((data: any, name: string) => {
-		if (!data || data.length === 0) return;
+	const [debouncedExport, showIcon] = useDebounce(
+		(data: any, name: string) => {
+			if (!data || data.length === 0) return;
 
-		const filename = `_${name}_${dayjs().format(DATE_FORMAT_PATTERNS.DATE_TIME_FULL_DASHED)}`;
+			const filename = `_${name}_${dayjs().format(DATE_FORMAT_PATTERNS.DATE_TIME_FULL_DASHED)}`;
 
-		Platform.OS === "web"
-			? exportTimeseriesToCSVForWeb(data, filename)
-			: exportTimeseriesToCSV(data, filename);
-	}, 1000);
+			Platform.OS === "web"
+				? exportTimeseriesToCSVForWeb(data, filename)
+				: exportTimeseriesToCSV(data, filename);
+		},
+		200
+	);
 
 	const fetchChartData = useCallback(
 		async (tab: string, payload: any) => {
@@ -132,22 +135,23 @@ const LoadDataDetails = () => {
 								</Text>
 							</View>
 						</View>
+
 						<View className="px-2 justify-start pt-5">
-							<FontAwesome5
-								classname="mr-2"
-								name="file-download"
-								size={30}
-								color="#e31837"
+							<DownloadFIleIcon
 								onPress={() =>
 									debouncedExport(
 										loadDetail?.data,
 										activeTabForFileName
 									)
 								}
+								showIcon={showIcon}
+								height={30}
+								width={50}
 							/>
 						</View>
 					</View>
 				)}
+
 				{/**chart component */}
 				<ToggleChartComponent
 					screenName={"loaddata"}

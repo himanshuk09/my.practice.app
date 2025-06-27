@@ -193,7 +193,7 @@ const CustomDrawer = memo(() => {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const segments = useSegments();
-	const segmentPath = segments.join("/");
+	const segmentPath = "/" + segments.join("/");
 	const { setSessionValue } = useAuth();
 	const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null); // Track the active submenu
 	const [isPressed, setIsPressed] = useState(false);

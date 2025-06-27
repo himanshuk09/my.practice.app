@@ -1,16 +1,14 @@
 import { st } from "@/utils/Styles";
 import { useEffect, useState } from "react";
 import { i18n } from "@/localization/config";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { useDebounce } from "@/hooks/useDebounce";
 import StackHeader from "@/components/ui/StackHeader";
 import { ChartLoaderPNG } from "@/components/Loader";
 import {
 	View,
-	Platform,
-	FlatList,
-	TouchableOpacity,
 	Text,
+	FlatList,
+	Platform,
 	StyleSheet,
 	RefreshControl,
 } from "react-native";
@@ -22,6 +20,7 @@ import {
 	exportDealsToCSVWeb,
 } from "@/components/exportcsv/exporttofile";
 import PrimaryButton from "./ui/PrimaryButton";
+import DownloadFIleIcon from "./ui/DownloadFIleIcon";
 
 const Card = ({ title, deals }: { title: string; deals: any }) => {
 	return (
@@ -178,7 +177,7 @@ const Transactions = ({
 	const isOnline = useSelector(
 		(state: RootState) => state?.network.isConnected
 	);
-	const debouncedExport = useDebounce(() => {
+	const [debouncedExport, showIcon] = useDebounce(() => {
 		if (!isOnline || cards?.length === 0) return;
 		setModalVisible(!modalVisible);
 		Platform.OS === "web"
@@ -205,11 +204,12 @@ const Transactions = ({
 				</View>
 
 				<View className="py-5 mr-5">
-					<FontAwesome5
-						name="file-download"
-						size={25}
-						color="#ef4444"
+					<DownloadFIleIcon
 						onPress={debouncedExport}
+						showIcon={showIcon}
+						size={25}
+						height={25}
+						width={24}
 					/>
 				</View>
 			</View>

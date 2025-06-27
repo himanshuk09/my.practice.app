@@ -16,7 +16,7 @@ const requestWritableDirectory = async (): Promise<string | null> => {
 		showToast({
 			type: "error",
 			title: PERMISSIONKEYS.PERMISSION_DENIED,
-			subtitle: PERMISSIONKEYS.PERMISSION_REQUIRED,
+			subtitle: PERMISSIONKEYS.PERMISSION_STORAGE_NOT_GRANTED,
 		});
 		return null;
 	}

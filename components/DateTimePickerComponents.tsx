@@ -98,7 +98,9 @@ const DateTimePickerComponents = ({
 				// minDate={dayjs().startOf("day")}
 				//maxDate={dayjs().add(7, "day").endOf("day")}
 				// disabledDates={[dayjs(), dayjs().add(1, "day")]} // we can add the date in array
-				// disabledDates={(date) => [0, 6].includes(dayjs(date).day())} // disable weekends
+				disabledDates={(date) =>
+					dayjs(date).isAfter(dayjs().add(10, "year"), "day")
+				}
 				displayFullDays
 				timePicker={timePicker}
 				onChange={onChange}

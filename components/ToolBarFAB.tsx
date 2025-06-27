@@ -22,7 +22,10 @@ export default function FloatingActionMenu({
 	const [tooltip, setTooltip] = useState<boolean | any>(false);
 	const [tooltipLabel, setTooltipLabel] = useState<any>(null);
 	const intervalRef = useRef<NodeJS.Timeout | number>(null);
-	const debouncedExport = useDebounce((item: any) => item(), 1000);
+	const [debouncedExport, showIcon] = useDebounce(
+		(item: any) => item(),
+		1000
+	);
 	const menuItems = [
 		{
 			icon: isZoomIn ? "search-plus" : "search-minus",

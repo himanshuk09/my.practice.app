@@ -2,15 +2,23 @@
  * when any routes hit that not exist then this screen appear
  */
 
-import React from "react";
 import { Link, Stack } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
-import { View, Text, Pressable, StyleSheet, Image } from "react-native";
+import { useDispatch } from "react-redux";
 import { i18n } from "@/localization/config";
-import { I18n } from "i18n-js";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useLayoutEffect } from "react";
+import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
+import { useIsFocused } from "@react-navigation/native";
+import { inActiveLoading } from "@/store/navigationSlice";
+import { View, Text, Pressable, StyleSheet, Image } from "react-native";
 
 export default function NotFoundScreen() {
+	const isFocused = useIsFocused();
+	const dispatch = useDispatch();
+
+	useLayoutEffect(() => {
+		if (isFocused) dispatch(inActiveLoading());
+	}, [isFocused]);
 	return (
 		<React.Fragment>
 			<Stack.Screen

@@ -58,7 +58,7 @@ const DATE_FORMAT_PATTERNS = {
 	// Number formats
 	DECIMAL_DOT: "00.00",
 	DECIMAL_COMMA: "00,00",
-};
+} as const;
 
 export {
 	i18n,
