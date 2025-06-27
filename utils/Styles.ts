@@ -5,13 +5,24 @@ export const st = StyleSheet.create({
 		// For iOS and Android
 		...Platform.select({
 			ios: {
-				shadowColor: "#000",
-				shadowOffset: { width: 0, height: 0 },
-				shadowOpacity: 0.5,
-				shadowRadius: 3,
+				shadowColor: "#000000",
+				shadowOffset: {
+					width: 0,
+					height: 5,
+				},
+				shadowOpacity: 0.2,
+				shadowRadius: 5.62,
+				elevation: 7,
 			},
 			android: {
-				elevation: 3,
+				shadowColor: "#474646",
+				shadowOffset: {
+					width: 0,
+					height: 15,
+				},
+				shadowOpacity: 0.24,
+				shadowRadius: 17.43,
+				elevation: 21,
 			},
 		}),
 		// For web
@@ -45,6 +56,13 @@ export const st = StyleSheet.create({
 				shadowRadius: 10,
 			},
 			android: {
+				shadowColor: "#474646",
+				shadowOffset: {
+					width: 0,
+					height: 11,
+				},
+				shadowOpacity: 0.23,
+				shadowRadius: 11.78,
 				elevation: 15,
 			},
 			default: {

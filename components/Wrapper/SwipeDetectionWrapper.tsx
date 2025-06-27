@@ -14,6 +14,9 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 	const isDrawerOpen = useSelector(
 		(state: RootState) => state.drawer.isDrawerOpen
 	);
+	const isLandscape = useSelector(
+		(state: RootState) => state.orientation.isLandscape
+	);
 	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	const debounceAction = (action: () => void) => {
@@ -60,7 +63,7 @@ const SwipeDetectionWrapper: React.FC<SwipeDetectionWrapperProps> = ({
 	return (
 		<View
 			style={styles.container}
-			{...panResponder.panHandlers}
+			{...(isLandscape ? {} : panResponder.panHandlers)}
 			className="font-sans"
 		>
 			{children}
