@@ -16,9 +16,9 @@ import { inActiveLoading } from "@/store/navigationSlice";
 import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
+import { EnergyTypeEnum, ScreenNameEnum } from "@/types/chart.type";
 
 interface CombinedData {
-	type: "header";
 	title: string;
 	data: PriceForwardCurveArray;
 }
@@ -42,23 +42,9 @@ const PFC = () => {
 	});
 
 	const combinedData: CombinedData[] = [
-		{ type: "header", title: "gas", data: pfcResponse?.gas || [] },
-		{ type: "header", title: "power", data: pfcResponse?.strom || [] },
+		{ title: EnergyTypeEnum.GAS, data: pfcResponse?.gas || [] },
+		{ title: EnergyTypeEnum.POWER, data: pfcResponse?.strom || [] },
 	];
-
-	const renderItem: ListRenderItem<CombinedData> = ({ item }) => {
-		if (item.type === "header") {
-			return (
-				<FlatListBlock
-					title={item.title}
-					items={item.data || []}
-					height={"auto"}
-					renderType="pfc"
-				/>
-			);
-		}
-		return null;
-	};
 
 	useEffect(() => {
 		if (isFocused) dispatch(inActiveLoading());
@@ -80,7 +66,14 @@ const PFC = () => {
 		>
 			<FlatList
 				data={combinedData}
-				renderItem={renderItem}
+				renderItem={({ item, index }) => (
+					<FlatListBlock
+						title={item.title}
+						items={item.data || []}
+						height={"auto"}
+						renderType={ScreenNameEnum.PFC}
+					/>
+				)}
 				keyExtractor={(item, index) => `${item.title}-${index}`}
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}

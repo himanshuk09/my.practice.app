@@ -736,13 +736,12 @@ const webviewAreaHtmlContent = /*html*/ `<!DOCTYPE html>
                         },
                     },
                     y: {
-                        //formatter: (value) => value + " MW", // Add 'MW' unit after y-axis value
                         formatter: function (value) {
                             const formattedValue = new Intl.NumberFormat(locale).format(value);
                             return formattedValue + " MW";
                         },
                         title: {
-                            formatter: (seriesName) => seriesName, // Use the series name as the title (optional)
+                            formatter: (seriesName) => seriesName,
                         },
                     },
                     z: {

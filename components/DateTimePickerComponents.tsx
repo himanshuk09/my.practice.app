@@ -15,13 +15,10 @@ import "dayjs/locale/en-in";
 import { useSelector } from "react-redux";
 import React, { useCallback, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import {
-	DATE_FORMAT_PATTERNS,
-	englishLocale,
-	i18n,
-} from "@/localization/config";
+import { englishLocale, i18n } from "@/localization/config";
 import DateTimePicker, { DateType, ModeType } from "react-native-ui-datepicker";
 import { DateTimePickerComponentsProps } from "@/types/date-time-picker.type";
+import { DATE_FORMAT_PATTERNS } from "@/utils/dateformatter.utils";
 
 const DateTimePickerComponents = ({
 	title = "Select",

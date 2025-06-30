@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
 import { activeLoading } from "@/store/navigationSlice";
 
+//.............................helper shimmer components ....................
 const ShimmerPrices = () => {
 	const shimmerValue = useRef(new Animated.Value(-1)).current;
 	const screenWidth = Dimensions.get("window").width;
@@ -83,10 +84,10 @@ const ShimmerPricesHeader = () => {
 
 	return (
 		<TouchableOpacity
-			className="flex flex-row justify-between items-center  p-6  font-medium  bg-primary   w-[100%]"
+			className="flex flex-row justify-between items-center bg-primary p-5  z-50 w-[100%]"
 			style={[st.boxShadow, styles.shimmerContainer]}
 		>
-			<View className="flex flex-col justify-start">
+			<View className="flex flex-col justify-evenly">
 				<View className="flex flex-row items-center justify-start">
 					<View style={styles.shimmerBox} />
 				</View>
@@ -108,7 +109,6 @@ const ShimmerPricesHeader = () => {
 					color="white"
 					onPress={() => {
 						dispatch(activeLoading());
-
 						setTimeout(() =>
 							router.push(ROUTEKEYS.PRICES_SETTINGS)
 						);
@@ -259,8 +259,10 @@ const ShimmerListCard = () => {
 };
 const ShimmerFlatListBlock = ({
 	height,
+	pricesScreen = false,
 }: {
 	height: number | string | any;
+	pricesScreen?: boolean;
 }) => {
 	return (
 		<View
@@ -268,16 +270,18 @@ const ShimmerFlatListBlock = ({
 				height: height,
 			}}
 		>
-			<ShimmerHeader />
+			{!pricesScreen ? <ShimmerHeader /> : <ShimmerPricesHeader />}
 			<FlatList
-				data={[...Array(10).keys()].map((index) => ({
+				data={[...Array(8).keys()].map((index) => ({
 					id: index,
 					title: `Shimmer ${index}`,
 					unit: 0,
 					indicator: "Loading",
 					route: "",
 				}))}
-				renderItem={(items) => <ShimmerListCard />}
+				renderItem={(items) =>
+					!pricesScreen ? <ShimmerListCard /> : <ShimmerPrices />
+				}
 				keyExtractor={(items, index) => index.toString()}
 				initialNumToRender={50}
 				showsHorizontalScrollIndicator={false}
@@ -286,48 +290,7 @@ const ShimmerFlatListBlock = ({
 		</View>
 	);
 };
-const ShimmerScreenHeader = () => {
-	const shimmerValue = useRef(new Animated.Value(-1)).current;
-	const screenWidth = Dimensions.get("window").width;
 
-	useEffect(() => {
-		const startShimmer = () => {
-			Animated.loop(
-				Animated.timing(shimmerValue, {
-					toValue: 2,
-					duration: 1500,
-					useNativeDriver: Platform.OS === "android",
-				})
-			).start();
-		};
-		startShimmer();
-	}, [shimmerValue]);
-
-	const translateX = shimmerValue.interpolate({
-		inputRange: [-1, 2],
-		outputRange: [-screenWidth, screenWidth],
-	});
-
-	return (
-		<View
-			className="flex flex-row justify-between items-center p-6 font-medium bg-white w-[100%]"
-			style={[st.boxShadow, styles.shimmerContainer]}
-		>
-			<View className="flex flex-col justify-start my-2">
-				<View className="flex flex-row items-center justify-start">
-					<View style={styles.shimmerBox} />
-				</View>
-				<View className="flex flex-row items-center justify-start">
-					<View style={styles.shimmerBox} />
-				</View>
-			</View>
-			<View style={styles.iconPlaceholder} />
-			<Animated.View
-				style={[styles.shimmerOverlay, { transform: [{ translateX }] }]}
-			/>
-		</View>
-	);
-};
 const styles = StyleSheet.create({
 	shimmerContainer: {
 		overflow: "hidden",
@@ -373,13 +336,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export {
-	ShimmerPrices,
-	ShimmerListCard,
-	ShimmerHeader,
-	ShimmerPricesHeader,
-	ShimmerFlatListBlock,
-	ShimmerAccordionListCard,
-	ShimmerAccordion,
-	ShimmerScreenHeader,
-};
+export { ShimmerFlatListBlock, ShimmerAccordion };

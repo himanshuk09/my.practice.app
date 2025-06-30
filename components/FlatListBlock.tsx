@@ -12,11 +12,13 @@ import { useDispatch } from "react-redux";
 import Title from "@/components//ui/Title";
 import { ROUTEKEYS } from "@/utils/messages";
 import { FontAwesome } from "@expo/vector-icons";
+import { ScreenNameEnum } from "@/types/chart.type";
 import { useIsFocused } from "@react-navigation/native";
 import { activeLoading } from "@/store/navigationSlice";
-import { Href, Router, usePathname, useRouter } from "expo-router";
-import { ShimmerFlatListBlock } from "@/components/ShimmerEffect";
+import { Router, usePathname, useRouter } from "expo-router";
 import React, { memo, useCallback, useEffect, useRef } from "react";
+
+import { ShimmerFlatListBlock } from "./ListShimmer";
 
 interface FlatListBlockProps<T = any> {
 	title: string;
@@ -24,7 +26,7 @@ interface FlatListBlockProps<T = any> {
 	enableAutoScroll?: boolean;
 	height?: number | string | any;
 	keyExtractor?: (item: T, index: number | string) => string;
-	renderType: "pfc" | "portfolio" | "signal";
+	renderType: ScreenNameEnum;
 }
 
 const FlatListBlock = <T,>({
@@ -54,28 +56,28 @@ const FlatListBlock = <T,>({
 		}: {
 			item: any;
 			router: Router;
-			renderType: string;
+			renderType: ScreenNameEnum;
 			index: number | string;
 		}) => {
 			const handlePress = () => {
 				dispatch(activeLoading());
 
 				setTimeout(() => {
-					if (renderType === "portfolio") {
+					if (renderType === ScreenNameEnum.PORTFOLIO) {
 						router.push({
 							pathname: ROUTEKEYS.PORTFOLIO_ID,
 							params: {
 								id: encodeURIComponent(JSON.stringify(item)),
 							},
 						});
-					} else if (renderType === "pfc") {
+					} else if (renderType === ScreenNameEnum.PFC) {
 						router.push({
 							pathname: ROUTEKEYS.PFC_ID,
 							params: {
 								id: 1,
 							},
 						});
-					} else {
+					} else if (renderType === ScreenNameEnum.SIGNALS) {
 						router.push({
 							pathname: ROUTEKEYS.SIGNALS_ID,
 							params: {
@@ -87,9 +89,9 @@ const FlatListBlock = <T,>({
 			};
 
 			const title =
-				renderType === "portfolio"
+				renderType === ScreenNameEnum.PORTFOLIO
 					? item?.PortfolioName
-					: renderType === "pfc"
+					: renderType === ScreenNameEnum.PFC
 						? item?.PriceForwardCurveName
 						: item?.title;
 

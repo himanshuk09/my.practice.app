@@ -21,6 +21,7 @@ import {
 } from "@/components/exportcsv/exporttofile";
 import PrimaryButton from "./ui/PrimaryButton";
 import DownloadFIleIcon from "./ui/DownloadFIleIcon";
+import { UNIT_PLACEHOLDER } from "@/utils/dateformatter.utils";
 
 const Card = ({ title, deals }: { title: string; deals: any }) => {
 	return (
@@ -46,7 +47,8 @@ const Card = ({ title, deals }: { title: string; deals: any }) => {
 						</Text>
 						<View className="items-start justify-start w-[30%]">
 							<Text className="text-xs  text-cardText">
-								{deals?.Amount} MW
+								{deals?.Amount}{" "}
+								{UNIT_PLACEHOLDER.PLACEHOLDER_MW}
 							</Text>
 						</View>
 					</View>
@@ -56,7 +58,10 @@ const Card = ({ title, deals }: { title: string; deals: any }) => {
 						</Text>
 						<View className="items-start justify-start w-[50%]">
 							<Text className="text-xs text-cardText">
-								{deals?.Price} €/MWh
+								{deals?.Price}{" "}
+								{
+									UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT
+								}
 							</Text>
 						</View>
 					</View>
@@ -139,19 +144,22 @@ const DataDisplay = ({
 			<DataRow
 				label="Price"
 				value={Math.trunc(data?.Price)}
-				unit={data?.PriceUnit}
+				unit={data?.PriceUnit || UNIT_PLACEHOLDER.PLACEHOLDER_EURO}
 				locale={locale}
 			/>
 			<DataRow
 				label="Load"
 				value={data?.Load}
-				unit={data?.LoadUnit}
+				unit={data?.LoadUnit || UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
 				locale={locale}
 			/>
 			<DataRow
 				label="Value"
 				value={data?.Value}
-				unit={data?.unit || "€/MWh"}
+				unit={
+					data?.unit ||
+					UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT
+				}
 				locale={locale}
 			/>
 		</View>

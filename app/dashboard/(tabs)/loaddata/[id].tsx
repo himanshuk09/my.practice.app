@@ -7,7 +7,7 @@ import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
 import { StatusBar } from "expo-status-bar";
 import { tabsType } from "@/types/chart.type";
-import { DATE_FORMAT_PATTERNS, i18n } from "@/localization/config";
+import { i18n } from "@/localization/config";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useLocalSearchParams } from "expo-router";
 import useTabDataCache from "@/hooks/useTabDataCache";
@@ -19,6 +19,10 @@ import { View, Text, SafeAreaView, Platform } from "react-native";
 import DownloadFIleIcon from "@/components/ui/DownloadFIleIcon";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
 import { EnergyDataRequest, getLoadDataTS } from "@/services/loaddata.service";
+import {
+	DATE_FORMAT_PATTERNS,
+	UNIT_PLACEHOLDER,
+} from "@/utils/dateformatter.utils";
 
 const LoadDataDetails = () => {
 	const isFocused = useIsFocused();
@@ -115,8 +119,9 @@ const LoadDataDetails = () => {
 														""
 													)
 												)
-											)} kWh`
-										: "0 kWh"}
+											)} `
+										: "0 "}{" "}
+									{UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
 								</Text>
 							</View>
 							<View className="flex-row justify-items-start">
@@ -128,10 +133,9 @@ const LoadDataDetails = () => {
 										? `${new Intl.NumberFormat(locale, {
 												useGrouping: true,
 												maximumFractionDigits: 2,
-											}).format(
-												loadDetail.AverageValue
-											)} kWh`
-										: "0 kWh"}
+											}).format(loadDetail.AverageValue)}`
+										: "0"}
+									{UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
 								</Text>
 							</View>
 						</View>
@@ -156,7 +160,7 @@ const LoadDataDetails = () => {
 				<ToggleChartComponent
 					screenName={"loaddata"}
 					fetchChartData={fetchChartData}
-					yaxisunit="kWh"
+					yaxisunit={UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
 					setActiveTabForFileName={setActiveTabForFileName}
 				/>
 			</View>

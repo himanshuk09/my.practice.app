@@ -3,6 +3,8 @@ import {
 	exportTimeseriesToCSVForWeb,
 } from "@/components/exportcsv/exporttofile";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
 import React, { useEffect, useState } from "react";
@@ -15,7 +17,8 @@ import { PFCGas, PFCStrom } from "@/constants/constantData";
 import DownloadFIleIcon from "@/components/ui/DownloadFIleIcon";
 import { View, Text, SafeAreaView, Platform } from "react-native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
-import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
+import { englishLocale } from "@/localization/config";
+import { DATE_FORMAT_PATTERNS } from "@/utils/dateformatter.utils";
 
 const PFCDetails = () => {
 	const dispatch = useDispatch();
@@ -27,21 +30,10 @@ const PFCDetails = () => {
 	const isLandscape = useSelector(
 		(state: RootState) => state.orientation.isLandscape
 	);
-
-	const getCurrentUTCDateTime = () => {
-		const now = new Date();
-		// Extract UTC components
-		const day = String(now.getUTCDate()).padStart(2, "0");
-		const month = String(now.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
-		const year = now.getUTCFullYear();
-		const hours = String(now.getUTCHours()).padStart(2, "0");
-		const minutes = String(now.getUTCMinutes()).padStart(2, "0");
-
-		// Format as DD/MM/YYYY HH:mm
-		return locale === englishLocale
-			? `${day}/${month}/${year} ${hours}:${minutes}`
-			: `${day}.${month}.${year} ${hours}:${minutes}`;
-	};
+	const isEng = locale === englishLocale;
+	const dateFormate = isEng
+		? DATE_FORMAT_PATTERNS.DATE_SLASHED_DD_MM_YYYY
+		: DATE_FORMAT_PATTERNS.DATE_DOTTED_DD_MM_YYYY;
 
 	const [debouncedExport, showIcon] = useDebounce(
 		(data: any, name: string) => {
@@ -96,7 +88,7 @@ const PFCDetails = () => {
 								{pfcDetails?.title}
 							</Text>
 							<Text className=" text-md text-mainCardHeaderText ">
-								{getCurrentUTCDateTime()}
+								{dayjs().utc().format(dateFormate)}
 							</Text>
 						</View>
 						<View className="px-2 justify-start">

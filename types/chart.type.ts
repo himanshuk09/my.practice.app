@@ -19,6 +19,18 @@ export type ScreenName =
 	| "loaddata"
 	| "portfolio";
 
+export enum EnergyTypeEnum {
+	POWER = "power",
+	GAS = "gas",
+}
+export enum ScreenNameEnum {
+	PRICES = "prices",
+	PFC = "pfc",
+	SIGNALS = "signals",
+	LOADDATA = "loaddata",
+	PORTFOLIO = "portfolio",
+}
+
 export type graphPriceUnit = [
 	" €/MWh",
 	" €/MWh",

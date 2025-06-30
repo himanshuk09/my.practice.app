@@ -16,14 +16,6 @@ const useTabDataCache = () => {
 	const CUSTOM_TAB_KEY = "__custom__";
 	const EMPTY_TAB_KEY = "__empty__";
 
-	useEffect(() => {
-		return () => {
-			isMountedRef.current = false;
-			cacheRef.current = {};
-			pendingRequestsRef.current = {};
-		};
-	}, []);
-
 	const normalizeTabKey = (tab: string | number): string => {
 		if (tab === "") return EMPTY_TAB_KEY;
 		return String(tab);
@@ -97,6 +89,13 @@ const useTabDataCache = () => {
 		}
 	};
 
+	useEffect(() => {
+		return () => {
+			isMountedRef.current = false;
+			cacheRef.current = {};
+			pendingRequestsRef.current = {};
+		};
+	}, []);
 	return {
 		fetchWithCache,
 		clearCache,

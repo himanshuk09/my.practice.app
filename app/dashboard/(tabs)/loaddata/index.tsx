@@ -1,5 +1,8 @@
+import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
+import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 import { useDispatch } from "react-redux";
 import NoData from "@/components/icons/NoData";
+import { EnergyTypeEnum } from "@/types/chart.type";
 import NoNetwork from "@/components/icons/NoNetwork";
 import { useIsFocused } from "@react-navigation/native";
 import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
@@ -8,8 +11,6 @@ import AccordionFlatlist from "@/components/AccordionFlatlist";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FlatList, RefreshControl, SafeAreaView } from "react-native";
-import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 
 interface DataItem {
 	id: string;
@@ -37,8 +38,8 @@ const LoadData = () => {
 	};
 
 	const listData: DataItem[] = [
-		{ id: "1", title: "gas", data: data?.gas || [] },
-		{ id: "2", title: "power", data: data?.strom || [] },
+		{ id: "1", title: EnergyTypeEnum.GAS, data: data?.gas || [] },
+		{ id: "2", title: EnergyTypeEnum.POWER, data: data?.strom || [] },
 	];
 
 	useLayoutEffect(() => {

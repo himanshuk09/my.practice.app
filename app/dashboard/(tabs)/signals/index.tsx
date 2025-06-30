@@ -9,42 +9,62 @@ import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SignalsGas, SignalsStrom } from "@/constants/constantData";
 import { SafeAreaView, FlatList, RefreshControl } from "react-native";
+import { EnergyTypeEnum, ScreenNameEnum } from "@/types/chart.type";
+import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 
 const Signals = () => {
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
 	const [error, setError] = useState(false);
-	const [signalsGas, setSignalsGas] = useState<any>();
+	// const [signalsGas, setSignalsGas] = useState<any>();
 	const [isRefreshing, setIsRefreshing] = useState(false);
-	const [signalsStrom, setSignalsStrom] = useState<any>();
+	// const [signalsStrom, setSignalsStrom] = useState<any>();
 	const insets = useSafeAreaInsets();
-	const combinedData = [
-		{ type: "header", title: "gas", data: signalsGas },
-		{ type: "header", title: "power", data: signalsStrom },
-	];
-	const renderItem = ({ item }: any) => {
-		if (item.type === "header") {
-			return (
-				<FlatListBlock
-					title={item.title}
-					items={item.data === undefined ? [] : item.data}
-					enableAutoScroll={false}
-					height={"auto"}
-					renderType={"signal"}
-				/>
-			);
+
+	const getSignalsList = async () => {
+		try {
+			return await new Promise((resolve) => {
+				setTimeout(() => {
+					resolve({
+						SignalsStrom: SignalsStrom,
+						SignalsGas: SignalsGas,
+					});
+				}, 2000);
+			});
+		} catch (error) {
+			console.error("Error in getsignalsList:", error);
+			return;
+			{
+				SignalsStrom: [];
+				SignalsGas: [];
+			}
 		}
-		return null;
 	};
+
+	const {
+		data: signalsResponse,
+		error: signalsError,
+		loading: signalsLoading,
+		isOnline,
+		refetch,
+	} = useNetworkAwareApiRequest(getSignalsList, {
+		autoFetch: true,
+		enabled: isFocused,
+		showGlobalLoader: false,
+		deps: [isFocused],
+	});
+	const combinedData = [
+		{ title: EnergyTypeEnum.GAS, data: signalsResponse?.SignalsGas || [] },
+		{
+			title: EnergyTypeEnum.POWER,
+			data: signalsResponse?.SignalsStrom || [],
+		},
+	];
 
 	useEffect(() => {
 		if (isFocused) {
 			dispatch(inActiveLoading());
 		}
-		setTimeout(() => {
-			setSignalsGas(SignalsGas);
-			setSignalsStrom(SignalsStrom);
-		}, 500);
 	}, [isFocused]);
 
 	/**
@@ -52,7 +72,7 @@ const Signals = () => {
 	 * Return Based On Condition
 	 */
 	if (error) return <NoNetwork />;
-	if (signalsGas?.length === 0) return <NoData />;
+	if (signalsResponse?.length === 0) return <NoData />;
 
 	return (
 		<SafeAreaView
@@ -63,7 +83,15 @@ const Signals = () => {
 		>
 			<FlatList
 				data={combinedData}
-				renderItem={renderItem}
+				renderItem={({ item, index }) => (
+					<FlatListBlock
+						title={item.title}
+						items={item.data === undefined ? [] : item.data}
+						enableAutoScroll={false}
+						height={"auto"}
+						renderType={ScreenNameEnum.SIGNALS}
+					/>
+				)}
 				className=" overflow-scroll"
 				keyExtractor={(item, index) => `${item.title}-${index}`}
 				showsVerticalScrollIndicator={false}

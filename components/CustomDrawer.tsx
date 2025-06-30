@@ -50,7 +50,7 @@ const Submenu = memo(
 		React.useEffect(() => {
 			Animated.timing(heightAnim, {
 				toValue: isVisible ? height : 0,
-				duration: 0,
+				duration: 300,
 				easing: Easing.inOut(Easing.ease),
 				useNativeDriver: false,
 			}).start();
@@ -113,7 +113,7 @@ const SidebarMenuItem: React.FC<MenuItemProps> = memo(
 					>
 						{menu?.icon}
 						<Text
-							className="text-lg font-semibold ml-4 text-chartText flex-1 break-words"
+							className="text-xl font-semibold ml-4 text-chartText flex-1 break-words"
 							onPress={() => toggleSubmenu(menu?.key)}
 						>
 							{i18n.t(menu?.label)}
@@ -147,7 +147,7 @@ const SidebarMenuItem: React.FC<MenuItemProps> = memo(
 							getTextAndIconStyle(menu?.route)
 						)}
 						<Text
-							className={`text-lg font-semibold ml-4 text-chartText ${
+							className={`text-xl font-semibold ml-4  text-chartText ${
 								menu?.label === "portfolio"
 									? "uppercase"
 									: "capitalize"
@@ -176,7 +176,7 @@ const SidebarMenuItem: React.FC<MenuItemProps> = memo(
 								onPress={() => navigationToRoute(submenu)}
 							>
 								<Text
-									className="text-lg font-normal text-chartText"
+									className="text-xl font-normal text-chartText"
 									style={getTextAndIconStyle(submenu?.route)}
 								>
 									{i18n.t(submenu?.label)}

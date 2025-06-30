@@ -28,7 +28,7 @@ export const menuItems: MenuItem[] = [
 		key: "",
 		items: [],
 		route: ROUTEKEYS.DASHBOARD,
-		icon: <FontAwesome name="home" size={23} />,
+		icon: <FontAwesome name="home" size={24} color="#9a9b9f" />,
 	},
 	{
 		label: "marketinfo",
@@ -44,7 +44,7 @@ export const menuItems: MenuItem[] = [
 	{
 		label: "consumption",
 		key: "consumption",
-		icon: <Ionicons name="speedometer-sharp" size={24} color="#9a9b9f" />,
+		icon: <Ionicons name="speedometer-sharp" size={25} color="#9a9b9f" />,
 		items: [{ label: "loaddata", route: ROUTEKEYS.LOADDATA }],
 		height: Platform.OS === "web" ? 52 : 45,
 	},
@@ -53,7 +53,7 @@ export const menuItems: MenuItem[] = [
 		key: "",
 		items: [],
 		route: ROUTEKEYS.PORTFOLIO,
-		icon: <Ionicons name="briefcase-sharp" size={20} color="#9a9b9f" />,
+		icon: <Ionicons name="briefcase-sharp" size={23} color="#9a9b9f" />,
 	},
 	{
 		label: "settings",
@@ -67,7 +67,7 @@ export const menuItems: MenuItem[] = [
 	{
 		label: "feedback",
 		key: "feedback",
-		icon: <MaterialIcons name="message" size={24} color="#9a9b9f" />,
+		icon: <MaterialIcons name="message" size={25} color="#9a9b9f" />,
 		items: [
 			{ label: "rateus", route: ROUTEKEYS.RATE },
 			{ label: "contactus", route: ROUTEKEYS.CONTACT_US },

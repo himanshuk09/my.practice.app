@@ -16,7 +16,11 @@ import utc from "dayjs/plugin/utc";
 import DownloadFIleIcon from "@/components/ui/DownloadFIleIcon";
 import { View, Text, SafeAreaView, Platform } from "react-native";
 import ToggleChartComponent from "@/components/ToggleChartComponent";
-import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
+import { englishLocale } from "@/localization/config";
+import {
+	DATE_FORMAT_PATTERNS,
+	UNIT_PLACEHOLDER,
+} from "@/utils/dateformatter.utils";
 
 dayjs.extend(utc);
 
@@ -90,7 +94,10 @@ const PricesDetails = () => {
 									{dayjs().utc().format(dateFormate)}
 								</Text>
 								<Text className="text-mainCardHeaderText  text-sm font-normal">
-									{pricesDetail?.unit} €/MWh
+									{pricesDetail?.unit}{" "}
+									{
+										UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT
+									}
 								</Text>
 							</View>
 						</View>

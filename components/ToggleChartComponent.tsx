@@ -30,10 +30,11 @@ import { englishLocale } from "@/localization/config";
 import iframeLineHtmlContent from "@/components/chart/config/Linechart.web";
 import webviewLineHtmlContent from "@/components/chart/config/Linechart.android";
 import { tabsType, ToggleChartComponentProps } from "@/types/chart.type";
+import { UNIT_PLACEHOLDER } from "@/utils/dateformatter.utils";
 
 const ToggleChartComponent = ({
 	fetchChartData,
-	yaxisunit = "€/MWh",
+	yaxisunit = UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT,
 	screenName = "loaddata",
 	setActiveTabForFileName = () => "cockpit",
 }: ToggleChartComponentProps) => {

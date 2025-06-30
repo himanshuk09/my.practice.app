@@ -15,11 +15,7 @@ import {
 	initialDatePickerViewProps,
 	PickerModelProps,
 } from "@/types/date-time-picker.type";
-import {
-	DATE_FORMAT_PATTERNS,
-	englishLocale,
-	i18n,
-} from "@/localization/config";
+import { englishLocale, i18n } from "@/localization/config";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -27,6 +23,10 @@ import { PICKERVALIDATEMESSAGE } from "@/utils/messages";
 import DateTimePickerComponents from "./DateTimePickerComponents";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
 import { formatNumber, parseNumber } from "@/utils/formatting-utils";
+import {
+	DATE_FORMAT_PATTERNS,
+	UNIT_PLACEHOLDER,
+} from "@/utils/dateformatter.utils";
 
 const PickerModel = ({
 	range,
@@ -237,8 +237,8 @@ const PickerModel = ({
 	const renderDatePickerButton = (
 		date: any,
 		onPress: () => void,
-		showTimeIcon = false,
-		format = dateFormat
+		showTimeIcon: boolean = false,
+		format: any = dateFormat
 	) => (
 		<Pressable
 			className="bg-cardBg p-3 flex-row justify-between"
@@ -249,7 +249,7 @@ const PickerModel = ({
 					? dayjs(date).locale(locale).format(format)
 					: format === dateFormat
 						? emptyDatePlaceholder
-						: "-- : --"}
+						: DATE_FORMAT_PATTERNS.PLACEHOLDER}
 			</Text>
 			{showTimeIcon ? (
 				<Ionicons name="alarm" size={20} color="#808080" />
@@ -277,7 +277,7 @@ const PickerModel = ({
 					maxLength={10}
 				/>
 				<Text className="z-50 w-10 absolute top-3 right-2 font-light size-6 text-slate-600">
-					kWh
+					{UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
 				</Text>
 			</View>
 		</View>

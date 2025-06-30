@@ -1,4 +1,6 @@
+import { UNIT_PLACEHOLDER } from "@/utils/dateformatter.utils";
 import api from "./api";
+
 import { formateByEnergyType } from "./helper";
 /**
  * GET PORTFOLIO LIST
@@ -92,15 +94,15 @@ const formatePortfolioDetails = (response: any) => {
 		donotChartData: [openPercentage, closedPercentage],
 		closedData: formattedData.map((d: any) => ({
 			...d.Close,
-			PriceUnit: "€",
-			LoadUnit: "MWh",
-			unit: "€/MWh",
+			PriceUnit: UNIT_PLACEHOLDER.PLACEHOLDER_EURO,
+			LoadUnit: UNIT_PLACEHOLDER.PLACEHOLDER_MWH_UNIT,
+			unit: UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT,
 		})),
 		openData: formattedData.map((d: any) => ({
 			...d.Open,
-			PriceUnit: "€",
-			LoadUnit: "MWh",
-			unit: "€/MWh",
+			PriceUnit: UNIT_PLACEHOLDER.PLACEHOLDER_EURO,
+			LoadUnit: UNIT_PLACEHOLDER.PLACEHOLDER_MWH_UNIT,
+			unit: UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT,
 		})),
 		message: "no error",
 	};
@@ -125,9 +127,9 @@ const getPortfolioDetails = async (payload: any) => {
 						Price: 0,
 						Load: 0,
 						Value: 0,
-						PriceUnit: "€",
-						LoadUnit: "MWh",
-						unit: "€/MWh",
+						PriceUnit: UNIT_PLACEHOLDER.PLACEHOLDER_EURO,
+						LoadUnit: UNIT_PLACEHOLDER.PLACEHOLDER_MWH_UNIT,
+						unit: UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT,
 					},
 				],
 				openData: [
@@ -135,9 +137,9 @@ const getPortfolioDetails = async (payload: any) => {
 						Price: 0,
 						Load: 0,
 						Value: 0,
-						PriceUnit: "€",
-						LoadUnit: "MWh",
-						unit: "€/MWh",
+						PriceUnit: UNIT_PLACEHOLDER.PLACEHOLDER_EURO,
+						LoadUnit: UNIT_PLACEHOLDER.PLACEHOLDER_MWH_UNIT,
+						unit: UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT,
 					},
 				],
 			};

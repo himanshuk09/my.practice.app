@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Platform, SafeAreaView, useWindowDimensions } from "react-native";
 import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
 import useIsComingFromPortfolioDetail from "@/hooks/useIsComingFromPortfolioDetail";
+import { EnergyTypeEnum, ScreenNameEnum } from "@/types/chart.type";
 
 const Portfolio: React.FC = () => {
 	const dispatch = useDispatch();
@@ -54,21 +55,21 @@ const Portfolio: React.FC = () => {
 			}}
 		>
 			<FlatListBlock
-				title="gas"
+				title={EnergyTypeEnum.GAS}
 				items={gasList}
 				enableAutoScroll={!isFromDetail}
 				height={Platform.OS === "web" ? height * 0.45 : "50%"}
-				renderType={"portfolio"}
+				renderType={ScreenNameEnum.PORTFOLIO}
 				keyExtractor={(item: Portfolioprops, index: number | string) =>
 					item?.PortfolioId.toString()
 				}
 			/>
 			<FlatListBlock
-				title="power"
+				title={EnergyTypeEnum.POWER}
 				items={stromList}
 				enableAutoScroll={!isFromDetail}
 				height={Platform.OS === "web" ? height * 0.45 : "50%"}
-				renderType={"portfolio"}
+				renderType={ScreenNameEnum.PORTFOLIO}
 				keyExtractor={(item: Portfolioprops, index: number | string) =>
 					item?.PortfolioId.toString()
 				}

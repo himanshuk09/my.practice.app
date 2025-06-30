@@ -767,7 +767,7 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
 
                 yaxis: {
                     title: {
-                        text: "kWh",
+                        text: "-",
                     },
                     labels: {
                         show: true,

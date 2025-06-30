@@ -20,24 +20,55 @@ import { isIdRoute } from "@/app/dashboard/(tabs)/_layout";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import { ShimmerPrices, ShimmerPricesHeader } from "@/components/ShimmerEffect";
+import { ShimmerFlatListBlock } from "@/components/ListShimmer";
 import { RootState } from "@/store/store";
-import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
+import { englishLocale } from "@/localization/config";
+import { useNetworkAwareApiRequest } from "@/hooks/useNetworkAwareApiRequest";
+import {
+	DATE_FORMAT_PATTERNS,
+	UNIT_PLACEHOLDER,
+} from "@/utils/dateformatter.utils";
 
 const Prices = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const isFocused = useIsFocused();
-	const [error, setError] = useState(false);
-	const [prices, setPrices] = useState<any>(PricesItem);
 	const [isRefreshing, setIsRefreshing] = useState(false);
-	const [loading, setLoading] = useState(true);
 	const insets = useSafeAreaInsets();
 	const { locale } = useSelector((state: RootState) => state.culture);
 	const isEng = locale === englishLocale;
 	const dateFormate = isEng
 		? DATE_FORMAT_PATTERNS.DATE_SLASHED_DD_MM_YYYY
 		: DATE_FORMAT_PATTERNS.DATE_DOTTED_DD_MM_YYYY;
+	const getPricesList = async () => {
+		try {
+			return await new Promise((resolve) => {
+				setTimeout(() => {
+					resolve(PricesItem);
+				}, 2000);
+			});
+		} catch (error) {
+			console.error("Error in getPricesList:", error);
+			return;
+			{
+				prices: [];
+			}
+		}
+	};
+
+	const {
+		data: pricesResponse,
+		error: pricesError,
+		loading: pricesLoading,
+		isOnline,
+		refetch,
+	} = useNetworkAwareApiRequest(getPricesList, {
+		autoFetch: true,
+		enabled: isFocused,
+		showGlobalLoader: false,
+		deps: [isFocused],
+	});
+	const pricesList: any = pricesResponse || [];
 	const ListItem = memo(({ item }: any) => (
 		<TouchableOpacity
 			key={item.id}
@@ -58,7 +89,8 @@ const Prices = () => {
 			</View>
 			<View className="flex flex-row items-center justify-start">
 				<Text className="font-sans font-extralight text-listText text-xs ">
-					{item.unit} € / MWh
+					{item.unit}{" "}
+					{UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT}
 				</Text>
 			</View>
 
@@ -79,23 +111,17 @@ const Prices = () => {
 							: "gray"
 				}
 				style={{
-					margin: 1,
 					transform:
 						item.indicator === "up" || item.indicator === "down"
 							? [{ rotate: "45deg" }]
 							: [],
 				}}
-				className="mr-5"
+				className="mr-7"
 			/>
 		</TouchableOpacity>
 	));
-	const renderItem = ({ item }: any) =>
-		loading ? <ShimmerPrices /> : <ListItem item={item} />;
 
 	useEffect(() => {
-		setTimeout(() => {
-			setLoading(false);
-		}, 2000);
 		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 
@@ -103,57 +129,45 @@ const Prices = () => {
 	 *
 	 * Return Based On Condition
 	 */
-	if (error) return <NoNetwork />;
-	if (prices.length === 0) return <NoData />;
-	return (
+	if (pricesError) return <NoNetwork />;
+	if (pricesList?.prices?.length === 0) return <NoData />;
+
+	return pricesList?.length === 0 ? (
+		<ShimmerFlatListBlock height={"100%"} pricesScreen={true} />
+	) : (
 		<SafeAreaView className="flex-1 bg-white">
-			{loading ? (
-				<ShimmerPricesHeader />
-			) : (
-				<View
-					className="top-0 w-[100%] p-5 z-50 flex flex-row rounded-sm justify-between bg-primary"
-					style={{
-						marginTop: isIdRoute ? insets.top : 0,
-					}}
-				>
-					<View className="flex flex-col justify-evenly w-[60%]">
-						<Text className="flex justify-start font-normal mb-2  items-center   text-xl  text-white">
-							EEX Power Auction
-						</Text>
-						<Text className="flex justify-start font-normal items-center  text-sm  text-white">
-							{dayjs().locale(locale).format(dateFormate)}
-						</Text>
-					</View>
-
-					<View className="flex justify-center items-center w-[10%] mb-4">
-						<Ionicons
-							name="settings-sharp"
-							size={30}
-							color="white"
-							onPress={() => {
-								dispatch(activeLoading());
-
-								setTimeout(() =>
-									router.push(ROUTEKEYS.PRICES_SETTINGS)
-								);
-							}}
-						/>
-					</View>
+			<View
+				className="flex flex-row justify-between  bg-primary top-0 w-[100%] p-5 z-50 "
+				style={{
+					marginTop: isIdRoute ? insets.top : 0,
+				}}
+			>
+				<View className="flex flex-col justify-evenly w-[60%]">
+					<Text className="flex justify-start font-normal mb-2  items-center   text-xl  text-white">
+						EEX Power Auction
+					</Text>
+					<Text className="flex justify-start font-normal items-center  text-sm  text-white">
+						{dayjs().locale(locale).format(dateFormate)}
+					</Text>
 				</View>
-			)}
+
+				<View className="flex justify-center items-center w-[10%] mb-4">
+					<Ionicons
+						name="settings-sharp"
+						size={30}
+						color="white"
+						onPress={() => {
+							dispatch(activeLoading());
+							setTimeout(() =>
+								router.push(ROUTEKEYS.PRICES_SETTINGS)
+							);
+						}}
+					/>
+				</View>
+			</View>
 			<FlatList
-				data={
-					loading
-						? [...Array(10).keys()].map((index) => ({
-								id: index,
-								title: `Shimmer ${index}`,
-								unit: 0,
-								indicator: "Loading",
-								route: "",
-							}))
-						: prices
-				}
-				renderItem={renderItem}
+				data={pricesList}
+				renderItem={({ item }: any) => <ListItem item={item} />}
 				keyExtractor={(item: any, index) => index.toString()}
 				contentContainerStyle={{ paddingTop: 4, paddingBottom: 40 }}
 				showsHorizontalScrollIndicator={false}

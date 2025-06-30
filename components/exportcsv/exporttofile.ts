@@ -4,8 +4,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showToast } from "@/components/ToastConfig";
 import dayjs from "dayjs";
 import { getLocale } from "@/components/global";
-import { DATE_FORMAT_PATTERNS, englishLocale } from "@/localization/config";
+import { englishLocale } from "@/localization/config";
 import { LOCALSTORAGEKEYS, PERMISSIONKEYS } from "@/utils/messages";
+import { DATE_FORMAT_PATTERNS } from "@/utils/dateformatter.utils";
 
 // -------------------- Helpers ------------------------
 

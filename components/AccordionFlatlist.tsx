@@ -11,8 +11,8 @@ import { useRouter } from "expo-router";
 import Title from "@/components//ui/Title";
 import { ROUTEKEYS } from "@/utils/messages";
 import React, { useEffect, useRef } from "react";
-import { ShimmerAccordion } from "@/components/ShimmerEffect";
 import { Fontisto } from "@expo/vector-icons";
+import { ShimmerAccordion } from "./ListShimmer";
 
 interface AccordionFlatlistProps {
 	data: any[];
