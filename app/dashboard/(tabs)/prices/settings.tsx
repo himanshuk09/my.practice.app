@@ -10,7 +10,6 @@ import {
 import { st } from "@/utils/Styles";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
-import { StatusBar } from "expo-status-bar";
 import { Picker } from "@react-native-picker/picker";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
@@ -135,13 +134,6 @@ const PricesSettings = () => {
 				marginBottom: insets.bottom,
 			}}
 		>
-			<StatusBar
-				style="light"
-				translucent
-				animated
-				hideTransitionAnimation="fade"
-				networkActivityIndicatorVisible
-			/>
 			{/* Market Place Section */}
 			<View
 				className="p-2 mb-1 py-3 w-full bg-white "

@@ -5,7 +5,6 @@ import {
 import dayjs from "dayjs";
 import { st } from "@/utils/Styles";
 import { RootState } from "@/store/store";
-import { StatusBar } from "expo-status-bar";
 import { tabsType } from "@/types/chart.type";
 import { i18n } from "@/localization/config";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -79,14 +78,6 @@ const LoadDataDetails = () => {
 
 	return (
 		<SafeAreaView className="flex-1 ">
-			<StatusBar
-				style="light"
-				translucent
-				animated
-				hideTransitionAnimation="fade"
-				networkActivityIndicatorVisible
-			/>
-
 			<View className="flex-1  bg-white">
 				{!isLandscape && (
 					<View

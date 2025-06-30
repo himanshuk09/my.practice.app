@@ -54,28 +54,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 			}
 
 			setTimeout(() => {
-				(webViewRef?.current as any)?.injectJavaScript(
-					`updateChartOptions(${JSON.stringify({
-						chart: {
-							height: 290,
-						},
-						xaxis: {
-							labels: {
-								show: true,
-								rotate: 0,
-								rotateAlways: true,
-								position: "top",
-								textAnchor: "end",
-								hideOverlappingLabels: false,
-								showDuplicates: false,
-								trim: false,
-								maxHeight: 120,
-							},
-						},
-					})});`
-				);
-			}, 500);
-			setTimeout(() => {
 				dispatch(inActiveLoading());
 			}, 2000);
 			dispatch(setOrientation(!isLandscape));

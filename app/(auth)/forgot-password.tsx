@@ -14,7 +14,6 @@ import {
 	KeyboardAvoidingView,
 } from "react-native";
 import Logo from "@/components/svg/Logo";
-import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { Href, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -27,12 +26,16 @@ const Forgotpassword = () => {
 	const [email, setEmail] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
 	const [isEmailFocused, setIsEmailFocused] = useState<boolean>(false);
-
-	const validateEmail = (text: string): void => {
+	const [status, setStatus] = useState<"idle" | "loading" | "success">(
+		"idle"
+	);
+	const validateEmail = (text: string): boolean => {
 		if (AUTHKEYS.EMAIL_REGEX.test(text)) {
 			setErrorMessage("");
+			return true;
 		} else {
 			setErrorMessage(AUTHKEYS.INVALID_EMAIL);
+			return false;
 		}
 	};
 
@@ -45,15 +48,22 @@ const Forgotpassword = () => {
 		}
 	}, [email]);
 
+	const handleSendEmail = () => {
+		try {
+			setStatus("loading");
+			if (validateEmail(email)) {
+				setTimeout(() => {
+					setStatus("success");
+				}, 2000);
+			} else {
+				setStatus("idle");
+			}
+		} catch (error) {
+			setStatus("idle");
+		}
+	};
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<StatusBar
-				style="light"
-				translucent
-				animated
-				hideTransitionAnimation="fade"
-				networkActivityIndicatorVisible
-			/>
 			<KeyboardAvoidingView
 				style={{ flex: 1 }}
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -156,8 +166,12 @@ const Forgotpassword = () => {
 								{/**Forgot Password Send Mail Botton */}
 								<RoundedButton
 									title="send"
-									onPress={() => {}}
-									disabled={false}
+									onPress={handleSendEmail}
+									disabled={
+										status === "loading" ||
+										email.trim() === ""
+									}
+									status={status}
 								/>
 
 								<Pressable

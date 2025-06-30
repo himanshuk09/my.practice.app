@@ -94,7 +94,7 @@ const FloatingActionMenu = ({
 	};
 
 	return (
-		<View className="absolute top-0 left-6 pt-1 pl-1 z-[1000]">
+		<View className="absolute top-0 left-6   z-[1000]">
 			<TouchableOpacity
 				className="bg-[#e11935] w-[30px] h-[30px] rounded-full justify-center items-center "
 				onPress={toggleMenu}

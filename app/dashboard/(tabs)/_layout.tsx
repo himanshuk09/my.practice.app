@@ -1,5 +1,4 @@
 import { SafeAreaView } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import Header from "@/components/ui/MainHeader";
 import { i18n } from "@/localization/config";
 import { Tabs, useSegments } from "expo-router";
@@ -33,13 +32,6 @@ const TabNavigatorLayout = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<StatusBar
-				style="light"
-				translucent
-				animated
-				hideTransitionAnimation="fade"
-				networkActivityIndicatorVisible
-			/>
 			{!isIdRoute && <Header />}
 			<Tabs
 				screenOptions={{

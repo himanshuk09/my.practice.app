@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import Header from "@/components/ui/MainHeader";
 
-const LoaddataLayout = () => {
+const LegalNotesLayout = () => {
 	return (
 		<Stack>
 			<Stack.Screen
@@ -32,4 +32,4 @@ const LoaddataLayout = () => {
 		</Stack>
 	);
 };
-export default LoaddataLayout;
+export default LegalNotesLayout;

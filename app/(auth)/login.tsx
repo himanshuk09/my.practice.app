@@ -17,7 +17,6 @@ import Logo from "@/components/svg/Logo";
 import { useAuth } from "@/hooks/useAuth";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { Href, useRouter } from "expo-router";
 import { loginUser } from "@/services/auth.service";
@@ -33,7 +32,9 @@ const SignIn: React.FC = () => {
 	const isOnline = useSelector(
 		(state: RootState) => state?.network.isConnected
 	);
-	const [loading, setLoading] = useState<boolean>(false);
+	const [status, setStatus] = useState<"idle" | "loading" | "success">(
+		"idle"
+	);
 	const [userName, setUserName] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
@@ -67,10 +68,10 @@ const SignIn: React.FC = () => {
 		setErrorMessage("");
 		try {
 			Keyboard.dismiss();
-			setLoading(true);
+			setStatus("loading");
 			if (!isOnline) {
 				setErrorMessage(NETWORKKEYS.NO_INTERNET);
-				setLoading(false);
+				setStatus("idle");
 				return;
 			}
 			const payload = {
@@ -81,14 +82,18 @@ const SignIn: React.FC = () => {
 			const response = await loginUser(payload);
 
 			if (response?.success) {
-				setSessionValue(true);
+				setStatus("success");
 				setTimeout(() => {
-					showToast({
-						type: "success",
-						title: AUTHKEYS.SUCCESS,
-					});
-				}, 1000);
+					setSessionValue(true);
+					setTimeout(() => {
+						showToast({
+							type: "success",
+							title: AUTHKEYS.SUCCESS,
+						});
+					}, 500);
+				}, 500);
 			} else {
+				setStatus("idle");
 				setErrorMessage(response?.message || AUTHKEYS.FAILURE);
 			}
 		} catch (err: unknown) {
@@ -99,20 +104,11 @@ const SignIn: React.FC = () => {
 			} else {
 				setErrorMessage(AUTHKEYS.UNKNOWN_ERROR);
 			}
-		} finally {
-			setLoading(false);
 		}
 	};
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<StatusBar
-				style="light"
-				translucent
-				animated
-				hideTransitionAnimation="fade"
-				networkActivityIndicatorVisible
-			/>
 			<KeyboardAvoidingView
 				style={{ flex: 1 }}
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -325,12 +321,12 @@ const SignIn: React.FC = () => {
 								<RoundedButton
 									title="login"
 									onPress={handleSubmit}
-									loading={loading}
 									disabled={
-										loading ||
+										status === "loading" ||
 										(userName.trim() === "" &&
 											password.trim() === "")
 									}
+									status={status}
 								/>
 								{/** Forget password screen redirector */}
 								<Pressable
@@ -343,7 +339,7 @@ const SignIn: React.FC = () => {
 										);
 									}}
 									className="mx-auto my-5  p-4"
-									disabled={loading}
+									disabled={status === "loading"}
 								>
 									<Text className="text-red-600 capitalize underline text-center text-sm">
 										{i18n.t("forgotyourpassword")}

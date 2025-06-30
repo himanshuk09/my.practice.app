@@ -1,19 +1,20 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React from "react";
 import { i18n } from "@/localization/config";
+import { Entypo } from "@expo/vector-icons";
 
 const RoundedButton = ({
 	onPress,
 	title,
 	disabled,
 	style,
-	loading = false,
+	status = "idle",
 }: {
 	onPress: () => void;
 	title: string;
 	disabled: boolean;
 	style?: string;
-	loading?: boolean;
+	status?: "idle" | "loading" | "success";
 }) => {
 	return (
 		<TouchableOpacity
@@ -21,12 +22,18 @@ const RoundedButton = ({
 			onPress={onPress}
 			disabled={disabled}
 		>
-			{loading ? (
-				<ActivityIndicator size={25} color={"white"} />
-			) : (
+			{status === "idle" && (
 				<Text className="text-white font-medium text-xl uppercase">
 					{i18n.t(title)}
 				</Text>
+			)}
+
+			{status === "loading" && (
+				<ActivityIndicator size={25} color={"white"} />
+			)}
+
+			{status === "success" && (
+				<Entypo name="check" size={24} color="white" />
 			)}
 		</TouchableOpacity>
 	);

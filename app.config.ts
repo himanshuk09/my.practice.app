@@ -59,7 +59,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 			"READ_EXTERNAL_STORAGE",
 			"MANAGE_EXTERNAL_STORAGE",
 		],
-		softwareKeyboardLayoutMode: "pan",
+		// softwareKeyboardLayoutMode: "pan",
 		edgeToEdgeEnabled: true,
 		googleServicesFile: "./google-services.json",
 		intentFilters: [

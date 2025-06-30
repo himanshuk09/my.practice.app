@@ -7,11 +7,12 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 	SafeAreaView,
+	Text,
+	Keyboard,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import Title from "@/components/ui/Title";
-import { StatusBar } from "expo-status-bar";
 import { i18n } from "@/localization/config";
 import { FontAwesome } from "@expo/vector-icons";
 import CustomAlert from "@/components/CustomAlert";
@@ -20,6 +21,7 @@ import FooterActions from "@/components/ui/FooterActions";
 import { inActiveLoading } from "@/store/navigationSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
 
 const ContactUs = () => {
 	const router = useRouter();
@@ -34,21 +36,28 @@ const ContactUs = () => {
 	useEffect(() => {
 		setTimeout(() => dispatch(inActiveLoading()), 100);
 	}, [isFocused]);
+	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
+	useEffect(() => {
+		const showSubscription = Keyboard.addListener("keyboardDidShow", () =>
+			setKeyboardVisible(true)
+		);
+		const hideSubscription = Keyboard.addListener("keyboardDidHide", () =>
+			setKeyboardVisible(false)
+		);
+
+		return () => {
+			showSubscription.remove();
+			hideSubscription.remove();
+		};
+	}, []);
 	return (
 		<SafeAreaView style={{ flex: 1, paddingBottom: insets.bottom }}>
-			<StatusBar
-				style="light"
-				translucent
-				animated
-				hideTransitionAnimation="fade"
-				networkActivityIndicatorVisible
-			/>
 			<Title title={"contactus"} />
 			<KeyboardAvoidingView
 				style={{ flex: 1 }}
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
-				keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+				keyboardVerticalOffset={isKeyboardVisible ? 115 : 0}
 			>
 				<View
 					style={{
@@ -58,8 +67,12 @@ const ContactUs = () => {
 					}}
 				>
 					<ScrollView
-						className="flex-1"
-						contentContainerStyle={{ padding: 15, flexGrow: 1 }}
+						className="flex-1 "
+						contentContainerStyle={{
+							padding: 15,
+							flexGrow: 1,
+							paddingBottom: 100,
+						}}
 						keyboardShouldPersistTaps="handled"
 						nestedScrollEnabled
 						showsVerticalScrollIndicator={false}
@@ -158,7 +171,7 @@ const ContactUs = () => {
 					{/* Footer */}
 					<FooterActions
 						leftTitle="cancel"
-						leftOnPress={() => router.back()}
+						leftOnPress={() => router.push(ROUTEKEYS.DASHBOARD)}
 						rightTitle="save"
 						rightOnPress={async () => {
 							console.log("Message sent:", {

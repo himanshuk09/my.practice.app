@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { Platform } from "react-native";
 import React, { useEffect } from "react";
 import RootLayout from "@/app/RootLayout";
+import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import ToastProvider from "@/components/ToastProvider";
 import AppLoader from "@/components/wrapper/AppLoader";
@@ -45,6 +46,13 @@ const Layout = () => {
 							<NetworkListener />
 							<UpdatesListener />
 							<RootLayout />
+							<StatusBar
+								style="dark"
+								translucent
+								animated
+								hideTransitionAnimation="fade"
+								networkActivityIndicatorVisible
+							/>
 							<AlertContainer
 								animationType="fade"
 								appearance="light"

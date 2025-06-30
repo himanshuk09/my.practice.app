@@ -10,7 +10,6 @@ import {
 } from "@/components/wrapper/NotificationWrapper";
 import { st } from "@/utils/Styles";
 import Title from "@/components/ui/Title";
-import { StatusBar } from "expo-status-bar";
 import * as Clipboard from "expo-clipboard";
 import { Href, useRouter } from "expo-router";
 import CustomAlert from "@/components/CustomAlert";
@@ -186,14 +185,6 @@ const Settings = () => {
 				marginBottom: insets.bottom,
 			}}
 		>
-			<StatusBar
-				style="light"
-				translucent
-				animated
-				hideTransitionAnimation="fade"
-				networkActivityIndicatorVisible
-			/>
-
 			<Title title={"settings"} />
 			<View className="p-2 mb-2 pl-5 bg-white" style={st.boxShadow}>
 				<Text className="text-base font-semibold capitalize text-dropdownSecondTitle">
