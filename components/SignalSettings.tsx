@@ -16,10 +16,7 @@ import PrimaryButton from "./ui/PrimaryButton";
 
 const Card = ({ title, data }: { title: string; data: any }) => {
 	return (
-		<View
-			className="bg-[#ebebeb] rounded-lg p-3 my-1 "
-			style={st.boxShadow}
-		>
+		<View className="bg-[#ebebeb]  p-3 my-1 " style={[st.boxShadow]}>
 			<Text className="text-sm text-gray-800 font-normal mb-2">
 				{title}
 			</Text>
@@ -71,6 +68,33 @@ const Card = ({ title, data }: { title: string; data: any }) => {
 	);
 };
 
+export const SignalsTitleNotificationCard = ({
+	title,
+	isEnabled,
+	setIsEnabled,
+}: any) => {
+	return (
+		<View
+			className="flex justify-between bg-white flex-row  m-1  h-20 px-3 pl-5  "
+			style={[st.headerShadow, st.bottomShadow]}
+		>
+			<View className="justify-center items-center">
+				<Text className="text-xl font-medium text-mainCardHeaderText">
+					{title}
+				</Text>
+			</View>
+			<View className="flex-row justify-center items-center">
+				<Text className="  mr-2 text-md font-normal text-mainCardHeaderText ">
+					{i18n.t("notifications")}
+				</Text>
+				<CustomSwitch
+					isEnabled={isEnabled}
+					setIsEnabled={setIsEnabled}
+				/>
+			</View>
+		</View>
+	);
+};
 const SignalSettings = ({
 	cards,
 	modalVisible,
@@ -99,25 +123,11 @@ const SignalSettings = ({
 			style={StyleSheet.absoluteFill}
 		>
 			<StackHeader title={"Signals_Details"} closed={true} />
-			<View
-				className="flex justify-between bg-white flex-row  m-1  h-20 px-3 pl-5  "
-				style={[st.headerShadow, st.bottomShadow]}
-			>
-				<View className="justify-center items-center">
-					<Text className="text-xl font-medium text-mainCardHeaderText">
-						{signalDetail?.title}
-					</Text>
-				</View>
-				<View className="flex-row justify-center items-center">
-					<Text className="  mr-2 text-md font-normal text-mainCardHeaderText ">
-						{i18n.t("notifications")}
-					</Text>
-					<CustomSwitch
-						isEnabled={isEnabled}
-						setIsEnabled={setIsEnabled}
-					/>
-				</View>
-			</View>
+			<SignalsTitleNotificationCard
+				title={signalDetail?.title}
+				isEnabled={isEnabled}
+				setIsEnabled={setIsEnabled}
+			/>
 			<View
 				className="w-full h-full flex-1"
 				style={{
@@ -141,7 +151,10 @@ const SignalSettings = ({
 						keyExtractor={(item: any, index) => index.toString()}
 						scrollEnabled={true}
 						className="bg-slate-50 overflow-scroll px-2"
-						contentContainerStyle={{ paddingTop: 4 }}
+						contentContainerStyle={{
+							paddingTop: 1,
+							backgroundColor: "#fff",
+						}}
 						showsHorizontalScrollIndicator={false}
 						showsVerticalScrollIndicator={false}
 						initialNumToRender={10}

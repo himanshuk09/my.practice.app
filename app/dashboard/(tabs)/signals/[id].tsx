@@ -12,7 +12,9 @@ import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import CustomSwitch from "@/components/CustomSwitch";
 import { useDispatch, useSelector } from "react-redux";
-import SignalSettings from "@/components/SignalSettings";
+import SignalSettings, {
+	SignalsTitleNotificationCard,
+} from "@/components/SignalSettings";
 import { useIsFocused } from "@react-navigation/native";
 import { inActiveLoading } from "@/store/navigationSlice";
 import PrimaryButton from "@/components/ui/PrimaryButton";
@@ -63,63 +65,45 @@ const SignalDetails = () => {
 				marginBottom: insets.bottom,
 			}}
 		>
-			<View
-				className="flex-1 
-					 bg-white"
-			>
-				{/* Header Section */}
-				{!isLandscape && (
-					<View
-						className="flex justify-between bg-white flex-row  m-1  h-20 px-3 pl-5  "
-						style={[st.headerShadow, st.bottomShadow]}
-					>
-						<View className="justify-center items-center">
-							<Text className="text-xl font-medium text-mainCardHeaderText">
-								{signalDetail?.title}
-							</Text>
-						</View>
-						<View className="flex-row justify-center items-center">
-							<Text className="  mr-2 text-md font-normal text-mainCardHeaderText ">
-								{i18n.t("notifications")}
-							</Text>
-							<CustomSwitch
-								isEnabled={isEnabled}
-								setIsEnabled={setIsEnabled}
-							/>
-						</View>
-					</View>
-				)}
+			{/* Header Section */}
+			{!isLandscape && (
+				<SignalsTitleNotificationCard
+					title={signalDetail?.title}
+					isEnabled={isEnabled}
+					setIsEnabled={setIsEnabled}
+				/>
+			)}
 
-				<View style={{ flex: 1 }}>
-					<View
-						style={{ height: "100%" }}
-						className={`${
-							!isLandscape && "h-full w-full absolute bg-white"
-						} `}
-					>
-						<ToggleChartComponent
-							screenName="signals"
-							fetchChartData={fetchChartData}
-						/>
-					</View>
-				</View>
-
-				<Modal
-					animationType="slide"
-					transparent={false}
-					visible={modalVisible}
-					onRequestClose={() => setModalVisible(!modalVisible)}
+			<View style={{ flex: 1 }}>
+				<View
+					style={{ height: "100%" }}
+					className={`${
+						!isLandscape && "h-full w-full absolute bg-white"
+					} `}
 				>
-					<SignalSettings
-						cards={signalsCards}
-						setModalVisible={setModalVisible}
-						modalVisible={modalVisible}
-						signalDetail={signalDetail}
-						isEnabled={isEnabled}
-						setIsEnabled={setIsEnabled}
+					<ToggleChartComponent
+						screenName="signals"
+						fetchChartData={fetchChartData}
 					/>
-				</Modal>
+				</View>
 			</View>
+
+			<Modal
+				animationType="slide"
+				transparent={false}
+				visible={modalVisible}
+				onRequestClose={() => setModalVisible(!modalVisible)}
+			>
+				<SignalSettings
+					cards={signalsCards}
+					setModalVisible={setModalVisible}
+					modalVisible={modalVisible}
+					signalDetail={signalDetail}
+					isEnabled={isEnabled}
+					setIsEnabled={setIsEnabled}
+				/>
+			</Modal>
+
 			{!isLandscape && (
 				<PrimaryButton
 					title={"View_Signal_Settings"}

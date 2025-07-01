@@ -7,7 +7,13 @@ import { toggleDrawer } from "@/store/drawerSlice";
 import { useRouter, useSegments } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
-import { SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
+import {
+	SafeAreaView,
+	View,
+	TouchableOpacity,
+	Platform,
+	Keyboard,
+} from "react-native";
 
 const Header = React.memo(() => {
 	const dispatch = useDispatch();
@@ -43,7 +49,10 @@ const Header = React.memo(() => {
 				}}
 			>
 				<TouchableOpacity
-					onPress={() => dispatch(toggleDrawer())}
+					onPress={() => {
+						Keyboard.dismiss();
+						dispatch(toggleDrawer());
+					}}
 					style={{
 						position: "absolute",
 						left: 10,

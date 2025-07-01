@@ -25,7 +25,10 @@ import { UNIT_PLACEHOLDER } from "@/utils/dateformatter.utils";
 
 const Card = ({ title, deals }: { title: string; deals: any }) => {
 	return (
-		<View className="bg-cardBg  mx-1 p-3 my-1 " style={st.boxShadow}>
+		<View
+			className="bg-cardBg  mx-2 p-3 my-1 "
+			style={[st.boxShadow, { shadowColor: "#ccc" }]}
+		>
 			<Text className="text-sm text-cardTextHeader font-medium mb-2">
 				{deals?.ProductName}
 			</Text>
@@ -199,9 +202,12 @@ const Transactions = ({
 	}, []);
 
 	return (
-		<View className="flex-1 " style={StyleSheet.absoluteFill}>
+		<View className="flex-1 bg-white " style={StyleSheet.absoluteFill}>
 			<StackHeader title={"portfolio_overview"} closed={true} />
-			<View className="flex justify-between  bg-white flex-row    h-20 px-3 pl-5 shadow-lg shadow-cardBg ">
+			<View
+				className="flex justify-between  bg-white flex-row  mb-1  h-20 px-3 pl-5 "
+				style={st.bottomShadow}
+			>
 				<View className="justify-center items-start bg-white">
 					<Text className="text-xl font-semibold  text-mainCardHeaderText">
 						{title}
@@ -242,6 +248,9 @@ const Transactions = ({
 						style={{
 							flex: 1,
 							marginBottom: 5,
+						}}
+						contentContainerStyle={{
+							backgroundColor: "#fff",
 						}}
 						refreshControl={
 							<RefreshControl

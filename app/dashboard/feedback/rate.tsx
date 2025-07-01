@@ -55,7 +55,7 @@ const Rate = () => {
 				style={{ flex: 1 }}
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 				keyboardVerticalOffset={
-					Platform.OS === "ios" ? 60 : isKeyboardVisible ? 105 : 0
+					Platform.OS === "ios" ? 60 : isKeyboardVisible ? 115 : 0
 				}
 			>
 				<View

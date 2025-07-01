@@ -77,84 +77,82 @@ const LoadDataDetails = () => {
 	}, [isFocused, id]);
 
 	return (
-		<SafeAreaView className="flex-1 ">
-			<View className="flex-1  bg-white">
-				{!isLandscape && (
+		<SafeAreaView className="flex-1 bg-white">
+			{!isLandscape && (
+				<View
+					className="flex justify-between bg-white  flex-row px-3 pl-5 py-1 mb-1"
+					style={[st.headerShadow, st.bottomShadow]}
+				>
 					<View
-						className="flex justify-between bg-white  flex-row px-3 pl-5 py-1 mb-1"
-						style={[st.headerShadow, st.bottomShadow]}
+						className="flex-col p-1"
+						style={{
+							width: Platform.OS === "web" ? "90%" : "85%",
+						}}
 					>
-						<View
-							className="flex-col p-1"
-							style={{
-								width: Platform.OS === "web" ? "90%" : "85%",
-							}}
-						>
-							<Text className="text-sm font-semibold text-mainCardHeaderText break-words">
-								{title}
+						<Text className="text-sm font-semibold text-mainCardHeaderText break-words">
+							{title}
+						</Text>
+
+						<View className="flex-row justify-self-start">
+							<Text className="text-mainCardHeaderText text-md min-w-[80px]">
+								{i18n.t("Energy")}:{" "}
 							</Text>
-
-							<View className="flex-row justify-self-start">
-								<Text className="text-mainCardHeaderText text-md min-w-[80px]">
-									{i18n.t("Energy")}:{" "}
-								</Text>
-								<Text className="text-mainCardHeaderText text-sm ml-2">
-									{loadDetail?.MaxMomentum
-										? `${new Intl.NumberFormat(locale, {
-												useGrouping: true,
-												maximumFractionDigits: 0,
-											}).format(
-												parseFloat(
-													loadDetail.MaxMomentum.replace(
-														/[^\d.]/g,
-														""
-													)
+							<Text className="text-mainCardHeaderText text-sm ml-2">
+								{loadDetail?.MaxMomentum
+									? `${new Intl.NumberFormat(locale, {
+											useGrouping: true,
+											maximumFractionDigits: 0,
+										}).format(
+											parseFloat(
+												loadDetail.MaxMomentum.replace(
+													/[^\d.]/g,
+													""
 												)
-											)} `
-										: "0 "}{" "}
-									{UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
-								</Text>
-							</View>
-							<View className="flex-row justify-items-start">
-								<Text className="text-mainCardHeaderText text-md min-w-[80px]">
-									{i18n.t("Average")}:{" "}
-								</Text>
-								<Text className="text-mainCardHeaderText text-sm ml-2">
-									{loadDetail?.AverageValue != null
-										? `${new Intl.NumberFormat(locale, {
-												useGrouping: true,
-												maximumFractionDigits: 2,
-											}).format(loadDetail.AverageValue)}`
-										: "0"}
-									{UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
-								</Text>
-							</View>
+											)
+										)} `
+									: "0 "}{" "}
+								{UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
+							</Text>
 						</View>
-
-						<View className="px-2 justify-start pt-5">
-							<DownloadFIleIcon
-								onPress={() =>
-									debouncedExport(
-										loadDetail?.data,
-										activeTabForFileName
-									)
-								}
-								showIcon={showIcon}
-								height={30}
-								width={50}
-							/>
+						<View className="flex-row justify-items-start">
+							<Text className="text-mainCardHeaderText text-md min-w-[80px]">
+								{i18n.t("Average")}:{" "}
+							</Text>
+							<Text className="text-mainCardHeaderText text-sm ml-2">
+								{loadDetail?.AverageValue != null
+									? `${new Intl.NumberFormat(locale, {
+											useGrouping: true,
+											maximumFractionDigits: 2,
+										}).format(loadDetail.AverageValue)}`
+									: "0"}
+								{UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
+							</Text>
 						</View>
 					</View>
-				)}
 
-				{/**chart component */}
-				<ToggleChartComponent
-					screenName={"loaddata"}
-					fetchChartData={fetchChartData}
-					yaxisunit={UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
-					setActiveTabForFileName={setActiveTabForFileName}
-				/>
-			</View>
+					<View className="px-2 justify-start pt-5">
+						<DownloadFIleIcon
+							onPress={() =>
+								debouncedExport(
+									loadDetail?.data,
+									activeTabForFileName
+								)
+							}
+							showIcon={showIcon}
+							height={30}
+							width={50}
+						/>
+					</View>
+				</View>
+			)}
+
+			{/**chart component */}
+			<ToggleChartComponent
+				screenName={"loaddata"}
+				fetchChartData={fetchChartData}
+				yaxisunit={UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
+				setActiveTabForFileName={setActiveTabForFileName}
+			/>
 		</SafeAreaView>
 	);
 };

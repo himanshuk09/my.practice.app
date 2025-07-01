@@ -304,7 +304,23 @@ const sendMultipleNotification = async (
 		return null;
 	}
 };
+const checkStatus = async (ids = ["0197c4ce-28c5-7922-aabe-3b13b0a86a04"]) => {
+	const response = await fetch(
+		"https://exp.host/--/api/v2/push/getReceipts",
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				ids: ids, // From initial push response
+			}),
+		}
+	);
 
+	const data = await response.json();
+	console.log("Receipt:", JSON.stringify(data, null, 2));
+};
 /**
  * Getter
  */

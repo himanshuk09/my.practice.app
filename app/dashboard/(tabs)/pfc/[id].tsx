@@ -75,38 +75,37 @@ const PFCDetails = () => {
 	}, [isFocused]);
 
 	return (
-		<SafeAreaView className="flex-1 ">
-			<View className="flex-1  bg-white">
-				{/* Header Section */}
-				{!isLandscape && (
-					<View
-						className="flex justify-between bg-white flex-row  m-1  h-24 px-3 pl-5  pt-3"
-						style={[st.headerShadow, st.bottomShadow]}
-					>
-						<View className="flex-col w-60  ">
-							<Text className="text-xl break-words font-bold text-mainCardHeaderText">
-								{pfcDetails?.title}
-							</Text>
-							<Text className=" text-md text-mainCardHeaderText ">
-								{dayjs().utc().format(dateFormate)}
-							</Text>
-						</View>
-						<View className="px-2 justify-start">
-							<DownloadFIleIcon
-								onPress={debouncedExport}
-								showIcon={showIcon}
-								size={25}
-								height={25}
-								width={25}
-							/>
-						</View>
+		<SafeAreaView className="flex-1 bg-white">
+			{/* Header Section */}
+			{!isLandscape && (
+				<View
+					className="flex justify-between bg-white flex-row  m-1  h-24 px-3 pl-5  pt-3"
+					style={[st.headerShadow, st.bottomShadow]}
+				>
+					<View className="flex-col w-60  ">
+						<Text className="text-xl break-words font-bold text-mainCardHeaderText">
+							{pfcDetails?.title}
+						</Text>
+						<Text className=" text-md text-mainCardHeaderText ">
+							{dayjs().utc().format(dateFormate)}
+						</Text>
 					</View>
-				)}
-				<ToggleChartComponent
-					screenName="pfc"
-					fetchChartData={fetchChartData}
-				/>
-			</View>
+					<View className="px-2 justify-start">
+						<DownloadFIleIcon
+							onPress={debouncedExport}
+							showIcon={showIcon}
+							size={25}
+							height={25}
+							width={25}
+						/>
+					</View>
+				</View>
+			)}
+			{/**chart component */}
+			<ToggleChartComponent
+				screenName="pfc"
+				fetchChartData={fetchChartData}
+			/>
 		</SafeAreaView>
 	);
 };

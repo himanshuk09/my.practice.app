@@ -34,9 +34,7 @@ const DateTimePickerComponents = ({
 }: DateTimePickerComponentsProps) => {
 	const [mode] = useState<ModeType>(pickerMode);
 	const locale = useSelector((state: any) => state.culture.locale);
-	const [date, setDate] = useState<DateType | undefined>(
-		dayjs(defaultDate).isValid() ? defaultDate : dayjs().add(5)
-	);
+	const [date, setDate] = useState<DateType | undefined>(defaultDate);
 	const [dates, setDates] = useState<DateType[] | undefined>();
 
 	const onChange = useCallback(
@@ -85,16 +83,33 @@ const DateTimePickerComponents = ({
 			<DateTimePicker
 				mode={mode}
 				locale={locale}
-				date={date} //single picker
-				startDate={range?.startDate} //range picker start date
-				endDate={range?.endDate} //range picker end date
-				dates={dates} //multiple date
-				initialView={initialView} //day or time
+				//single picker
+				date={
+					dayjs(date).isValid()
+						? date
+						: dayjs().startOf("day").toDate()
+				}
+				//range picker start date
+				startDate={
+					dayjs(range?.startDate).isValid()
+						? range?.startDate
+						: dayjs().startOf("day").toDate()
+				}
+				//range picker end date
+				endDate={
+					dayjs(range?.endDate).isValid()
+						? range?.endDate
+						: dayjs().add(1, "month").startOf("day").toDate()
+				}
+				//multiple date
+				dates={dates}
+				// "day" | "month" | "year" | "time"
+				initialView={initialView}
 				firstDayOfWeek={1}
 				height={300}
-				// minDate={dayjs().startOf("day")}
+				//minDate={dayjs().startOf("day")}
 				//maxDate={dayjs().add(7, "day").endOf("day")}
-				// disabledDates={[dayjs(), dayjs().add(1, "day")]} // we can add the date in array
+				//disabledDates={[dayjs(), dayjs().add(1, "day")]} // we can add the date in array
 				disabledDates={(date) =>
 					dayjs(date).isAfter(dayjs().add(10, "year"), "day")
 				}

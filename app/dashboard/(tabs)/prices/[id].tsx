@@ -77,47 +77,46 @@ const PricesDetails = () => {
 	}, [isFocused]);
 
 	return (
-		<SafeAreaView className="flex-1 ">
-			<View className="flex-1  bg-white">
-				{/* Header Section */}
-				{!isLandscape && (
-					<View
-						className="flex justify-between bg-white flex-row  m-1  h-24 px-3  pt-3 pl-5"
-						style={[st.headerShadow, st.bottomShadow]}
-					>
-						<View className="flex-col">
-							<Text className="text-xl break-words font-bold text-mainCardHeaderText">
-								{pricesDetail?.title}
+		<SafeAreaView className="flex-1 {/**chart component */}">
+			{/* Header Section */}
+			{!isLandscape && (
+				<View
+					className="flex justify-between bg-white flex-row  m-1  h-24 px-3  pt-3 pl-5"
+					style={[st.headerShadow, st.bottomShadow]}
+				>
+					<View className="flex-col">
+						<Text className="text-xl break-words font-bold text-mainCardHeaderText">
+							{pricesDetail?.title}
+						</Text>
+						<View className="flex-row justify-between w-[90%]">
+							<Text className=" text-md text-mainCardHeaderText ">
+								{dayjs().utc().format(dateFormate)}
 							</Text>
-							<View className="flex-row justify-between w-[90%]">
-								<Text className=" text-md text-mainCardHeaderText ">
-									{dayjs().utc().format(dateFormate)}
-								</Text>
-								<Text className="text-mainCardHeaderText  text-sm font-normal">
-									{pricesDetail?.unit}{" "}
-									{
-										UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT
-									}
-								</Text>
-							</View>
-						</View>
-
-						<View className="px-2 justify-start ">
-							<DownloadFIleIcon
-								showIcon={showIcon}
-								onPress={debouncedExport}
-								size={30}
-								height={30}
-								width={27}
-							/>
+							<Text className="text-mainCardHeaderText  text-sm font-normal">
+								{pricesDetail?.unit}{" "}
+								{
+									UNIT_PLACEHOLDER.PLACEHOLDER_EURO_PER_MEGAWATT_HOUR_UNIT
+								}
+							</Text>
 						</View>
 					</View>
-				)}
-				<ToggleChartComponent
-					screenName="prices"
-					fetchChartData={fetchChartData}
-				/>
-			</View>
+
+					<View className="px-2 justify-start ">
+						<DownloadFIleIcon
+							showIcon={showIcon}
+							onPress={debouncedExport}
+							size={30}
+							height={30}
+							width={27}
+						/>
+					</View>
+				</View>
+			)}
+			{/**chart component */}
+			<ToggleChartComponent
+				screenName="prices"
+				fetchChartData={fetchChartData}
+			/>
 		</SafeAreaView>
 	);
 };
