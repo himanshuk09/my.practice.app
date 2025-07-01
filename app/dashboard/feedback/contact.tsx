@@ -171,7 +171,7 @@ const ContactUs = () => {
 					{/* Footer */}
 					<FooterActions
 						leftTitle="cancel"
-						leftOnPress={() => router.push(ROUTEKEYS.DASHBOARD)}
+						leftOnPress={() => router.replace(ROUTEKEYS.DASHBOARD)}
 						rightTitle="save"
 						rightOnPress={async () => {
 							console.log("Message sent:", {
@@ -206,7 +206,7 @@ const ContactUs = () => {
 											textTransform: "uppercase",
 										} as TextStyle,
 										onPress: () =>
-											router.push(ROUTEKEYS.DASHBOARD),
+											router.replace(ROUTEKEYS.DASHBOARD),
 									},
 								],
 							});

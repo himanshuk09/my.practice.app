@@ -254,7 +254,7 @@ const Settings = () => {
 			<FooterActions
 				leftTitle="cancel"
 				leftOnPress={() => {
-					router.back();
+					router.replace(ROUTEKEYS.DASHBOARD);
 				}}
 				rightTitle="save"
 				rightOnPress={handleSave}

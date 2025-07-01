@@ -119,7 +119,7 @@ const Rate = () => {
 					{/* Footer Buttons */}
 					<FooterActions
 						leftTitle="cancel"
-						leftOnPress={() => router.push(ROUTEKEYS.DASHBOARD)}
+						leftOnPress={() => router.replace(ROUTEKEYS.DASHBOARD)}
 						rightTitle="save"
 						rightOnPress={async () => {
 							CustomAlert({
@@ -147,7 +147,7 @@ const Rate = () => {
 											textTransform: "uppercase",
 										} as TextStyle,
 										onPress: () =>
-											router.push(ROUTEKEYS.DASHBOARD),
+											router.replace(ROUTEKEYS.DASHBOARD),
 									},
 								],
 							});

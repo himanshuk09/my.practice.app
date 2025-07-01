@@ -6,19 +6,18 @@ import {
 	Text,
 	Keyboard,
 	Platform,
-	Pressable,
 	TextInput,
 	ScrollView,
 	TouchableOpacity,
 	KeyboardAvoidingView,
 } from "react-native";
+import { Link } from "expo-router";
 import React, { useState } from "react";
 import Logo from "@/components/svg/Logo";
 import { useAuth } from "@/hooks/useAuth";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { i18n } from "@/localization/config";
-import { Href, useRouter } from "expo-router";
 import { loginUser } from "@/services/auth.service";
 import { showToast } from "@/components/ToastConfig";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -27,7 +26,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AUTHKEYS, NETWORKKEYS, ROUTEKEYS } from "@/utils/messages";
 
 const SignIn: React.FC = () => {
-	const router = useRouter();
 	const { setSessionValue } = useAuth();
 	const isOnline = useSelector(
 		(state: RootState) => state?.network.isConnected
@@ -329,22 +327,21 @@ const SignIn: React.FC = () => {
 									status={status}
 								/>
 								{/** Forget password screen redirector */}
-								<Pressable
+								<Link
+									href={ROUTEKEYS.FORGOT_PASSWORD}
 									onPress={() => {
 										if (Keyboard.isVisible()) {
 											Keyboard.dismiss();
 										}
-										router.replace(
-											ROUTEKEYS.FORGOT_PASSWORD as Href
-										);
 									}}
-									className="mx-auto my-5  p-4"
+									className="mx-auto my-5 p-4"
 									disabled={status === "loading"}
+									asChild
 								>
 									<Text className="text-red-600 capitalize underline text-center text-sm">
 										{i18n.t("forgotyourpassword")}
 									</Text>
-								</Pressable>
+								</Link>
 							</View>
 						</View>
 					</View>

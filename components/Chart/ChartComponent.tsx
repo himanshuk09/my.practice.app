@@ -5,6 +5,7 @@ import * as FileSystem from "expo-file-system";
 import { PERMISSIONKEYS } from "@/utils/messages";
 import * as MediaLibrary from "expo-media-library";
 import { MaterialIcons } from "@expo/vector-icons";
+import { CircularLoaderDefault } from "../Loader";
 import CustomAlert from "@/components/CustomAlert";
 import { setOrientation } from "@/store/chartSlice";
 import { showToast } from "@/components/ToastConfig";
@@ -239,7 +240,15 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 							bounces={false}
 							zoomEnabled={false}
 							nestedScrollEnabled={true}
-							// startInLoadingState
+							renderError={(error) => {
+								console.warn("WebView error", error);
+								return <CircularLoaderDefault />;
+							}}
+							renderLoading={() => {
+								return <CircularLoaderDefault />;
+							}}
+							renderToHardwareTextureAndroid
+							startInLoadingState
 						/>
 					</ViewShot>
 					{showToggleOrientation && !isChartEmpty && (

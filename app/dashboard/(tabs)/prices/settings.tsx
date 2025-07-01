@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { st } from "@/utils/Styles";
 import { useRouter } from "expo-router";
+import { ROUTEKEYS } from "@/utils/messages";
 import { useDispatch } from "react-redux";
 import { Picker } from "@react-native-picker/picker";
 import { useIsFocused } from "@react-navigation/native";
@@ -207,9 +208,9 @@ const PricesSettings = () => {
 
 			<FooterActions
 				leftTitle="cancel"
-				leftOnPress={() => router.back()}
+				leftOnPress={() => router.replace(ROUTEKEYS.DASHBOARD)}
 				rightTitle="save"
-				rightOnPress={() => router.back()}
+				rightOnPress={() => router.replace(ROUTEKEYS.DASHBOARD)}
 			/>
 		</SafeAreaView>
 	);

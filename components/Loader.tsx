@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 
-const CircularLoaderDefault = () => (
+export const CircularLoaderDefault = () => (
 	<View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-[#f5f5f5ed] z-50">
 		<ActivityIndicator size={70} color="#E31837" />
 	</View>

@@ -363,7 +363,7 @@ const responseListener = Notifications.addNotificationResponseReceivedListener(
 			}
 
 			const url: any = response.notification.request.content.data?.url;
-			if (url) router.push(url);
+			if (url) router.replace(url);
 		} catch (error) {
 			console.log("error on response lister", error);
 		}

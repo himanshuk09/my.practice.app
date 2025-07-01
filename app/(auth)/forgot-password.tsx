@@ -8,21 +8,19 @@ import {
 	Platform,
 	Keyboard,
 	TextInput,
-	Pressable,
 	ScrollView,
 	SafeAreaView,
 	KeyboardAvoidingView,
 } from "react-native";
 import Logo from "@/components/svg/Logo";
 import { i18n } from "@/localization/config";
-import { Href, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
 import Foundation from "@expo/vector-icons/Foundation";
 import RoundedButton from "@/components/ui/RoundedButton";
 
 const Forgotpassword = () => {
-	const router = useRouter();
 	const [email, setEmail] = useState<string>("");
 	const [errorMessage, setErrorMessage] = useState<string>("");
 	const [isEmailFocused, setIsEmailFocused] = useState<boolean>(false);
@@ -174,19 +172,20 @@ const Forgotpassword = () => {
 									status={status}
 								/>
 
-								<Pressable
+								<Link
+									href={ROUTEKEYS.LOGIN}
+									asChild
 									onPress={() => {
 										if (Keyboard.isVisible()) {
 											Keyboard.dismiss();
 										}
-										router.replace(ROUTEKEYS.LOGIN as Href);
 									}}
 									className="mx-auto my-5  p-4"
 								>
 									<Text className="text-red-600 capitalize underline text-center text-sm">
 										{i18n.t("login")}
 									</Text>
-								</Pressable>
+								</Link>
 							</View>
 						</View>
 					</View>

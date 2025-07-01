@@ -219,7 +219,7 @@ const CustomDrawer = memo(() => {
 				LOCALSTORAGEKEYS.USERID,
 				LOCALSTORAGEKEYS.APKVERSION,
 			]);
-			router.push(ROUTEKEYS.LOGIN);
+			router.replace(ROUTEKEYS.LOGIN);
 			setSessionValue(false);
 		} catch (error) {
 			console.error("Error clearing AsyncStorage or navigating:", error);
@@ -263,7 +263,7 @@ const CustomDrawer = memo(() => {
 				: Linking.openURL(item.route);
 		} else if (segmentPath !== item.route) {
 			dispatch(activeLoading());
-			setTimeout(() => router.replace(item.route as Href));
+			setTimeout(() => router.push(item.route as Href));
 			setActiveSubmenu(null);
 		}
 		dispatch(closeDrawer());
