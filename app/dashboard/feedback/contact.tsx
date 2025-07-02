@@ -34,7 +34,7 @@ const ContactUs = () => {
 	const insets = useSafeAreaInsets();
 
 	useEffect(() => {
-		setTimeout(() => dispatch(inActiveLoading()), 100);
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -170,10 +170,10 @@ const ContactUs = () => {
 
 					{/* Footer */}
 					<FooterActions
-						leftTitle="cancel"
-						leftOnPress={() => router.replace(ROUTEKEYS.DASHBOARD)}
-						rightTitle="save"
-						rightOnPress={async () => {
+						dismissOnPress={() =>
+							router.dismissTo(ROUTEKEYS.DASHBOARD)
+						}
+						confirmOnPress={async () => {
 							console.log("Message sent:", {
 								name,
 								phone,
@@ -206,7 +206,9 @@ const ContactUs = () => {
 											textTransform: "uppercase",
 										} as TextStyle,
 										onPress: () =>
-											router.replace(ROUTEKEYS.DASHBOARD),
+											router.dismissTo(
+												ROUTEKEYS.DASHBOARD
+											),
 									},
 								],
 							});

@@ -126,6 +126,9 @@ export default function FloatingActionMenu({
 										)?.injectJavaScript(item.action);
 									}
 								}, 100);
+								setTimeout(() => {
+									setTooltipLabel(null);
+								}, 1000);
 							}}
 							onPressOut={() => {
 								// Stop calling JS when user lifts finger

@@ -48,6 +48,19 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
             let markersVisible = false;
             let activeTab = "";
 
+            const isInIframe = window.self !== window.top;
+            const isInRNWebView = typeof window?.ReactNativeWebView !== 'undefined';
+            const isElectron = navigator.userAgent.toLowerCase().includes('electron');
+                
+
+            if (isInIframe) {
+            console.log("Running inside an iframe",isElectron);
+            } else if (isInRNWebView) {
+            console.log("Running inside an Webview");
+            }else{
+            console.log("not in ifram nor webview");
+            }
+
 
             function setFileName (newFileName){
                 chart?.updateOptions({
@@ -225,7 +238,6 @@ const iframeLineHtmlContent = /*html*/ `<!DOCTYPE html>
                     return;
                 }
 
-                sendMsgToWeb("called");
 
                 let minPoint,
                     maxPoint,

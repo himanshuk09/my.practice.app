@@ -165,7 +165,7 @@ const AccordionFlatlist = ({
 								className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3 pl-4 items-start justify-center  text-center border-y-4 border-y-white h-20"
 								onPress={() => {
 									startLoader();
-									setTimeout(() =>
+									requestAnimationFrame(() => {
 										router.push({
 											pathname: ROUTEKEYS.LOADDATA_ID,
 											params: {
@@ -184,8 +184,8 @@ const AccordionFlatlist = ({
 												),
 												title: channels?.ChanelName,
 											},
-										})
-									);
+										});
+									});
 								}}
 							>
 								<Text className="text-md font-normal text-listText">

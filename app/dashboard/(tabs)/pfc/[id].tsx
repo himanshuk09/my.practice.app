@@ -67,11 +67,7 @@ const PFCDetails = () => {
 	}, [id]);
 
 	useEffect(() => {
-		if (isFocused) {
-			setTimeout(() => {
-				dispatch(inActiveLoading());
-			}, 500);
-		}
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 
 	return (

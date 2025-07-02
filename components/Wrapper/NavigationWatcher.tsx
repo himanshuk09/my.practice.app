@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { RootState } from "@/store/store";
 import { BackHandler } from "react-native";
-import { AUTHKEYS, PERMISSIONKEYS, ROUTEKEYS } from "@/utils/messages";
+import { PERMISSIONKEYS, ROUTEKEYS } from "@/utils/messages";
 import { closeDrawer } from "@/store/drawerSlice";
 import CustomAlert from "@/components/CustomAlert";
 import { setOrientation } from "@/store/chartSlice";
-import { useRouter, useSegments } from "expo-router";
+import { Href, useRouter, useSegments } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { activeLoading, inActiveLoading } from "@/store/navigationSlice";
@@ -14,12 +14,12 @@ type NavigationWatcherProps = {
 	children: React.ReactNode;
 };
 // Handle specific paths within dashboard
-const dashboardPaths = [
-	"/dashboard/(tabs)/prices",
-	"/dashboard/(tabs)/pfc",
-	"/dashboard/(tabs)/loaddata",
-	"/dashboard/(tabs)/signals",
-	"/dashboard/(tabs)/portfolio",
+const dashboardPaths: string[] = [
+	ROUTEKEYS.PRICES,
+	ROUTEKEYS.PFC,
+	ROUTEKEYS.LOADDATA,
+	ROUTEKEYS.SIGNALS,
+	ROUTEKEYS.PORTFOLIO,
 ];
 
 const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
@@ -56,48 +56,36 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 				dispatch(closeDrawer());
 				return true;
 			}
+
 			if (isLandscape) {
+				dispatch(activeLoading());
 				ScreenOrientation.lockAsync(
 					ScreenOrientation.OrientationLock.PORTRAIT
-				);
-				dispatch(activeLoading());
-				dispatch(setOrientation(false));
-				setTimeout(() => {
-					dispatch(inActiveLoading());
-				}, 2000);
+				)
+					.then(() => {
+						dispatch(setOrientation(false));
+					})
+					.finally(() => {
+						dispatch(inActiveLoading());
+					});
 				return true;
 			}
 
-			// Handle specific route cases
-			switch (currentPath) {
-				case ROUTEKEYS.DASHBOARD:
-					showAlert();
-					return true;
-
-				case ROUTEKEYS.FORGOT_PASSWORD:
-					router.replace(ROUTEKEYS.LOGIN);
-					return true;
-				case ROUTEKEYS.LOGIN:
-					showAlert();
-					return true;
-				default:
-					// Handle dashboard paths
-					if (dashboardPaths.includes(currentPath)) {
-						dispatch(activeLoading());
-						router.replace(ROUTEKEYS.DASHBOARD);
-						return true;
-					}
-
-					// Handle general back navigation
-					if (!router.canGoBack()) {
-						BackHandler.exitApp();
-						return true;
-					}
-
-					// dispatch(activeLoading());
-					router.back();
-					return true;
+			if (dashboardPaths.includes(currentPath)) {
+				dispatch(activeLoading());
+				router.dismissTo(ROUTEKEYS.DASHBOARD);
+				return true;
 			}
+
+			// Handle general back navigation
+			if (!router.canGoBack()) {
+				showAlert();
+				return true;
+			}
+
+			router.back();
+			return true;
+			// }
 		};
 
 		const backHandler = BackHandler.addEventListener(
@@ -106,7 +94,7 @@ const NavigationWatcher: React.FC<NavigationWatcherProps> = ({ children }) => {
 		);
 
 		return () => backHandler.remove();
-	}, [currentPath, dispatch, router, isLandscape]);
+	}, [currentPath, isLandscape]);
 	return children;
 };
 

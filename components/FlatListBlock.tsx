@@ -62,7 +62,7 @@ const FlatListBlock = <T,>({
 			const handlePress = () => {
 				dispatch(activeLoading());
 
-				setTimeout(() => {
+				requestAnimationFrame(() => {
 					if (renderType === ScreenNameEnum.PORTFOLIO) {
 						router.push({
 							pathname: ROUTEKEYS.PORTFOLIO_ID,

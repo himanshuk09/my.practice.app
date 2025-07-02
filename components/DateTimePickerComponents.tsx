@@ -158,9 +158,7 @@ const DateTimePickerComponents = ({
 							</Pressable>
 							{date && (
 								<Pressable
-									onPress={() => {
-										setTimeout(() => setOpen?.(false), 100);
-									}}
+									onPress={() => setOpen?.(false)}
 									accessibilityRole="button"
 									accessibilityLabel="select"
 								>
@@ -211,9 +209,7 @@ const DateTimePickerComponents = ({
 						</View>
 						{range && (
 							<Pressable
-								onPress={() => {
-									setTimeout(() => setOpen?.(false), 100);
-								}}
+								onPress={() => setOpen?.(false)}
 								accessibilityRole="button"
 								accessibilityLabel="select"
 								style={{ marginBottom: 2 }}

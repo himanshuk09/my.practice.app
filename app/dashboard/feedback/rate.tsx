@@ -31,7 +31,7 @@ const Rate = () => {
 	const insets = useSafeAreaInsets();
 
 	useEffect(() => {
-		setTimeout(() => dispatch(inActiveLoading()), 100);
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -118,10 +118,10 @@ const Rate = () => {
 
 					{/* Footer Buttons */}
 					<FooterActions
-						leftTitle="cancel"
-						leftOnPress={() => router.replace(ROUTEKEYS.DASHBOARD)}
-						rightTitle="save"
-						rightOnPress={async () => {
+						dismissOnPress={() =>
+							router.dismissTo(ROUTEKEYS.DASHBOARD)
+						}
+						confirmOnPress={async () => {
 							CustomAlert({
 								title: AUTHKEYS.SUBMIT,
 								description: AUTHKEYS.SUBMIT_FEEDBACK,
@@ -147,7 +147,9 @@ const Rate = () => {
 											textTransform: "uppercase",
 										} as TextStyle,
 										onPress: () =>
-											router.replace(ROUTEKEYS.DASHBOARD),
+											router.dismissTo(
+												ROUTEKEYS.DASHBOARD
+											),
 									},
 								],
 							});

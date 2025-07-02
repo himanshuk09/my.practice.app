@@ -79,9 +79,9 @@ const CustomTabBar = ({
 						});
 
 						if (!isFocused && !event.defaultPrevented) {
-							setTimeout(() => {
-								navigation.navigate(route.name);
-							});
+							requestAnimationFrame(() =>
+								navigation.navigate(route.name)
+							);
 							dispatch(activeLoading());
 						}
 					};

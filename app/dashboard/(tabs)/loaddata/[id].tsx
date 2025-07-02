@@ -69,11 +69,7 @@ const LoadDataDetails = () => {
 	);
 
 	useEffect(() => {
-		if (isFocused) {
-			setTimeout(() => {
-				dispatch(inActiveLoading());
-			}, 500);
-		}
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused, id]);
 
 	return (
@@ -124,7 +120,7 @@ const LoadDataDetails = () => {
 											useGrouping: true,
 											maximumFractionDigits: 2,
 										}).format(loadDetail.AverageValue)}`
-									: "0"}
+									: "0"}{" "}
 								{UNIT_PLACEHOLDER.PLACEHOLDER_KWH_UNIT}
 							</Text>
 						</View>

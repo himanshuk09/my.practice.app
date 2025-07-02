@@ -48,8 +48,10 @@ const MenuCard = memo(({ item }: MenuCardProps) => {
 		<Pressable
 			className="m-1 items-center"
 			onPressIn={() => {
+				requestAnimationFrame(() => {
+					router.push(item.route as Href);
+				});
 				dispatch(activeLoading());
-				setTimeout(() => router.push(item.route as Href));
 			}}
 		>
 			<View

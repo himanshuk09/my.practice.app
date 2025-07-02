@@ -80,8 +80,8 @@ const Header = React.memo(() => {
 						}
 
 						// Navigate after a slight delay, ensuring loading starts first
-						setTimeout(() => {
-							router.replace(ROUTEKEYS.DASHBOARD);
+						requestAnimationFrame(() => {
+							router.dismissTo(ROUTEKEYS.DASHBOARD);
 							setHeaderPress(false);
 						});
 					}}

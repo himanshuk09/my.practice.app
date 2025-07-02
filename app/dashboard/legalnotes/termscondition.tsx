@@ -20,7 +20,7 @@ const TermsAndConditionsScreen = () => {
 	const [isRefreshing, setIsRefreshing] = useState(false);
 
 	useEffect(() => {
-		setTimeout(() => dispatch(inActiveLoading()), 100);
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 
 	return (

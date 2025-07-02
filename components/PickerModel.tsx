@@ -197,7 +197,7 @@ const PickerModel = ({
 		if (rangeChanged || maxMinChanged) {
 			handleRangeDataFilter();
 		}
-		setTimeout(() => setModalVisible?.(false), 100);
+		setModalVisible?.(false);
 	};
 
 	// Effects

@@ -34,7 +34,7 @@ const Imprint = () => {
 	const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
 	useEffect(() => {
-		setTimeout(() => dispatch(inActiveLoading()), 100);
+		if (isFocused) dispatch(inActiveLoading());
 	}, [isFocused]);
 	return (
 		<SafeAreaView className="flex-1 bg-white">

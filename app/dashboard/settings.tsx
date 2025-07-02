@@ -146,7 +146,7 @@ const Settings = () => {
 			],
 		]);
 
-		router.replace(ROUTEKEYS.DASHBOARD as Href);
+		router.dismissTo(ROUTEKEYS.DASHBOARD as Href);
 		dispatch(updateLocale(selectedLanguage));
 	};
 
@@ -252,12 +252,8 @@ const Settings = () => {
 			</View>
 
 			<FooterActions
-				leftTitle="cancel"
-				leftOnPress={() => {
-					router.replace(ROUTEKEYS.DASHBOARD);
-				}}
-				rightTitle="save"
-				rightOnPress={handleSave}
+				dismissOnPress={() => router.dismissTo(ROUTEKEYS.DASHBOARD)}
+				confirmOnPress={handleSave}
 			/>
 		</SafeAreaView>
 	);

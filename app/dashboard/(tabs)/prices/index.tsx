@@ -76,12 +76,12 @@ const Prices = () => {
 			style={st.boxShadow}
 			onPress={() => {
 				dispatch(activeLoading());
-				setTimeout(() =>
+				requestAnimationFrame(() => {
 					router.push({
 						pathname: ROUTEKEYS.PRICES_ID,
 						params: { id: item.id },
-					})
-				);
+					});
+				});
 			}}
 		>
 			<View className="flex flex-row items-center justify-start">
@@ -158,9 +158,9 @@ const Prices = () => {
 						color="white"
 						onPress={() => {
 							dispatch(activeLoading());
-							setTimeout(() =>
-								router.push(ROUTEKEYS.PRICES_SETTINGS)
-							);
+							requestAnimationFrame(() => {
+								router.push(ROUTEKEYS.PRICES_SETTINGS);
+							});
 						}}
 					/>
 				</View>

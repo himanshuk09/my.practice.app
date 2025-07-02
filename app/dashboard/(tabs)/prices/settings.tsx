@@ -207,10 +207,8 @@ const PricesSettings = () => {
 			</View>
 
 			<FooterActions
-				leftTitle="cancel"
-				leftOnPress={() => router.replace(ROUTEKEYS.DASHBOARD)}
-				rightTitle="save"
-				rightOnPress={() => router.replace(ROUTEKEYS.DASHBOARD)}
+				dismissOnPress={() => router.dismissTo(ROUTEKEYS.DASHBOARD)}
+				confirmOnPress={() => router.dismissTo(ROUTEKEYS.DASHBOARD)}
 			/>
 		</SafeAreaView>
 	);

@@ -29,7 +29,8 @@ const StackHeader = ({
 						window.history.back();
 						return;
 					}
-					router.back();
+					router.dismiss();
+					// router.back();
 				}}
 				className="w-7 ml-3"
 			>

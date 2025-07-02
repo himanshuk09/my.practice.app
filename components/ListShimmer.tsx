@@ -109,7 +109,7 @@ const ShimmerPricesHeader = () => {
 					color="white"
 					onPress={() => {
 						dispatch(activeLoading());
-						setTimeout(() =>
+						requestAnimationFrame(() =>
 							router.push(ROUTEKEYS.PRICES_SETTINGS)
 						);
 					}}

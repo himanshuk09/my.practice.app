@@ -440,12 +440,7 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                     },
                     events: {
                         dataURI: function (event, chartContext, config) {
-                            window.ReactNativeWebView.postMessage(
-                                JSON.stringify({
-                                    type: "dataURI",
-                                    dataURI: config.dataURI,
-                                })
-                            );
+                            sendMsgToReactNative("dataURI",  config.dataURI)
                         },
 
                         animationEnd: function (chartContext, { xaxis, yaxis }) {
@@ -559,15 +554,11 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                             }
 
                             // Post zoom start event
-                            window.ReactNativeWebView.postMessage(
-                                JSON.stringify({
-                                    action: "Zoom Start",
-                                    newRange: {
-                                        min: newMinX,
-                                        max: newMaxX,
-                                    },
+                            sendMsgToReactNative("Zoom Start", {
+                                    min: newMinX,
+                                    max: newMaxX,
                                 })
-                            );
+                            
 
                             // Allow zooming with validated values
                             return {
