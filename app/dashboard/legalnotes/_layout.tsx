@@ -8,8 +8,7 @@ const LegalNotesLayout = () => {
 				name="imprint"
 				options={{
 					headerShown: true,
-					animation: "slide_from_right",
-					animationDuration: 4000,
+					animation: "ios_from_left",
 					header: ({ navigation }) => <Header />,
 				}}
 			/>
@@ -17,7 +16,7 @@ const LegalNotesLayout = () => {
 				name="privacypolicy"
 				options={{
 					headerShown: true,
-					animation: "slide_from_right",
+					animation: "ios_from_left",
 					header: ({ navigation }) => <Header />,
 				}}
 			/>
@@ -25,7 +24,7 @@ const LegalNotesLayout = () => {
 				name="termscondition"
 				options={{
 					headerShown: true,
-					animation: "slide_from_right",
+					animation: "ios_from_left",
 					header: ({ navigation }) => <Header />,
 				}}
 			/>

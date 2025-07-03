@@ -280,7 +280,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 						height: "100%",
 						border: "none",
 						overflow: "hidden",
-						pointerEvents: "auto",
+
 						// margin: 1,
 					}}
 					onLoad={() => setIsChartLoaded?.(true)}

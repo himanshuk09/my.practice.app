@@ -18,14 +18,14 @@ const PricesLayout = () => {
 				name="index"
 				options={{
 					headerShown: false,
-					animation: "slide_from_bottom",
+					animation: "ios_from_left",
 				}}
 			/>
 			<Stack.Screen
 				name="[id]"
 				options={{
 					headerShown: Platform.OS === "web" ? true : !isLandscape,
-					animation: "simple_push",
+					animation: "fade",
 					header: ({ navigation }) => (
 						<StackHeader
 							navigation={navigation}
@@ -39,7 +39,7 @@ const PricesLayout = () => {
 				options={{
 					headerShown: true,
 					title: "Settings Prices",
-					animation: "slide_from_right",
+					animation: "fade",
 					headerBackButtonDisplayMode: "minimal",
 					headerBackVisible: true,
 					headerStyle: {

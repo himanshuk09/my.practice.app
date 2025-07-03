@@ -33,7 +33,7 @@ const Header = React.memo(() => {
 					alignItems: "center",
 					justifyContent: "center",
 					borderBottomWidth: 0,
-					// Platform-specific shadow removal
+					// Platform-specific
 					...Platform.select({
 						android: { elevation: 0 },
 						ios: {

@@ -34,11 +34,15 @@ const DateTimePickerComponents = ({
 }: DateTimePickerComponentsProps) => {
 	const [mode] = useState<ModeType>(pickerMode);
 	const locale = useSelector((state: any) => state.culture.locale);
-	const [date, setDate] = useState<DateType | undefined>(defaultDate);
-	const [dates, setDates] = useState<DateType[] | undefined>();
+	const [date, setDate] = useState<DateType>(
+		dayjs(defaultDate).isValid() ? defaultDate : dayjs().startOf("day")
+	);
+	const [dates, setDates] = useState<DateType[]>();
+	const [hasInteracted, setHasInteracted] = useState<boolean>(false);
 
 	const onChange = useCallback(
 		(params: any) => {
+			setHasInteracted(true);
 			if (mode === "single") {
 				setDate(params.date);
 				setSingleDate?.(params.date);
@@ -67,9 +71,9 @@ const DateTimePickerComponents = ({
 	if (!open) return null;
 	return (
 		<Pressable
-			className={`${Platform.OS === "web" ? "w-80" : "w-[23rem]"} mx-1 -z-0 bg-[#fff] p-1 rounded-md  md:mt-9 md:ml-5  shadow-lg`}
+			className={`${Platform.OS === "web" ? "w-80" : "w-[23rem]"} mx-1 -z-0 bg-[#fff] p-2  md:mt-9 md:ml-5 `}
 		>
-			<View className="flex flex-row items-start my-2 justify-between">
+			<View className="flex flex-row  items-start my-2 justify-between">
 				<Text className="text-slate-90000 font-bold my-1 ml-1">
 					{i18n.t(title)}
 				</Text>
@@ -84,23 +88,11 @@ const DateTimePickerComponents = ({
 				mode={mode}
 				locale={locale}
 				//single picker
-				date={
-					dayjs(date).isValid()
-						? date
-						: dayjs().startOf("day").toDate()
-				}
+				date={date}
 				//range picker start date
-				startDate={
-					dayjs(range?.startDate).isValid()
-						? range?.startDate
-						: dayjs().startOf("day").toDate()
-				}
+				startDate={range?.startDate}
 				//range picker end date
-				endDate={
-					dayjs(range?.endDate).isValid()
-						? range?.endDate
-						: dayjs().add(1, "month").startOf("day").toDate()
-				}
+				endDate={range?.endDate}
 				//multiple date
 				dates={dates}
 				// "day" | "month" | "year" | "time"
@@ -131,7 +123,10 @@ const DateTimePickerComponents = ({
 
 			<View className="px-3 pb-4 relative">
 				{mode === "single" ? (
-					<View className=" flex-col items-start justify-between">
+					<View
+						style={{ gap: 3 }}
+						className=" flex-col items-start justify-between"
+					>
 						<View className="w-full items-center">
 							<Text className="mb-3 text-center">
 								{date
@@ -144,8 +139,8 @@ const DateTimePickerComponents = ({
 						<View className="flex-row justify-between flex w-full">
 							<Pressable
 								onPress={() => {
-									setDate(new Date());
-									setSingleDate?.(new Date());
+									setDate(dayjs().startOf("day"));
+									setSingleDate?.(dayjs().startOf("day"));
 								}}
 								accessibilityRole="button"
 								accessibilityLabel="Today"
@@ -158,7 +153,12 @@ const DateTimePickerComponents = ({
 							</Pressable>
 							{date && (
 								<Pressable
-									onPress={() => setOpen?.(false)}
+									onPress={() => {
+										if (!hasInteracted) {
+											setSingleDate?.(date);
+										}
+										setOpen?.(false);
+									}}
 									accessibilityRole="button"
 									accessibilityLabel="select"
 								>
@@ -207,7 +207,7 @@ const DateTimePickerComponents = ({
 									: "..."}
 							</Text>
 						</View>
-						{range && (
+						{range?.endDate && (
 							<Pressable
 								onPress={() => setOpen?.(false)}
 								accessibilityRole="button"

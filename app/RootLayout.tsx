@@ -45,7 +45,7 @@ const RootLayout: React.FC = () => {
 				name="index"
 				options={{
 					headerShown: false,
-					animation: "slide_from_left",
+					animation: "fade",
 				}}
 			/>
 			<Stack.Protected guard={!session}>
@@ -53,7 +53,8 @@ const RootLayout: React.FC = () => {
 					name="(auth)"
 					options={{
 						headerShown: false,
-						animation: "slide_from_right",
+						animation: "simple_push",
+						animationTypeForReplace: "push",
 					}}
 				/>
 			</Stack.Protected>
@@ -63,6 +64,7 @@ const RootLayout: React.FC = () => {
 					options={{
 						headerShown: false,
 						animation: "simple_push",
+						animationTypeForReplace: "push",
 					}}
 				/>
 			</Stack.Protected>

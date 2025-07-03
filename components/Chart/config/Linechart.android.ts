@@ -544,6 +544,7 @@ const webviewLineHtmlContent = /*html*/ `<!DOCTYPE html>
                             if (newMaxX - newMinX < minDistanceBetweenPoints) {
                                 // Prevent zooming if no point would be visible
                                 sendMsgToReactNative("Zoom Prevented", null, "No data points visible");
+                                updateLocale();
                                 return {
                                     xaxis: {
                                         min: chartContext.w.globals.minX,

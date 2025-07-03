@@ -19,7 +19,7 @@ const PFCLayout = () => {
 				name="index"
 				options={{
 					headerShown: false,
-					animation: "slide_from_left",
+					animation: "ios_from_left",
 				}}
 			/>
 			<Stack.Screen

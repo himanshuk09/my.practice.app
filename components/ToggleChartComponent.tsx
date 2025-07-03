@@ -56,8 +56,8 @@ const ToggleChartComponent = ({
 	// State
 	const [activeTab, setActiveTab] = useState<tabsType>("Week");
 	const [range, setRange] = useState<{
-		startDate: DateType | string;
-		endDate: DateType | string;
+		startDate: DateType;
+		endDate: DateType;
 	}>({
 		startDate: dayjs().subtract(1, "month"),
 		endDate: dayjs().add(1),
@@ -106,9 +106,9 @@ const ToggleChartComponent = ({
 				// setLoading(true);
 				break;
 
-				// case "stopLoader":
-				setTimeout(() => setLoading(false), 200);
-				break;
+			// case "stopLoader":
+			//	setTimeout(() => setLoading(false), 200);
+			//break;
 
 			case "chartZoomed":
 				setIschartZoomed(isZoomed);
@@ -216,8 +216,8 @@ const ToggleChartComponent = ({
 				updateChartData([]);
 				setRange((prev: any) => ({
 					...prev,
-					endDate: "",
-					startDate: "",
+					endDate: null,
+					startDate: null,
 				}));
 				setMaxMinValues({
 					minX: 0,

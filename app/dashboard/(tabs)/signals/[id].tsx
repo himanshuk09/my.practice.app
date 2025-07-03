@@ -85,7 +85,7 @@ const SignalDetails = () => {
 			</View>
 
 			<Modal
-				animationType="slide"
+				animationType="fade"
 				transparent={false}
 				visible={modalVisible}
 				onRequestClose={() => setModalVisible(!modalVisible)}

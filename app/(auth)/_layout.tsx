@@ -18,7 +18,7 @@ const AuthLayout = () => {
 				name="login"
 				options={{
 					headerShown: false,
-					animation: "slide_from_left",
+					animation: "ios_from_left",
 					animationTypeForReplace: "push",
 				}}
 			/>
@@ -26,7 +26,7 @@ const AuthLayout = () => {
 				name="forgot-password"
 				options={{
 					headerShown: false,
-					animation: "slide_from_right",
+					animation: "ios_from_right",
 				}}
 			/>
 		</Stack>

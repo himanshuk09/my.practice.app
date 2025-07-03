@@ -162,7 +162,8 @@ const AccordionFlatlist = ({
 						item?.ChannelList.map((channels: any) => (
 							<TouchableOpacity
 								key={channels?.ChannelId}
-								className="my-1 bg-accordionBg shadow-slate-200 shadow-lg p-3 pl-4 items-start justify-center  text-center border-y-4 border-y-white h-20"
+								className="my-1 bg-accordionBg  p-3 pl-4 items-start justify-center  text-center border-y-4 border-y-white h-20"
+								style={st.boxShadow}
 								onPress={() => {
 									startLoader();
 									requestAnimationFrame(() => {

@@ -118,7 +118,10 @@ const PickerModel = ({
 			return false;
 		}
 
-		if (dayjs(startDate).isAfter(dayjs(endDate))) {
+		if (
+			dayjs(startDate).isAfter(dayjs(endDate)) ||
+			dayjs(startDate).isSame(dayjs(endDate))
+		) {
 			setDateError(true);
 			setDateErrorText(PICKERVALIDATEMESSAGE.DATE.END_BEFORE_START);
 			return false;
@@ -172,6 +175,7 @@ const PickerModel = ({
 	};
 
 	const handleApply = () => {
+		if (Keyboard.isVisible()) Keyboard.dismiss();
 		if (!validateStartEndDate(range?.startDate, range?.endDate)) return;
 		if (
 			screenName != "prices" &&

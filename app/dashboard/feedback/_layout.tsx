@@ -8,7 +8,7 @@ const FeedBackLayout = () => {
 				name="contact"
 				options={{
 					headerShown: true,
-					animation: "slide_from_right",
+					animation: "ios_from_left",
 					header: ({ navigation }) => <Header />,
 				}}
 			/>
@@ -16,7 +16,7 @@ const FeedBackLayout = () => {
 				name="rate"
 				options={{
 					headerShown: true,
-					animation: "slide_from_right",
+					animation: "ios_from_left",
 					header: ({ navigation }) => <Header />,
 				}}
 			/>

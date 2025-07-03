@@ -335,7 +335,6 @@ const SignIn: React.FC = () => {
 										}
 									}}
 									className="mx-auto my-5 p-4"
-									disabled={status === "loading"}
 									asChild
 								>
 									<Text className="text-red-600 capitalize underline text-center text-sm">

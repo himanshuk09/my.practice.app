@@ -29,7 +29,7 @@ export type DateTimePickerComponentsProps = {
 	pickerMode?: ModeType;
 	open?: boolean;
 	setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-	setSingleDate?: (date: DateType) => void;
+	setSingleDate?: React.Dispatch<React.SetStateAction<DateType>>;
 	defaultDate?: DateType;
 	initialView?: initialDatePickerViewProps;
 	range?: DateTimeRange;

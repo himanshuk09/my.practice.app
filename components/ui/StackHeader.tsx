@@ -30,8 +30,8 @@ const StackHeader = ({
 						return;
 					}
 					router.dismiss();
-					// router.back();
 				}}
+				activeOpacity={0.8}
 				className="w-7 ml-3"
 			>
 				<MaterialIcons name="arrow-back" size={27} color="#9a9b9f" />

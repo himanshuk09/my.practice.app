@@ -19,14 +19,14 @@ const DashboardLayout = () => {
 						gestureEnabled: true,
 						gestureDirection: "vertical",
 						contentStyle: { backgroundColor: "white" },
-						statusBarAnimation: "slide",
+						statusBarAnimation: "fade",
 					}}
 				>
 					<Stack.Screen
 						name="index"
 						options={{
 							headerShown: true,
-							animation: "slide_from_left",
+							animation: "fade",
 							header: ({ navigation }) => <Header />,
 						}}
 					/>
@@ -34,14 +34,14 @@ const DashboardLayout = () => {
 						name="(tabs)"
 						options={{
 							headerShown: false,
-							animation: "slide_from_right",
+							animation: "ios_from_right",
 						}}
 					/>
 					<Stack.Screen
 						name="settings"
 						options={{
 							headerShown: true,
-							animation: "slide_from_right",
+							animation: "ios_from_right",
 							header: ({ navigation }) => <Header />,
 						}}
 					/>
@@ -49,12 +49,14 @@ const DashboardLayout = () => {
 						name="feedback"
 						options={{
 							headerShown: false,
+							animation: "ios_from_left",
 						}}
 					/>
 					<Stack.Screen
 						name="legalnotes"
 						options={{
 							headerShown: false,
+							animation: "ios_from_left",
 						}}
 					/>
 				</Stack>
