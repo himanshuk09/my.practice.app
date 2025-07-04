@@ -146,7 +146,7 @@ const Settings = () => {
 			],
 		]);
 
-		router.dismissTo(ROUTEKEYS.DASHBOARD as Href);
+		router.replace(ROUTEKEYS.DASHBOARD as Href);
 		dispatch(updateLocale(selectedLanguage));
 	};
 
@@ -160,7 +160,7 @@ const Settings = () => {
 			const signalpref = await AsyncStorage.getItem(
 				LOCALSTORAGEKEYS.SIGNAL_PREFERENCE
 			);
-			if (status == "granted") {
+			if (status == "granted" || Platform.OS == "web") {
 				setIsNotificationEnabled(notipref === "enabled");
 
 				if (notipref === "enabled")

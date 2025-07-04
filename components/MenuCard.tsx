@@ -57,7 +57,7 @@ const MenuCard = memo(({ item }: MenuCardProps) => {
 			<View
 				className={`relative bg-secondary justify-center items-center ${
 					Platform.OS === "web"
-						? "w-[11.7rem] my-1"
+						? "w-[10.5rem] my-1"
 						: "w-[11.7rem] mx-px my-5"
 				} h-[11rem]`}
 			>

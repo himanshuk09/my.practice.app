@@ -46,16 +46,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
 	(response) => response,
 	async (error: any) => {
-		if (error.response && error.response.status === 401) {
+		const status = error.response?.status || error?.status;
+		if (status === 401) {
 			// 401 indicates token is invalid (expired or not matching) Token expired or Unauthorized
-			await AsyncStorage.removeItem(LOCALSTORAGEKEYS.TOKEN); // Clear token
+			await AsyncStorage.clear(); // Clear
 			router.replace(ROUTEKEYS.LOGIN); // Redirect to login screen
 		}
+		console.log(error);
 
-		error.errorMessage = await getErrorMessageFromStatus(
-			error.response.status,
-			error
-		);
+		error.errorMessage = await getErrorMessageFromStatus(status, error);
 		return Promise.reject(error); // Pass error to the calling code
 	}
 );

@@ -21,7 +21,7 @@ import { Href, useRouter, useSegments } from "expo-router";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import * as ScreenOrientation from "expo-screen-orientation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LOCALSTORAGEKEYS, AUTHKEYS, ROUTEKEYS } from "@/utils/messages";
+import { LOCALSTORAGEKEYS, AUTHKEYS } from "@/utils/messages";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 
 interface MenuItemProps {
@@ -219,7 +219,6 @@ const CustomDrawer = memo(() => {
 				LOCALSTORAGEKEYS.USERID,
 				LOCALSTORAGEKEYS.APKVERSION,
 			]);
-			router.dismissTo(ROUTEKEYS.LOGIN);
 			setSessionValue(false);
 		} catch (error) {
 			console.error("Error clearing AsyncStorage or navigating:", error);
